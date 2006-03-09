@@ -5,6 +5,7 @@ import com.jgoodies.looks.plastic.theme.*;
 
 import org.jmeld.ui.*;
 import org.jmeld.util.*;
+import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
 
@@ -45,6 +46,7 @@ public class JMeld
       else
       {
         PlasticLookAndFeel.setPlasticTheme(new SkyBluer());
+        PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
       }
 
@@ -59,13 +61,18 @@ public class JMeld
     panel = new JMeldPanel(fileName1, fileName2);
     frame.add(panel);
     frame.setJMenuBar(panel.getMenuBar());
-    frame.setSize(500, 400);
     frame.setIconImage(ResourceLoader.getImageIcon("jmeld-small").getImage());
+    new WindowPreference(frame.getTitle(), frame);
+
     frame.setVisible(true);
   }
 
   public static void main(String[] args)
   {
+    //e.debug.EventDispatchThreadHangMonitor.initMonitoring();
+
+    // According to the latest news EVERYTHING regarding swing should
+    //   be executed on the EventDispatchThread
     SwingUtilities.invokeLater(new JMeld(args));
   }
 }
