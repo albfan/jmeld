@@ -2,11 +2,14 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.builder.*;
 
+import org.apache.commons.jrcs.diff.*;
+import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.plaf.*;
@@ -15,6 +18,7 @@ import javax.swing.plaf.basic.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 
@@ -49,10 +53,9 @@ public class JMeldPanel
 
   public void open(String fileName1, String fileName2)
   {
-    DiffPanel panel;
+    setWaitCursor();
 
-    panel = new DiffPanel(this, fileName1, fileName2);
-    tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
+    new NewDiffPanel(fileName1, fileName2).execute();
   }
 
   private JComponent getToolBar()
@@ -152,9 +155,41 @@ public class JMeldPanel
 
   public void doNew(ActionEvent ae)
   {
+    NewPanelDialog dialog;
+    File           file1;
+    File           file2;
+    String         fileName;
+
     System.out.println("new diff");
 
-    //open(fileName1, fileName2);
+    dialog = new NewPanelDialog(this);
+    dialog.show();
+    if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
+    {
+      fileName = dialog.getOriginalFileName();
+      if (StringUtil.isEmpty(fileName))
+      {
+        return;
+      }
+
+      if (!new File(fileName).exists())
+      {
+        return;
+      }
+
+      fileName = dialog.getMineFileName();
+      if (StringUtil.isEmpty(fileName))
+      {
+        return;
+      }
+
+      if (!new File(fileName).exists())
+      {
+        return;
+      }
+
+      open(dialog.getOriginalFileName(), dialog.getMineFileName());
+    }
   }
 
   public boolean isSaveEnabled()
@@ -225,5 +260,111 @@ public class JMeldPanel
   private DiffPanel getCurrentDiffPanel()
   {
     return (DiffPanel) tabbedPane.getSelectedComponent();
+  }
+
+  private void setWaitCursor()
+  {
+    JFrame frame;
+
+    frame = (JFrame) SwingUtilities.getRoot(this);
+    if (frame != null)
+    {
+      frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+      System.out.println("setCursor(WAIT)");
+      try
+      {
+        Thread.sleep(40);
+      }
+      catch (Exception ex)
+      {
+      }
+
+      System.out.println("after sleep setCursor(WAIT)");
+    }
+  }
+
+  private void resetWaitCursor()
+  {
+    JFrame frame;
+
+    frame = (JFrame) SwingUtilities.getRoot(this);
+    if (frame != null)
+    {
+      frame.setCursor(null);
+      System.out.println("setCursor(null)");
+    }
+  }
+
+  class NewDiffPanel
+         extends SwingWorker<String, Object>
+  {
+    private String       fileName1;
+    private String       fileName2;
+    private FileDocument fd1;
+    private FileDocument fd2;
+    private Revision     revision;
+
+    NewDiffPanel(String fileName1, String fileName2)
+    {
+      this.fileName1 = fileName1;
+      this.fileName2 = fileName2;
+    }
+
+    public String doInBackground()
+    {
+      Diff diff;
+      File file;
+
+      try
+      {
+        fd1 = new FileDocument(new File(fileName1));
+        fd1.read();
+
+        fd2 = new FileDocument(new File(fileName2));
+        fd2.read();
+
+        diff = new Diff(fd1.getLines());
+        revision = diff.diff(fd2.getLines());
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+        return ex.getMessage();
+      }
+
+      return null;
+    }
+
+    protected void done()
+    {
+      try
+      {
+        String    result;
+        DiffPanel panel;
+
+        result = get();
+        if (result != null)
+        {
+          JOptionPane.showMessageDialog(JMeldPanel.this, result,
+            "Error opening file", JOptionPane.ERROR_MESSAGE);
+        }
+
+        System.out.println("fd1 = " + fd1);
+        System.out.println("fd2 = " + fd2);
+        panel = new DiffPanel(JMeldPanel.this);
+        panel.setFileDocuments(fd1, fd2, revision);
+
+        tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
+        tabbedPane.setSelectedComponent(panel);
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
+      finally
+      {
+        resetWaitCursor();
+      }
+    }
   }
 }
