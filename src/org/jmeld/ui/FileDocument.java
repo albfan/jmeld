@@ -213,11 +213,7 @@ public class FileDocument
     try
     {
       out = new FileWriter(file);
-      new DefaultEditorKit().write(
-        out,
-        document,
-        0,
-        document.getLength());
+      new DefaultEditorKit().write(out, document, 0, document.getLength());
       out.flush();
       out.close();
     }
@@ -280,9 +276,7 @@ public class FileDocument
 
     public void print()
     {
-      System.out.printf(
-        "[%08d]: %s\n",
-        getOffset(),
+      System.out.printf("[%08d]: %s\n", getOffset(),
         StringUtil.replaceNewLines(toString()));
     }
 
@@ -323,8 +317,7 @@ public class FileDocument
     {
       try
       {
-        return content.getString(
-          element.getStartOffset(),
+        return content.getString(element.getStartOffset(),
           element.getEndOffset() - element.getStartOffset());
       }
       catch (Exception ex)

@@ -42,10 +42,11 @@ public class WidgetFactory
     }
 
     size = button.getPreferredSize();
-    if(size.height > size.width)
+    if (size.height > size.width)
     {
       size.width = size.height;
     }
+
     button.setPreferredSize(size);
 
     return button;

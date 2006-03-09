@@ -26,10 +26,7 @@ public class DiffPanel
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
 
-  public DiffPanel(
-    JMeldPanel mainPanel,
-    String     fileName1,
-    String     fileName2)
+  public DiffPanel(JMeldPanel mainPanel, String fileName1, String fileName2)
   {
     this.mainPanel = mainPanel;
 
@@ -50,7 +47,7 @@ public class DiffPanel
 
   public String getTitle()
   {
-    String title;
+    String       title;
     FileDocument fd;
 
     title = "";
@@ -58,7 +55,7 @@ public class DiffPanel
     if (filePanel1 != null)
     {
       fd = filePanel1.getFileDocument();
-      if(fd != null)
+      if (fd != null)
       {
         title += fd.getName();
       }
@@ -68,7 +65,7 @@ public class DiffPanel
     {
       title += "-";
       fd = filePanel2.getFileDocument();
-      if(fd != null)
+      if (fd != null)
       {
         title += fd.getName();
       }
@@ -124,36 +121,18 @@ public class DiffPanel
     filePanel2 = new FilePanel(this, FileDocument.REVISED);
 
     // panel for file1
-    add(
-      filePanel1.getSaveButton(),
-      cc.xy(2, 2));
-    add(
-      filePanel1.getFileBox(),
-      cc.xy(3, 2));
-    add(
-      filePanel1.getBrowseButton(),
-      cc.xy(5, 2));
-    add(
-      filePanel1.getScrollPane(),
-      cc.xyw(3, 4, 3));
+    add(filePanel1.getSaveButton(), cc.xy(2, 2));
+    add(filePanel1.getFileBox(), cc.xy(3, 2));
+    add(filePanel1.getBrowseButton(), cc.xy(5, 2));
+    add(filePanel1.getScrollPane(), cc.xyw(3, 4, 3));
 
-    add(
-      new DiffScrollComponent(this, filePanel1, filePanel2),
-      cc.xy(6, 4));
+    add(new DiffScrollComponent(this, filePanel1, filePanel2), cc.xy(6, 4));
 
     // panel for file2
-    add(
-      filePanel2.getFileBox(),
-      cc.xy(7, 2));
-    add(
-      filePanel2.getBrowseButton(),
-      cc.xy(9, 2));
-    add(
-      filePanel2.getScrollPane(),
-      cc.xyw(7, 4, 3));
-    add(
-      filePanel2.getSaveButton(),
-      cc.xy(10, 2));
+    add(filePanel2.getFileBox(), cc.xy(7, 2));
+    add(filePanel2.getBrowseButton(), cc.xy(9, 2));
+    add(filePanel2.getScrollPane(), cc.xyw(7, 4, 3));
+    add(filePanel2.getSaveButton(), cc.xy(10, 2));
 
     scrollSynchronizer = new ScrollSynchronizer(this, filePanel1, filePanel2);
   }

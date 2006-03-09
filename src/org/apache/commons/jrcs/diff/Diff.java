@@ -126,9 +126,7 @@ public class Diff
    * @param o the original text which will be compared against
    * @param algorithm the difference algorithm to use.
    */
-  public Diff(
-    Object[]      original,
-    DiffAlgorithm algorithm)
+  public Diff(Object[] original, DiffAlgorithm algorithm)
   {
     if (original == null)
     {
@@ -158,9 +156,7 @@ public class Diff
    * @param rev the revision to compare with the original.
    * @return a Revision describing the differences
    */
-  public static Revision diff(
-    Object[] orig,
-    Object[] rev)
+  public static Revision diff(Object[] orig, Object[] rev)
     throws DifferentiationFailedException
   {
     if (orig == null || rev == null)
@@ -179,9 +175,7 @@ public class Diff
    * @param algorithm the difference algorithm to use
    * @return a Revision describing the differences
    */
-  public static Revision diff(
-    Object[]      orig,
-    Object[]      rev,
+  public static Revision diff(Object[] orig, Object[] rev,
     DiffAlgorithm algorithm)
     throws DifferentiationFailedException
   {
@@ -211,9 +205,7 @@ public class Diff
    * @param rev The revised sequence.
    * @return true if the sequences are identical. False otherwise.
    */
-  public static boolean compare(
-    Object[] orig,
-    Object[] rev)
+  public static boolean compare(Object[] orig, Object[] rev)
   {
     if (orig.length != rev.length)
     {
@@ -278,9 +270,7 @@ public class Diff
    * @param seed A seed value for the randomizer.
    * @return The sequence with random edits performed.
    */
-  public static Object[] randomEdit(
-    Object[] text,
-    long     seed)
+  public static Object[] randomEdit(Object[] text, long seed)
   {
     List   result = new ArrayList(Arrays.asList(text));
     Random r = new Random(seed);
@@ -324,9 +314,7 @@ public class Diff
    * @param seed A seed value for randomizing the suffle.
    * @return The shuffled sequence.
    */
-  public static Object[] shuffle(
-    Object[] text,
-    long     seed)
+  public static Object[] shuffle(Object[] text, long seed)
   {
     List result = new ArrayList(Arrays.asList(text));
 
@@ -350,9 +338,7 @@ public class Diff
    * @param seed A seed value for randomizing the generation.
    * @return The generated sequence.
    */
-  public static Object[] randomSequence(
-    int  size,
-    long seed)
+  public static Object[] randomSequence(int size, long seed)
   {
     Integer[] result = new Integer[size];
     Random    r = new Random(seed);

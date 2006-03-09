@@ -38,18 +38,13 @@ public class ImageUtil
   }
 
   /** Create a x% Transparent icon */
-  public static ImageIcon createTransparentIcon(
-    ImageIcon icon,
-    int       percentage)
+  public static ImageIcon createTransparentIcon(ImageIcon icon, int percentage)
   {
-    return createIcon(
-      icon,
-      new TransparentFilter(percentage));
+    return createIcon(icon, new TransparentFilter(percentage));
   }
 
   /** Create a new icon which is filtered by some ImageFilter */
-  private static synchronized ImageIcon createIcon(
-    ImageIcon   icon,
+  private static synchronized ImageIcon createIcon(ImageIcon icon,
     ImageFilter filter)
   {
     ImageProducer ip;
@@ -61,9 +56,7 @@ public class ImageUtil
       return null;
     }
 
-    ip = new FilteredImageSource(
-        icon.getImage().getSource(),
-        filter);
+    ip = new FilteredImageSource(icon.getImage().getSource(), filter);
     image = Toolkit.getDefaultToolkit().createImage(ip);
 
     tracker = new MediaTracker(new JPanel());

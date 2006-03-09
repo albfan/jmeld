@@ -82,9 +82,7 @@ public class Chunk
    * @param pos the start position in the text.
    * @param count the size of the chunk.
    */
-  public Chunk(
-    int pos,
-    int count)
+  public Chunk(int pos, int count)
   {
     this.anchor = pos;
     this.count = (count >= 0 ? count : 0);
@@ -96,10 +94,7 @@ public class Chunk
    * @param pos the start position in the text.
    * @param count the size of the chunk.
    */
-  public Chunk(
-    Object[] iseq,
-    int      pos,
-    int      count)
+  public Chunk(Object[] iseq, int pos, int count)
   {
     this(pos, count);
     chunk = slice(iseq, pos, count);
@@ -113,11 +108,7 @@ public class Chunk
    * @param count the size of the chunk.
    * @param offset the position the chunk should have in the resulting text.
    */
-  public Chunk(
-    Object[] iseq,
-    int      pos,
-    int      count,
-    int      offset)
+  public Chunk(Object[] iseq, int pos, int count, int offset)
   {
     this(offset, count);
     chunk = slice(iseq, pos, count);
@@ -129,10 +120,7 @@ public class Chunk
    * @param pos the start position in the text.
    * @param count the size of the chunk.
    */
-  public Chunk(
-    List iseq,
-    int  pos,
-    int  count)
+  public Chunk(List iseq, int pos, int count)
   {
     this(pos, count);
     chunk = slice(iseq, pos, count);
@@ -146,11 +134,7 @@ public class Chunk
    * @param count the size of the chunk.
    * @param offset the position the chunk should have in the resulting text.
    */
-  public Chunk(
-    List iseq,
-    int  pos,
-    int  count,
-    int  offset)
+  public Chunk(List iseq, int pos, int count, int offset)
   {
     this(offset, count);
     chunk = slice(iseq, pos, count);
@@ -261,17 +245,13 @@ public class Chunk
    * @param start where to add the text.
    * @param target the text to add to.
    */
-  public void applyAdd(
-    int  start,
-    List target)
+  public void applyAdd(int start, List target)
   {
     Iterator i = chunk.iterator();
 
     while (i.hasNext())
     {
-      target.add(
-        start++,
-        i.next());
+      target.add(start++, i.next());
     }
   }
 
@@ -291,10 +271,7 @@ public class Chunk
    * @param prefix the text thatshould prefix each line.
    * @param postfix the text that should end each line.
    */
-  public StringBuffer toString(
-    StringBuffer s,
-    String       prefix,
-    String       postfix)
+  public StringBuffer toString(StringBuffer s, String prefix, String postfix)
   {
     if (chunk != null)
     {
@@ -318,10 +295,7 @@ public class Chunk
    * @param count the number of items in the slice.
    * @return a {@link List List} containing the specified items.
    */
-  public static List slice(
-    List seq,
-    int  pos,
-    int  count)
+  public static List slice(List seq, int pos, int count)
   {
     if (count <= 0)
     {
@@ -340,15 +314,9 @@ public class Chunk
    * @param count the number of items in the slice.
    * @return a {@link List List} containing the specified items.
    */
-  public static List slice(
-    Object[] seq,
-    int      pos,
-    int      count)
+  public static List slice(Object[] seq, int pos, int count)
   {
-    return slice(
-      Arrays.asList(seq),
-      pos,
-      count);
+    return slice(Arrays.asList(seq), pos, count);
   }
 
   /**
@@ -376,9 +344,7 @@ public class Chunk
    * @param s where the string representation should be appended.
    * @param separ what to use as line separator.
    */
-  public void rangeString(
-    StringBuffer s,
-    String       separ)
+  public void rangeString(StringBuffer s, String separ)
   {
     if (size() <= 1)
     {

@@ -29,9 +29,7 @@ public class FilePanel
   private Timer          timer;
   private boolean        documentChanged;
 
-  FilePanel(
-    DiffPanel diffPanel,
-    String    name)
+  FilePanel(DiffPanel diffPanel, String name)
   {
     this.diffPanel = diffPanel;
     this.name = name;
@@ -74,9 +72,7 @@ public class FilePanel
     saveButton.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
     saveButton.addActionListener(getSaveButtonAction());
 
-    timer = new Timer(
-        500,
-        refresh());
+    timer = new Timer(500, refresh());
     timer.setRepeats(false);
 
     setDocumentChanged(false);
@@ -126,8 +122,7 @@ public class FilePanel
       if (previousDocument != null)
       {
         previousDocument.removeDocumentListener(this);
-        previousDocument.removeUndoableEditListener(
-          diffPanel.getUndoHandler());
+        previousDocument.removeUndoableEditListener(diffPanel.getUndoHandler());
       }
 
       document = fileDocument.getDocument();
@@ -194,9 +189,7 @@ public class FilePanel
         else if (delta instanceof ChangeDelta)
         {
           // Mark the changes in a change in a different color.
-          changeRev = getChangeRevision(
-              original.toString(),
-              revised.toString());
+          changeRev = getChangeRevision(original.toString(), revised.toString());
           if (changeRev != null)
           {
             for (int j = 0; j < changeRev.size(); j++)
@@ -238,9 +231,7 @@ public class FilePanel
         }
         else if (delta instanceof ChangeDelta)
         {
-          changeRev = getChangeRevision(
-              original.toString(),
-              revised.toString());
+          changeRev = getChangeRevision(original.toString(), revised.toString());
           if (changeRev != null)
           {
             for (int j = 0; j < changeRev.size(); j++)
@@ -286,9 +277,7 @@ public class FilePanel
     }
   }
 
-  private Revision getChangeRevision(
-    String original,
-    String revised)
+  private Revision getChangeRevision(String original, String revised)
   {
     Diff        diff;
     char[]      original1;
@@ -323,9 +312,7 @@ public class FilePanel
     return null;
   }
 
-  private void setHighlight(
-    int                          offset,
-    int                          size,
+  private void setHighlight(int offset, int size,
     Highlighter.HighlightPainter highlight)
   {
     try
@@ -377,12 +364,9 @@ public class FilePanel
           }
           catch (Exception ex)
           {
-            JOptionPane.showMessageDialog(
-              SwingUtilities.getRoot(editor),
+            JOptionPane.showMessageDialog(SwingUtilities.getRoot(editor),
               "Could not save file: " + fileDocument.getName() + "\n"
-              + ex.getMessage(),
-              "Error saving file",
-              JOptionPane.ERROR_MESSAGE);
+              + ex.getMessage(), "Error saving file", JOptionPane.ERROR_MESSAGE);
           }
         }
       };
@@ -429,7 +413,7 @@ public class FilePanel
   {
     this.documentChanged = documentChanged;
 
-    if(saveButton.isEnabled() != documentChanged)
+    if (saveButton.isEnabled() != documentChanged)
     {
       saveButton.setEnabled(documentChanged);
       diffPanel.checkActions();

@@ -103,9 +103,7 @@ public class DeleteDelta
     original.toString(s, "< ", Diff.NL);
   }
 
-  public void toRCSString(
-    StringBuffer s,
-    String       EOL)
+  public void toRCSString(StringBuffer s, String EOL)
   {
     s.append("d");
     s.append(original.rcsfrom());

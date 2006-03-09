@@ -41,10 +41,7 @@ public final class DiffNode
    * @param the position in the revised sequence
    * @param prev the previous node in the path.
    */
-  public DiffNode(
-    int      i,
-    int      j,
-    PathNode prev)
+  public DiffNode(int i, int j, PathNode prev)
   {
     super(i, j, (prev == null ? null : prev.previousSnake()));
   }

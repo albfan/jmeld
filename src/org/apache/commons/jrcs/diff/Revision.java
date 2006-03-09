@@ -199,9 +199,7 @@ public class Revision
    * representation will be appended.
    * @param EOL the string to use as line separator.
    */
-  public synchronized void toRCSString(
-    StringBuffer s,
-    String       EOL)
+  public synchronized void toRCSString(StringBuffer s, String EOL)
   {
     Iterator i = deltas_.iterator();
 

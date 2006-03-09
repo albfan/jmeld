@@ -22,9 +22,7 @@ public class DiffScrollComponent
   private List<Command> commands;
   private Object        antiAlias;
 
-  public DiffScrollComponent(
-    DiffPanel diffPanel,
-    FilePanel filePanelOriginal,
+  public DiffScrollComponent(DiffPanel diffPanel, FilePanel filePanelOriginal,
     FilePanel filePanelRevised)
   {
     this.diffPanel = diffPanel;
@@ -65,9 +63,7 @@ public class DiffScrollComponent
       };
   }
 
-  public boolean executeCommand(
-    double x,
-    double y)
+  public boolean executeCommand(double x, double y)
   {
     if (commands == null)
     {
@@ -353,10 +349,7 @@ public class DiffScrollComponent
   class ChangeCommand
          extends Command
   {
-    ChangeCommand(
-      Shape   shape,
-      Delta   delta,
-      boolean originalToRevised)
+    ChangeCommand(Shape shape, Delta delta, boolean originalToRevised)
     {
       super(shape, delta, originalToRevised);
     }
@@ -425,10 +418,7 @@ public class DiffScrollComponent
   class DeleteCommand
          extends Command
   {
-    DeleteCommand(
-      Shape   shape,
-      Delta   delta,
-      boolean originalToRevised)
+    DeleteCommand(Shape shape, Delta delta, boolean originalToRevised)
     {
       super(shape, delta, originalToRevised);
     }
@@ -484,19 +474,14 @@ public class DiffScrollComponent
     Delta     delta;
     boolean   originalToRevised;
 
-    Command(
-      Shape   shape,
-      Delta   delta,
-      boolean originalToRevised)
+    Command(Shape shape, Delta delta, boolean originalToRevised)
     {
       this.bounds = shape.getBounds();
       this.delta = delta;
       this.originalToRevised = originalToRevised;
     }
 
-    boolean contains(
-      double x,
-      double y)
+    boolean contains(double x, double y)
     {
       return bounds.contains(x, y);
     }

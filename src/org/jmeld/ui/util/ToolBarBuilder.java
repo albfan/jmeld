@@ -5,7 +5,8 @@ import com.jgoodies.forms.layout.*;
 
 import javax.swing.*;
 
-public class ToolBarBuilder extends AbstractFormBuilder
+public class ToolBarBuilder
+       extends AbstractFormBuilder
 {
   public ToolBarBuilder(JToolBar toolBar)
   {

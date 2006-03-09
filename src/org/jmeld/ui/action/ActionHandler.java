@@ -15,9 +15,7 @@ public class ActionHandler
     return actions.get(name);
   }
 
-  public MeldAction createAction(
-    Object object,
-    String name)
+  public MeldAction createAction(Object object, String name)
   {
     MeldAction action;
 

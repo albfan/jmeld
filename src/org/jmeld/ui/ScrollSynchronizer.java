@@ -17,9 +17,7 @@ public class ScrollSynchronizer
   private FilePanel filePanelOriginal;
   private FilePanel filePanelRevised;
 
-  public ScrollSynchronizer(
-    DiffPanel diffPanel,
-    FilePanel filePanelOriginal,
+  public ScrollSynchronizer(DiffPanel diffPanel, FilePanel filePanelOriginal,
     FilePanel filePanelRevised)
   {
     this.diffPanel = diffPanel;
@@ -158,23 +156,23 @@ public class ScrollSynchronizer
      System.out.println("prev: null");
    }
 
-          if(currentDelta != null)
-          {
-            System.out.println("curr: " + currentDelta.getOriginal().anchor());
-          }
-          else
-          {
-            System.out.println("curr: null");
-          }
+             if(currentDelta != null)
+             {
+               System.out.println("curr: " + currentDelta.getOriginal().anchor());
+             }
+             else
+             {
+               System.out.println("curr: null");
+             }
 
-          if(nextDelta != null)
-          {
-            System.out.println("next: " + nextDelta.getOriginal().anchor());
-          }
-          else
-          {
-            System.out.println("next: null");
-          }
+             if(nextDelta != null)
+             {
+               System.out.println("next: " + nextDelta.getOriginal().anchor());
+             }
+             else
+             {
+               System.out.println("next: null");
+             }
  */
     if (next)
     {
@@ -187,10 +185,7 @@ public class ScrollSynchronizer
 
     if (toDelta != null)
     {
-      scrollToLine(
-        filePanelOriginal,
-        toDelta.getOriginal().anchor(),
-        false);
+      scrollToLine(filePanelOriginal, toDelta.getOriginal().anchor(), false);
     }
   }
 
@@ -222,10 +217,8 @@ public class ScrollSynchronizer
     return line;
   }
 
-  private void scrollToLine(
-    FilePanel fp,
-    int       line,
-    boolean   initiatedByScrolling)
+  private void scrollToLine(FilePanel fp, int line,
+    boolean initiatedByScrolling)
   {
     Revision       revision;
     JScrollPane    scrollPane;

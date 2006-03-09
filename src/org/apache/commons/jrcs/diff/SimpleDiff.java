@@ -145,10 +145,7 @@ public class SimpleDiff
   {
   }
 
-  protected int scan(
-    int[] ndx,
-    int   i,
-    int   target)
+  protected int scan(int[] ndx, int i, int target)
   {
     while (ndx[i] < target)
     {
@@ -166,9 +163,7 @@ public class SimpleDiff
    * @return A Revision object describing the differences.
    * @throws DifferenciationFailedException if the diff could not be computed.
    */
-  public Revision diff(
-    Object[] orig,
-    Object[] rev)
+  public Revision diff(Object[] orig, Object[] rev)
     throws DifferentiationFailedException
   {
     // create map eqs, such that for each item in both orig and rev
@@ -247,9 +242,7 @@ public class SimpleDiff
         --j;
       }
 
-      deltas.addDelta(
-        Delta.newDelta(
-          new Chunk(orig, ia, i - ia),
+      deltas.addDelta(Delta.newDelta(new Chunk(orig, ia, i - ia),
           new Chunk(rev, ja, j - ja)));
       // skip matching
       for (; indx[i] != EOS && indx[i] == jndx[j]; i++, j++)
@@ -268,9 +261,7 @@ public class SimpleDiff
    * @param orig the original sequence of items
    * @param rev  the revised sequence of items
    */
-  protected Map buildEqSet(
-    Object[] orig,
-    Object[] rev)
+  protected Map buildEqSet(Object[] orig, Object[] rev)
   {
     // construct a set of the objects that orig and rev have in common
 
@@ -288,9 +279,7 @@ public class SimpleDiff
       if (items.contains(orig[i]))
       {
         // add it to the map
-        eqs.put(
-          orig[i],
-          new Integer(i));
+        eqs.put(orig[i], new Integer(i));
         // and make sure its not considered again
         items.remove(orig[i]);
       }
@@ -306,10 +295,7 @@ public class SimpleDiff
    * @param seq a sequence of objects
    * @param NF  the not found marker
    */
-  protected int[] buildIndex(
-    Map      eqs,
-    Object[] seq,
-    int      NF)
+  protected int[] buildIndex(Map eqs, Object[] seq, int NF)
   {
     int[] result = new int[seq.length + 1];
 

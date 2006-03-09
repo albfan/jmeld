@@ -104,9 +104,7 @@ public abstract class Delta
    * @param orig the chunk in the original text.
    * @param rev  the chunk in the revised text.
    */
-  public static Delta newDelta(
-    Chunk orig,
-    Chunk rev)
+  public static Delta newDelta(Chunk orig, Chunk rev)
   {
     Class c = DeltaClass[orig.size() > 0 ? 1 : 0][rev.size() > 0 ? 1 : 0];
     Delta result;
@@ -135,9 +133,7 @@ public abstract class Delta
    * Creates a delta object with the given chunks from the original
    * and revised texts.
    */
-  protected Delta(
-    Chunk orig,
-    Chunk rev)
+  protected Delta(Chunk orig, Chunk rev)
   {
     init(orig, rev);
   }
@@ -146,9 +142,7 @@ public abstract class Delta
    * Initializaes the delta with the given chunks from the original
    * and revised texts.
    */
-  protected void init(
-    Chunk orig,
-    Chunk rev)
+  protected void init(Chunk orig, Chunk rev)
   {
     original = orig;
     revised = rev;
@@ -211,9 +205,7 @@ public abstract class Delta
    * representation will be appended.
    * @param EOL the string to use as line separator.
    */
-  public abstract void toRCSString(
-    StringBuffer s,
-    String       EOL);
+  public abstract void toRCSString(StringBuffer s, String EOL);
 
   /**
    * Converts this delta into its RCS style string representation.

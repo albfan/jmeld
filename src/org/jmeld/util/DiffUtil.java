@@ -9,9 +9,7 @@ public class DiffUtil
 {
   public static boolean debug = false;
 
-  public static int getRevisedLine(
-    Revision revision,
-    int      originalLine)
+  public static int getRevisedLine(Revision revision, int originalLine)
   {
     Delta delta;
     int   originalAnchor;
@@ -62,9 +60,7 @@ public class DiffUtil
     return revisedLine;
   }
 
-  public static int getOriginalLine(
-    Revision revision,
-    int      revisedLine)
+  public static int getOriginalLine(Revision revision, int revisedLine)
   {
     Delta delta;
     int   originalAnchor;
@@ -110,24 +106,18 @@ public class DiffUtil
     return originalLine;
   }
 
-  private static Delta findOriginalDelta(
-    Revision revision,
-    int      line)
+  private static Delta findOriginalDelta(Revision revision, int line)
   {
     return findDelta(revision, line, true);
   }
 
-  private static Delta findRevisedDelta(
-    Revision revision,
-    int      line)
+  private static Delta findRevisedDelta(Revision revision, int line)
   {
     return findDelta(revision, line, false);
   }
 
-  private static Delta findDelta(
-    Revision revision,
-    int      line,
-    boolean  originalDelta)
+  private static Delta findDelta(Revision revision, int line,
+    boolean originalDelta)
   {
     Delta delta;
     Delta previousDelta;

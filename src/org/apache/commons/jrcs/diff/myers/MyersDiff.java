@@ -88,9 +88,7 @@ public class MyersDiff
   /**
    * {@inheritDoc}
    */
-  public Revision diff(
-    Object[] orig,
-    Object[] rev)
+  public Revision diff(Object[] orig, Object[] rev)
     throws DifferentiationFailedException
   {
     PathNode path = buildPath(orig, rev);
@@ -108,9 +106,7 @@ public class MyersDiff
    * @return A minimum {@link PathNode Path} accross the differences graph.
    * @throws DifferentiationFailedException if a diff path could not be found.
    */
-  public static PathNode buildPath(
-    Object[] orig,
-    Object[] rev)
+  public static PathNode buildPath(Object[] orig, Object[] rev)
     throws DifferentiationFailedException
   {
     int                    N;
@@ -151,9 +147,7 @@ public class MyersDiff
 
     path = null;
 
-    diagonal.put(
-      middle + 1,
-      new Snake(0, -1, null));
+    diagonal.put(middle + 1, new Snake(0, -1, null));
     for (int d = 0; d < MAX; d++)
     {
       for (int k = -d; k <= d; k += 2)
@@ -235,9 +229,7 @@ public class MyersDiff
    * @throws DifferentiationFailedException if a {@link Revision} could
    *         not be built from the given path.
    */
-  public static Revision buildRevision(
-    PathNode path,
-    Object[] orig,
+  public static Revision buildRevision(PathNode path, Object[] orig,
     Object[] rev)
   {
     if (path == null)
@@ -276,8 +268,7 @@ public class MyersDiff
       int   ianchor = path.i;
       int   janchor = path.j;
 
-      Delta delta = Delta.newDelta(
-          new Chunk(orig, ianchor, i - ianchor),
+      Delta delta = Delta.newDelta(new Chunk(orig, ianchor, i - ianchor),
           new Chunk(rev, janchor, j - janchor));
 
       revision.insertDelta(delta);

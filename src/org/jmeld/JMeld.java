@@ -47,7 +47,8 @@ public class JMeld
         PlasticLookAndFeel.setPlasticTheme(new SkyBluer());
         UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
       }
-        System.out.println("look & feel = " + UIManager.getLookAndFeel());
+
+      System.out.println("look & feel = " + UIManager.getLookAndFeel());
     }
     catch (Exception e)
     {
