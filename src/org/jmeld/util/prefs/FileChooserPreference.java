@@ -1,4 +1,4 @@
-package org.jmeld.ui.util;
+package org.jmeld.util.prefs;
 
 import javax.swing.*;
 

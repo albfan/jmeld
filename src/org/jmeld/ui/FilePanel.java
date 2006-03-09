@@ -2,6 +2,7 @@ package org.jmeld.ui;
 
 import org.apache.commons.jrcs.diff.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
