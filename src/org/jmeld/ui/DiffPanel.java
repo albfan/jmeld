@@ -26,23 +26,34 @@ public class DiffPanel
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
 
-  public DiffPanel(JMeldPanel mainPanel, String fileName1, String fileName2)
+  DiffPanel(JMeldPanel mainPanel)
   {
     this.mainPanel = mainPanel;
 
     init();
+  }
 
-    if (fileName1 != null)
+  public void setFileDocuments(FileDocument fd1, FileDocument fd2,
+    Revision revision)
+  {
+    if (fd1 != null)
     {
-      filePanel1.setFile(new File(fileName1));
+      filePanel1.setFileDocument(fd1);
     }
 
-    if (fileName2 != null)
+    if (fd2 != null)
     {
-      filePanel2.setFile(new File(fileName2));
+      filePanel2.setFileDocument(fd2);
     }
 
-    diff();
+    if (fd1 != null && fd2 != null)
+    {
+      filePanel1.setRevision(revision);
+      filePanel2.setRevision(revision);
+    }
+
+    currentRevision = revision;
+    repaint();
   }
 
   public String getTitle()
@@ -122,15 +133,17 @@ public class DiffPanel
 
     // panel for file1
     add(filePanel1.getSaveButton(), cc.xy(2, 2));
-    add(filePanel1.getFileBox(), cc.xy(3, 2));
-    add(filePanel1.getBrowseButton(), cc.xy(5, 2));
+    //add(filePanel1.getFileBox(), cc.xy(3, 2));
+    //add(filePanel1.getBrowseButton(), cc.xy(5, 2));
+    add(filePanel1.getFileLabel(), cc.xyw(3, 2, 3));
     add(filePanel1.getScrollPane(), cc.xyw(3, 4, 3));
 
     add(new DiffScrollComponent(this, filePanel1, filePanel2), cc.xy(6, 4));
 
     // panel for file2
-    add(filePanel2.getFileBox(), cc.xy(7, 2));
-    add(filePanel2.getBrowseButton(), cc.xy(9, 2));
+    //add(filePanel2.getFileBox(), cc.xy(7, 2));
+    //add(filePanel2.getBrowseButton(), cc.xy(9, 2));
+    add(filePanel2.getFileLabel(), cc.xyw(7, 2, 3));
     add(filePanel2.getScrollPane(), cc.xyw(7, 4, 3));
     add(filePanel2.getSaveButton(), cc.xy(10, 2));
 
