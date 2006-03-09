@@ -51,18 +51,27 @@ public class DiffPanel
   public String getTitle()
   {
     String title;
+    FileDocument fd;
 
     title = "";
 
     if (filePanel1 != null)
     {
-      title += filePanel1.getFileDocument().getName();
+      fd = filePanel1.getFileDocument();
+      if(fd != null)
+      {
+        title += fd.getName();
+      }
     }
 
     if (filePanel2 != null)
     {
       title += "-";
-      title += filePanel2.getFileDocument().getName();
+      fd = filePanel2.getFileDocument();
+      if(fd != null)
+      {
+        title += fd.getName();
+      }
     }
 
     return title;
