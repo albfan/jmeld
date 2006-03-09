@@ -2,8 +2,6 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.builder.*;
 
-import de.hardcode.util.swing.*;
-
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
