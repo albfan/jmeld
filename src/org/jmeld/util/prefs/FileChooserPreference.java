@@ -3,56 +3,51 @@ package org.jmeld.util.prefs;
 import javax.swing.*;
 
 import java.io.*;
-import java.util.prefs.*;
 
-public class FileChooserPreference
+public class FileChooserPreference extends Preference
 {
-  private String preferenceName;
+  // Class variables:
+  private static String FILE = "FILE";
+  // Instance variables:
+  private JFileChooser target;
 
-  public FileChooserPreference(String preferenceName)
+  public FileChooserPreference(String preferenceName, JFileChooser target)
   {
-    this.preferenceName = preferenceName;
+    super("FileChooser-" + preferenceName);
+
+    this.target = target;
+
+    init();
   }
 
-  public void init(JFileChooser c)
+  private void init()
   {
     String fileName;
 
-    fileName = getPreferences().get(preferenceName, null);
-    if (fileName == null)
+    fileName = getString(FILE, null);
+    if (fileName != null)
     {
-      return;
+      target.setCurrentDirectory(new File(fileName));
     }
-
-    c.setCurrentDirectory(new File(fileName));
   }
 
-  public void save(JFileChooser c)
+  public void save()
   {
     String fileName;
     File   file;
 
-    file = c.getSelectedFile();
-    if (file == null)
+    file = target.getSelectedFile();
+    if (file != null)
     {
-      return;
+      try
+      {
+        fileName = file.getCanonicalPath();
+        putString(FILE, fileName);
+      }
+      catch (IOException ex)
+      {
+        ex.printStackTrace();
+      }
     }
-
-    try
-    {
-      fileName = file.getCanonicalPath();
-    }
-    catch (IOException ex)
-    {
-      ex.printStackTrace();
-      return;
-    }
-
-    getPreferences().put(preferenceName, fileName);
-  }
-
-  private Preferences getPreferences()
-  {
-    return AppPreferences.getPreferences(getClass());
   }
 }
