@@ -18,8 +18,13 @@ import java.util.List;
 public class FilePanel
        implements DocumentListener
 {
+  // Class variables:
+  private static final int MAXSIZE_CHANGE_DIFF = 1000;
+
+  // Instance variables:
   private DiffPanel      diffPanel;
   private String         name;
+  private JLabel         fileLabel;
   private JButton        browseButton;
   private JComboBox      fileBox;
   private JScrollPane    scrollPane;
@@ -64,6 +69,8 @@ public class FilePanel
     fileBox = new JComboBox();
     fileBox.addActionListener(getFileBoxAction());
 
+    fileLabel = new JLabel();
+
     saveButton = new JButton();
     saveButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     saveButton.setContentAreaFilled(false);
@@ -88,6 +95,11 @@ public class FilePanel
     return fileBox;
   }
 
+  JLabel getFileLabel()
+  {
+    return fileLabel;
+  }
+
   JScrollPane getScrollPane()
   {
     return scrollPane;
@@ -110,14 +122,34 @@ public class FilePanel
 
   void setFile(File file)
   {
+    try
+    {
+      FileDocument fd;
+
+      fd = new FileDocument(file);
+      fd.read();
+
+      setFileDocument(fd);
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  void setFileDocument(FileDocument fd)
+  {
     Document previousDocument;
     Document document;
     String   fileName;
+    String   text;
+    File     file;
+
+    fileDocument = fd;
+    file = fileDocument.getFile();
 
     try
     {
-      fileDocument = new FileDocument(file);
-      fileDocument.read();
       previousDocument = editor.getDocument();
       if (previousDocument != null)
       {
@@ -133,6 +165,15 @@ public class FilePanel
       fileName = file.getCanonicalPath();
       fileBox.addItem(fileName);
       fileBox.setSelectedItem(fileName);
+
+      text = fileName;
+      /*
+         if(fileName.length() > 40)
+         {
+           text = "..." + text.substring(text.length() - 40);
+         }
+       */
+      fileLabel.setText(text);
     }
     catch (Exception ex)
     {
@@ -189,23 +230,30 @@ public class FilePanel
         else if (delta instanceof ChangeDelta)
         {
           // Mark the changes in a change in a different color.
-          changeRev = getChangeRevision(original.toString(), revised.toString());
-          if (changeRev != null)
+          if (original.size() < MAXSIZE_CHANGE_DIFF
+            && revised.size() < MAXSIZE_CHANGE_DIFF)
           {
-            for (int j = 0; j < changeRev.size(); j++)
+            System.out.println("original.size = " + original.size());
+            System.out.println("revised.size = " + revised.size());
+            changeRev = getChangeRevision(original.toString(),
+                revised.toString());
+            if (changeRev != null)
             {
-              changeDelta = changeRev.getDelta(j);
-              changeOriginal = changeDelta.getOriginal();
-              fromOffset2 = fromOffset + changeOriginal.anchor();
-              toOffset2 = fromOffset2 + changeOriginal.size();
+              for (int j = 0; j < changeRev.size(); j++)
+              {
+                changeDelta = changeRev.getDelta(j);
+                changeOriginal = changeDelta.getOriginal();
+                fromOffset2 = fromOffset + changeOriginal.anchor();
+                toOffset2 = fromOffset2 + changeOriginal.size();
 
-              if (changeDelta instanceof DeleteDelta)
-              {
-                setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
-              }
-              else if (changeDelta instanceof ChangeDelta)
-              {
-                setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                if (changeDelta instanceof DeleteDelta)
+                {
+                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                }
+                else if (changeDelta instanceof ChangeDelta)
+                {
+                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                }
               }
             }
           }
@@ -231,27 +279,34 @@ public class FilePanel
         }
         else if (delta instanceof ChangeDelta)
         {
-          changeRev = getChangeRevision(original.toString(), revised.toString());
-          if (changeRev != null)
+          System.out.println("original.size = " + original.size());
+          System.out.println("revised.size = " + revised.size());
+          if (original.size() < MAXSIZE_CHANGE_DIFF
+            && revised.size() < MAXSIZE_CHANGE_DIFF)
           {
-            for (int j = 0; j < changeRev.size(); j++)
+            changeRev = getChangeRevision(original.toString(),
+                revised.toString());
+            if (changeRev != null)
             {
-              changeDelta = changeRev.getDelta(j);
-              changeRevised = changeDelta.getRevised();
-              fromOffset2 = fromOffset + changeRevised.anchor();
-              toOffset2 = fromOffset2 + changeRevised.size();
+              for (int j = 0; j < changeRev.size(); j++)
+              {
+                changeDelta = changeRev.getDelta(j);
+                changeRevised = changeDelta.getRevised();
+                fromOffset2 = fromOffset + changeRevised.anchor();
+                toOffset2 = fromOffset2 + changeRevised.size();
 
-              if (changeDelta instanceof AddDelta)
-              {
-                setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                if (changeDelta instanceof AddDelta)
+                {
+                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                }
+                else if (changeDelta instanceof ChangeDelta)
+                {
+                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                }
               }
-              else if (changeDelta instanceof ChangeDelta)
-              {
-                setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
-              }
+
+              setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
             }
-
-            setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
           }
         }
       }
@@ -336,15 +391,13 @@ public class FilePanel
           int                   result;
           File                  file;
 
-          pref = new FileChooserPreference("Browse");
-
           chooser = new JFileChooser();
-          pref.init(chooser);
+          pref = new FileChooserPreference("Browse", chooser);
           result = chooser.showOpenDialog(diffPanel);
 
           if (result == JFileChooser.APPROVE_OPTION)
           {
-            pref.save(chooser);
+            pref.save();
             setFile(chooser.getSelectedFile());
           }
         }
