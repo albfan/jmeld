@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+                 Sun Public License Notice
+
+ The contents of this file are subject to the Sun Public License
+ Version 1.0 (the "License"). You may not use this file except in
+ compliance with the License. A copy of the License is available at
+ http://www.sun.com/
+
+ The Original Code is the Execution Profile module. 
+ The Initial Developer of the Original Code is Iván Rivera Rodríguez. 
+ Portions created by Iván Rivera Rodríguez are Copyright (C) 2005.
+ All rights reserved.
+
+ Contributor(s): Iván Rivera Rodríguez.
+-->
+
+<project name="-run-single-impl" default="run-single" basedir=".." 
+    xmlns:j2seproject1="http://www.netbeans.org/ns/j2se-project/1">
+    <description>Build support file for executionprofile.nbm</description>
+    <target name="-pre-init">
+        <!-- Loading execution profile properties, stored into project 
+        directory. Do not override, or be sure of including this statement. -->
+        <property file="nbproject/localarguments.properties"/>
+        <condition property="default.platform.java" value="${platform.java}" else="java">
+            <isset property="platform.java"/>
+        </condition>
+    </target>
+    <target name="-init-macrodef-java">
+        <!-- Capturing per-project java platform -->
+        <condition property="local.platform.java" value="${platform.java}" else="java">
+            <isset property="platform.java"/>
+        </condition>
+        <!-- We overwrite this macro to include support for JVM per-project 
+        arguments. -->
+        <macrodef name="java" uri="http://www.netbeans.org/ns/j2se-project/1">
+            <attribute name="classname" default="${main.class}"/>
+            <attribute name="jvmargs" default="${run.jvmargs}"/>
+            <attribute name="jvm" default="${local.platform.java}"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <java fork="true" classname="@{classname}" dir="${work.dir}" jvm="@{jvm}">
+                    <jvmarg line="@{jvmargs}"/>
+                    <classpath>
+                        <path path="${run.classpath}"/>
+                    </classpath>
+                    <syspropertyset>
+                        <propertyref prefix="run-sys-prop."/>
+                        <mapper type="glob" from="run-sys-prop.*" to="*"/>
+                    </syspropertyset>
+                    <customize/>
+                </java>
+            </sequential>
+        </macrodef>
+        <!-- This macro implements indirection support in Ant property lookup.
+        As we need support for default values, we cannot use the property
+        macro as defined in build-impl.xml -->
+        <macrodef name="compose-property">
+            <attribute name="name"/>
+            <attribute name="selector"/>
+            <attribute name="default" default=""/>
+            <!-- The property ${name} will end up with a default value if
+            the property ${selector} is not set, and with the value of
+            ${selector} otherwise. -->
+            <sequential>
+                <condition property="@{name}" value="@{default}">
+                    <not>
+                        <isset property="@{selector}"/>
+                    </not>
+                </condition>
+                <condition property="@{name}" value="${@{selector}}">
+                    <isset property="@{selector}"/>
+                </condition>
+            </sequential>
+        </macrodef>
+    </target>
+    <target name="run-single" depends="init,compile-single">
+        <fail unless="run.class">Must select one file in the IDE or set run.class</fail>
+        <compose-property name="local.args" selector="${run.class}"/>
+        <compose-property name="jvm.local.args" selector="jvm_${run.class}"/>
+        <compose-property name="override.jvm.perproject.args" selector="override_${run.class}" default="false"/>
+        <compose-property name="platform.executable.jvm" selector="platform_${run.class}" default="${local.platform.java}"/>
+        <!-- Branching condition -->
+        <condition property="run.single.override.jvm.perproject.args">
+            <equals arg1="${override.jvm.perproject.args}" arg2="true"/>
+        </condition>
+        <!-- Multiple branching target call -->
+        <antcall target="-run-single-branch"/>
+    </target>
+    <!-- Branching target -->
+    <target name="-run-single-branch" depends="
+        -run-single-nooverride,
+        -run-single-override"/>
+    <!-- Only one of the next targets will execute. -->
+    <target name="-run-single-nooverride" unless="run.single.override.jvm.perproject.args">
+        <j2seproject1:java classname="${run.class}" jvmargs="${run.jvmargs} ${jvm.local.args}" jvm="${platform.executable.jvm}">
+            <customize>
+                <arg line="${local.args}"/>
+            </customize>
+        </j2seproject1:java>
+    </target>
+    <target name="-run-single-override" if="run.single.override.jvm.perproject.args">
+        <j2seproject1:java classname="${run.class}" jvmargs="${jvm.local.args}" jvm="${platform.executable.jvm}">
+            <customize>
+                <arg line="${local.args}"/>
+            </customize>
+        </j2seproject1:java>
+    </target>
+    <!-- End of branching targets -->
+</project>
