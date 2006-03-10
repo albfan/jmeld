@@ -78,6 +78,9 @@ import java.util.*;
 public class MyersDiff
        implements DiffAlgorithm
 {
+  private static int    MAXTIME = 1000;
+  public static boolean checkMaxTime = false;
+
   /**
    * Constructs an instance of the Myers differencing algorithm.
    */
@@ -125,6 +128,7 @@ public class MyersDiff
     PathNode               prev;
     int                    i;
     int                    j;
+    long                   startTime;
 
     if (orig == null)
     {
@@ -147,9 +151,17 @@ public class MyersDiff
 
     path = null;
 
+    startTime = System.currentTimeMillis();
+
     diagonal.put(middle + 1, new Snake(0, -1, null));
     for (int d = 0; d < MAX; d++)
     {
+      if (checkMaxTime && System.currentTimeMillis() - startTime > MAXTIME)
+      {
+        throw new org.jmeld.diff.MaxTimeExceededException(
+          "Algoritm is taking up to much time");
+      }
+
       for (int k = -d; k <= d; k += 2)
       {
         kmiddle = middle + k;
