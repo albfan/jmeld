@@ -233,8 +233,29 @@ public class DiffScrollComponent
 
         x = 0;
         y = fromRect.y - viewportRect.y + 1;
+        y = y < 0 ? 0 : y;
         width = 10;
-        height = toRect.y - fromRect.y - 1;
+        height = 0;
+        if (fromRect.y <= viewportRect.y
+          && toRect.y <= viewportRect.y + viewportRect.height)
+        {
+          height = toRect.y - viewportRect.y - 1;
+        }
+        else if (fromRect.y > viewportRect.y
+          && toRect.y > viewportRect.y + viewportRect.height)
+        {
+          height = viewportRect.y + viewportRect.height - fromRect.y - 1;
+        }
+        else if (fromRect.y > viewportRect.y
+          && toRect.y <= viewportRect.y + viewportRect.height)
+        {
+          height = toRect.y - fromRect.y - 1;
+        }
+        else if (fromRect.y <= viewportRect.y
+          && toRect.y > viewportRect.y + viewportRect.height)
+        {
+          height = viewportRect.height - 1;
+        }
 
         x0 = x + width;
         y0 = y;
@@ -264,8 +285,29 @@ public class DiffScrollComponent
 
         x = bounds.x + bounds.width - 10;
         y = fromRect.y - viewportRect.y + 1;
+        y = y < 0 ? 0 : y;
         width = 10;
-        height = toRect.y - fromRect.y - 1;
+        height = 0;
+        if (fromRect.y <= viewportRect.y
+          && toRect.y <= viewportRect.y + viewportRect.height)
+        {
+          height = toRect.y - viewportRect.y - 1;
+        }
+        else if (fromRect.y > viewportRect.y
+          && toRect.y > viewportRect.y + viewportRect.height)
+        {
+          height = viewportRect.y + viewportRect.height - fromRect.y - 1;
+        }
+        else if (fromRect.y > viewportRect.y
+          && toRect.y <= viewportRect.y + viewportRect.height)
+        {
+          height = toRect.y - fromRect.y - 1;
+        }
+        else if (fromRect.y <= viewportRect.y
+          && toRect.y > viewportRect.y + viewportRect.height)
+        {
+          height = viewportRect.height - 1;
+        }
 
         x1 = x;
         y1 = y;
