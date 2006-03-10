@@ -3,6 +3,7 @@ package org.jmeld.ui;
 import com.jgoodies.forms.layout.*;
 
 import org.apache.commons.jrcs.diff.*;
+import org.jmeld.diff.*;
 import org.jmeld.util.*;
 
 import javax.swing.*;
@@ -25,17 +26,22 @@ public class DiffPanel
   private Revision           currentRevision;
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
+  private JMeldDiff          diff;
 
   DiffPanel(JMeldPanel mainPanel)
   {
     this.mainPanel = mainPanel;
 
+    diff = new JMeldDiff();
+
     init();
   }
 
   public void setFileDocuments(FileDocument fd1, FileDocument fd2,
-    Revision revision)
+    JMeldDiff diff, Revision revision)
   {
+    this.diff = diff;
+
     if (fd1 != null)
     {
       filePanel1.setFileDocument(fd1);
@@ -87,8 +93,6 @@ public class DiffPanel
 
   public void diff()
   {
-    Diff         diff;
-    Revision     rev;
     FileDocument fd1;
     FileDocument fd2;
 
@@ -99,8 +103,7 @@ public class DiffPanel
     {
       try
       {
-        diff = new Diff(fd1.getLines());
-        currentRevision = diff.diff(fd2.getLines());
+        currentRevision = diff.diff(fd1.getLines(), fd2.getLines());
 
         filePanel1.setRevision(currentRevision);
         filePanel2.setRevision(currentRevision);
