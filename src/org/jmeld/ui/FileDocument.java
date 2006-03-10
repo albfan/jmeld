@@ -8,17 +8,14 @@ import javax.swing.text.*;
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
-import java.nio.charset.*;
 import java.util.*;
 import java.util.List;
 
 public class FileDocument
 {
   // class variables:
-  public static String          ORIGINAL = "Original";
-  public static String          REVISED = "Revised";
-  private static Charset        charset = Charset.forName("UTF-8");
-  private static CharsetDecoder decoder = charset.newDecoder();
+  public static String ORIGINAL = "Original";
+  public static String REVISED = "Revised";
 
   // instance variables:
   private File          file;
@@ -100,13 +97,7 @@ public class FileDocument
     throws JMeldException, FileNotFoundException, IOException,
       BadLocationException
   {
-    Reader         reader;
-    BufferedReader br;
-    String         s;
-    int            number;
-    char[]         buffer;
-    int            totalOffset;
-    int            test = 3;
+    Reader reader;
 
     if (!file.isFile() || !file.canRead())
     {
@@ -121,59 +112,9 @@ public class FileDocument
     content = new MyGapContent((int) file.length() + 500);
     document = new PlainDocument(content);
 
-    // Read the file 
-    if (test == 1)
-    {
-      reader = new FileReader(file);
-
-      buffer = new char[(int) file.length()];
-      number = reader.read(buffer, 0, buffer.length);
-      if (number == -1 || number != file.length())
-      {
-        throw new JMeldException("File: " + file + ", filesize(="
-          + file.length() + ") not equal to number of chars(" + number
-          + ") read");
-      }
-
-      reader.close();
-
-      s = new String(buffer, 0, number);
-
-      System.out.println("read took " + stopWatch.getElapsedTime());
-      stopWatch.start();
-
-      document.insertString(0, s, null);
-    }
-    else if (test == 2)
-    {
-      FileInputStream  fis;
-      FileChannel      fc;
-      int              size;
-      MappedByteBuffer bb;
-      CharBuffer       cb;
-
-      fis = new FileInputStream(file);
-      fc = fis.getChannel();
-      size = (int) fc.size();
-      bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, size);
-      cb = decoder.decode(bb);
-      s = cb.toString();
-
-      fis.close();
-
-      System.out.println("read took " + stopWatch.getElapsedTime());
-      stopWatch.start();
-
-      document.insertString(0, s, null);
-    }
-    else if (test == 3)
-    {
-      reader = new FileReader(file);
-
-      new DefaultEditorKit().read(reader, document, 0);
-
-      reader.close();
-    }
+    reader = new FileReader(file);
+    new DefaultEditorKit().read(reader, document, 0);
+    reader.close();
 
     System.out.println("create document took " + stopWatch.getElapsedTime());
 
@@ -184,11 +125,7 @@ public class FileDocument
   {
     Element   paragraph;
     Element   e;
-    int       rangeStart;
-    int       rangeEnd;
-    String    line;
     int       size;
-    Segment   segment;
     StopWatch stopWatch;
 
     System.out.println("initLines");
@@ -196,12 +133,10 @@ public class FileDocument
 
     paragraph = document.getDefaultRootElement();
     size = paragraph.getElementCount();
-    lines = new Line[size];
-    for (int i = 0; i < size; i++)
+    lines = new Line[size-1];
+    for (int i = 0; i < lines.length; i++)
     {
       e = paragraph.getElement(i);
-      rangeStart = e.getStartOffset();
-      rangeEnd = e.getEndOffset();
       lines[i] = new Line(e);
     }
 
@@ -268,6 +203,8 @@ public class FileDocument
       int    g2_0;
       int    g2_1;
       int    size;
+      int    o1;
+      int    o2;
 
       array1 = getCharArray();
       array2 = c2.getCharArray();
@@ -277,9 +214,34 @@ public class FileDocument
       g2_0 = c2.getGapStart();
       g2_1 = c2.getGapEnd();
 
-      size = end1 - start1;
-      for (int o1 = start1, o2 = start2, i = 0; i < size; i++, o1++, o2++)
+      //System.out.println("compare[" + start1 + "-" + end1 + "] - [" + start2
+        //+ "]");
+      //System.out.println("gap0[" + g1_0 + "-" + g1_1 + "], gap1[" + g2_0 + "-"
+        //+ g2_1 + "]");
+
+      if (start1 >= g1_0)
       {
+        o1 = start1 + g1_1 - g1_0;
+      }
+      else
+      {
+        o1 = start1;
+      }
+
+      if (start2 >= g2_0)
+      {
+        o2 = start2 + g2_1 - g2_0;
+      }
+      else
+      {
+        o2 = start2;
+      }
+
+      //System.out.println("o1 = " + o1 + ", o2=" + o2);
+
+      size = end1 - start1;
+      for (int i = 0; i < size; i++, o1++, o2++)
+      {  
         if (o1 == g1_0)
         {
           o1 += g1_1 - g1_0;
@@ -290,6 +252,8 @@ public class FileDocument
           o2 += g2_1 - g2_0;
         }
 
+        //System.out.println("o1[" + o1 + "]=" + array1[o1] + ", a2[" + o2
+          //+ "]=" + array2[o2]);
         if (array1[o1] != array2[o2])
         {
           return false;
@@ -306,6 +270,7 @@ public class FileDocument
       int    g1;
       int    size;
       int    h;
+      int o;
 
       h = 0;
 
@@ -314,9 +279,20 @@ public class FileDocument
       g0 = getGapStart();
       g1 = getGapEnd();
 
-      size = end - start;
-      for (int o = start, i = 0; i < size; i++, o++)
+      // Mind the gap!
+      if (start >= g0)
       {
+        o = start + g1 - g0;
+      }
+      else
+      {
+        o = start;
+      }
+
+      size = end - start;
+      for (int i = 0; i < size; i++, o++)
+      {
+        // Mind the gap!
         if (o == g0)
         {
           o += g1 - g0;
@@ -325,21 +301,20 @@ public class FileDocument
         h = 31 * h + array[o];
       }
 
-      if(h == 0)
+      if (h == 0)
       {
         h = 1;
       }
 
       return h;
     }
-
   }
 
   public class Line
   {
     Element element;
-    int     hash;
 
+    //int     hash;
     Line(Element element)
     {
       this.element = element;
@@ -363,10 +338,12 @@ public class FileDocument
 
     public boolean equals(Object o)
     {
-      Element      element2;
-      Line line2;
-      int          start1, start2;
-      int          end1, end2;
+      Element element2;
+      Line    line2;
+      int     start1;
+      int     start2;
+      int     end1;
+      int     end2;
 
       line2 = ((Line) o);
       element2 = line2.element;
@@ -387,12 +364,15 @@ public class FileDocument
 
     public int hashCode()
     {
-      if (hash == 0)
-      {
-        hash = content.hashCode(element.getStartOffset(), element.getEndOffset());
-      }
+      /*
+         if (hash == 0)
+         {
+           hash = content.hashCode(element.getStartOffset(), element.getEndOffset());
+         }
+         return hash;
+       */
+      return content.hashCode(element.getStartOffset(), element.getEndOffset());
 
-      return hash;
     }
 
     public String toString()
