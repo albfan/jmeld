@@ -4,6 +4,7 @@ import com.jgoodies.forms.builder.*;
 
 import org.apache.commons.jrcs.diff.*;
 import org.jdesktop.swingworker.SwingWorker;
+import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -302,6 +303,7 @@ public class JMeldPanel
     private String       fileName2;
     private FileDocument fd1;
     private FileDocument fd2;
+    private JMeldDiff    diff;
     private Revision     revision;
 
     NewDiffPanel(String fileName1, String fileName2)
@@ -312,9 +314,6 @@ public class JMeldPanel
 
     public String doInBackground()
     {
-      Diff diff;
-      File file;
-
       try
       {
         fd1 = new FileDocument(new File(fileName1));
@@ -323,8 +322,8 @@ public class JMeldPanel
         fd2 = new FileDocument(new File(fileName2));
         fd2.read();
 
-        diff = new Diff(fd1.getLines());
-        revision = diff.diff(fd2.getLines());
+        diff = new JMeldDiff();
+        revision = diff.diff(fd1.getLines(), fd2.getLines());
       }
       catch (Exception ex)
       {
@@ -349,10 +348,8 @@ public class JMeldPanel
             "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
 
-        System.out.println("fd1 = " + fd1);
-        System.out.println("fd2 = " + fd2);
         panel = new DiffPanel(JMeldPanel.this);
-        panel.setFileDocuments(fd1, fd2, revision);
+        panel.setFileDocuments(fd1, fd2, diff, revision);
 
         tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);
