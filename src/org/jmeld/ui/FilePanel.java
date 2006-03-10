@@ -233,8 +233,6 @@ public class FilePanel
           if (original.size() < MAXSIZE_CHANGE_DIFF
             && revised.size() < MAXSIZE_CHANGE_DIFF)
           {
-            System.out.println("original.size = " + original.size());
-            System.out.println("revised.size = " + revised.size());
             changeRev = getChangeRevision(original.toString(),
                 revised.toString());
             if (changeRev != null)
@@ -279,8 +277,6 @@ public class FilePanel
         }
         else if (delta instanceof ChangeDelta)
         {
-          System.out.println("original.size = " + original.size());
-          System.out.println("revised.size = " + revised.size());
           if (original.size() < MAXSIZE_CHANGE_DIFF
             && revised.size() < MAXSIZE_CHANGE_DIFF)
           {
@@ -304,10 +300,10 @@ public class FilePanel
                   setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
                 }
               }
-
-              setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
             }
           }
+
+          setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
         }
       }
     }
