@@ -102,6 +102,7 @@ public class JMeldPanel
     menu = menuBar.add(new JMenu("Edit"));
     menu.add(WidgetFactory.getMenuItem(actionHandler.get(UNDO_ACTION)));
     menu.add(WidgetFactory.getMenuItem(actionHandler.get(REDO_ACTION)));
+
     //menu.add(new JMenuItem("Find"));
     //menu.add(new JMenuItem("Find next"));
     //menu.add(new JMenuItem("Down"));
@@ -165,9 +166,11 @@ public class JMeldPanel
 
     dialog = new NewPanelDialog(this);
     dialog.show();
+
     if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
     {
       fileName = dialog.getOriginalFileName();
+
       if (StringUtil.isEmpty(fileName))
       {
         return;
@@ -179,6 +182,7 @@ public class JMeldPanel
       }
 
       fileName = dialog.getMineFileName();
+
       if (StringUtil.isEmpty(fileName))
       {
         return;
@@ -198,6 +202,7 @@ public class JMeldPanel
     DiffPanel dp;
 
     dp = getCurrentDiffPanel();
+
     if (dp == null)
     {
       return false;
@@ -221,6 +226,7 @@ public class JMeldPanel
     DiffPanel dp;
 
     dp = getCurrentDiffPanel();
+
     if (dp == null)
     {
       return false;
@@ -239,6 +245,7 @@ public class JMeldPanel
     DiffPanel dp;
 
     dp = getCurrentDiffPanel();
+
     if (dp == null)
     {
       return false;
@@ -265,34 +272,33 @@ public class JMeldPanel
 
   private void setWaitCursor()
   {
-    JFrame frame;
+    JFrame    frame;
+    Component pane;
 
     frame = (JFrame) SwingUtilities.getRoot(this);
+
     if (frame != null)
     {
-      frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-      System.out.println("setCursor(WAIT)");
-      try
-      {
-        Thread.sleep(40);
-      }
-      catch (Exception ex)
-      {
-      }
+      pane = frame.getRootPane().getGlassPane();
 
-      System.out.println("after sleep setCursor(WAIT)");
+      pane.setVisible(true);
+      pane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
   }
 
   private void resetWaitCursor()
   {
-    JFrame frame;
+    JFrame    frame;
+    Component pane;
 
     frame = (JFrame) SwingUtilities.getRoot(this);
+
     if (frame != null)
     {
-      frame.setCursor(null);
-      System.out.println("setCursor(null)");
+      pane = frame.getRootPane().getGlassPane();
+
+      pane.setVisible(false);
+      pane.setCursor(null);
     }
   }
 
@@ -328,6 +334,7 @@ public class JMeldPanel
       catch (Exception ex)
       {
         ex.printStackTrace();
+
         return ex.getMessage();
       }
 
@@ -342,6 +349,7 @@ public class JMeldPanel
         DiffPanel panel;
 
         result = get();
+
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
