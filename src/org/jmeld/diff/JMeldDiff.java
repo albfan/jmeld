@@ -37,32 +37,6 @@ public class JMeldDiff
       {
         diff = new Diff(a, algorithm);
         revision = diff.diff(b);
-        System.out.println(revision);
-        /*
-        for (int i = 0; i < revision.size(); i++)
-        {
-          delta = revision.getDelta(i);
-          original = delta.getOriginal();
-          revised = delta.getRevised();
-
-          System.out.println("org[" + original.anchor() + "-"
-            + original.size() + "]rev[" + revised.anchor() + "-"
-            + revised.size() + "]");
-
-          for (int j = 0; j < original.size(); j++)
-          {
-            line = original.anchor() + j;
-            System.out.println("org[" + line + "] = "
-              + StringUtil.replaceNewLines(a[line].toString()));
-          }
-          for (int j = 0; j < revised.size(); j++)
-          {
-            line = revised.anchor() + j;
-            System.out.println("rev[" + line + "] = "
-              + StringUtil.replaceNewLines(b[line].toString()));
-          }
-        }
-          */
 
         return revision;
       }
