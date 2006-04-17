@@ -1,6 +1,7 @@
 package org.jmeld.ui;
 
 import org.apache.commons.jrcs.diff.*;
+import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.prefs.*;
 

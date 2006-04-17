@@ -4,6 +4,7 @@ import com.jgoodies.forms.layout.*;
 
 import org.apache.commons.jrcs.diff.*;
 import org.jmeld.diff.*;
+import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
 
 import javax.swing.*;

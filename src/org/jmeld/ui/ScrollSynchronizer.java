@@ -1,6 +1,7 @@
 package org.jmeld.ui;
 
 import org.apache.commons.jrcs.diff.*;
+import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
 
 import javax.swing.*;
@@ -155,7 +156,6 @@ public class ScrollSynchronizer
    {
      System.out.println("prev: null");
    }
-
              if(currentDelta != null)
              {
                System.out.println("curr: " + currentDelta.getOriginal().anchor());
@@ -164,7 +164,6 @@ public class ScrollSynchronizer
              {
                System.out.println("curr: null");
              }
-
              if(nextDelta != null)
              {
                System.out.println("next: " + nextDelta.getOriginal().anchor());

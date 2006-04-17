@@ -1,6 +1,7 @@
-package org.jmeld.ui;
+package org.jmeld.ui.text;
 
 import org.jmeld.*;
+import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
 
 import javax.swing.text.*;
@@ -133,7 +134,7 @@ public class FileDocument
 
     paragraph = document.getDefaultRootElement();
     size = paragraph.getElementCount();
-    lines = new Line[size-1];
+    lines = new Line[size - 1];
     for (int i = 0; i < lines.length; i++)
     {
       e = paragraph.getElement(i);
@@ -145,7 +146,7 @@ public class FileDocument
     //print();
   }
 
-  void doSave()
+  public void doSave()
     throws IOException
   {
     Writer out;
@@ -214,11 +215,6 @@ public class FileDocument
       g2_0 = c2.getGapStart();
       g2_1 = c2.getGapEnd();
 
-      //System.out.println("compare[" + start1 + "-" + end1 + "] - [" + start2
-        //+ "]");
-      //System.out.println("gap0[" + g1_0 + "-" + g1_1 + "], gap1[" + g2_0 + "-"
-        //+ g2_1 + "]");
-
       if (start1 >= g1_0)
       {
         o1 = start1 + g1_1 - g1_0;
@@ -237,11 +233,9 @@ public class FileDocument
         o2 = start2;
       }
 
-      //System.out.println("o1 = " + o1 + ", o2=" + o2);
-
       size = end1 - start1;
       for (int i = 0; i < size; i++, o1++, o2++)
-      {  
+      {
         if (o1 == g1_0)
         {
           o1 += g1_1 - g1_0;
@@ -252,8 +246,6 @@ public class FileDocument
           o2 += g2_1 - g2_0;
         }
 
-        //System.out.println("o1[" + o1 + "]=" + array1[o1] + ", a2[" + o2
-          //+ "]=" + array2[o2]);
         if (array1[o1] != array2[o2])
         {
           return false;
@@ -270,7 +262,7 @@ public class FileDocument
       int    g1;
       int    size;
       int    h;
-      int o;
+      int    o;
 
       h = 0;
 
