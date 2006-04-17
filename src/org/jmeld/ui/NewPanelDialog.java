@@ -2,6 +2,7 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.layout.*;
 
+import org.jmeld.util.*;
 import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
@@ -43,7 +44,7 @@ public class NewPanelDialog
     dialog.setResizable(true);
     dialog.show();
 
-    if (pane.getValue().equals(JOptionPane.OK_OPTION))
+    if (ObjectUtil.equals(pane.getValue(), JOptionPane.OK_OPTION))
     {
       switch (tabbedPane.getSelectedIndex())
       {
