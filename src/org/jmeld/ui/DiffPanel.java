@@ -38,22 +38,22 @@ public class DiffPanel
     init();
   }
 
-  public void setFileDocuments(FileDocument fd1, FileDocument fd2,
+  public void setBufferDocuments(BufferDocumentIF bd1, BufferDocumentIF bd2,
     JMeldDiff diff, Revision revision)
   {
     this.diff = diff;
 
-    if (fd1 != null)
+    if (bd1 != null)
     {
-      filePanel1.setFileDocument(fd1);
+      filePanel1.setBufferDocument(bd1);
     }
 
-    if (fd2 != null)
+    if (bd2 != null)
     {
-      filePanel2.setFileDocument(fd2);
+      filePanel2.setBufferDocument(bd2);
     }
 
-    if (fd1 != null && fd2 != null)
+    if (bd1 != null && bd2 != null)
     {
       filePanel1.setRevision(revision);
       filePanel2.setRevision(revision);
@@ -65,27 +65,27 @@ public class DiffPanel
 
   public String getTitle()
   {
-    String       title;
-    FileDocument fd;
+    String           title;
+    BufferDocumentIF bd;
 
     title = "";
 
     if (filePanel1 != null)
     {
-      fd = filePanel1.getFileDocument();
-      if (fd != null)
+      bd = filePanel1.getBufferDocument();
+      if (bd != null)
       {
-        title += fd.getName();
+        title += bd.getShortName();
       }
     }
 
     if (filePanel2 != null)
     {
       title += "-";
-      fd = filePanel2.getFileDocument();
-      if (fd != null)
+      bd = filePanel2.getBufferDocument();
+      if (bd != null)
       {
-        title += fd.getName();
+        title += bd.getShortName();
       }
     }
 
@@ -94,17 +94,17 @@ public class DiffPanel
 
   public void diff()
   {
-    FileDocument fd1;
-    FileDocument fd2;
+    BufferDocumentIF bd1;
+    BufferDocumentIF bd2;
 
-    fd1 = filePanel1.getFileDocument();
-    fd2 = filePanel2.getFileDocument();
+    bd1 = filePanel1.getBufferDocument();
+    bd2 = filePanel2.getBufferDocument();
 
-    if (fd1 != null && fd2 != null)
+    if (bd1 != null && bd2 != null)
     {
       try
       {
-        currentRevision = diff.diff(fd1.getLines(), fd2.getLines());
+        currentRevision = diff.diff(bd1.getLines(), bd2.getLines());
 
         filePanel1.setRevision(currentRevision);
         filePanel2.setRevision(currentRevision);
@@ -132,8 +132,8 @@ public class DiffPanel
 
     setLayout(layout);
 
-    filePanel1 = new FilePanel(this, FileDocument.ORIGINAL);
-    filePanel2 = new FilePanel(this, FileDocument.REVISED);
+    filePanel1 = new FilePanel(this, BufferDocumentIF.ORIGINAL);
+    filePanel2 = new FilePanel(this, BufferDocumentIF.REVISED);
 
     // panel for file1
     add(filePanel1.getSaveButton(), cc.xy(2, 2));
@@ -171,10 +171,12 @@ public class DiffPanel
 
   public boolean isSaveEnabled()
   {
+    System.out.println("isSaveEnabled?");
     if (filePanel1 != null)
     {
       if (filePanel1.isDocumentChanged())
       {
+    System.out.println("document1 is changed!");
         return true;
       }
     }
@@ -183,6 +185,7 @@ public class DiffPanel
     {
       if (filePanel2.isDocumentChanged())
       {
+    System.out.println("document2 is changed!");
         return true;
       }
     }
@@ -202,15 +205,6 @@ public class DiffPanel
       if (undoManager.canUndo())
       {
         undoManager.undo();
-
-        // I can only be sure that none of the documents have 
-        //   changed if nothing can be undone! (I do not know if
-        //   there are UndoableEvents per document!)
-        if (!undoManager.canUndo())
-        {
-          filePanel1.setDocumentChanged(false);
-          filePanel2.setDocumentChanged(false);
-        }
       }
     }
     catch (CannotUndoException ex)

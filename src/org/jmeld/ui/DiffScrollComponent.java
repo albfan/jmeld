@@ -104,40 +104,40 @@ public class DiffScrollComponent
 
   private void drawDiffs(Graphics2D g2)
   {
-    JViewport      viewportOriginal;
-    JViewport      viewportRevised;
-    JTextComponent editorOriginal;
-    JTextComponent editorRevised;
-    Revision       revision;
-    FileDocument   fdOriginal;
-    FileDocument   fdRevised;
-    int            firstLineOriginal;
-    int            lastLineOriginal;
-    int            firstLineRevised;
-    int            lastLineRevised;
-    int            offset;
-    Rectangle      r;
-    Point          p;
-    Delta          delta;
-    Chunk          original;
-    Chunk          revised;
-    Rectangle      viewportRect;
-    Rectangle      fromRect;
-    Rectangle      toRect;
-    int            fromLine;
-    int            toLine;
-    int            x;
-    int            y;
-    int            width;
-    int            height;
-    Rectangle      bounds;
-    int            x0;
-    int            y0;
-    int            x1;
-    int            y1;
-    Color          color;
-    Polygon        shape;
-    Rectangle      rect;
+    JViewport        viewportOriginal;
+    JViewport        viewportRevised;
+    JTextComponent   editorOriginal;
+    JTextComponent   editorRevised;
+    Revision         revision;
+    BufferDocumentIF bdOriginal;
+    BufferDocumentIF bdRevised;
+    int              firstLineOriginal;
+    int              lastLineOriginal;
+    int              firstLineRevised;
+    int              lastLineRevised;
+    int              offset;
+    Rectangle        r;
+    Point            p;
+    Delta            delta;
+    Chunk            original;
+    Chunk            revised;
+    Rectangle        viewportRect;
+    Rectangle        fromRect;
+    Rectangle        toRect;
+    int              fromLine;
+    int              toLine;
+    int              x;
+    int              y;
+    int              width;
+    int              height;
+    Rectangle        bounds;
+    int              x0;
+    int              y0;
+    int              x1;
+    int              y1;
+    Color            color;
+    Polygon          shape;
+    Rectangle        rect;
 
     bounds = g2.getClipBounds();
 
@@ -154,35 +154,35 @@ public class DiffScrollComponent
     // Original side:
     viewportOriginal = filePanelOriginal.getScrollPane().getViewport();
     editorOriginal = filePanelOriginal.getEditor();
-    fdOriginal = filePanelOriginal.getFileDocument();
+    bdOriginal = filePanelOriginal.getBufferDocument();
     r = viewportOriginal.getViewRect();
 
     // Calculate firstLine shown of the first document. 
     p = new Point(r.x, r.y);
     offset = editorOriginal.viewToModel(p);
-    firstLineOriginal = fdOriginal.getLineForOffset(offset);
+    firstLineOriginal = bdOriginal.getLineForOffset(offset);
 
     // Calculate lastLine shown of the first document. 
     p = new Point(r.x, r.y + r.height);
     offset = editorOriginal.viewToModel(p);
-    fdOriginal = filePanelOriginal.getFileDocument();
-    lastLineOriginal = fdOriginal.getLineForOffset(offset) + 1;
+    bdOriginal = filePanelOriginal.getBufferDocument();
+    lastLineOriginal = bdOriginal.getLineForOffset(offset) + 1;
 
     // Revised side:
     viewportRevised = filePanelRevised.getScrollPane().getViewport();
     editorRevised = filePanelRevised.getEditor();
-    fdRevised = filePanelRevised.getFileDocument();
+    bdRevised = filePanelRevised.getBufferDocument();
     r = viewportRevised.getViewRect();
 
     // Calculate firstLine shown of the second document. 
     p = new Point(r.x, r.y);
     offset = editorRevised.viewToModel(p);
-    firstLineRevised = fdRevised.getLineForOffset(offset);
+    firstLineRevised = bdRevised.getLineForOffset(offset);
 
     // Calculate lastLine shown of the second document. 
     p = new Point(r.x, r.y + r.height);
     offset = editorRevised.viewToModel(p);
-    lastLineRevised = fdRevised.getLineForOffset(offset) + 1;
+    lastLineRevised = bdRevised.getLineForOffset(offset) + 1;
 
     try
     {
@@ -227,9 +227,9 @@ public class DiffScrollComponent
         fromLine = original.anchor();
         toLine = original.anchor() + original.size();
         viewportRect = viewportOriginal.getViewRect();
-        offset = fdOriginal.getOffsetForLine(fromLine);
+        offset = bdOriginal.getOffsetForLine(fromLine);
         fromRect = editorOriginal.modelToView(offset);
-        offset = fdOriginal.getOffsetForLine(toLine);
+        offset = bdOriginal.getOffsetForLine(toLine);
         toRect = editorOriginal.modelToView(offset);
 
         x = 0;
@@ -279,9 +279,9 @@ public class DiffScrollComponent
         fromLine = revised.anchor();
         toLine = revised.anchor() + revised.size();
         viewportRect = viewportRevised.getViewRect();
-        offset = fdRevised.getOffsetForLine(fromLine);
+        offset = bdRevised.getOffsetForLine(fromLine);
         fromRect = editorRevised.modelToView(offset);
-        offset = fdRevised.getOffsetForLine(toLine);
+        offset = bdRevised.getOffsetForLine(toLine);
         toRect = editorRevised.modelToView(offset);
 
         x = bounds.x + bounds.width - 10;
@@ -399,55 +399,55 @@ public class DiffScrollComponent
 
     public void execute()
     {
-      FileDocument  fromFileDocument;
-      FileDocument  toFileDocument;
-      PlainDocument from;
-      PlainDocument to;
-      String        s;
-      int           fromLine;
-      int           toLine;
-      int           fromOffset;
-      int           toOffset;
-      int           size;
-      Chunk         fromChunk;
-      Chunk         toChunk;
+      BufferDocumentIF fromBufferDocument;
+      BufferDocumentIF toBufferDocument;
+      PlainDocument    from;
+      PlainDocument    to;
+      String           s;
+      int              fromLine;
+      int              toLine;
+      int              fromOffset;
+      int              toOffset;
+      int              size;
+      Chunk            fromChunk;
+      Chunk            toChunk;
 
       try
       {
         if (originalToRevised)
         {
-          fromFileDocument = filePanelOriginal.getFileDocument();
-          toFileDocument = filePanelRevised.getFileDocument();
+          fromBufferDocument = filePanelOriginal.getBufferDocument();
+          toBufferDocument = filePanelRevised.getBufferDocument();
           fromChunk = delta.getOriginal();
           toChunk = delta.getRevised();
         }
         else
         {
-          fromFileDocument = filePanelRevised.getFileDocument();
-          toFileDocument = filePanelOriginal.getFileDocument();
+          fromBufferDocument = filePanelRevised.getBufferDocument();
+          toBufferDocument = filePanelOriginal.getBufferDocument();
           fromChunk = delta.getRevised();
           toChunk = delta.getOriginal();
         }
 
-        if (fromFileDocument == null || toFileDocument == null)
+        if (fromBufferDocument == null || toBufferDocument == null)
         {
           return;
         }
 
-        from = fromFileDocument.getDocument();
-        to = toFileDocument.getDocument();
+        from = fromBufferDocument.getDocument();
+        to = toBufferDocument.getDocument();
 
         fromLine = fromChunk.anchor();
         size = fromChunk.size();
-        fromOffset = fromFileDocument.getOffsetForLine(fromLine);
-        toOffset = fromFileDocument.getOffsetForLine(fromLine + size);
+        fromOffset = fromBufferDocument.getOffsetForLine(fromLine);
+        toOffset = fromBufferDocument.getOffsetForLine(fromLine + size);
 
         s = from.getText(fromOffset, toOffset - fromOffset);
 
         fromLine = toChunk.anchor();
         size = toChunk.size();
-        fromOffset = toFileDocument.getOffsetForLine(fromLine);
-        toOffset = toFileDocument.getOffsetForLine(fromLine + size);
+        fromOffset = toBufferDocument.getOffsetForLine(fromLine);
+        toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
 
         to.replace(fromOffset, toOffset - fromOffset, s, null);
       }
@@ -468,39 +468,39 @@ public class DiffScrollComponent
 
     public void execute()
     {
-      FileDocument  fileDocument;
-      PlainDocument document;
-      String        s;
-      int           fromLine;
-      int           fromOffset;
-      int           toOffset;
-      int           size;
-      Chunk         chunk;
+      BufferDocumentIF bufferDocument;
+      PlainDocument    document;
+      String           s;
+      int              fromLine;
+      int              fromOffset;
+      int              toOffset;
+      int              size;
+      Chunk            chunk;
 
       try
       {
         if (originalToRevised)
         {
-          fileDocument = filePanelOriginal.getFileDocument();
+          bufferDocument = filePanelOriginal.getBufferDocument();
           chunk = delta.getOriginal();
         }
         else
         {
-          fileDocument = filePanelRevised.getFileDocument();
+          bufferDocument = filePanelRevised.getBufferDocument();
           chunk = delta.getRevised();
         }
 
-        if (fileDocument == null)
+        if (bufferDocument == null)
         {
           return;
         }
 
-        document = fileDocument.getDocument();
+        document = bufferDocument.getDocument();
 
         fromLine = chunk.anchor();
         size = chunk.size();
-        fromOffset = fileDocument.getOffsetForLine(fromLine);
-        toOffset = fileDocument.getOffsetForLine(fromLine + size);
+        fromOffset = bufferDocument.getOffsetForLine(fromLine);
+        toOffset = bufferDocument.getOffsetForLine(fromLine + size);
 
         document.remove(fromOffset, toOffset - fromOffset);
       }

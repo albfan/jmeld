@@ -190,15 +190,15 @@ public class ScrollSynchronizer
 
   private int getCurrentLineCenter(FilePanel fp)
   {
-    Revision       revision;
-    JScrollPane    scrollPane;
-    FileDocument   fd;
-    JTextComponent editor;
-    JViewport      viewport;
-    int            line;
-    Rectangle      rect;
-    int            offset;
-    Point          p;
+    Revision         revision;
+    JScrollPane      scrollPane;
+    BufferDocumentIF bd;
+    JTextComponent   editor;
+    JViewport        viewport;
+    int              line;
+    Rectangle        rect;
+    int              offset;
+    Point            p;
 
     editor = fp.getEditor();
     scrollPane = fp.getScrollPane();
@@ -210,8 +210,8 @@ public class ScrollSynchronizer
     p.y += getHeightOffset(fp);
 
     offset = editor.viewToModel(p);
-    fd = fp.getFileDocument();
-    line = fd.getLineForOffset(offset);
+    bd = fp.getBufferDocument();
+    line = bd.getLineForOffset(offset);
 
     return line;
   }
@@ -219,23 +219,23 @@ public class ScrollSynchronizer
   private void scrollToLine(FilePanel fp, int line,
     boolean initiatedByScrolling)
   {
-    Revision       revision;
-    JScrollPane    scrollPane;
-    FilePanel      fp2;
-    FileDocument   fd;
-    JTextComponent editor;
-    JViewport      viewport;
-    Rectangle      rect;
-    int            offset;
-    Point          p;
-    Dimension      viewSize;
-    Dimension      extentSize;
-    int            x;
+    Revision         revision;
+    JScrollPane      scrollPane;
+    FilePanel        fp2;
+    BufferDocumentIF bd;
+    JTextComponent   editor;
+    JViewport        viewport;
+    Rectangle        rect;
+    int              offset;
+    Point            p;
+    Dimension        viewSize;
+    Dimension        extentSize;
+    int              x;
 
     fp2 = fp == filePanelOriginal ? filePanelRevised : filePanelOriginal;
 
-    fd = fp.getFileDocument();
-    offset = fd.getOffsetForLine(line);
+    bd = fp.getBufferDocument();
+    offset = bd.getOffsetForLine(line);
     viewport = fp.getScrollPane().getViewport();
     editor = fp.getEditor();
 

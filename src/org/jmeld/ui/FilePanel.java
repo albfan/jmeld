@@ -1,6 +1,7 @@
 package org.jmeld.ui;
 
 import org.apache.commons.jrcs.diff.*;
+import org.jmeld.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.prefs.*;
@@ -17,23 +18,22 @@ import java.util.*;
 import java.util.List;
 
 public class FilePanel
-       implements DocumentListener
+       implements BufferDocumentChangeListenerIF
 {
   // Class variables:
   private static final int MAXSIZE_CHANGE_DIFF = 1000;
 
   // Instance variables:
-  private DiffPanel      diffPanel;
-  private String         name;
-  private JLabel         fileLabel;
-  private JButton        browseButton;
-  private JComboBox      fileBox;
-  private JScrollPane    scrollPane;
-  private JTextComponent editor;
-  private FileDocument   fileDocument;
-  private JButton        saveButton;
-  private Timer          timer;
-  private boolean        documentChanged;
+  private DiffPanel        diffPanel;
+  private String           name;
+  private JLabel           fileLabel;
+  private JButton          browseButton;
+  private JComboBox        fileBox;
+  private JScrollPane      scrollPane;
+  private JTextComponent   editor;
+  private BufferDocumentIF bufferDocument;
+  private JButton          saveButton;
+  private Timer            timer;
 
   FilePanel(DiffPanel diffPanel, String name)
   {
@@ -59,7 +59,7 @@ public class FilePanel
 
     scrollPane = new JScrollPane(editor);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());
-    if (FileDocument.ORIGINAL.equals(name))
+    if (BufferDocumentIF.ORIGINAL.equals(name))
     {
       scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
     }
@@ -82,8 +82,6 @@ public class FilePanel
 
     timer = new Timer(500, refresh());
     timer.setRepeats(false);
-
-    setDocumentChanged(false);
   }
 
   JButton getBrowseButton()
@@ -111,9 +109,9 @@ public class FilePanel
     return editor;
   }
 
-  FileDocument getFileDocument()
+  BufferDocumentIF getBufferDocument()
   {
-    return fileDocument;
+    return bufferDocument;
   }
 
   JButton getSaveButton()
@@ -121,16 +119,17 @@ public class FilePanel
     return saveButton;
   }
 
-  void setFile(File file)
+  private void setFile(File file)
   {
+    BufferDocumentIF bd;
+
     try
     {
-      FileDocument fd;
+      bd = new FileDocument(file);
+      bd.read();
 
-      fd = new FileDocument(file);
-      fd.read();
-
-      setFileDocument(fd);
+      setBufferDocument(bd);
+      checkActions();
     }
     catch (Exception ex)
     {
@@ -138,51 +137,49 @@ public class FilePanel
     }
   }
 
-  void setFileDocument(FileDocument fd)
+  public void setBufferDocument(BufferDocumentIF bd)
   {
     Document previousDocument;
     Document document;
     String   fileName;
     String   text;
-    File     file;
-
-    fileDocument = fd;
-    file = fileDocument.getFile();
 
     try
     {
-      previousDocument = editor.getDocument();
-      if (previousDocument != null)
+      if (bufferDocument != null)
       {
-        previousDocument.removeDocumentListener(this);
-        previousDocument.removeUndoableEditListener(diffPanel.getUndoHandler());
+        bufferDocument.removeChangeListener(this);
+
+        previousDocument = bufferDocument.getDocument();
+        if (previousDocument != null)
+        {
+          previousDocument.removeUndoableEditListener(diffPanel.getUndoHandler());
+        }
       }
 
-      document = fileDocument.getDocument();
+      bufferDocument = bd;
+
+      document = bufferDocument.getDocument();
       editor.setDocument(document);
-      document.addDocumentListener(this);
+      bufferDocument.addChangeListener(this);
       document.addUndoableEditListener(diffPanel.getUndoHandler());
 
-      fileName = file.getCanonicalPath();
+      fileName = bufferDocument.getName();
       fileBox.addItem(fileName);
       fileBox.setSelectedItem(fileName);
 
       text = fileName;
-      /*
-         if(fileName.length() > 40)
-         {
-           text = "..." + text.substring(text.length() - 40);
-         }
-       */
       fileLabel.setText(text);
+
+      checkActions();
     }
     catch (Exception ex)
     {
       ex.printStackTrace();
 
       JOptionPane.showMessageDialog(diffPanel,
-        "Could not read file: " + file + "\n" + ex.getMessage(),
-        "Error opening file", JOptionPane.ERROR_MESSAGE);
+        "Could not read file: " + bufferDocument.getName() + "\n"
+        + ex.getMessage(), "Error opening file", JOptionPane.ERROR_MESSAGE);
       return;
     }
   }
@@ -201,7 +198,7 @@ public class FilePanel
     Chunk    changeOriginal;
     Chunk    changeRevised;
 
-    if (fileDocument == null)
+    if (bufferDocument == null)
     {
       return;
     }
@@ -214,10 +211,10 @@ public class FilePanel
       original = delta.getOriginal();
       revised = delta.getRevised();
 
-      if (FileDocument.ORIGINAL.equals(name))
+      if (BufferDocumentIF.ORIGINAL.equals(name))
       {
-        fromOffset = fileDocument.getOffsetForLine(original.anchor());
-        toOffset = fileDocument.getOffsetForLine(original.anchor()
+        fromOffset = bufferDocument.getOffsetForLine(original.anchor());
+        toOffset = bufferDocument.getOffsetForLine(original.anchor()
             + original.size());
 
         if (delta instanceof AddDelta)
@@ -262,10 +259,10 @@ public class FilePanel
           setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
         }
       }
-      else if (FileDocument.REVISED.equals(name))
+      else if (BufferDocumentIF.REVISED.equals(name))
       {
-        fromOffset = fileDocument.getOffsetForLine(revised.anchor());
-        toOffset = fileDocument.getOffsetForLine(revised.anchor()
+        fromOffset = bufferDocument.getOffsetForLine(revised.anchor());
+        toOffset = bufferDocument.getOffsetForLine(revised.anchor()
             + revised.size());
 
         if (delta instanceof AddDelta)
@@ -409,13 +406,12 @@ public class FilePanel
         {
           try
           {
-            fileDocument.doSave();
-            setDocumentChanged(false);
+            bufferDocument.write();
           }
           catch (Exception ex)
           {
             JOptionPane.showMessageDialog(SwingUtilities.getRoot(editor),
-              "Could not save file: " + fileDocument.getName() + "\n"
+              "Could not save file: " + bufferDocument.getName() + "\n"
               + ex.getMessage(), "Error saving file", JOptionPane.ERROR_MESSAGE);
           }
         }
@@ -433,41 +429,25 @@ public class FilePanel
       };
   }
 
-  public void changedUpdate(DocumentEvent de)
-  {
-    documentChanged();
-  }
-
-  public void insertUpdate(DocumentEvent de)
-  {
-    documentChanged();
-  }
-
-  public void removeUpdate(DocumentEvent de)
-  {
-    documentChanged();
-  }
-
-  private void documentChanged()
+  public void documentChanged()
   {
     timer.restart();
-    setDocumentChanged(true);
+    checkActions();
+  }
+
+  private void checkActions()
+  {
+    if (saveButton.isEnabled() != isDocumentChanged())
+    {
+      saveButton.setEnabled(isDocumentChanged());
+    }
+
+    diffPanel.checkActions();
   }
 
   boolean isDocumentChanged()
   {
-    return documentChanged;
-  }
-
-  void setDocumentChanged(boolean documentChanged)
-  {
-    this.documentChanged = documentChanged;
-
-    if (saveButton.isEnabled() != documentChanged)
-    {
-      saveButton.setEnabled(documentChanged);
-      diffPanel.checkActions();
-    }
+    return bufferDocument != null ? bufferDocument.isChanged() : false;
   }
 
   public ActionListener refresh()
@@ -476,7 +456,7 @@ public class FilePanel
       {
         public void actionPerformed(ActionEvent ae)
         {
-          fileDocument.initLines();
+          bufferDocument.initLines();
           diffPanel.diff();
         }
       };

@@ -274,12 +274,12 @@ public class JMeldPanel
   class NewDiffPanel
          extends SwingWorker<String, Object>
   {
-    private String       fileName1;
-    private String       fileName2;
-    private FileDocument fd1;
-    private FileDocument fd2;
-    private JMeldDiff    diff;
-    private Revision     revision;
+    private String           fileName1;
+    private String           fileName2;
+    private BufferDocumentIF bd1;
+    private BufferDocumentIF bd2;
+    private JMeldDiff        diff;
+    private Revision         revision;
 
     NewDiffPanel(String fileName1, String fileName2)
     {
@@ -291,14 +291,14 @@ public class JMeldPanel
     {
       try
       {
-        fd1 = new FileDocument(new File(fileName1));
-        fd1.read();
+        bd1 = new FileDocument(new File(fileName1));
+        bd1.read();
 
-        fd2 = new FileDocument(new File(fileName2));
-        fd2.read();
+        bd2 = new FileDocument(new File(fileName2));
+        bd2.read();
 
         diff = new JMeldDiff();
-        revision = diff.diff(fd1.getLines(), fd2.getLines());
+        revision = diff.diff(bd1.getLines(), bd2.getLines());
       }
       catch (Exception ex)
       {
@@ -326,7 +326,7 @@ public class JMeldPanel
         }
 
         panel = new DiffPanel(JMeldPanel.this);
-        panel.setFileDocuments(fd1, fd2, diff, revision);
+        panel.setBufferDocuments(bd1, bd2, diff, revision);
 
         tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);
