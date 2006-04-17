@@ -3,6 +3,7 @@ package org.jmeld.ui;
 import com.jgoodies.forms.layout.*;
 
 import org.apache.commons.jrcs.diff.*;
+import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
@@ -22,8 +23,7 @@ public class DiffPanel
        extends JPanel
 {
   private JMeldPanel         mainPanel;
-  private FilePanel          filePanel1;
-  private FilePanel          filePanel2;
+  private FilePanel[]        filePanels;
   private Revision           currentRevision;
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
@@ -35,6 +35,8 @@ public class DiffPanel
 
     diff = new JMeldDiff();
 
+    filePanels = new FilePanel[3];
+
     init();
   }
 
@@ -45,18 +47,18 @@ public class DiffPanel
 
     if (bd1 != null)
     {
-      filePanel1.setBufferDocument(bd1);
+      filePanels[0].setBufferDocument(bd1);
     }
 
     if (bd2 != null)
     {
-      filePanel2.setBufferDocument(bd2);
+      filePanels[1].setBufferDocument(bd2);
     }
 
     if (bd1 != null && bd2 != null)
     {
-      filePanel1.setRevision(revision);
-      filePanel2.setRevision(revision);
+      filePanels[0].setRevision(revision);
+      filePanels[1].setRevision(revision);
     }
 
     currentRevision = revision;
@@ -70,23 +72,25 @@ public class DiffPanel
 
     title = "";
 
-    if (filePanel1 != null)
+    for (FilePanel filePanel : filePanels)
     {
-      bd = filePanel1.getBufferDocument();
-      if (bd != null)
+      if (filePanel == null)
       {
-        title += bd.getShortName();
+        continue;
       }
-    }
 
-    if (filePanel2 != null)
-    {
-      title += "-";
-      bd = filePanel2.getBufferDocument();
-      if (bd != null)
+      bd = filePanel.getBufferDocument();
+      if (bd == null)
       {
-        title += bd.getShortName();
+        continue;
       }
+
+      if (!StringUtil.isEmpty(title))
+      {
+        title += "-";
+      }
+
+      title += bd.getShortName();
     }
 
     return title;
@@ -97,8 +101,8 @@ public class DiffPanel
     BufferDocumentIF bd1;
     BufferDocumentIF bd2;
 
-    bd1 = filePanel1.getBufferDocument();
-    bd2 = filePanel2.getBufferDocument();
+    bd1 = filePanels[0].getBufferDocument();
+    bd2 = filePanels[1].getBufferDocument();
 
     if (bd1 != null && bd2 != null)
     {
@@ -106,8 +110,8 @@ public class DiffPanel
       {
         currentRevision = diff.diff(bd1.getLines(), bd2.getLines());
 
-        filePanel1.setRevision(currentRevision);
-        filePanel2.setRevision(currentRevision);
+        filePanels[0].setRevision(currentRevision);
+        filePanels[1].setRevision(currentRevision);
       }
       catch (Exception ex)
       {
@@ -132,26 +136,24 @@ public class DiffPanel
 
     setLayout(layout);
 
-    filePanel1 = new FilePanel(this, BufferDocumentIF.ORIGINAL);
-    filePanel2 = new FilePanel(this, BufferDocumentIF.REVISED);
+    filePanels[0] = new FilePanel(this, BufferDocumentIF.ORIGINAL);
+    filePanels[1] = new FilePanel(this, BufferDocumentIF.REVISED);
 
     // panel for file1
-    add(filePanel1.getSaveButton(), cc.xy(2, 2));
-    //add(filePanel1.getFileBox(), cc.xy(3, 2));
-    //add(filePanel1.getBrowseButton(), cc.xy(5, 2));
-    add(filePanel1.getFileLabel(), cc.xyw(3, 2, 3));
-    add(filePanel1.getScrollPane(), cc.xyw(3, 4, 3));
+    add(filePanels[0].getSaveButton(), cc.xy(2, 2));
+    add(filePanels[0].getFileLabel(), cc.xyw(3, 2, 3));
+    add(filePanels[0].getScrollPane(), cc.xyw(3, 4, 3));
 
-    add(new DiffScrollComponent(this, filePanel1, filePanel2), cc.xy(6, 4));
+    add(new DiffScrollComponent(this, filePanels[0], filePanels[1]),
+      cc.xy(6, 4));
 
     // panel for file2
-    //add(filePanel2.getFileBox(), cc.xy(7, 2));
-    //add(filePanel2.getBrowseButton(), cc.xy(9, 2));
-    add(filePanel2.getFileLabel(), cc.xyw(7, 2, 3));
-    add(filePanel2.getScrollPane(), cc.xyw(7, 4, 3));
-    add(filePanel2.getSaveButton(), cc.xy(10, 2));
+    add(filePanels[1].getFileLabel(), cc.xyw(7, 2, 3));
+    add(filePanels[1].getScrollPane(), cc.xyw(7, 4, 3));
+    add(filePanels[1].getSaveButton(), cc.xy(10, 2));
 
-    scrollSynchronizer = new ScrollSynchronizer(this, filePanel1, filePanel2);
+    scrollSynchronizer = new ScrollSynchronizer(this, filePanels[0],
+        filePanels[1]);
   }
 
   void toNextDelta(boolean next)
@@ -169,23 +171,73 @@ public class DiffPanel
     undoManager.discardAllEdits();
   }
 
-  public boolean isSaveEnabled()
+  public boolean checkSave()
   {
-    System.out.println("isSaveEnabled?");
-    if (filePanel1 != null)
+    SavePanelDialog dialog;
+
+    if (!isSaveEnabled())
     {
-      if (filePanel1.isDocumentChanged())
+      return true;
+    }
+
+    dialog = new SavePanelDialog(mainPanel);
+    for (FilePanel filePanel : filePanels)
+    {
+      if (filePanel != null)
       {
-    System.out.println("document1 is changed!");
-        return true;
+        dialog.add(filePanel.getBufferDocument());
       }
     }
 
-    if (filePanel2 != null)
+    dialog.show();
+
+    if (dialog.isOK())
     {
-      if (filePanel2.isDocumentChanged())
+      dialog.doSave();
+      return true;
+    }
+
+    return false;
+  }
+
+  public void save()
+  {
+    BufferDocumentIF document;
+
+    for (FilePanel filePanel : filePanels)
+    {
+      if (filePanel == null)
       {
-    System.out.println("document2 is changed!");
+        continue;
+      }
+
+      if (!filePanel.isDocumentChanged())
+      {
+        continue;
+      }
+
+      document = filePanel.getBufferDocument();
+
+      try
+      {
+        document.write();
+      }
+      catch (JMeldException ex)
+      {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(mainPanel,
+          "Can't write file" + document.getName(), "Problem writing file",
+          JOptionPane.ERROR_MESSAGE);
+      }
+    }
+  }
+
+  public boolean isSaveEnabled()
+  {
+    for (FilePanel filePanel : filePanels)
+    {
+      if (filePanel != null && filePanel.isDocumentChanged())
+      {
         return true;
       }
     }

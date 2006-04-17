@@ -1,5 +1,7 @@
 package org.jmeld.ui.util;
 
+import org.jmeld.ui.*;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -125,7 +127,8 @@ public class TabIcon
       {
         public void mousePressed(MouseEvent me)
         {
-          int index;
+          int       index;
+          Component component;
 
           if (!me.isConsumed() && closeBounds != null
             && closeBounds.contains(me.getX(), me.getY()))
@@ -133,6 +136,16 @@ public class TabIcon
             index = tabbedPane.indexOfTab(TabIcon.this);
             if (index != -1)
             {
+              component = tabbedPane.getComponentAt(index);
+              if (component instanceof DiffPanel)
+              {
+                if (!((DiffPanel) component).checkSave())
+                {
+                  me.consume();
+                  return;
+                }
+              }
+
               tabbedPane.remove(index);
               me.consume();
             }

@@ -214,7 +214,15 @@ public class JMeldPanel
 
   public void doSave(ActionEvent ae)
   {
-    System.out.println("save files");
+    Component component;
+
+    component = tabbedPane.getSelectedComponent();
+    if(!(component instanceof DiffPanel))
+    {
+      return;
+    }
+
+    ((DiffPanel) component).save();
   }
 
   public void doUndo(ActionEvent ae)
