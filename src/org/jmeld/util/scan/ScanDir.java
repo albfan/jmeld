@@ -52,6 +52,8 @@ public class ScanDir
 
     if (file.isDirectory())
     {
+      visitor.visit(directoryName, file);
+
       files = file.listFiles(fileFilter);
       for (int i = 0; i < files.length; i++)
       {

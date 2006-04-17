@@ -1,38 +1,30 @@
 package org.jmeld.util.scan;
 
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 public class DirectoryScan
 {
-  private File           directory;
-  private List<FileData> list;
+  private File                  directory;
+  private Filter                filter;
+  private Map<String, FileNode> map;
 
-  public DirectoryScan(File directory)
+  public DirectoryScan(File directory, Filter filter)
   {
     this.directory = directory;
+    this.filter = filter;
 
-    list = new ArrayList<FileData>();
+    map = new HashMap<String, FileNode>();
   }
 
-  public void scan()
+  public Map<String, FileNode> scan()
   {
     ScanDir scan;
-    Filter  filter;
-
-    filter = new Filter();
-    filter.exclude("classes");
-    filter.exclude(".svn");
-    filter.exclude("CVS");
-    filter.exclude("tags");
 
     scan = new ScanDir(directory, filter);
     scan.visitRecursivly(new FileVisitor());
 
-    for (FileData file : list)
-    {
-      System.out.println(file);
-    }
+    return map;
   }
 
   class FileVisitor
@@ -40,29 +32,12 @@ public class DirectoryScan
   {
     public void visit(String directoryName, File file)
     {
-      list.add(new FileData(directoryName, file));
-    }
-  }
-
-  class FileData
-  {
-    private File   file;
-    private String directoryName;
-
-    public FileData(String directoryName, File file)
-    {
-      this.directoryName = directoryName;
-      this.file = file;
-    }
-
-    public String toString()
-    {
-      return directoryName + File.separator + file.getName();
+      map.put(directoryName, new FileNode(directoryName, file));
     }
   }
 
   public static void main(String[] args)
   {
-    new DirectoryScan(new File(args[0])).scan();
+    new DirectoryScan(new File(args[0]), new Filter()).scan();
   }
 }
