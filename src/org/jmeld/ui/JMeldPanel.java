@@ -6,6 +6,7 @@ import org.apache.commons.jrcs.diff.*;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
+import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 
@@ -54,7 +55,7 @@ public class JMeldPanel
 
   public void open(String fileName1, String fileName2)
   {
-    setWaitCursor();
+    WaitCursor.wait(this);
 
     new NewDiffPanel(fileName1, fileName2).execute();
   }
@@ -270,38 +271,6 @@ public class JMeldPanel
     return (DiffPanel) tabbedPane.getSelectedComponent();
   }
 
-  private void setWaitCursor()
-  {
-    JFrame    frame;
-    Component pane;
-
-    frame = (JFrame) SwingUtilities.getRoot(this);
-
-    if (frame != null)
-    {
-      pane = frame.getRootPane().getGlassPane();
-
-      pane.setVisible(true);
-      pane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    }
-  }
-
-  private void resetWaitCursor()
-  {
-    JFrame    frame;
-    Component pane;
-
-    frame = (JFrame) SwingUtilities.getRoot(this);
-
-    if (frame != null)
-    {
-      pane = frame.getRootPane().getGlassPane();
-
-      pane.setVisible(false);
-      pane.setCursor(null);
-    }
-  }
-
   class NewDiffPanel
          extends SwingWorker<String, Object>
   {
@@ -368,7 +337,7 @@ public class JMeldPanel
       }
       finally
       {
-        resetWaitCursor();
+        WaitCursor.resume(JMeldPanel.this);
       }
     }
   }
