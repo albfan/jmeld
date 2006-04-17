@@ -12,15 +12,25 @@ public class DirectoryDiff
   private List<FileNode> mine;
   private List<FileNode> original;
 
-  public DirectoryDiff(File mineDirectory, File originalDirectory)
+  public DirectoryDiff(File originalDirectory, File mineDirectory)
   {
-    this.mineDirectory = mineDirectory;
     this.originalDirectory = originalDirectory;
+    this.mineDirectory = mineDirectory;
+  }
+
+  public File getMineDirectory()
+  {
+    return mineDirectory;
   }
 
   public List<FileNode> getMineNodes()
   {
     return mine;
+  }
+
+  public File getOriginalDirectory()
+  {
+    return originalDirectory;
   }
 
   public List<FileNode> getOriginalNodes()
@@ -35,6 +45,8 @@ public class DirectoryDiff
     String                name;
     Map<String, FileNode> mineMap;
     Map<String, FileNode> originalMap;
+    FileNode mineNode;
+    FileNode originalNode;
 
     filter = getFilter();
 
@@ -74,6 +86,22 @@ public class DirectoryDiff
 
     original = new ArrayList(originalMap.values());
     Collections.sort(original);
+
+    for(int i=0; i<mine.size(); i++)
+    {
+      mineNode = mine.get(i);
+      originalNode = original.get(i);
+
+      if(mineNode.getState() == JMeldNode.EQUAL &&
+         originalNode.getState() == JMeldNode.EQUAL)
+      {
+        if(!mineNode.contentEquals(originalNode))
+        {
+          mineNode.setState(JMeldNode.CHANGED);
+          originalNode.setState(JMeldNode.CHANGED);
+        }
+      }
+    }
   }
 
   private Filter getFilter()
@@ -105,7 +133,7 @@ public class DirectoryDiff
     }
   }
 
-  public static void main(String args[])
+  public static void main(String[] args)
   {
     DirectoryDiff diff;
 

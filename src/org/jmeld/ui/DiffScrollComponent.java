@@ -17,14 +17,14 @@ public class DiffScrollComponent
        extends JComponent
        implements ChangeListener
 {
-  private DiffPanel     diffPanel;
-  private FilePanel     filePanelOriginal;
-  private FilePanel     filePanelRevised;
-  private List<Command> commands;
-  private Object        antiAlias;
+  private BufferDiffPanel diffPanel;
+  private FilePanel       filePanelOriginal;
+  private FilePanel       filePanelRevised;
+  private List<Command>   commands;
+  private Object          antiAlias;
 
-  public DiffScrollComponent(DiffPanel diffPanel, FilePanel filePanelOriginal,
-    FilePanel filePanelRevised)
+  public DiffScrollComponent(BufferDiffPanel diffPanel,
+    FilePanel filePanelOriginal, FilePanel filePanelRevised)
   {
     this.diffPanel = diffPanel;
     this.filePanelOriginal = filePanelOriginal;

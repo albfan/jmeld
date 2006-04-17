@@ -7,6 +7,7 @@ public class JMeldNode
        implements Comparable<JMeldNode>
 {
   // class variables:
+  public static final char EQUAL = 'E';
   public static final char ADDED = 'A';
   public static final char CHANGED = 'C';
   public static final char DELETED = 'D';
@@ -20,6 +21,8 @@ public class JMeldNode
   {
     this.name = name;
     this.isLeaf = isLeaf;
+
+    state = EQUAL;
   }
 
   public String getName()
@@ -60,6 +63,11 @@ public class JMeldNode
   public void print()
   {
     System.out.println(name + (state != 0 ? (" [" + state + "]") : ""));
+  }
+
+  public boolean contentEquals(JMeldNode node)
+  {
+    return true;
   }
 
   public String toString()

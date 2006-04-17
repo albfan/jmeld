@@ -137,9 +137,9 @@ public class TabIcon
             if (index != -1)
             {
               component = tabbedPane.getComponentAt(index);
-              if (component instanceof DiffPanel)
+              if (component instanceof BufferDiffPanel)
               {
-                if (!((DiffPanel) component).checkSave())
+                if (!((BufferDiffPanel) component).checkSave())
                 {
                   me.consume();
                   return;

@@ -14,12 +14,12 @@ import java.awt.event.*;
 public class ScrollSynchronizer
        implements ChangeListener
 {
-  private DiffPanel diffPanel;
-  private FilePanel filePanelOriginal;
-  private FilePanel filePanelRevised;
+  private BufferDiffPanel diffPanel;
+  private FilePanel       filePanelOriginal;
+  private FilePanel       filePanelRevised;
 
-  public ScrollSynchronizer(DiffPanel diffPanel, FilePanel filePanelOriginal,
-    FilePanel filePanelRevised)
+  public ScrollSynchronizer(BufferDiffPanel diffPanel,
+    FilePanel filePanelOriginal, FilePanel filePanelRevised)
   {
     this.diffPanel = diffPanel;
     this.filePanelOriginal = filePanelOriginal;

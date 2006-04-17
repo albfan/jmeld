@@ -19,8 +19,9 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 
-public class DiffPanel
+public class BufferDiffPanel
        extends JPanel
+       implements JMeldPanelIF
 {
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
@@ -29,7 +30,7 @@ public class DiffPanel
   private ScrollSynchronizer scrollSynchronizer;
   private JMeldDiff          diff;
 
-  DiffPanel(JMeldPanel mainPanel)
+  BufferDiffPanel(JMeldPanel mainPanel)
   {
     this.mainPanel = mainPanel;
 
@@ -200,7 +201,7 @@ public class DiffPanel
     return false;
   }
 
-  public void save()
+  public void doSave()
   {
     BufferDocumentIF document;
 

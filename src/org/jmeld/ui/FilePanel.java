@@ -24,7 +24,7 @@ public class FilePanel
   private static final int MAXSIZE_CHANGE_DIFF = 1000;
 
   // Instance variables:
-  private DiffPanel        diffPanel;
+  private BufferDiffPanel  diffPanel;
   private String           name;
   private JLabel           fileLabel;
   private JButton          browseButton;
@@ -35,7 +35,7 @@ public class FilePanel
   private JButton          saveButton;
   private Timer            timer;
 
-  FilePanel(DiffPanel diffPanel, String name)
+  FilePanel(BufferDiffPanel diffPanel, String name)
   {
     this.diffPanel = diffPanel;
     this.name = name;

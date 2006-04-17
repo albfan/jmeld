@@ -9,6 +9,7 @@ import org.jmeld.ui.action.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
+import org.jmeld.util.file.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -38,7 +39,7 @@ public class JMeldPanel
   private ActionHandler actionHandler;
   private JTabbedPane   tabbedPane;
 
-  public JMeldPanel(String fileName1, String fileName2)
+  public JMeldPanel(String originalName, String mineName)
   {
     tabbedPane = new JTabbedPane();
 
@@ -50,14 +51,38 @@ public class JMeldPanel
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
-    open(fileName1, fileName2);
+    openComparison(originalName, mineName);
   }
 
-  public void open(String fileName1, String fileName2)
+  public void openComparison(String originalname, String mineName)
+  {
+    File original;
+    File mine;
+
+    original = new File(originalname);
+    mine = new File(mineName);
+    if (original.isDirectory() && mine.isDirectory())
+    {
+      openDirectoryComparison(originalname, mineName);
+    }
+    else
+    {
+      openFileComparison(originalname, mineName);
+    }
+  }
+
+  public void openFileComparison(String originalname, String mineName)
   {
     WaitCursor.wait(this);
 
-    new NewDiffPanel(fileName1, fileName2).execute();
+    new NewFileComparisonPanel(originalname, mineName).execute();
+  }
+
+  public void openDirectoryComparison(String originalName, String mineName)
+  {
+    WaitCursor.wait(this);
+
+    new NewDirectoryComparisonPanel(originalName, mineName).execute();
   }
 
   private JComponent getToolBar()
@@ -163,104 +188,72 @@ public class JMeldPanel
     File           file2;
     String         fileName;
 
-    System.out.println("new diff");
-
     dialog = new NewPanelDialog(this);
     dialog.show();
 
     if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
     {
-      fileName = dialog.getOriginalFileName();
-
-      if (StringUtil.isEmpty(fileName))
-      {
-        return;
-      }
-
-      if (!new File(fileName).exists())
-      {
-        return;
-      }
-
-      fileName = dialog.getMineFileName();
-
-      if (StringUtil.isEmpty(fileName))
-      {
-        return;
-      }
-
-      if (!new File(fileName).exists())
-      {
-        return;
-      }
-
-      open(dialog.getOriginalFileName(), dialog.getMineFileName());
+      openFileComparison(dialog.getOriginalFileName(), dialog.getMineFileName());
     }
-  }
-
-  public boolean isSaveEnabled()
-  {
-    DiffPanel dp;
-
-    dp = getCurrentDiffPanel();
-
-    if (dp == null)
+    else if (dialog.getValue() == NewPanelDialog.DIRECTORY_COMPARISON)
     {
-      return false;
+      openDirectoryComparison(dialog.getOriginalDirectoryName(),
+        dialog.getMineDirectoryName());
     }
-
-    return dp.isSaveEnabled();
   }
 
   public void doSave(ActionEvent ae)
   {
-    Component component;
+    getCurrentJMeldPanel().doSave();
+  }
 
-    component = tabbedPane.getSelectedComponent();
-    if(!(component instanceof DiffPanel))
+  public boolean isSaveEnabled()
+  {
+    JMeldPanelIF panel;
+
+    panel = getCurrentJMeldPanel();
+    if (panel == null)
     {
-      return;
+      return false;
     }
 
-    ((DiffPanel) component).save();
+    return panel.isSaveEnabled();
   }
 
   public void doUndo(ActionEvent ae)
   {
-    getCurrentDiffPanel().doUndo();
+    getCurrentJMeldPanel().doUndo();
   }
 
   public boolean isUndoEnabled()
   {
-    DiffPanel dp;
+    JMeldPanelIF panel;
 
-    dp = getCurrentDiffPanel();
-
-    if (dp == null)
+    panel = getCurrentJMeldPanel();
+    if (panel == null)
     {
       return false;
     }
 
-    return dp.isUndoEnabled();
+    return panel.isUndoEnabled();
   }
 
   public void doRedo(ActionEvent ae)
   {
-    getCurrentDiffPanel().doRedo();
+    getCurrentJMeldPanel().doRedo();
   }
 
   public boolean isRedoEnabled()
   {
-    DiffPanel dp;
+    JMeldPanelIF panel;
 
-    dp = getCurrentDiffPanel();
-
-    if (dp == null)
+    panel = getCurrentJMeldPanel();
+    if (panel == null)
     {
       return false;
     }
 
-    return dp.isRedoEnabled();
+    return panel.isRedoEnabled();
   }
 
   private ChangeListener getChangeListener()
@@ -274,35 +267,55 @@ public class JMeldPanel
       };
   }
 
-  private DiffPanel getCurrentDiffPanel()
+  private JMeldPanelIF getCurrentJMeldPanel()
   {
-    return (DiffPanel) tabbedPane.getSelectedComponent();
+    return (JMeldPanelIF) tabbedPane.getSelectedComponent();
   }
 
-  class NewDiffPanel
+  class NewFileComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private String           fileName1;
-    private String           fileName2;
+    private String           originalName;
+    private String           mineName;
     private BufferDocumentIF bd1;
     private BufferDocumentIF bd2;
     private JMeldDiff        diff;
     private Revision         revision;
 
-    NewDiffPanel(String fileName1, String fileName2)
+    NewFileComparisonPanel(String originalName, String mineName)
     {
-      this.fileName1 = fileName1;
-      this.fileName2 = fileName2;
+      this.originalName = originalName;
+      this.mineName = mineName;
     }
 
     public String doInBackground()
     {
+      if (StringUtil.isEmpty(originalName))
+      {
+        return "original filename is empty";
+      }
+
+      if (!new File(originalName).exists())
+      {
+        return "original filename(" + originalName + ") doesn't exist";
+      }
+
+      if (StringUtil.isEmpty(mineName))
+      {
+        return "mine filename is empty";
+      }
+
+      if (!new File(mineName).exists())
+      {
+        return "mine filename(" + mineName + ") doesn't exist";
+      }
+
       try
       {
-        bd1 = new FileDocument(new File(fileName1));
+        bd1 = new FileDocument(new File(originalName));
         bd1.read();
 
-        bd2 = new FileDocument(new File(fileName2));
+        bd2 = new FileDocument(new File(mineName));
         bd2.read();
 
         diff = new JMeldDiff();
@@ -322,8 +335,8 @@ public class JMeldPanel
     {
       try
       {
-        String    result;
-        DiffPanel panel;
+        String          result;
+        BufferDiffPanel panel;
 
         result = get();
 
@@ -333,8 +346,95 @@ public class JMeldPanel
             "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
 
-        panel = new DiffPanel(JMeldPanel.this);
+        panel = new BufferDiffPanel(JMeldPanel.this);
         panel.setBufferDocuments(bd1, bd2, diff, revision);
+
+        tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
+        tabbedPane.setSelectedComponent(panel);
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
+      finally
+      {
+        WaitCursor.resume(JMeldPanel.this);
+      }
+    }
+  }
+
+  class NewDirectoryComparisonPanel
+         extends SwingWorker<String, Object>
+  {
+    private String        originalName;
+    private String        mineName;
+    private File          original;
+    private File          mine;
+    private DirectoryDiff diff;
+
+    NewDirectoryComparisonPanel(String originalName, String mineName)
+    {
+      this.originalName = originalName;
+      this.mineName = mineName;
+    }
+
+    public String doInBackground()
+    {
+      if (StringUtil.isEmpty(originalName))
+      {
+        return "original directoryName is empty";
+      }
+
+      original = new File(originalName);
+      if (!original.exists())
+      {
+        return "original directoryName(" + originalName + ") doesn't exist";
+      }
+
+      if (!original.isDirectory())
+      {
+        return "original directoryName(" + originalName
+        + ") is not a directory";
+      }
+
+      if (StringUtil.isEmpty(mineName))
+      {
+        return "mine directoryName is empty";
+      }
+
+      mine = new File(mineName);
+      if (!mine.exists())
+      {
+        return "mine directoryName(" + mineName + ") doesn't exist";
+      }
+
+      if (!mine.isDirectory())
+      {
+        return "mine directoryName(" + mineName + ") is not a directory";
+      }
+
+      diff = new DirectoryDiff(original, mine);
+      diff.diff();
+
+      return null;
+    }
+
+    protected void done()
+    {
+      try
+      {
+        String             result;
+        DirectoryDiffPanel panel;
+
+        result = get();
+
+        if (result != null)
+        {
+          JOptionPane.showMessageDialog(JMeldPanel.this, result,
+            "Error opening file", JOptionPane.ERROR_MESSAGE);
+        }
+
+        panel = new DirectoryDiffPanel(JMeldPanel.this, diff);
 
         tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);
