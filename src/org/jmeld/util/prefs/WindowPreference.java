@@ -44,7 +44,7 @@ public class WindowPreference
   {
     return new WindowAdapter()
       {
-        public void targetClosing(WindowEvent we)
+        public void windowClosing(WindowEvent we)
         {
           save();
         }
