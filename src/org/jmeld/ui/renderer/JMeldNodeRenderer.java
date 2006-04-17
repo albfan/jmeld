@@ -12,11 +12,21 @@ public class JMeldNodeRenderer
        extends JLabel
        implements ListCellRenderer
 {
-  private boolean strikeThrough;
+  private boolean   strikeThrough;
+  private ImageIcon empty;
+  private ImageIcon added;
+  private ImageIcon changed;
+  private ImageIcon deleted;
 
   public JMeldNodeRenderer()
   {
     setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+    setOpaque(true);
+
+    empty = ImageUtil.getSmallImageIcon("stock_empty");
+    added = ImageUtil.getSmallImageIcon("stock_added");
+    changed = ImageUtil.getSmallImageIcon("stock_changed");
+    deleted = ImageUtil.getSmallImageIcon("stock_deleted");
   }
 
   public Component getListCellRendererComponent(JList list, Object value,
@@ -27,52 +37,42 @@ public class JMeldNodeRenderer
     node = (JMeldNode) value;
 
     setText(node.toString());
+    setBackground(Color.WHITE);
+    setIcon(empty);
     strikeThrough = false;
 
     if (node.getState() == JMeldNode.ADDED)
     {
       setForeground(Colors.ADDED_DARK);
+      setIcon(added);
     }
     else if (node.getState() == JMeldNode.DELETED)
     {
       setForeground(Colors.DELETED_DARK);
       strikeThrough = true;
+      setIcon(deleted);
     }
     else if (node.getState() == JMeldNode.CHANGED)
     {
       setForeground(Colors.CHANGED_DARK);
+      setIcon(changed);
     }
     else
     {
       setForeground(Color.BLACK);
     }
 
+    if (isSelected)
+    {
+      setBackground(list.getSelectionBackground());
+    }
+
     return this;
   }
 
-  public void paintComponent2(Graphics g)
-  {
-    Rectangle2D b;
-    int         y;
-    int         w;
-    int         x;
-
-    super.paintComponent(g);
-
-    if (strikeThrough)
-    {
-      b = getFontMetrics(getFont()).getStringBounds(getText(), g);
-      y = (getHeight() / 2 + (int) (b.getHeight() / 2)) / 2;
-      w = (int) b.getWidth();
-      x = (getIcon() == null ? 0 : getIcon().getIconWidth() + getIconTextGap());
-
-      g.setColor(Color.black);
-      g.drawLine(0, y, x + w, y);
-    }
-  }
   public void paintComponent(Graphics g)
   {
-    Rectangle cb;
+    Rectangle   cb;
     Rectangle2D b;
     int         y;
     int         w;
@@ -87,9 +87,11 @@ public class JMeldNodeRenderer
 
       cb = g.getClipBounds();
       b = getFontMetrics(getFont()).getStringBounds(getText(), g);
-      y = cb.y + insets.top + ((int)cb.getHeight() / 2);
+      y = cb.y + insets.top
+        + ((int) (cb.getHeight() - insets.top - insets.bottom) / 2);
       w = cb.y + (int) b.getWidth();
-      x = cb.x + insets.left;
+      x = cb.x + insets.left
+        + (getIcon() == null ? 0 : getIcon().getIconWidth() + getIconTextGap());
 
       g.setColor(Color.black);
       g.drawLine(x, y, x + w, y);
