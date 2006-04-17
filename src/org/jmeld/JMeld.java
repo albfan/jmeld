@@ -49,8 +49,6 @@ public class JMeld
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
       }
-
-      System.out.println("look & feel = " + UIManager.getLookAndFeel());
     }
     catch (Exception e)
     {
@@ -65,6 +63,9 @@ public class JMeld
     new WindowPreference(frame.getTitle(), frame);
 
     frame.setVisible(true);
+
+    // Just to keep the damned metacity happy
+    frame.toFront();
   }
 
   public static void main(String[] args)
