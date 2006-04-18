@@ -345,12 +345,14 @@ public class JMeldPanel
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
             "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
+        else
+        {
+          panel = new BufferDiffPanel(JMeldPanel.this);
+          panel.setBufferDocuments(bd1, bd2, diff, revision);
 
-        panel = new BufferDiffPanel(JMeldPanel.this);
-        panel.setBufferDocuments(bd1, bd2, diff, revision);
-
-        tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
-        tabbedPane.setSelectedComponent(panel);
+          tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
+          tabbedPane.setSelectedComponent(panel);
+        }
       }
       catch (Exception ex)
       {
