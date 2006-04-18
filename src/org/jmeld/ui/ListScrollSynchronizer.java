@@ -19,9 +19,6 @@ public class ListScrollSynchronizer
 
     vp1.addChangeListener(this);
     vp2.addChangeListener(this);
-
-    vp1.setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-    vp2.setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
   }
 
   public void stateChanged(ChangeEvent event)
