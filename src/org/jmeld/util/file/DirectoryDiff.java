@@ -18,6 +18,16 @@ public class DirectoryDiff
     this.mineDirectory = mineDirectory;
   }
 
+  public String getMineFileName(int index)
+  {
+    if (index < 0 || index >= mine.size())
+    {
+      return null;
+    }
+
+    return mineDirectory.getName() + File.separator + mine.get(index).getName();
+  }
+
   public File getMineDirectory()
   {
     return mineDirectory;
@@ -26,6 +36,16 @@ public class DirectoryDiff
   public List<FileNode> getMineNodes()
   {
     return mine;
+  }
+
+  public String getOriginalFileName(int index)
+  {
+    if (index < 0 || index >= mine.size())
+    {
+      return null;
+    }
+
+    return originalDirectory.getName() + File.separator + original.get(index).getName();
   }
 
   public File getOriginalDirectory()
@@ -45,8 +65,8 @@ public class DirectoryDiff
     String                name;
     Map<String, FileNode> mineMap;
     Map<String, FileNode> originalMap;
-    FileNode mineNode;
-    FileNode originalNode;
+    FileNode              mineNode;
+    FileNode              originalNode;
 
     filter = getFilter();
 
@@ -87,15 +107,15 @@ public class DirectoryDiff
     original = new ArrayList(originalMap.values());
     Collections.sort(original);
 
-    for(int i=0; i<mine.size(); i++)
+    for (int i = 0; i < mine.size(); i++)
     {
       mineNode = mine.get(i);
       originalNode = original.get(i);
 
-      if(mineNode.getState() == JMeldNode.EQUAL &&
-         originalNode.getState() == JMeldNode.EQUAL)
+      if (mineNode.getState() == JMeldNode.EQUAL
+        && originalNode.getState() == JMeldNode.EQUAL)
       {
-        if(!mineNode.contentEquals(originalNode))
+        if (!mineNode.contentEquals(originalNode))
         {
           mineNode.setState(JMeldNode.CHANGED);
           originalNode.setState(JMeldNode.CHANGED);
