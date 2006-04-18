@@ -80,7 +80,7 @@ public class FilePanel
     saveButton.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
     saveButton.addActionListener(getSaveButtonAction());
 
-    timer = new Timer(500, refresh());
+    timer = new Timer(100, refresh());
     timer.setRepeats(false);
   }
 
