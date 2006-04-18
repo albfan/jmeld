@@ -90,7 +90,7 @@ public class JMeldNodeRenderer
       y = cb.y + insets.top
         + ((int) (cb.getHeight() - insets.top - insets.bottom) / 2);
       w = cb.y + (int) b.getWidth();
-      x = cb.x + insets.left
+      x = insets.left
         + (getIcon() == null ? 0 : getIcon().getIconWidth() + getIconTextGap());
 
       g.setColor(Color.black);
