@@ -6,54 +6,68 @@ import java.io.*;
 import java.util.*;
 
 public class DirectoryDiff
+       extends FolderDiff
 {
-  private File           mineDirectory;
-  private File           originalDirectory;
-  private List<FileNode> mine;
-  private List<FileNode> original;
+  private File            mineDirectory;
+  private File            originalDirectory;
+  private List<JMeldNode> mine;
+  private List<JMeldNode> original;
 
   public DirectoryDiff(File originalDirectory, File mineDirectory)
   {
     this.originalDirectory = originalDirectory;
     this.mineDirectory = mineDirectory;
+
+    try
+    {
+      setOriginalFolderShortName(originalDirectory.getName());
+      setMineFolderShortName(mineDirectory.getName());
+      setOriginalFolderName(originalDirectory.getCanonicalPath());
+      setMineFolderName(mineDirectory.getCanonicalPath());
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
   }
 
-  public String getMineFileName(int index)
+  public String getMineNodeName(int index)
   {
     if (index < 0 || index >= mine.size())
     {
       return null;
     }
 
-    return mineDirectory.getName() + File.separator + mine.get(index).getName();
+    return getMineFolderName() + File.separator + mine.get(index).getName();
   }
 
-  public File getMineDirectory()
+  public File getMineFolder()
   {
     return mineDirectory;
   }
 
-  public List<FileNode> getMineNodes()
+  public List<JMeldNode> getMineNodes()
   {
     return mine;
   }
 
-  public String getOriginalFileName(int index)
+  public String getOriginalNodeName(int index)
   {
     if (index < 0 || index >= mine.size())
     {
       return null;
     }
 
-    return originalDirectory.getName() + File.separator + original.get(index).getName();
+    return getOriginalFolderName() + File.separator
+    + original.get(index).getName();
   }
 
-  public File getOriginalDirectory()
+  public File getOriginalFolder()
   {
     return originalDirectory;
   }
 
-  public List<FileNode> getOriginalNodes()
+  public List<JMeldNode> getOriginalNodes()
   {
     return original;
   }
@@ -65,37 +79,39 @@ public class DirectoryDiff
     String                name;
     Map<String, FileNode> mineMap;
     Map<String, FileNode> originalMap;
-    FileNode              mineNode;
-    FileNode              originalNode;
+    JMeldNode             mineNode;
+    JMeldNode             originalNode;
 
     filter = getFilter();
 
     mineMap = new DirectoryScan(mineDirectory, filter).scan();
     originalMap = new DirectoryScan(originalDirectory, filter).scan();
 
-    for (FileNode node : mineMap.values())
+    for (JMeldNode node : mineMap.values())
     {
       name = node.getName();
       if (!originalMap.containsKey(name))
       {
         newNode = new FileNode(name, new File(originalDirectory, name));
-        newNode.setState(FileNode.DELETED);
+        newNode.setLeaf(node.isLeaf());
+        newNode.setState(JMeldNode.DELETED);
 
-        node.setState(FileNode.ADDED);
+        node.setState(JMeldNode.ADDED);
 
         originalMap.put(name, newNode);
       }
     }
 
-    for (FileNode node : originalMap.values())
+    for (JMeldNode node : originalMap.values())
     {
       name = node.getName();
       if (!mineMap.containsKey(name))
       {
         newNode = new FileNode(name, new File(originalDirectory, name));
-        newNode.setState(FileNode.ADDED);
+        newNode.setLeaf(node.isLeaf());
+        newNode.setState(JMeldNode.ADDED);
 
-        node.setState(FileNode.DELETED);
+        node.setState(JMeldNode.DELETED);
 
         mineMap.put(name, newNode);
       }
@@ -140,14 +156,14 @@ public class DirectoryDiff
   public void print()
   {
     System.out.println("original:");
-    for (FileNode node : original)
+    for (JMeldNode node : original)
     {
       node.print();
     }
 
     System.out.println();
     System.out.println("mine:");
-    for (FileNode node : mine)
+    for (JMeldNode node : mine)
     {
       node.print();
     }

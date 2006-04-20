@@ -54,28 +54,31 @@ public class JMeldPanel
     openComparison(originalName, mineName);
   }
 
-  public void openComparison(String originalname, String mineName)
+  public void openComparison(String originalName, String mineName)
   {
     File original;
     File mine;
 
-    original = new File(originalname);
-    mine = new File(mineName);
-    if (original.isDirectory() && mine.isDirectory())
+    if (!StringUtil.isEmpty(originalName) && !StringUtil.isEmpty(mineName))
     {
-      openDirectoryComparison(originalname, mineName);
-    }
-    else
-    {
-      openFileComparison(originalname, mineName);
+      original = new File(originalName);
+      mine = new File(mineName);
+      if (original.isDirectory() && mine.isDirectory())
+      {
+        openDirectoryComparison(originalName, mineName);
+      }
+      else
+      {
+        openFileComparison(originalName, mineName);
+      }
     }
   }
 
-  public void openFileComparison(String originalname, String mineName)
+  public void openFileComparison(String originalName, String mineName)
   {
     WaitCursor.wait(this);
 
-    new NewFileComparisonPanel(originalname, mineName).execute();
+    new NewFileComparisonPanel(originalName, mineName).execute();
   }
 
   public void openDirectoryComparison(String originalName, String mineName)
@@ -425,8 +428,8 @@ public class JMeldPanel
     {
       try
       {
-        String             result;
-        DirectoryDiffPanel panel;
+        String          result;
+        FolderDiffPanel panel;
 
         result = get();
 
@@ -436,7 +439,7 @@ public class JMeldPanel
             "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
 
-        panel = new DirectoryDiffPanel(JMeldPanel.this, diff);
+        panel = new FolderDiffPanel(JMeldPanel.this, diff);
 
         tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);

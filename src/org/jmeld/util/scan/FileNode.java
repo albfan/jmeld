@@ -12,13 +12,18 @@ public class FileNode
 
   public FileNode(String name, File file)
   {
-    super(name, file.isDirectory());
+    super(name, !file.isDirectory());
     this.file = file;
   }
 
   public File getFile()
   {
     return file;
+  }
+
+  public long getSize()
+  {
+    return file.length();
   }
 
   public boolean contentEquals(JMeldNode node)

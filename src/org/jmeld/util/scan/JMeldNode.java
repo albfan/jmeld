@@ -16,6 +16,7 @@ public class JMeldNode
   private String  name;
   private boolean isLeaf;
   private char    state;
+  private boolean collapsed;
 
   public JMeldNode(String name, boolean isLeaf)
   {
@@ -30,9 +31,24 @@ public class JMeldNode
     return name;
   }
 
+  public void setLeaf(boolean isLeaf)
+  {
+    this.isLeaf = isLeaf;
+  }
+
   public boolean isLeaf()
   {
     return isLeaf;
+  }
+
+  public boolean isCollapsed()
+  {
+    return collapsed;
+  }
+
+  public void setCollapsed(boolean collapsed)
+  {
+    this.collapsed = collapsed;
   }
 
   public void setState(char state)
@@ -43,6 +59,11 @@ public class JMeldNode
   public char getState()
   {
     return state;
+  }
+
+  public long getSize()
+  {
+    return 0;
   }
 
   public int compareTo(JMeldNode o)
