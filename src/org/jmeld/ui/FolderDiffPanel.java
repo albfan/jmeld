@@ -2,10 +2,14 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.layout.*;
 
+import org.jdesktop.swingx.*;
+import org.jdesktop.swingx.decorator.*;
+import org.jdesktop.swingx.decorator.Highlighter;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
 import org.jmeld.ui.text.*;
+import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.scan.*;
@@ -44,7 +48,8 @@ public class FolderDiffPanel
 
   private void init()
   {
-    JTable           table;
+    JXTable          table;
+    JTableHeader     tableHeader;
     JScrollPane      sp;
     TableColumnModel columnModel;
     TableColumn      column;
@@ -52,14 +57,26 @@ public class FolderDiffPanel
 
     setLayout(new BorderLayout());
 
+    table = new JXTable();
+    table.setSortable(false);
+    table.setHighlighters(new HighlighterPipeline(
+        new Highlighter[]
+        {
+          new AlternateRowHighlighter(Color.white,
+            Colors.TABLEROW_HIGHLIGHTER, Color.black)
+        }));
+
     tableModel = new FolderDiffTableModel(diff);
-    table = new JTable(tableModel);
-    table.addMouseListener(tableModel.getMouseListener());
+    table.setModel(tableModel);
+
+    tableHeader = table.getTableHeader();
+    tableHeader.setReorderingAllowed(false);
+    tableHeader.setResizingAllowed(false);
 
     // Make sure the icons fit well.
-    if (table.getRowHeight() < 20)
+    if (table.getRowHeight() < 22)
     {
-      table.setRowHeight(20);
+      table.setRowHeight(22);
     }
 
     columnModel = table.getColumnModel();
@@ -76,8 +93,11 @@ public class FolderDiffPanel
       }
     }
 
-    // double-click will show the differences of a node.
+    // Double-click will show the differences of a node.
     table.addMouseListener(getMouseListener());
+
+    // Expand/collapse folders (with one mouseclick):
+    table.addMouseListener(tableModel.getMouseListener());
 
     sp = new JScrollPane(table);
     add(sp, BorderLayout.CENTER);

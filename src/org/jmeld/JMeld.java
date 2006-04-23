@@ -4,6 +4,7 @@ import com.jgoodies.looks.plastic.*;
 import com.jgoodies.looks.plastic.theme.*;
 
 import org.jmeld.ui.*;
+import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.prefs.*;
 
@@ -39,13 +40,15 @@ public class JMeld
       System.setProperty("swing.aatext", "true");
 
       version = System.getProperty("java.version");
-      if (version.startsWith("1.6"))
+      /*
+         if (version.startsWith("1.7"))
+         {
+           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+         }
+         else
+       */
       {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      }
-      else
-      {
-        PlasticLookAndFeel.setPlasticTheme(new SkyBluer());
+        PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
       }

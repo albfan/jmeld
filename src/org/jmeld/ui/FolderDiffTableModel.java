@@ -236,7 +236,7 @@ public class FolderDiffTableModel
     }
   }
 
-  protected MouseListener getMouseListener()
+  MouseListener getMouseListener()
   {
     return new MouseAdapter()
       {

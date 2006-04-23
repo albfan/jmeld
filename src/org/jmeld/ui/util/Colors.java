@@ -12,4 +12,6 @@ public class Colors
   public static Color ADDED_DARK = new Color(13, 143, 13);
   public static Color CHANGED_DARK = new Color(62, 122, 172);
   public static Color DELETED_DARK = new Color(193, 50, 0);
+
+  public static Color TABLEROW_HIGHLIGHTER = new Color(255, 253, 240);
 }
