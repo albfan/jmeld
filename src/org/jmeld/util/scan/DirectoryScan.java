@@ -1,5 +1,7 @@
 package org.jmeld.util.scan;
 
+import org.jmeld.util.node.*;
+
 import java.io.*;
 import java.util.*;
 

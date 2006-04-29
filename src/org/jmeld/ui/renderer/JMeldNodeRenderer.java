@@ -1,7 +1,7 @@
 package org.jmeld.ui.renderer;
 
 import org.jmeld.ui.util.*;
-import org.jmeld.util.scan.*;
+import org.jmeld.util.node.*;
 
 import javax.swing.*;
 

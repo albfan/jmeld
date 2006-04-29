@@ -1,6 +1,6 @@
 package org.jmeld.util.file;
 
-import org.jmeld.util.scan.*;
+import org.jmeld.util.node.*;
 
 import java.util.*;
 
