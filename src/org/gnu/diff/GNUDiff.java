@@ -37,11 +37,6 @@ public class GNUDiff
     Revision revision;
     Delta    delta;
 
-    if (change == null)
-    {
-      throw new IllegalArgumentException("change is null");
-    }
-
     if (orig == null)
     {
       throw new IllegalArgumentException("original sequence is null");
