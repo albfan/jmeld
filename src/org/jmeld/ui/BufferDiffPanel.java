@@ -288,7 +288,7 @@ public class BufferDiffPanel
     }
   }
 
-  public UndoableEditListener getUndoHandler()
+  public MyUndoManager getUndoHandler()
   {
     return undoManager;
   }
@@ -302,8 +302,30 @@ public class BufferDiffPanel
          extends UndoManager
          implements UndoableEditListener
   {
+    CompoundEdit activeEdit;
+
+    public void start(String text)
+    {
+      activeEdit = new CompoundEdit();
+    }
+
+    public void end(String text)
+    {
+      activeEdit.end();
+      addEdit(activeEdit);
+      activeEdit = null;
+
+      checkActions();
+    }
+
     public void undoableEditHappened(UndoableEditEvent e)
     {
+      if(activeEdit != null)
+      {
+        activeEdit.addEdit(e.getEdit());
+        return;
+      }
+
       addEdit(e.getEdit());
       checkActions();
     }

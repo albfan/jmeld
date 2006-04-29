@@ -75,7 +75,9 @@ public class DiffScrollComponent
     {
       if (command.contains(x, y))
       {
+System.out.println("before command:" + command);
         command.execute();
+System.out.println("after command");
         return true;
       }
     }
@@ -449,7 +451,9 @@ public class DiffScrollComponent
         fromOffset = toBufferDocument.getOffsetForLine(fromLine);
         toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
 
+        diffPanel.getUndoHandler().start("replace");
         to.replace(fromOffset, toOffset - fromOffset, s, null);
+        diffPanel.getUndoHandler().end("replace");
       }
       catch (Exception ex)
       {
@@ -502,7 +506,9 @@ public class DiffScrollComponent
         fromOffset = bufferDocument.getOffsetForLine(fromLine);
         toOffset = bufferDocument.getOffsetForLine(fromLine + size);
 
+        diffPanel.getUndoHandler().start("remove");
         document.remove(fromOffset, toOffset - fromOffset);
+        diffPanel.getUndoHandler().end("remove");
       }
       catch (Exception ex)
       {
