@@ -24,6 +24,8 @@ public interface BufferDocumentIF
 
   public AbstractBufferDocument.Line[] getLines();
 
+  public String getLineText(int lineNumber);
+
   public int getOffsetForLine(int lineNumber);
 
   public int getLineForOffset(int offset);

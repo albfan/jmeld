@@ -88,6 +88,19 @@ public abstract class AbstractBufferDocument
     return lines;
   }
 
+  public String getLineText(int lineNumber)
+  {
+    Line[] lines;
+
+    lines = getLines();
+    if(lineNumber >= lines.length || lineNumber < 0)
+    {
+      return "<NO LINE>";
+    }
+
+    return lines[lineNumber].toString();
+  }
+
   public int getOffsetForLine(int lineNumber)
   {
     int lineCounter;
@@ -203,6 +216,7 @@ public abstract class AbstractBufferDocument
   {
     Writer out;
 
+    System.out.println("write : " + getName());
     try
     {
       out = getWriter();
