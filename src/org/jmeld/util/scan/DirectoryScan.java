@@ -1,5 +1,6 @@
 package org.jmeld.util.scan;
 
+import org.jmeld.ui.*;
 import org.jmeld.util.node.*;
 
 import java.io.*;
@@ -11,7 +12,9 @@ public class DirectoryScan
   private Filter                filter;
   private Map<String, FileNode> map;
 
-  public DirectoryScan(File directory, Filter filter)
+  public DirectoryScan(
+    File   directory,
+    Filter filter)
   {
     this.directory = directory;
     this.filter = filter;
@@ -32,14 +35,26 @@ public class DirectoryScan
   class FileVisitor
          implements FileVisitorIF
   {
-    public void visit(String directoryName, File file)
+    public void visit(
+      String directoryName,
+      File   file)
     {
-      map.put(directoryName, new FileNode(directoryName, file));
+      map.put(
+        directoryName,
+        new FileNode(directoryName, file));
+
+      if (file.isDirectory())
+      {
+        StatusBar.setStatus("Scanning directory : " + directoryName
+          + File.separator + file.getName());
+      }
     }
   }
 
   public static void main(String[] args)
   {
-    new DirectoryScan(new File(args[0]), new Filter()).scan();
+    new DirectoryScan(
+      new File(args[0]),
+      new Filter()).scan();
   }
 }

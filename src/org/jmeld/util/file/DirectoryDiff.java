@@ -1,5 +1,6 @@
 package org.jmeld.util.file;
 
+import org.jmeld.ui.*;
 import org.jmeld.util.scan.*;
 import org.jmeld.util.node.*;
 
@@ -85,6 +86,9 @@ public class DirectoryDiff
 
     filter = getFilter();
 
+    StatusBar.start();
+    StatusBar.setStatus("Start scanning directories...");
+
     mineMap = new DirectoryScan(mineDirectory, filter).scan();
     originalMap = new DirectoryScan(originalDirectory, filter).scan();
 
@@ -132,6 +136,7 @@ public class DirectoryDiff
       if (mineNode.getState() == JMeldNode.EQUAL
         && originalNode.getState() == JMeldNode.EQUAL)
       {
+        StatusBar.setStatus("Comparing file : " + mineNode.getName());
         if (!mineNode.contentEquals(originalNode))
         {
           mineNode.setState(JMeldNode.CHANGED);
@@ -139,6 +144,8 @@ public class DirectoryDiff
         }
       }
     }
+    StatusBar.setStatus("Ready comparing directories");
+    StatusBar.stop();
   }
 
   private Filter getFilter()

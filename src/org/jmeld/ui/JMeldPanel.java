@@ -48,6 +48,7 @@ public class JMeldPanel
     setLayout(new BorderLayout());
     add(getToolBar(), BorderLayout.PAGE_START);
     add(tabbedPane, BorderLayout.CENTER);
+    add(getStatusBar(), BorderLayout.PAGE_END);
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
@@ -88,33 +89,6 @@ public class JMeldPanel
     new NewDirectoryComparisonPanel(originalName, mineName).execute();
   }
 
-  private JComponent getToolBar()
-  {
-    JButton        button;
-    JToolBar       toolBar;
-    ToolBarBuilder builder;
-
-    toolBar = new JToolBar();
-    toolBar.setFloatable(false);
-    toolBar.setRollover(true);
-
-    builder = new ToolBarBuilder(toolBar);
-
-    button = WidgetFactory.getToolBarButton(actionHandler.get(NEW_ACTION));
-    builder.addButton(button);
-    button = WidgetFactory.getToolBarButton(actionHandler.get(SAVE_ACTION));
-    builder.addButton(button);
-
-    builder.addSeparator();
-
-    button = WidgetFactory.getToolBarButton(actionHandler.get(UNDO_ACTION));
-    builder.addButton(button);
-    button = WidgetFactory.getToolBarButton(actionHandler.get(REDO_ACTION));
-    builder.addButton(button);
-
-    return toolBar;
-  }
-
   public JMenuBar getMenuBar()
   {
     JMenuBar menuBar;
@@ -146,6 +120,38 @@ public class JMeldPanel
     //menu.add(new JMenuItem("Report bug"));
     //menu.add(new JMenuItem("About"));
     return menuBar;
+  }
+
+  private JComponent getToolBar()
+  {
+    JButton        button;
+    JToolBar       toolBar;
+    ToolBarBuilder builder;
+
+    toolBar = new JToolBar();
+    toolBar.setFloatable(false);
+    toolBar.setRollover(true);
+
+    builder = new ToolBarBuilder(toolBar);
+
+    button = WidgetFactory.getToolBarButton(actionHandler.get(NEW_ACTION));
+    builder.addButton(button);
+    button = WidgetFactory.getToolBarButton(actionHandler.get(SAVE_ACTION));
+    builder.addButton(button);
+
+    builder.addSeparator();
+
+    button = WidgetFactory.getToolBarButton(actionHandler.get(UNDO_ACTION));
+    builder.addButton(button);
+    button = WidgetFactory.getToolBarButton(actionHandler.get(REDO_ACTION));
+    builder.addButton(button);
+
+    return toolBar;
+  }
+
+  private JComponent getStatusBar()
+  {
+    return StatusBar.getInstance();
   }
 
   public void initActions()
@@ -315,14 +321,20 @@ public class JMeldPanel
 
       try
       {
+        StatusBar.start();
+        StatusBar.setStatus("Reading file: " + originalName);
         bd1 = new FileDocument(new File(originalName));
         bd1.read();
 
+        StatusBar.setStatus("Reading file: " + mineName);
         bd2 = new FileDocument(new File(mineName));
         bd2.read();
 
+        StatusBar.setStatus("Calculating differences...");
         diff = new JMeldDiff();
         revision = diff.diff(bd1.getLines(), bd2.getLines());
+        StatusBar.setStatus("Ready calculating differences");
+        StatusBar.stop();
       }
       catch (Exception ex)
       {
