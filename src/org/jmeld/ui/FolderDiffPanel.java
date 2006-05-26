@@ -4,7 +4,9 @@ import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.Highlighter;
+import org.jdesktop.swingx.table.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
@@ -39,7 +41,9 @@ public class FolderDiffPanel
   private MouseListener          mouseListener;
   private FolderDiffTableModel   tableModel;
 
-  FolderDiffPanel(JMeldPanel mainPanel, FolderDiff diff)
+  FolderDiffPanel(
+    JMeldPanel mainPanel,
+    FolderDiff diff)
   {
     this.mainPanel = mainPanel;
     this.diff = diff;
@@ -49,30 +53,30 @@ public class FolderDiffPanel
 
   private void init()
   {
-    JXTable          table;
-    JTableHeader     tableHeader;
-    JScrollPane      sp;
-    TableColumnModel columnModel;
-    TableColumn      column;
-    int              preferredWidth;
+    JXTable                  table;
+    JXGroupableTableHeader   tableHeader;
+    JScrollPane              sp;
+    TableColumnModel         columnModel;
+    TableColumn              column;
+    int                      preferredWidth;
+    Map<String, ColumnGroup> columnGroups;
+    String                   groupName;
+    ColumnGroup              group;
 
     setLayout(new BorderLayout());
 
     table = new JXTable();
     table.setSortable(false);
-    table.setHighlighters(new HighlighterPipeline(
+    table.setHighlighters(
+      new HighlighterPipeline(
         new Highlighter[]
         {
           new AlternateRowHighlighter(Color.white,
-            Colors.TABLEROW_HIGHLIGHTER, Color.black)
+            Colors.TABLEROW_HIGHLIGHTER, Color.black), getHighlighter(),
         }));
 
     tableModel = new FolderDiffTableModel(diff);
     table.setModel(tableModel);
-
-    tableHeader = table.getTableHeader();
-    tableHeader.setReorderingAllowed(false);
-    tableHeader.setResizingAllowed(false);
 
     // Make sure the icons fit well.
     if (table.getRowHeight() < 22)
@@ -81,6 +85,13 @@ public class FolderDiffPanel
     }
 
     columnModel = table.getColumnModel();
+
+    tableHeader = new JXGroupableTableHeader(columnModel);
+    tableHeader.setReorderingAllowed(false);
+    tableHeader.setResizingAllowed(false);
+    table.setTableHeader(tableHeader);
+
+    columnGroups = new HashMap<String, ColumnGroup>();
     for (int i = 0; i < tableModel.getColumnCount(); i++)
     {
       column = columnModel.getColumn(i);
@@ -92,6 +103,23 @@ public class FolderDiffPanel
         column.setMaxWidth(preferredWidth);
         column.setPreferredWidth(preferredWidth);
       }
+
+      groupName = tableModel.getColumnGroupName(i);
+      if (groupName != null)
+      {
+        group = columnGroups.get(groupName);
+        if (group == null)
+        {
+          group = new ColumnGroup(groupName);
+          columnGroups.put(groupName, group);
+        }
+        group.add(column);
+      }
+    }
+
+    for (ColumnGroup cg : columnGroups.values())
+    {
+      tableHeader.addColumnGroup(cg);
     }
 
     // Double-click will show the differences of a node.
@@ -129,7 +157,8 @@ public class FolderDiffPanel
                 originalNode = tableModel.getOriginalNode(rowIndex);
                 mineNode = tableModel.getMineNode(rowIndex);
 
-                mainPanel.openFileComparison(originalNode.getName(),
+                mainPanel.openFileComparison(
+                  originalNode.getName(),
                   mineNode.getName());
               }
             }
@@ -164,5 +193,55 @@ public class FolderDiffPanel
 
   public void doRedo()
   {
+  }
+
+  private Highlighter getHighlighter()
+  {
+    return new Highlighter()
+      {
+        private boolean dontFireStateChanges;
+
+        public Component highlight(
+          Component        renderer,
+          ComponentAdapter adapter)
+        {
+          Component c;
+          Color     background;
+          Color     orgBackground;
+
+          background = tableModel.getColumnBackground(adapter.column);
+          if (background == null)
+          {
+            c = renderer;
+          }
+          else
+          {
+            dontFireStateChanges = true;
+            try
+            {
+              orgBackground = getBackground();
+              setBackground(background);
+              c = super.highlight(renderer, adapter);
+              setBackground(orgBackground);
+            }
+            finally
+            {
+              dontFireStateChanges = false;
+            }
+          }
+
+          return c;
+        }
+
+        protected void fireStateChanged()
+        {
+          if (dontFireStateChanges)
+          {
+            return;
+          }
+
+          super.fireStateChanged();
+        }
+      };
   }
 }
