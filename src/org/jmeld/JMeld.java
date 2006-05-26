@@ -48,9 +48,10 @@ public class JMeld
          else
        */
       {
-        PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
-        PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
-        UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+        //PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
+        //PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
+        //UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+        //UIManager.setLookAndFeel(new com.lipstikLF.LipstikLookAndFeel());
       }
     }
     catch (Exception e)
