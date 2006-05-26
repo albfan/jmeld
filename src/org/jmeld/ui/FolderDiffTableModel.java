@@ -4,11 +4,12 @@ import org.jmeld.diff.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.file.*;
-import org.jmeld.util.scan.*;
+import org.jmeld.util.node.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
@@ -25,12 +26,24 @@ public class FolderDiffTableModel
     this.diff = diff;
 
     columns = new ArrayList<Column>();
-    columns.add(new Column("orgNode", "Node", Icon.class, 40));
-    columns.add(new Column("orgState", "", Icon.class, 25));
-    columns.add(new Column("orgName", "Name", String.class, -1));
-    columns.add(new Column("orgSize", "Size", Integer.class, 100));
-    columns.add(new Column("mineState", "", Icon.class, 25));
-    columns.add(new Column("mineSize", "Size", Integer.class, 100));
+    columns.add(new Column("orgNode", null, "Node", Icon.class, 40, null));
+    columns.add(new Column("orgName", null, "Name", String.class, -1, null));
+    columns.add(
+      new Column("orgState", "Original", "", Icon.class, 25,
+        Colors.TABLEROW_ORG));
+    columns.add(
+      new Column("orgSize", "Original", "Size", Integer.class, 80,
+        Colors.TABLEROW_ORG));
+    columns.add(
+      new Column("copyToRight", "Original", "", Icon.class, 25,
+        Colors.TABLEROW_ORG));
+    columns.add(
+      new Column("copyToLeft", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
+    columns.add(
+      new Column("mineSize", "Mine", "Size", Integer.class, 80,
+        Colors.TABLEROW_MINE));
+    columns.add(
+      new Column("mineState", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
 
     nodeFilter = new NodeFilter();
   }
@@ -50,6 +63,16 @@ public class FolderDiffTableModel
     return columns.get(columnIndex).columnClass;
   }
 
+  public Color getColumnBackground(int columnIndex)
+  {
+    return columns.get(columnIndex).background;
+  }
+
+  public String getColumnGroupName(int columnIndex)
+  {
+    return columns.get(columnIndex).columnGroupName;
+  }
+
   public int getColumnCount()
   {
     return columns.size();
@@ -65,7 +88,9 @@ public class FolderDiffTableModel
     return columns.get(columnIndex).id;
   }
 
-  public Object getValueAt(int rowIndex, int columnIndex)
+  public Object getValueAt(
+    int rowIndex,
+    int columnIndex)
   {
     String id;
 
@@ -99,6 +124,16 @@ public class FolderDiffTableModel
     if (id.equals("mineSize"))
     {
       return getMineNode(rowIndex).getSize();
+    }
+
+    if (id.equals("copyToRight"))
+    {
+      return ImageUtil.getSmallImageIcon("stock_copyToRight");
+    }
+
+    if (id.equals("copyToLeft"))
+    {
+      return ImageUtil.getSmallImageIcon("stock_copyToLeft");
     }
 
     return null;
@@ -250,12 +285,13 @@ public class FolderDiffTableModel
           if (me.getClickCount() == 1)
           {
             rowIndex = ((JTable) me.getSource()).rowAtPoint(me.getPoint());
-            columnIndex = ((JTable) me.getSource()).columnAtPoint(me.getPoint());
+            columnIndex = ((JTable) me.getSource()).columnAtPoint(
+                me.getPoint());
             id = getColumnId(columnIndex);
             if (id.equals("orgNode"))
             {
               node = getOriginalNode(rowIndex);
-              if(!node.isLeaf())
+              if (!node.isLeaf())
               {
                 node.setCollapsed(!node.isCollapsed());
 
@@ -271,17 +307,26 @@ public class FolderDiffTableModel
   public class Column
   {
     String id;
+    String columnGroupName;
     String columnName;
     Class  columnClass;
     int    columnSize;
+    Color  background;
 
-    public Column(String id, String columnName, Class columnClass,
-      int columnSize)
+    public Column(
+      String id,
+      String columnGroupName,
+      String columnName,
+      Class  columnClass,
+      int    columnSize,
+      Color  background)
     {
       this.id = id;
+      this.columnGroupName = columnGroupName;
       this.columnName = columnName;
       this.columnClass = columnClass;
       this.columnSize = columnSize;
+      this.background = background;
     }
   }
 }
