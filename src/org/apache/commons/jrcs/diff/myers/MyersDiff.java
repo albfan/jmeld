@@ -78,8 +78,8 @@ import java.util.*;
 public class MyersDiff
        implements DiffAlgorithm
 {
-  private static int    MAXTIME = 1000;
-  public static boolean checkMaxTime = false;
+  private static int MAXTIME = 1000;
+  public boolean     checkMaxTime = false;
 
   /**
    * Constructs an instance of the Myers differencing algorithm.
@@ -88,10 +88,17 @@ public class MyersDiff
   {
   }
 
+  public void checkMaxTime(boolean checkMaxTime)
+  {
+    this.checkMaxTime = checkMaxTime;
+  }
+
   /**
    * {@inheritDoc}
    */
-  public Revision diff(Object[] orig, Object[] rev)
+  public Revision diff(
+    Object[] orig,
+    Object[] rev)
     throws DifferentiationFailedException
   {
     PathNode path = buildPath(orig, rev);
@@ -109,7 +116,9 @@ public class MyersDiff
    * @return A minimum {@link PathNode Path} accross the differences graph.
    * @throws DifferentiationFailedException if a diff path could not be found.
    */
-  public static PathNode buildPath(Object[] orig, Object[] rev)
+  public PathNode buildPath(
+    Object[] orig,
+    Object[] rev)
     throws DifferentiationFailedException
   {
     int                    N;
@@ -153,7 +162,9 @@ public class MyersDiff
 
     startTime = System.currentTimeMillis();
 
-    diagonal.put(middle + 1, new Snake(0, -1, null));
+    diagonal.put(
+      middle + 1,
+      new Snake(0, -1, null));
     for (int d = 0; d < MAX; d++)
     {
       if (checkMaxTime && System.currentTimeMillis() - startTime > MAXTIME)
@@ -217,7 +228,7 @@ public class MyersDiff
     throw new DifferentiationFailedException("could not find a diff path");
   }
 
-  private static boolean isEmpty(Object o)
+  private boolean isEmpty(Object o)
   {
     String s;
 
@@ -241,7 +252,9 @@ public class MyersDiff
    * @throws DifferentiationFailedException if a {@link Revision} could
    *         not be built from the given path.
    */
-  public static Revision buildRevision(PathNode path, Object[] orig,
+  public Revision buildRevision(
+    PathNode path,
+    Object[] orig,
     Object[] rev)
   {
     if (path == null)
@@ -280,7 +293,8 @@ public class MyersDiff
       int   ianchor = path.i;
       int   janchor = path.j;
 
-      Delta delta = Delta.newDelta(new Chunk(orig, ianchor, i - ianchor),
+      Delta delta = Delta.newDelta(
+          new Chunk(orig, ianchor, i - ianchor),
           new Chunk(rev, janchor, j - janchor));
 
       revision.insertDelta(delta);
