@@ -6,20 +6,29 @@ import org.apache.commons.jrcs.diff.myers.*;
 import org.gnu.diff.*;
 import org.jmeld.util.*;
 
+import java.util.*;
+
 public class JMeldDiff
 {
-  private DiffAlgorithm algorithm;
+  private List<DiffAlgorithm> algorithms;
 
   public JMeldDiff()
   {
-    MyersDiff.checkMaxTime = true;
+    MyersDiff myersDiff;
+
+    myersDiff = new MyersDiff();
+    myersDiff.checkMaxTime(true);
 
     // MyersDiff is the fastest but can be very slow when 2 files
     //   are very different.
-    algorithm = new MyersDiff();
+    algorithms = new ArrayList<DiffAlgorithm>();
+    algorithms.add(myersDiff);
+    algorithms.add(new GNUDiff());
   }
 
-  public Revision diff(Object[] a, Object[] b)
+  public Revision diff(
+    Object[] a,
+    Object[] b)
     throws DifferentiationFailedException
   {
     Diff     diff;
@@ -31,7 +40,7 @@ public class JMeldDiff
 
     // First try MyersAlgoritm and if that takes too much time : Then
     //   try GNUAlgoritm.
-    for (;;)
+    for (DiffAlgorithm algorithm : algorithms)
     {
       try
       {
@@ -42,10 +51,10 @@ public class JMeldDiff
       }
       catch (MaxTimeExceededException ex)
       {
-        // GNUDiff is slower than MyersDiff but much faster if 2 files
-        //   are very different.
-        algorithm = new GNUDiff();
+        System.out.println("Time exceeded: try next algorithm");
       }
     }
+
+    return null;
   }
 }
