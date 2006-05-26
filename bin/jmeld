@@ -1,0 +1,4 @@
+#!/bin/sh
+
+. /projecten/jmeld/trunk/bin/setDevelopment.sh
+java org.jmeld.JMeld $*
