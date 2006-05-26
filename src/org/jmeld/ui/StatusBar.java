@@ -85,7 +85,7 @@ public class StatusBar
 
   public static void stop()
   {
-    //instance.busy = false;
+    instance.busy = false;
     instance.timer.restart();
   }
 
