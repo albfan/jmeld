@@ -196,7 +196,13 @@ public class Diff
   public Revision diff(Object[] rev)
     throws DifferentiationFailedException
   {
-    return algorithm.diff(orig, rev);
+    Revision revision;
+
+    revision = algorithm.diff(orig, rev);
+    revision.setOrgSize(orig.length);
+    revision.setRevSize(rev.length);
+
+    return revision;
   }
 
   /**

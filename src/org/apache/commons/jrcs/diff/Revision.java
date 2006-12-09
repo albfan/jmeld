@@ -87,13 +87,35 @@ import java.util.ListIterator;
 public class Revision
        extends ToString
 {
-  List deltas_ = new LinkedList();
+  private List deltas_ = new LinkedList();
+  private int orgSize;
+  private int revSize;
 
   /**
    * Creates an empty Revision.
    */
   public Revision()
   {
+  }
+
+  public void setOrgSize(int orgSize)
+  {
+    this.orgSize = orgSize;
+  }
+
+  public int getOrgSize()
+  {
+    return orgSize;
+  }
+
+  public void setRevSize(int revSize)
+  {
+    this.revSize = revSize;
+  }
+
+  public int getRevSize()
+  {
+    return revSize;
   }
 
   /**
