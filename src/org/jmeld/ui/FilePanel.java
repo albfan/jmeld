@@ -4,6 +4,7 @@ import org.apache.commons.jrcs.diff.*;
 import org.jmeld.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.ui.swing.*;
 import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
@@ -35,7 +36,9 @@ public class FilePanel
   private JButton          saveButton;
   private Timer            timer;
 
-  FilePanel(BufferDiffPanel diffPanel, String name)
+  FilePanel(
+    BufferDiffPanel diffPanel,
+    String          name)
   {
     this.diffPanel = diffPanel;
     this.name = name;
@@ -61,7 +64,10 @@ public class FilePanel
     scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());
     if (BufferDocumentIF.ORIGINAL.equals(name))
     {
-      //scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+      LeftScrollPaneLayout layout;
+      layout = new LeftScrollPaneLayout();
+      scrollPane.setLayout(layout);
+      layout.syncWithScrollPane(scrollPane);
     }
 
     browseButton = new JButton("Browse...");
@@ -80,7 +86,9 @@ public class FilePanel
     saveButton.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
     saveButton.addActionListener(getSaveButtonAction());
 
-    timer = new Timer(100, refresh());
+    timer = new Timer(
+        100,
+        refresh());
     timer.setRepeats(false);
   }
 
@@ -153,7 +161,8 @@ public class FilePanel
         previousDocument = bufferDocument.getDocument();
         if (previousDocument != null)
         {
-          previousDocument.removeUndoableEditListener(diffPanel.getUndoHandler());
+          previousDocument.removeUndoableEditListener(
+            diffPanel.getUndoHandler());
         }
       }
 
@@ -231,7 +240,8 @@ public class FilePanel
           if (original.size() < MAXSIZE_CHANGE_DIFF
             && revised.size() < MAXSIZE_CHANGE_DIFF)
           {
-            changeRev = getChangeRevision(original.toString(),
+            changeRev = getChangeRevision(
+                original.toString(),
                 revised.toString());
             if (changeRev != null)
             {
@@ -278,7 +288,8 @@ public class FilePanel
           if (original.size() < MAXSIZE_CHANGE_DIFF
             && revised.size() < MAXSIZE_CHANGE_DIFF)
           {
-            changeRev = getChangeRevision(original.toString(),
+            changeRev = getChangeRevision(
+                original.toString(),
                 revised.toString());
             if (changeRev != null)
             {
@@ -326,7 +337,9 @@ public class FilePanel
     }
   }
 
-  private Revision getChangeRevision(String original, String revised)
+  private Revision getChangeRevision(
+    String original,
+    String revised)
   {
     Diff        diff;
     char[]      original1;
@@ -361,7 +374,9 @@ public class FilePanel
     return null;
   }
 
-  private void setHighlight(int offset, int size,
+  private void setHighlight(
+    int                          offset,
+    int                          size,
     Highlighter.HighlightPainter highlight)
   {
     try
@@ -410,9 +425,12 @@ public class FilePanel
           }
           catch (Exception ex)
           {
-            JOptionPane.showMessageDialog(SwingUtilities.getRoot(editor),
+            JOptionPane.showMessageDialog(
+              SwingUtilities.getRoot(editor),
               "Could not save file: " + bufferDocument.getName() + "\n"
-              + ex.getMessage(), "Error saving file", JOptionPane.ERROR_MESSAGE);
+              + ex.getMessage(),
+              "Error saving file",
+              JOptionPane.ERROR_MESSAGE);
           }
         }
       };
