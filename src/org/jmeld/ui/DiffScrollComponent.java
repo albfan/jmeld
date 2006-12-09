@@ -63,7 +63,6 @@ public class DiffScrollComponent
         public void mouseClicked(MouseEvent me)
         {
           executeCommand((double) me.getX(), (double) me.getY());
-          repaint();
         }
       };
   }
@@ -89,7 +88,7 @@ public class DiffScrollComponent
     return false;
   }
 
-  public void paint(Graphics g)
+  public void paintComponent(Graphics g)
   {
     Rectangle  r;
     int        middle;
@@ -105,10 +104,10 @@ public class DiffScrollComponent
     g2.setColor(Color.LIGHT_GRAY);
     g2.drawLine(r.x + 15, r.y + middle, r.x + r.width - 15, r.y + middle);
 
-    drawDiffs(g2);
+    paintDiffs(g2);
   }
 
-  private void drawDiffs(Graphics2D g2)
+  private void paintDiffs(Graphics2D g2)
   {
     JViewport        viewportOriginal;
     JViewport        viewportRevised;
@@ -214,19 +213,7 @@ public class DiffScrollComponent
         }
 
         // OK, this delta has some visible lines. Now draw it!
-        if (delta instanceof DeleteDelta)
-        {
-          color = Colors.DELETED;
-        }
-        else if (delta instanceof ChangeDelta)
-        {
-          color = Colors.CHANGED;
-        }
-        else
-        {
-          color = Colors.ADDED;
-        }
-
+        color = RevisionUtil.getColor(delta);
         g2.setColor(color);
 
         // Draw original chunk:
