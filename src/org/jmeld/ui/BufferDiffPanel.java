@@ -130,7 +130,7 @@ public class BufferDiffPanel
     String          rows;
     CellConstraints cc;
 
-    columns = "4px, pref, 0:grow, 5px, min, 60px, 0:grow, 5px, min, pref, 4px";
+    columns = "3px, pref, 3px, 0:grow, 5px, min, 60px, 0:grow, 25px, min, 3px, pref, 3px";
     rows = "6px, pref, 3px, fill:0:grow, 6px";
     layout = new FormLayout(columns, rows);
     cc = new CellConstraints();
@@ -141,17 +141,19 @@ public class BufferDiffPanel
     filePanels[1] = new FilePanel(this, BufferDocumentIF.REVISED);
 
     // panel for file1
+    add(new RevisionBar(this, filePanels[0], true), cc.xy(2, 4));
     add(filePanels[0].getSaveButton(), cc.xy(2, 2));
-    add(filePanels[0].getFileLabel(), cc.xyw(3, 2, 3));
-    add(filePanels[0].getScrollPane(), cc.xyw(3, 4, 3));
+    add(filePanels[0].getFileLabel(), cc.xyw(4, 2, 3));
+    add(filePanels[0].getScrollPane(), cc.xyw(4, 4, 3));
 
     add(new DiffScrollComponent(this, filePanels[0], filePanels[1]),
-      cc.xy(6, 4));
+      cc.xy(7, 4));
 
     // panel for file2
-    add(filePanels[1].getFileLabel(), cc.xyw(7, 2, 3));
-    add(filePanels[1].getScrollPane(), cc.xyw(7, 4, 3));
-    add(filePanels[1].getSaveButton(), cc.xy(10, 2));
+    add(new RevisionBar(this, filePanels[1], false), cc.xy(12, 4));
+    add(filePanels[1].getFileLabel(), cc.xyw(8, 2, 3));
+    add(filePanels[1].getScrollPane(), cc.xyw(8, 4, 3));
+    add(filePanels[1].getSaveButton(), cc.xy(12, 2));
 
     scrollSynchronizer = new ScrollSynchronizer(this, filePanels[0],
         filePanels[1]);
