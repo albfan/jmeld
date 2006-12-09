@@ -76,6 +76,16 @@
             <fileset dir="." includes="images/**,ini/**"/>
         </copy>
     </target>
+
+   <target name="-post-jar">
+     <jar destfile="${dist.jar}" manifest="${manifest.file}" update="true">
+       <zipfileset src="lib/forms-1.0.5.jar"/>
+       <zipfileset src="lib/looks-2.0.jar"/>
+       <zipfileset src="lib/swinglabs-0.8.0.jar"/>
+       <zipfileset src="lib/swing-worker.jar"/>
+     </jar>
+   </target>
+
     <!-- ============================================================= -->
     <!-- Classpath waarin alle jar-files zijn om deze applicatie te    -->
     <!--   compileren                                                  -->
