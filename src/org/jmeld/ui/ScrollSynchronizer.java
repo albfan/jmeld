@@ -12,35 +12,41 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ScrollSynchronizer
-       implements ChangeListener
 {
-  private BufferDiffPanel diffPanel;
-  private FilePanel       filePanelOriginal;
-  private FilePanel       filePanelRevised;
+  private BufferDiffPanel    diffPanel;
+  private FilePanel          filePanelOriginal;
+  private FilePanel          filePanelRevised;
+  private AdjustmentListener horizontalAdjustmentListener;
+  private AdjustmentListener verticalAdjustmentListener;
 
-  public ScrollSynchronizer(BufferDiffPanel diffPanel,
-    FilePanel filePanelOriginal, FilePanel filePanelRevised)
+  public ScrollSynchronizer(
+    BufferDiffPanel diffPanel,
+    FilePanel       filePanelOriginal,
+    FilePanel       filePanelRevised)
   {
     this.diffPanel = diffPanel;
     this.filePanelOriginal = filePanelOriginal;
     this.filePanelRevised = filePanelRevised;
 
-    filePanelOriginal.getScrollPane().getViewport().addChangeListener(this);
-    filePanelRevised.getScrollPane().getViewport().addChangeListener(this);
+    init();
   }
 
-  public void stateChanged(ChangeEvent event)
+  private void init()
   {
-    boolean originalScrolled;
+    JScrollBar o;
+    JScrollBar r;
 
-    if (filePanelOriginal == null || filePanelRevised == null)
-    {
-      return;
-    }
+    // Synchronize the horizontal scrollbars:
+    o = filePanelOriginal.getScrollPane().getHorizontalScrollBar();
+    r = filePanelRevised.getScrollPane().getHorizontalScrollBar();
+    r.addAdjustmentListener(getHorizontalAdjustmentListener());
+    o.addAdjustmentListener(getHorizontalAdjustmentListener());
 
-    originalScrolled = event.getSource() == filePanelOriginal.getScrollPane()
-                                                             .getViewport();
-    scroll(originalScrolled);
+    // Synchronize the vertical scrollbars:
+    o = filePanelOriginal.getScrollPane().getVerticalScrollBar();
+    r = filePanelRevised.getScrollPane().getVerticalScrollBar();
+    r.addAdjustmentListener(getVerticalAdjustmentListener());
+    o.addAdjustmentListener(getVerticalAdjustmentListener());
   }
 
   private void scroll(boolean originalScrolled)
@@ -78,7 +84,7 @@ public class ScrollSynchronizer
       line = DiffUtil.getOriginalLine(revision, line);
     }
 
-    scrollToLine(fp2, line, true);
+    scrollToLine(fp2, line);
   }
 
   void toNextDelta(boolean next)
@@ -147,32 +153,6 @@ public class ScrollSynchronizer
       }
     }
 
-/*
-   if(previousDelta != null)
-   {
-     System.out.println("prev: " + previousDelta.getOriginal().anchor());
-   }
-   else
-   {
-     System.out.println("prev: null");
-   }
-             if(currentDelta != null)
-             {
-               System.out.println("curr: " + currentDelta.getOriginal().anchor());
-             }
-             else
-             {
-               System.out.println("curr: null");
-             }
-             if(nextDelta != null)
-             {
-               System.out.println("next: " + nextDelta.getOriginal().anchor());
-             }
-             else
-             {
-               System.out.println("next: null");
-             }
- */
     if (next)
     {
       toDelta = nextDelta;
@@ -184,7 +164,10 @@ public class ScrollSynchronizer
 
     if (toDelta != null)
     {
-      scrollToLine(filePanelOriginal, toDelta.getOriginal().anchor(), false);
+      scrollToLine(
+        filePanelOriginal,
+        toDelta.getOriginal().anchor());
+      scroll(true);
     }
   }
 
@@ -216,8 +199,9 @@ public class ScrollSynchronizer
     return line;
   }
 
-  private void scrollToLine(FilePanel fp, int line,
-    boolean initiatedByScrolling)
+  private void scrollToLine(
+    FilePanel fp,
+    int       line)
   {
     Revision         revision;
     JScrollPane      scrollPane;
@@ -228,6 +212,7 @@ public class ScrollSynchronizer
     Rectangle        rect;
     int              offset;
     Point            p;
+    Rectangle        viewRect;
     Dimension        viewSize;
     Dimension        extentSize;
     int              x;
@@ -259,24 +244,16 @@ public class ScrollSynchronizer
 
       // Do not allow scrolling after the end.
       viewSize = viewport.getViewSize();
+      viewRect = viewport.getViewRect();
       extentSize = viewport.getExtentSize();
       if (p.y > viewSize.height - extentSize.height)
       {
         p.y = viewSize.height - extentSize.height;
       }
 
-      // Don't listen to change-events if the user has used the scrollbar
-      //   of one of the filePanels.
-      if (initiatedByScrolling)
-      {
-        viewport.removeChangeListener(this);
-      }
+      p.x = viewRect.x;
 
       viewport.setViewPosition(p);
-      if (initiatedByScrolling)
-      {
-        viewport.addChangeListener(this);
-      }
     }
     catch (Exception ex)
     {
@@ -331,5 +308,95 @@ public class ScrollSynchronizer
     }
 
     return 0;
+  }
+
+  private AdjustmentListener getHorizontalAdjustmentListener()
+  {
+    if (horizontalAdjustmentListener == null)
+    {
+      horizontalAdjustmentListener = new AdjustmentListener()
+          {
+            private boolean insideScroll;
+
+            public void adjustmentValueChanged(AdjustmentEvent e)
+            {
+              JScrollBar scFrom;
+              JScrollBar scTo;
+
+              if (insideScroll)
+              {
+                return;
+              }
+
+              if (filePanelOriginal.getScrollPane().getHorizontalScrollBar() == e
+                .getSource())
+              {
+                scFrom = filePanelOriginal.getScrollPane()
+                                          .getHorizontalScrollBar();
+                scTo = filePanelRevised.getScrollPane().getHorizontalScrollBar();
+              }
+              else
+              {
+                scFrom = filePanelRevised.getScrollPane()
+                                         .getHorizontalScrollBar();
+                scTo = filePanelOriginal.getScrollPane()
+                                        .getHorizontalScrollBar();
+              }
+
+              // Stop possible recursion!
+              // An original scroll will have a revised scroll as
+              //   a result. That revised scroll could have a orginal 
+              //   scroll as result. etc...
+              insideScroll = true;
+              insideScroll = true;
+              scTo.setValue(scFrom.getValue());
+              insideScroll = false;
+            }
+          };
+    }
+
+    return horizontalAdjustmentListener;
+  }
+
+  private AdjustmentListener getVerticalAdjustmentListener()
+  {
+    if (verticalAdjustmentListener == null)
+    {
+      verticalAdjustmentListener = new AdjustmentListener()
+          {
+            private boolean insideScroll;
+            private int     counter;
+
+            public void adjustmentValueChanged(AdjustmentEvent e)
+            {
+              boolean originalScrolled;
+
+              if (insideScroll)
+              {
+                return;
+              }
+
+              if (filePanelOriginal.getScrollPane().getVerticalScrollBar() == e
+                .getSource())
+              {
+                originalScrolled = true;
+              }
+              else
+              {
+                originalScrolled = false;
+              }
+
+              // Stop possible recursion!
+              // An original scroll will have a revised scroll as
+              //   a result. That revised scroll could have a orginal 
+              //   scroll as result. etc...
+              insideScroll = true;
+              scroll(originalScrolled);
+              insideScroll = false;
+            }
+          };
+    }
+
+    return verticalAdjustmentListener;
   }
 }

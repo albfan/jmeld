@@ -23,8 +23,10 @@ public class DiffScrollComponent
   private List<Command>   commands;
   private Object          antiAlias;
 
-  public DiffScrollComponent(BufferDiffPanel diffPanel,
-    FilePanel filePanelOriginal, FilePanel filePanelRevised)
+  public DiffScrollComponent(
+    BufferDiffPanel diffPanel,
+    FilePanel       filePanelOriginal,
+    FilePanel       filePanelRevised)
   {
     this.diffPanel = diffPanel;
     this.filePanelOriginal = filePanelOriginal;
@@ -49,6 +51,7 @@ public class DiffScrollComponent
         public void mouseWheelMoved(MouseWheelEvent me)
         {
           diffPanel.toNextDelta(me.getWheelRotation() > 0);
+          repaint();
         }
       };
   }
@@ -60,11 +63,14 @@ public class DiffScrollComponent
         public void mouseClicked(MouseEvent me)
         {
           executeCommand((double) me.getX(), (double) me.getY());
+          repaint();
         }
       };
   }
 
-  public boolean executeCommand(double x, double y)
+  public boolean executeCommand(
+    double x,
+    double y)
   {
     if (commands == null)
     {
@@ -75,9 +81,7 @@ public class DiffScrollComponent
     {
       if (command.contains(x, y))
       {
-System.out.println("before command:" + command);
         command.execute();
-System.out.println("after command");
         return true;
       }
     }
@@ -394,7 +398,10 @@ System.out.println("after command");
   class ChangeCommand
          extends Command
   {
-    ChangeCommand(Shape shape, Delta delta, boolean originalToRevised)
+    ChangeCommand(
+      Shape   shape,
+      Delta   delta,
+      boolean originalToRevised)
     {
       super(shape, delta, originalToRevised);
     }
@@ -413,6 +420,7 @@ System.out.println("after command");
       int              size;
       Chunk            fromChunk;
       Chunk            toChunk;
+      JTextComponent   toEditor;
 
       try
       {
@@ -422,6 +430,7 @@ System.out.println("after command");
           toBufferDocument = filePanelRevised.getBufferDocument();
           fromChunk = delta.getOriginal();
           toChunk = delta.getRevised();
+          toEditor = filePanelRevised.getEditor();
         }
         else
         {
@@ -429,6 +438,7 @@ System.out.println("after command");
           toBufferDocument = filePanelOriginal.getBufferDocument();
           fromChunk = delta.getRevised();
           toChunk = delta.getOriginal();
+          toEditor = filePanelOriginal.getEditor();
         }
 
         if (fromBufferDocument == null || toBufferDocument == null)
@@ -452,7 +462,9 @@ System.out.println("after command");
         toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
 
         diffPanel.getUndoHandler().start("replace");
-        to.replace(fromOffset, toOffset - fromOffset, s, null);
+        toEditor.setSelectionStart(fromOffset);
+        toEditor.setSelectionEnd(toOffset);
+        toEditor.replaceSelection(s);
         diffPanel.getUndoHandler().end("replace");
       }
       catch (Exception ex)
@@ -465,7 +477,10 @@ System.out.println("after command");
   class DeleteCommand
          extends Command
   {
-    DeleteCommand(Shape shape, Delta delta, boolean originalToRevised)
+    DeleteCommand(
+      Shape   shape,
+      Delta   delta,
+      boolean originalToRevised)
     {
       super(shape, delta, originalToRevised);
     }
@@ -480,6 +495,7 @@ System.out.println("after command");
       int              toOffset;
       int              size;
       Chunk            chunk;
+      JTextComponent   toEditor;
 
       try
       {
@@ -487,11 +503,13 @@ System.out.println("after command");
         {
           bufferDocument = filePanelOriginal.getBufferDocument();
           chunk = delta.getOriginal();
+          toEditor = filePanelOriginal.getEditor();
         }
         else
         {
           bufferDocument = filePanelRevised.getBufferDocument();
           chunk = delta.getRevised();
+          toEditor = filePanelRevised.getEditor();
         }
 
         if (bufferDocument == null)
@@ -507,7 +525,9 @@ System.out.println("after command");
         toOffset = bufferDocument.getOffsetForLine(fromLine + size);
 
         diffPanel.getUndoHandler().start("remove");
-        document.remove(fromOffset, toOffset - fromOffset);
+        toEditor.setSelectionStart(fromOffset);
+        toEditor.setSelectionEnd(toOffset);
+        toEditor.replaceSelection("");
         diffPanel.getUndoHandler().end("remove");
       }
       catch (Exception ex)
@@ -523,14 +543,19 @@ System.out.println("after command");
     Delta     delta;
     boolean   originalToRevised;
 
-    Command(Shape shape, Delta delta, boolean originalToRevised)
+    Command(
+      Shape   shape,
+      Delta   delta,
+      boolean originalToRevised)
     {
       this.bounds = shape.getBounds();
       this.delta = delta;
       this.originalToRevised = originalToRevised;
     }
 
-    boolean contains(double x, double y)
+    boolean contains(
+      double x,
+      double y)
     {
       return bounds.contains(x, y);
     }

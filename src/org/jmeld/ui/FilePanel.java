@@ -61,7 +61,7 @@ public class FilePanel
     scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());
     if (BufferDocumentIF.ORIGINAL.equals(name))
     {
-      scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+      //scrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
     }
 
     browseButton = new JButton("Browse...");
