@@ -194,7 +194,6 @@ public abstract class AbstractBufferDocument
     int       size;
     StopWatch stopWatch;
 
-    System.out.println("initLines");
     stopWatch = new StopWatch().start();
 
     paragraph = document.getDefaultRootElement();
@@ -206,8 +205,7 @@ public abstract class AbstractBufferDocument
       lines[i] = new Line(e);
     }
 
-    System.out.println("initLines took " + stopWatch.getElapsedTime());
-
+    //System.out.println("initLines took " + stopWatch.getElapsedTime());
     //print();
   }
 
