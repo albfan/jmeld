@@ -9,7 +9,9 @@ public class GNUDiff
   {
   }
 
-  public Revision diff(Object[] orig, Object[] rev)
+  public Revision diff(
+    Object[] orig,
+    Object[] rev)
     throws DifferentiationFailedException
   {
     Diff        diff;
@@ -31,8 +33,10 @@ public class GNUDiff
    * @throws DifferentiationFailedException if a {@link Revision} could
    *         not be built from the given path.
    */
-  private Revision buildRevision(Diff.change change, Object[] orig,
-    Object[] rev)
+  private Revision buildRevision(
+    Diff.change change,
+    Object[]    orig,
+    Object[]    rev)
   {
     Revision revision;
     Delta    delta;
@@ -51,7 +55,8 @@ public class GNUDiff
 
     while (change != null)
     {
-      delta = Delta.newDelta(new Chunk(orig, change.line0, change.deleted),
+      delta = Delta.newDelta(
+          new Chunk(orig, change.line0, change.deleted),
           new Chunk(rev, change.line1, change.inserted));
       revision.addDelta(delta);
 

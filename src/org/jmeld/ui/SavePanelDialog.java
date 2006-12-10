@@ -38,14 +38,18 @@ public class SavePanelDialog
     JOptionPane pane;
     JDialog     dialog;
 
-    pane = new JOptionPane(getSavePanel(), JOptionPane.WARNING_MESSAGE);
+    pane = new JOptionPane(
+        getSavePanel(),
+        JOptionPane.WARNING_MESSAGE);
     pane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
 
     dialog = pane.createDialog(meldPanel, "Save files");
     dialog.setResizable(true);
     dialog.show();
 
-    if (ObjectUtil.equals(pane.getValue(), JOptionPane.OK_OPTION))
+    if (ObjectUtil.equals(
+        pane.getValue(),
+        JOptionPane.OK_OPTION))
     {
       ok = true;
     }
@@ -117,11 +121,15 @@ public class SavePanelDialog
     font = label.getFont().deriveFont(Font.BOLD);
     label.setFont(font);
     label.setHorizontalAlignment(JLabel.LEFT);
-    panel.add(label, cc.xy(2, 2));
+    panel.add(
+      label,
+      cc.xy(2, 2));
     label = new JLabel("Which ones would you like to save?");
     label.setFont(font);
     label.setHorizontalAlignment(JLabel.LEFT);
-    panel.add(label, cc.xy(2, 4));
+    panel.add(
+      label,
+      cc.xy(2, 4));
 
     checkBoxes = new JCheckBox[documents.size()];
     for (int i = 0; i < documents.size(); i++)
@@ -135,7 +143,9 @@ public class SavePanelDialog
         checkBox.setEnabled(false);
       }
 
-      panel.add(checkBox, cc.xy(2, 6 + i));
+      panel.add(
+        checkBox,
+        cc.xy(2, 6 + i));
     }
 
     return panel;

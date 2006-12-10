@@ -12,7 +12,9 @@ public class ToolBarSeparator
     this(10, 10);
   }
 
-  public ToolBarSeparator(int width, int height)
+  public ToolBarSeparator(
+    int width,
+    int height)
   {
     Dimension dimension;
 

@@ -75,7 +75,9 @@ public class ChangeDelta
     super();
   }
 
-  public ChangeDelta(Chunk orig, Chunk rev)
+  public ChangeDelta(
+    Chunk orig,
+    Chunk rev)
   {
     init(orig, rev);
   }
@@ -97,7 +99,9 @@ public class ChangeDelta
   public void applyTo(List target)
   {
     original.applyDelete(target);
-    revised.applyAdd(original.first(), target);
+    revised.applyAdd(
+      original.first(),
+      target);
   }
 
   public void toString(StringBuffer s)
@@ -112,7 +116,9 @@ public class ChangeDelta
     revised.toString(s, "> ", "\n");
   }
 
-  public void toRCSString(StringBuffer s, String EOL)
+  public void toRCSString(
+    StringBuffer s,
+    String       EOL)
   {
     s.append("d");
     s.append(original.rcsfrom());

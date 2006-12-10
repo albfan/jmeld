@@ -71,14 +71,14 @@ public class BusyLabel
     BusyIcon()
     {
       colors = new ArrayList<Color>();
-      colors.add( new Color(178, 178, 178));
-      colors.add( new Color(153, 153, 153));
-      colors.add( new Color(128, 128, 128));
-      colors.add( new Color(102, 102, 102));
-      colors.add( new Color(51, 51, 51));
-      colors.add( new Color(26, 26, 26));
-      colors.add( new Color(0, 0, 0));
-      colors.add( new Color(0, 0, 0));
+      colors.add(new Color(178, 178, 178));
+      colors.add(new Color(153, 153, 153));
+      colors.add(new Color(128, 128, 128));
+      colors.add(new Color(102, 102, 102));
+      colors.add(new Color(51, 51, 51));
+      colors.add(new Color(26, 26, 26));
+      colors.add(new Color(0, 0, 0));
+      colors.add(new Color(0, 0, 0));
     }
 
     void setIndex(int startIndex)

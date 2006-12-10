@@ -90,8 +90,8 @@ public class MeldBlue
   /*
    * TODO: The following two lines are likely an improvement.
    *       However, they require a rewrite of the PlasticInternalFrameTitlePanel.
-               public    ColorUIResource getWindowTitleBackground()                 { return getPrimary1(); }
-               public    ColorUIResource getWindowTitleForeground()                 { return WHITE;                 }
+                 public    ColorUIResource getWindowTitleBackground()                 { return getPrimary1(); }
+                 public    ColorUIResource getWindowTitleForeground()                 { return WHITE;                 }
    */
   public void addCustomEntriesToTable(UIDefaults table)
   {

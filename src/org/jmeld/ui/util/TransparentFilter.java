@@ -17,7 +17,10 @@ class TransparentFilter
     this.percent = percent;
   }
 
-  public int filterRGB(int x, int y, int rgb)
+  public int filterRGB(
+    int x,
+    int y,
+    int rgb)
   {
     int alpha;
 

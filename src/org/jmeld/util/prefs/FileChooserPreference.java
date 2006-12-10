@@ -4,14 +4,18 @@ import javax.swing.*;
 
 import java.io.*;
 
-public class FileChooserPreference extends Preference
+public class FileChooserPreference
+       extends Preference
 {
   // Class variables:
   private static String FILE = "FILE";
+
   // Instance variables:
   private JFileChooser target;
 
-  public FileChooserPreference(String preferenceName, JFileChooser target)
+  public FileChooserPreference(
+    String       preferenceName,
+    JFileChooser target)
   {
     super("FileChooser-" + preferenceName);
 

@@ -1,8 +1,8 @@
 package org.jmeld.util.scan;
 
 import java.io.*;
-import java.util.regex.*;
 import java.util.*;
+import java.util.regex.*;
 
 public class Filter
        implements FileFilter

@@ -22,7 +22,10 @@ public class MeldAction
   private Method        isActionEnabledMethod;
   private ActionHandler actionHandler;
 
-  MeldAction(ActionHandler actionHandler, Object object, String name)
+  MeldAction(
+    ActionHandler actionHandler,
+    Object        object,
+    String        name)
   {
     super(name);
 
@@ -68,8 +71,12 @@ public class MeldAction
 
   public void setIcon(String iconName)
   {
-    putValue(SMALL_ICON, ImageUtil.getSmallImageIcon(iconName));
-    putValue(LARGE_ICON_KEY, ImageUtil.getImageIcon(iconName));
+    putValue(
+      SMALL_ICON,
+      ImageUtil.getSmallImageIcon(iconName));
+    putValue(
+      LARGE_ICON_KEY,
+      ImageUtil.getImageIcon(iconName));
   }
 
   public void actionPerformed(ActionEvent ae)

@@ -1,8 +1,8 @@
 package org.jmeld.util.file;
 
 import org.jmeld.ui.*;
-import org.jmeld.util.scan.*;
 import org.jmeld.util.node.*;
+import org.jmeld.util.scan.*;
 
 import java.io.*;
 import java.util.*;
@@ -15,7 +15,9 @@ public class DirectoryDiff
   private List<JMeldNode> mine;
   private List<JMeldNode> original;
 
-  public DirectoryDiff(File originalDirectory, File mineDirectory)
+  public DirectoryDiff(
+    File originalDirectory,
+    File mineDirectory)
   {
     this.originalDirectory = originalDirectory;
     this.mineDirectory = mineDirectory;
@@ -97,7 +99,9 @@ public class DirectoryDiff
       name = node.getName();
       if (!originalMap.containsKey(name))
       {
-        newNode = new FileNode(name, new File(originalDirectory, name));
+        newNode = new FileNode(
+            name,
+            new File(originalDirectory, name));
         newNode.setLeaf(node.isLeaf());
         newNode.setState(JMeldNode.DELETED);
 
@@ -112,7 +116,9 @@ public class DirectoryDiff
       name = node.getName();
       if (!mineMap.containsKey(name))
       {
-        newNode = new FileNode(name, new File(originalDirectory, name));
+        newNode = new FileNode(
+            name,
+            new File(originalDirectory, name));
         newNode.setLeaf(node.isLeaf());
         newNode.setState(JMeldNode.ADDED);
 
@@ -181,7 +187,9 @@ public class DirectoryDiff
   {
     DirectoryDiff diff;
 
-    diff = new DirectoryDiff(new File(args[0]), new File(args[1]));
+    diff = new DirectoryDiff(
+        new File(args[0]),
+        new File(args[1]));
     diff.diff();
     diff.print();
   }

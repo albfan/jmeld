@@ -15,7 +15,9 @@ public class ScanDir
     this(directory, null);
   }
 
-  public ScanDir(File directory, FileFilter fileFilter)
+  public ScanDir(
+    File       directory,
+    FileFilter fileFilter)
   {
     this.directory = directory;
     this.fileFilter = fileFilter;
@@ -28,7 +30,10 @@ public class ScanDir
     visit(".", directory, visitor);
   }
 
-  private void visit(String directoryName, File file, FileVisitorIF visitor)
+  private void visit(
+    String        directoryName,
+    File          file,
+    FileVisitorIF visitor)
   {
     File[] files;
     String fileName;

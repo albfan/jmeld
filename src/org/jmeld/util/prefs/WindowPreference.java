@@ -16,7 +16,9 @@ public class WindowPreference
   // Instance variables:
   private Window target;
 
-  public WindowPreference(String preferenceName, Window target)
+  public WindowPreference(
+    String preferenceName,
+    Window target)
   {
     super("Window-" + preferenceName);
 
@@ -26,8 +28,12 @@ public class WindowPreference
 
   private void init()
   {
-    target.setLocation(getInt(X, 0), getInt(Y, 0));
-    target.setSize(getInt(WIDTH, 500), getInt(HEIGHT, 400));
+    target.setLocation(
+      getInt(X, 0),
+      getInt(Y, 0));
+    target.setSize(
+      getInt(WIDTH, 500),
+      getInt(HEIGHT, 400));
 
     target.addWindowListener(getWindowListener());
   }

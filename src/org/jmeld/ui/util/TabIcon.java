@@ -22,7 +22,9 @@ public class TabIcon
   private Rectangle   closeBounds;
   private JTabbedPane tabbedPane;
 
-  public TabIcon(Icon icon, String text)
+  public TabIcon(
+    Icon   icon,
+    String text)
   {
     this.icon = icon;
     this.text = text;
@@ -79,7 +81,11 @@ public class TabIcon
     return height;
   }
 
-  public void paintIcon(Component c, Graphics g, int x, int y)
+  public void paintIcon(
+    Component c,
+    Graphics  g,
+    int       x,
+    int       y)
   {
     FontMetrics fm;
     int         x0;
@@ -131,7 +137,9 @@ public class TabIcon
           Component component;
 
           if (!me.isConsumed() && closeBounds != null
-            && closeBounds.contains(me.getX(), me.getY()))
+            && closeBounds.contains(
+              me.getX(),
+              me.getY()))
           {
             index = tabbedPane.indexOfTab(TabIcon.this);
             if (index != -1)

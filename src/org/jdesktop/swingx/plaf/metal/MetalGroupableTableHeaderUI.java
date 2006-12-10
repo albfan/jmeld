@@ -6,23 +6,25 @@
  */
 package org.jdesktop.swingx.plaf.metal;
 
+import org.jdesktop.swingx.plaf.basic.BasicGroupableTableHeaderUI;
+
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 
-import org.jdesktop.swingx.plaf.basic.BasicGroupableTableHeaderUI;
-
 /**
  * Metal implementation of the <code>JXGroupableTableHeader</code> UI. <br>
- * 
+ *
  */
-public class MetalGroupableTableHeaderUI extends BasicGroupableTableHeaderUI {
-
-  public static ComponentUI createUI(JComponent c) {
+public class MetalGroupableTableHeaderUI
+       extends BasicGroupableTableHeaderUI
+{
+  public static ComponentUI createUI(JComponent c)
+  {
     return new MetalGroupableTableHeaderUI();
   }
 
-  protected void installDefaults() {
+  protected void installDefaults()
+  {
     super.installDefaults();
   }
-
 }

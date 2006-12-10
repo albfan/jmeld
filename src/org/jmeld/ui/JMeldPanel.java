@@ -39,23 +39,31 @@ public class JMeldPanel
   private ActionHandler actionHandler;
   private JTabbedPane   tabbedPane;
 
-  public JMeldPanel(String originalName, String mineName)
+  public JMeldPanel(
+    String originalName,
+    String mineName)
   {
     tabbedPane = new JTabbedPane();
 
     initActions();
 
     setLayout(new BorderLayout());
-    add(getToolBar(), BorderLayout.PAGE_START);
+    add(
+      getToolBar(),
+      BorderLayout.PAGE_START);
     add(tabbedPane, BorderLayout.CENTER);
-    add(getStatusBar(), BorderLayout.PAGE_END);
+    add(
+      getStatusBar(),
+      BorderLayout.PAGE_END);
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
     openComparison(originalName, mineName);
   }
 
-  public void openComparison(String originalName, String mineName)
+  public void openComparison(
+    String originalName,
+    String mineName)
   {
     File original;
     File mine;
@@ -75,14 +83,18 @@ public class JMeldPanel
     }
   }
 
-  public void openFileComparison(String originalName, String mineName)
+  public void openFileComparison(
+    String originalName,
+    String mineName)
   {
     WaitCursor.wait(this);
 
     new NewFileComparisonPanel(originalName, mineName).execute();
   }
 
-  public void openDirectoryComparison(String originalName, String mineName)
+  public void openDirectoryComparison(
+    String originalName,
+    String mineName)
   {
     WaitCursor.wait(this);
 
@@ -202,11 +214,14 @@ public class JMeldPanel
 
     if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
     {
-      openFileComparison(dialog.getOriginalFileName(), dialog.getMineFileName());
+      openFileComparison(
+        dialog.getOriginalFileName(),
+        dialog.getMineFileName());
     }
     else if (dialog.getValue() == NewPanelDialog.DIRECTORY_COMPARISON)
     {
-      openDirectoryComparison(dialog.getOriginalDirectoryName(),
+      openDirectoryComparison(
+        dialog.getOriginalDirectoryName(),
         dialog.getMineDirectoryName());
     }
   }
@@ -291,7 +306,9 @@ public class JMeldPanel
     private JMeldDiff        diff;
     private Revision         revision;
 
-    NewFileComparisonPanel(String originalName, String mineName)
+    NewFileComparisonPanel(
+      String originalName,
+      String mineName)
     {
       this.originalName = originalName;
       this.mineName = mineName;
@@ -332,7 +349,9 @@ public class JMeldPanel
 
         StatusBar.setStatus("Calculating differences...");
         diff = new JMeldDiff();
-        revision = diff.diff(bd1.getLines(), bd2.getLines());
+        revision = diff.diff(
+            bd1.getLines(),
+            bd2.getLines());
         StatusBar.setStatus("Ready calculating differences");
         StatusBar.stop();
       }
@@ -365,7 +384,11 @@ public class JMeldPanel
           panel = new BufferDiffPanel(JMeldPanel.this);
           panel.setBufferDocuments(bd1, bd2, diff, revision);
 
-          tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
+          tabbedPane.add(
+            panel,
+            new TabIcon(
+              null,
+              panel.getTitle()));
           tabbedPane.setSelectedComponent(panel);
         }
       }
@@ -389,7 +412,9 @@ public class JMeldPanel
     private File          mine;
     private DirectoryDiff diff;
 
-    NewDirectoryComparisonPanel(String originalName, String mineName)
+    NewDirectoryComparisonPanel(
+      String originalName,
+      String mineName)
     {
       this.originalName = originalName;
       this.mineName = mineName;
@@ -453,7 +478,11 @@ public class JMeldPanel
 
         panel = new FolderDiffPanel(JMeldPanel.this, diff);
 
-        tabbedPane.add(panel, new TabIcon(null, panel.getTitle()));
+        tabbedPane.add(
+          panel,
+          new TabIcon(
+            null,
+            panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);
       }
       catch (Exception ex)

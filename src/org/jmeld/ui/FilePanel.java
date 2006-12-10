@@ -2,9 +2,10 @@ package org.jmeld.ui;
 
 import org.apache.commons.jrcs.diff.*;
 import org.jmeld.*;
+import org.jmeld.diff.*;
+import org.jmeld.ui.swing.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
-import org.jmeld.ui.swing.*;
 import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
@@ -363,8 +364,9 @@ public class FilePanel
 
     try
     {
-      diff = new Diff(original2);
-      return diff.diff(revised2);
+      //diff = new Diff(original2);
+      //return diff.diff(revised2);
+      return new JMeldDiff().diff(original2, revised2);
     }
     catch (Exception ex)
     {

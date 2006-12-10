@@ -54,7 +54,9 @@ public class NewPanelDialog
     dialog.setResizable(true);
     dialog.show();
 
-    if (ObjectUtil.equals(pane.getValue(), JOptionPane.OK_OPTION))
+    if (ObjectUtil.equals(
+        pane.getValue(),
+        JOptionPane.OK_OPTION))
     {
       switch (tabbedPane.getSelectedIndex())
       {
@@ -105,8 +107,12 @@ public class NewPanelDialog
     JPanel panel;
 
     tabbedPane = new JTabbedPane();
-    tabbedPane.add("File Comparison", getFileComparisonPanel());
-    tabbedPane.add("Directory Comparison", getDirectoryComparisonPanel());
+    tabbedPane.add(
+      "File Comparison",
+      getFileComparisonPanel());
+    tabbedPane.add(
+      "Directory Comparison",
+      getDirectoryComparisonPanel());
 
     panel = new JPanel(new BorderLayout());
     panel.add(tabbedPane, BorderLayout.CENTER);
@@ -140,9 +146,15 @@ public class NewPanelDialog
 
     button.setActionCommand(ORIGINAL_FILENAME);
     button.addActionListener(getFileBrowseAction());
-    panel.add(label, cc.xy(2, 2));
-    panel.add(originalFileComboBox, cc.xy(4, 2));
-    panel.add(button, cc.xy(6, 2));
+    panel.add(
+      label,
+      cc.xy(2, 2));
+    panel.add(
+      originalFileComboBox,
+      cc.xy(4, 2));
+    panel.add(
+      button,
+      cc.xy(6, 2));
 
     label = new JLabel("Mine");
     button = new JButton("Browse...");
@@ -152,9 +164,15 @@ public class NewPanelDialog
     mineFileComboBox.setEditable(false);
     mineFileComboBox.addActionListener(getFileSelectAction());
     new ComboBoxPreference("MineFile", mineFileComboBox);
-    panel.add(label, cc.xy(2, 4));
-    panel.add(mineFileComboBox, cc.xy(4, 4));
-    panel.add(button, cc.xy(6, 4));
+    panel.add(
+      label,
+      cc.xy(2, 4));
+    panel.add(
+      mineFileComboBox,
+      cc.xy(4, 4));
+    panel.add(
+      button,
+      cc.xy(6, 4));
 
     return panel;
   }
@@ -256,9 +274,15 @@ public class NewPanelDialog
 
     button.setActionCommand(ORIGINAL_DIRECTORY);
     button.addActionListener(getDirectoryBrowseAction());
-    panel.add(label, cc.xy(2, 2));
-    panel.add(originalDirectoryComboBox, cc.xy(4, 2));
-    panel.add(button, cc.xy(6, 2));
+    panel.add(
+      label,
+      cc.xy(2, 2));
+    panel.add(
+      originalDirectoryComboBox,
+      cc.xy(4, 2));
+    panel.add(
+      button,
+      cc.xy(6, 2));
 
     label = new JLabel("Mine");
     button = new JButton("Browse...");
@@ -268,9 +292,15 @@ public class NewPanelDialog
     mineDirectoryComboBox.setEditable(false);
     mineDirectoryComboBox.addActionListener(getDirectorySelectAction());
     new ComboBoxPreference("MineDirectory", mineDirectoryComboBox);
-    panel.add(label, cc.xy(2, 4));
-    panel.add(mineDirectoryComboBox, cc.xy(4, 4));
-    panel.add(button, cc.xy(6, 4));
+    panel.add(
+      label,
+      cc.xy(2, 4));
+    panel.add(
+      mineDirectoryComboBox,
+      cc.xy(4, 4));
+    panel.add(
+      button,
+      cc.xy(6, 4));
 
     return panel;
   }
@@ -282,11 +312,11 @@ public class NewPanelDialog
         public void actionPerformed(ActionEvent ae)
         {
           DirectoryChooserPreference pref;
-          JFileChooser          chooser;
-          int                   result;
-          File                  file;
-          String                fileName;
-          JComboBox             comboBox;
+          JFileChooser               chooser;
+          int                        result;
+          File                       file;
+          String                     fileName;
+          JComboBox                  comboBox;
 
           chooser = new JFileChooser();
           chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

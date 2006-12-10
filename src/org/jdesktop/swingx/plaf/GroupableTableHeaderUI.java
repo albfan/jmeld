@@ -10,7 +10,9 @@ import javax.swing.plaf.TableHeaderUI;
 
 /**
  * Pluggable UI for <code>JXGroupableTableHeader</code>.
- *  
+ *
  */
-public class GroupableTableHeaderUI extends TableHeaderUI {
+public class GroupableTableHeaderUI
+       extends TableHeaderUI
+{
 }

@@ -79,6 +79,8 @@ public interface DiffAlgorithm
    * @return the revision script.
    * @throws DifferentiationFailedException if the diff could not be computed.
    */
-  public abstract Revision diff(Object[] orig, Object[] rev)
+  public abstract Revision diff(
+    Object[] orig,
+    Object[] rev)
     throws DifferentiationFailedException;
 }

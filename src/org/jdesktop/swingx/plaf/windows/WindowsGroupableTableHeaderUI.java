@@ -6,23 +6,25 @@
  */
 package org.jdesktop.swingx.plaf.windows;
 
+import org.jdesktop.swingx.plaf.basic.BasicGroupableTableHeaderUI;
+
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 
-import org.jdesktop.swingx.plaf.basic.BasicGroupableTableHeaderUI;
-
 /**
  * Windows implementation of the <code>JXGroupableTableHeader</code> UI. <br>
- * 
+ *
  */
-public class WindowsGroupableTableHeaderUI extends BasicGroupableTableHeaderUI {
-
-  public static ComponentUI createUI(JComponent c) {
+public class WindowsGroupableTableHeaderUI
+       extends BasicGroupableTableHeaderUI
+{
+  public static ComponentUI createUI(JComponent c)
+  {
     return new WindowsGroupableTableHeaderUI();
   }
 
-  protected void installDefaults() {
+  protected void installDefaults()
+  {
     super.installDefaults();
   }
-
 }

@@ -34,7 +34,9 @@ public class DiffHighlighter
     this(color, false);
   }
 
-  private DiffHighlighter(Color color, boolean line)
+  private DiffHighlighter(
+    Color   color,
+    boolean line)
   {
     super(color);
 
@@ -42,8 +44,13 @@ public class DiffHighlighter
     this.line = line;
   }
 
-  public Shape paintLayer(Graphics g, int p0, int p1, Shape shape,
-    JTextComponent comp, View view)
+  public Shape paintLayer(
+    Graphics       g,
+    int            p0,
+    int            p1,
+    Shape          shape,
+    JTextComponent comp,
+    View           view)
   {
     Rectangle b;
     Rectangle r1;

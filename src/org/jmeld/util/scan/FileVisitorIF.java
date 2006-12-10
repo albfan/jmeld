@@ -4,5 +4,7 @@ import java.io.*;
 
 public interface FileVisitorIF
 {
-  public void visit(String directoryName, File file);
+  public void visit(
+    String directoryName,
+    File   file);
 }

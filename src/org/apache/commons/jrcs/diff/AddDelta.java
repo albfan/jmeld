@@ -75,9 +75,13 @@ public class AddDelta
     super();
   }
 
-  public AddDelta(int origpos, Chunk rev)
+  public AddDelta(
+    int   origpos,
+    Chunk rev)
   {
-    init(new Chunk(origpos, 0), rev);
+    init(
+      new Chunk(origpos, 0),
+      rev);
   }
 
   public void verify(List target)
@@ -91,7 +95,9 @@ public class AddDelta
 
   public void applyTo(List target)
   {
-    revised.applyAdd(original.first(), target);
+    revised.applyAdd(
+      original.first(),
+      target);
   }
 
   public void toString(StringBuffer s)
@@ -103,7 +109,9 @@ public class AddDelta
     revised.toString(s, "> ", Diff.NL);
   }
 
-  public void toRCSString(StringBuffer s, String EOL)
+  public void toRCSString(
+    StringBuffer s,
+    String       EOL)
   {
     s.append("a");
     s.append(original.anchor());

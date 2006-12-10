@@ -40,13 +40,11 @@ public class JMeld
       System.setProperty("swing.aatext", "true");
 
       version = System.getProperty("java.version");
-      /*
-         if (version.startsWith("1.7"))
-         {
-           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-         }
-         else
-       */
+      if (version.startsWith("1.6"))
+      {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      }
+      else
       {
         //PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
         //PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
@@ -63,8 +61,10 @@ public class JMeld
     panel = new JMeldPanel(fileName1, fileName2);
     frame.add(panel);
     frame.setJMenuBar(panel.getMenuBar());
-    frame.setIconImage(ResourceLoader.getImageIcon("jmeld-small").getImage());
-    new WindowPreference(frame.getTitle(), frame);
+    frame.setIconImage(ResourceLoader.getImageIcon("jmeld2-small").getImage());
+    new WindowPreference(
+      frame.getTitle(),
+      frame);
 
     frame.setVisible(true);
 

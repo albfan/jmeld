@@ -93,7 +93,7 @@ public abstract class AbstractBufferDocument
     Line[] lines;
 
     lines = getLines();
-    if(lineNumber >= lines.length || lineNumber < 0)
+    if (lineNumber >= lines.length || lineNumber < 0)
     {
       return "<NO LINE>";
     }
@@ -218,7 +218,11 @@ public abstract class AbstractBufferDocument
     try
     {
       out = getWriter();
-      new DefaultEditorKit().write(out, document, 0, document.getLength());
+      new DefaultEditorKit().write(
+        out,
+        document,
+        0,
+        document.getLength());
       out.flush();
       out.close();
 
@@ -266,7 +270,11 @@ public abstract class AbstractBufferDocument
       return getCharArray()[offset];
     }
 
-    public boolean equals(MyGapContent c2, int start1, int end1, int start2)
+    public boolean equals(
+      MyGapContent c2,
+      int          start1,
+      int          end1,
+      int          start2)
     {
       char[] array1;
       char[] array2;
@@ -326,7 +334,9 @@ public abstract class AbstractBufferDocument
       return true;
     }
 
-    public int hashCode(int start, int end)
+    public int hashCode(
+      int start,
+      int end)
     {
       char[] array;
       int    g0;
@@ -374,7 +384,9 @@ public abstract class AbstractBufferDocument
 
     public int getDigest()
     {
-      return hashCode(0, document.getLength());
+      return hashCode(
+        0,
+        document.getLength());
     }
   }
 
@@ -399,7 +411,9 @@ public abstract class AbstractBufferDocument
 
     public void print()
     {
-      System.out.printf("[%08d]: %s\n", getOffset(),
+      System.out.printf(
+        "[%08d]: %s\n",
+        getOffset(),
         StringUtil.replaceNewLines(toString()));
     }
 
@@ -426,19 +440,26 @@ public abstract class AbstractBufferDocument
         return false;
       }
 
-      return content.equals(line2.getContent(), start1, end1, start2);
+      return content.equals(
+        line2.getContent(),
+        start1,
+        end1,
+        start2);
     }
 
     public int hashCode()
     {
-      return content.hashCode(element.getStartOffset(), element.getEndOffset());
+      return content.hashCode(
+        element.getStartOffset(),
+        element.getEndOffset());
     }
 
     public String toString()
     {
       try
       {
-        return content.getString(element.getStartOffset(),
+        return content.getString(
+          element.getStartOffset(),
           element.getEndOffset() - element.getStartOffset());
       }
       catch (Exception ex)

@@ -13,7 +13,9 @@ public class DirectoryChooserPreference
   // Instance variables:
   private JFileChooser target;
 
-  public DirectoryChooserPreference(String preferenceName, JFileChooser target)
+  public DirectoryChooserPreference(
+    String       preferenceName,
+    JFileChooser target)
   {
     super("DirectoryChooser-" + preferenceName);
 

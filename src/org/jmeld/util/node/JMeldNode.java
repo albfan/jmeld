@@ -18,7 +18,9 @@ public class JMeldNode
   private char    state;
   private boolean collapsed;
 
-  public JMeldNode(String name, boolean isLeaf)
+  public JMeldNode(
+    String  name,
+    boolean isLeaf)
   {
     this.name = name;
     this.isLeaf = isLeaf;

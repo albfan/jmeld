@@ -44,7 +44,9 @@ public class Diff
      be needed again later to print the results of the comparison as
      an edit script, if desired.
    */
-  public Diff(Object[] a, Object[] b)
+  public Diff(
+    Object[] a,
+    Object[] b)
   {
     Map h = new HashMap(a.length + b.length);
 
@@ -104,7 +106,11 @@ public class Diff
      the value of bdiag at that diagonal is "wrong",
      the worst this can do is cause suboptimal diff output.
      It cannot cause incorrect diff output.  */
-  private int diag(int xoff, int xlim, int yoff, int ylim)
+  private int diag(
+    int xoff,
+    int xlim,
+    int yoff,
+    int ylim)
   {
     final int[]   fd = fdiag;  // Give the compiler a chance.
     final int[]   bd = bdiag;  // Additional help for the compiler.
@@ -350,7 +356,11 @@ public class Diff
      The subsequence of file 0 is [XOFF, XLIM) and likewise for file 1.
      Note that XLIM, YLIM are exclusive bounds.
      All line numbers are origin-0 and discarded lines are not counted.  */
-  private void compareseq(int xoff, int xlim, int yoff, int ylim)
+  private void compareseq(
+    int xoff,
+    int xlim,
+    int yoff,
+    int ylim)
   {
     /* Slide down the bottom initial diagonal. */
     while (xoff < xlim && yoff < ylim && xvec[xoff] == yvec[yoff])
@@ -530,9 +540,9 @@ public class Diff
 
     discard_confusing_lines();
     /*
-    System.out.println("discard took : " + (System.currentTimeMillis() - time)
-      + " msec.");
-    */
+       System.out.println("discard took : " + (System.currentTimeMillis() - time)
+         + " msec.");
+     */
 
     /* Now do the main comparison algorithm, considering just the
        undiscarded lines.  */
@@ -595,7 +605,12 @@ public class Diff
        INSERTED is the number of lines inserted here in file 1.
        If DELETED is 0 then LINE0 is the number of the line before
        which the insertion was done; vice versa for INSERTED and LINE1.  */
-    change(int line0, int line1, int deleted, int inserted, change old)
+    change(
+      int    line0,
+      int    line1,
+      int    deleted,
+      int    inserted,
+      change old)
     {
       this.line0 = line0;
       this.line1 = line1;
@@ -906,11 +921,12 @@ public class Diff
       }
 
       //System.out.println("nondiscared_lines = " + j);
-
       nondiscarded_lines = j;
     }
 
-    file_data(Object[] data, Map h)
+    file_data(
+      Object[] data,
+      Map      h)
     {
       buffered_lines = data.length;
 
@@ -924,7 +940,9 @@ public class Diff
 
         if (ir == null)
         {
-          h.put(data[i], new Integer(equivs[i] = equiv_max++));
+          h.put(
+            data[i],
+            new Integer(equivs[i] = equiv_max++));
         }
         else
         {

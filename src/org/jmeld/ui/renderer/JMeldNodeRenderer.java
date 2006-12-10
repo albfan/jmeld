@@ -29,8 +29,12 @@ public class JMeldNodeRenderer
     deleted = ImageUtil.getSmallImageIcon("stock_deleted");
   }
 
-  public Component getListCellRendererComponent(JList list, Object value,
-    int index, boolean isSelected, boolean cellHasFocus)
+  public Component getListCellRendererComponent(
+    JList   list,
+    Object  value,
+    int     index,
+    boolean isSelected,
+    boolean cellHasFocus)
   {
     JMeldNode node;
 
@@ -86,7 +90,9 @@ public class JMeldNodeRenderer
       insets = getInsets();
 
       cb = g.getClipBounds();
-      b = getFontMetrics(getFont()).getStringBounds(getText(), g);
+      b = getFontMetrics(getFont()).getStringBounds(
+          getText(),
+          g);
       y = cb.y + insets.top
         + ((int) (cb.getHeight() - insets.top - insets.bottom) / 2);
       w = cb.y + (int) b.getWidth();
