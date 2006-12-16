@@ -26,7 +26,8 @@ public class RevisionBar
     this.filePanel = filePanel;
     this.original = original;
 
-    setBorder(BorderFactory.createLineBorder(Color.lightGray));
+    setBorder(
+      BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
 
     addMouseListener(getMouseListener());
   }
@@ -39,16 +40,19 @@ public class RevisionBar
         {
           Rectangle        r;
           int              y;
-          int              line;
+          int              line, lineBefore, lineAfter;
           Revision         revision;
           Point            p;
           BufferDocumentIF bd;
           int              offset;
           JTextComponent   editor;
           JViewport        viewport;
+          int numberOfLines;
+          Delta delta;
+          Chunk original;
 
-          r = getBounds();
-          y = me.getY();
+          r = getDrawableRectangle();
+          y = me.getY() - r.y;
 
           revision = diffPanel.getCurrentRevision();
           if (revision == null)
@@ -56,7 +60,26 @@ public class RevisionBar
             return;
           }
 
-          line = (y * getNumberOfLines(revision)) / r.height;
+          numberOfLines = getNumberOfLines(revision);
+          line = (y * numberOfLines) / r.height;
+
+          // If the files are very large the resolution of one pixel contains a lot
+          //   of lines of the document. Check if there is a chunk in the revision between
+          //   those lines and if there is position on that chunk.
+          lineBefore = ((y - 2) * numberOfLines) / r.height;
+          lineAfter = ((y + 2) * numberOfLines) / r.height;
+          for (int i = 0; i < revision.size(); i++)
+          {
+             delta = revision.getDelta(i);
+             original = delta.getOriginal();
+
+             // The chunk starts within the bounds of the line-resolution.
+             if (original.anchor() > lineBefore && original.anchor() < lineAfter)
+             {
+               line = original.anchor();
+               break;
+             }
+          }
 
           bd = filePanel.getBufferDocument();
           offset = bd.getOffsetForLine(line);
@@ -77,6 +100,30 @@ public class RevisionBar
       };
   }
 
+  private Rectangle getDrawableRectangle()
+  {
+    JScrollBar sb;
+    Rectangle  r;
+    int        buttonHeight;
+
+    sb = filePanel.getScrollPane().getVerticalScrollBar();
+    r = sb.getBounds();
+    r.x = 0;
+    r.y = 0;
+
+    for (Component c : sb.getComponents())
+    {
+      if (c instanceof AbstractButton)
+      {
+        r.y += c.getHeight();
+        r.height -= (2 * c.getHeight());
+        break;
+      }
+    }
+
+    return r;
+  }
+
   public void paintComponent(Graphics g)
   {
     Rectangle  r;
@@ -87,10 +134,16 @@ public class RevisionBar
     int        y;
     int        height;
     int        numberOfLines;
+    Rectangle  clipBounds;
 
     g2 = (Graphics2D) g;
 
-    r = g.getClipBounds();
+    clipBounds = g.getClipBounds();
+
+    r = getDrawableRectangle();
+    r.x = clipBounds.x;
+    r.width = clipBounds.width;
+
     g2.setColor(Color.white);
     g2.fill(r);
 
@@ -112,7 +165,7 @@ public class RevisionBar
       chunk = original ? delta.getOriginal() : delta.getRevised();
 
       g.setColor(RevisionUtil.getColor(delta));
-      y = (r.height * chunk.anchor()) / numberOfLines;
+      y = r.y + (r.height * chunk.anchor()) / numberOfLines;
       height = (r.height * chunk.size()) / numberOfLines;
       if (height <= 0)
       {
