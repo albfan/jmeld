@@ -32,7 +32,7 @@ public class StatusBar
       new CompoundBorder(
         new EmptyBorder(2, 0, 2, 5),
         new CompoundBorder(
-          new LineBorder(Color.lightGray),
+          new LineBorder(UIManager.getColor("controlShadow")),
           new EmptyBorder(2, 2, 2, 2))));
 
     busyLabel = new BusyLabel();
@@ -45,8 +45,8 @@ public class StatusBar
         clearText());
     timer.setRepeats(false);
 
-    setMinimumSize(new Dimension(30, 30));
-    setPreferredSize(new Dimension(30, 30));
+    setMinimumSize(new Dimension(25, 25));
+    setPreferredSize(new Dimension(25, 25));
   }
 
   public static StatusBar getInstance()
