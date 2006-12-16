@@ -22,8 +22,8 @@ public class JMeldDiff
     // MyersDiff is the fastest but can be very slow when 2 files
     //   are very different.
     algorithms = new ArrayList<DiffAlgorithm>();
-    algorithms.add(myersDiff);
     algorithms.add(new GNUDiff());
+    algorithms.add(myersDiff);
   }
 
   public Revision diff(
