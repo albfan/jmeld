@@ -34,6 +34,10 @@ public class JMeldPanel
   private static final String SAVE_ACTION = "Save";
   private static final String UNDO_ACTION = "Undo";
   private static final String REDO_ACTION = "Redo";
+  private static final String RIGHT_ACTION = "Right";
+  private static final String LEFT_ACTION = "Left";
+  private static final String UP_ACTION = "Up";
+  private static final String DOWN_ACTION = "Down";
 
   // instance variables:
   private ActionHandler actionHandler;
@@ -187,6 +191,18 @@ public class JMeldPanel
     action = actionHandler.createAction(this, REDO_ACTION);
     action.setIcon("stock_redo");
     action.setToolTip("Redo the latest change");
+
+    action = actionHandler.createAction(this, LEFT_ACTION);
+    installKey("alt LEFT", action);
+
+    action = actionHandler.createAction(this, RIGHT_ACTION);
+    installKey("alt RIGHT", action);
+
+    action = actionHandler.createAction(this, UP_ACTION);
+    installKey("alt UP", action);
+
+    action = actionHandler.createAction(this, DOWN_ACTION);
+    installKey("alt DOWN", action);
   }
 
   public ActionHandler getActionHandler()
@@ -233,7 +249,7 @@ public class JMeldPanel
 
   public boolean isSaveEnabled()
   {
-    JMeldPanelIF panel;
+    JMeldContentPanelIF panel;
 
     panel = getCurrentJMeldPanel();
     if (panel == null)
@@ -251,7 +267,7 @@ public class JMeldPanel
 
   public boolean isUndoEnabled()
   {
-    JMeldPanelIF panel;
+    JMeldContentPanelIF panel;
 
     panel = getCurrentJMeldPanel();
     if (panel == null)
@@ -269,7 +285,7 @@ public class JMeldPanel
 
   public boolean isRedoEnabled()
   {
-    JMeldPanelIF panel;
+    JMeldContentPanelIF panel;
 
     panel = getCurrentJMeldPanel();
     if (panel == null)
@@ -278,6 +294,26 @@ public class JMeldPanel
     }
 
     return panel.isRedoEnabled();
+  }
+
+  public void doLeft(ActionEvent ae)
+  {
+    getCurrentJMeldPanel().doLeft();
+  }
+
+  public void doRight(ActionEvent ae)
+  {
+    getCurrentJMeldPanel().doRight();
+  }
+
+  public void doUp(ActionEvent ae)
+  {
+    getCurrentJMeldPanel().doUp();
+  }
+
+  public void doDown(ActionEvent ae)
+  {
+    getCurrentJMeldPanel().doDown();
   }
 
   private ChangeListener getChangeListener()
@@ -291,9 +327,9 @@ public class JMeldPanel
       };
   }
 
-  private JMeldPanelIF getCurrentJMeldPanel()
+  private JMeldContentPanelIF getCurrentJMeldPanel()
   {
-    return (JMeldPanelIF) tabbedPane.getSelectedComponent();
+    return (JMeldContentPanelIF) tabbedPane.getSelectedComponent();
   }
 
   class NewFileComparisonPanel
@@ -494,5 +530,23 @@ public class JMeldPanel
         WaitCursor.resume(JMeldPanel.this);
       }
     }
+  }
+
+  private void installKey(
+    String     key,
+    MeldAction action)
+  {
+    InputMap  inputMap;
+    ActionMap actionMap;
+
+    inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    inputMap.put(
+      KeyStroke.getKeyStroke(key),
+      action.getName());
+
+    actionMap = getActionMap();
+    actionMap.put(
+      action.getName(),
+      action);
   }
 }

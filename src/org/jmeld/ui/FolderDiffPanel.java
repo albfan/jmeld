@@ -31,7 +31,7 @@ import java.util.List;
 
 public class FolderDiffPanel
        extends JPanel
-       implements JMeldPanelIF
+       implements JMeldContentPanelIF
 {
   private JMeldPanel             mainPanel;
   private FolderDiff             diff;
@@ -243,5 +243,21 @@ public class FolderDiffPanel
           super.fireStateChanged();
         }
       };
+  }
+
+  public void doLeft()
+  {
+  }
+
+  public void doRight()
+  {
+  }
+
+  public void doUp()
+  {
+  }
+
+  public void doDown()
+  {
   }
 }

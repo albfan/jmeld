@@ -21,8 +21,11 @@ import java.util.List;
 
 public class BufferDiffPanel
        extends JPanel
-       implements JMeldPanelIF
+       implements JMeldContentPanelIF
 {
+    private static int instanceCounter = 0;
+      private int        instanceCount = ++instanceCounter;
+
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
   private Revision           currentRevision;
@@ -39,6 +42,8 @@ public class BufferDiffPanel
     filePanels = new FilePanel[3];
 
     init();
+
+    setFocusable(true);
   }
 
   public void setBufferDocuments(
@@ -160,7 +165,7 @@ public class BufferDiffPanel
       cc.xyw(4, 4, 3));
 
     add(
-      new DiffScrollComponent(this, filePanels[0], filePanels[1]),
+      new DiffScrollComponent(mainPanel, this, filePanels[0], filePanels[1]),
       cc.xy(7, 4));
 
     // panel for file2
@@ -353,5 +358,25 @@ public class BufferDiffPanel
       addEdit(e.getEdit());
       checkActions();
     }
+  }
+
+  public void doLeft()
+  {
+    System.out.println("doLeft: " + instanceCount);
+  }
+
+  public void doRight()
+  {
+    System.out.println("doRight: " + instanceCount);
+  }
+
+  public void doUp()
+  {
+    System.out.println("doUp: " + instanceCount);
+  }
+
+  public void doDown()
+  {
+    System.out.println("doDown: " + instanceCount);
   }
 }
