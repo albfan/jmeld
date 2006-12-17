@@ -18,7 +18,7 @@ public class GNUDiff
     Diff.change change;
 
     diff = new Diff(orig, rev);
-    change = diff.diff_2(false);
+    change = diff.diff_2();
 
     return buildRevision(change, orig, rev);
   }
