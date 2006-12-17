@@ -100,6 +100,9 @@ public class RevisionBar
       };
   }
 
+  /** Calculate the rectangle that can be used to draw the diffs.
+   *    It is essentially the size of the scrollbar minus its buttons.
+   */
   private Rectangle getDrawableRectangle()
   {
     JScrollBar sb;
