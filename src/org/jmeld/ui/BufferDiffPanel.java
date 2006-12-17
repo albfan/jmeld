@@ -165,7 +165,7 @@ public class BufferDiffPanel
       cc.xyw(4, 4, 3));
 
     add(
-      new DiffScrollComponent(mainPanel, this, filePanels[0], filePanels[1]),
+      new DiffScrollComponent(this, filePanels[0], filePanels[1]),
       cc.xy(7, 4));
 
     // panel for file2
