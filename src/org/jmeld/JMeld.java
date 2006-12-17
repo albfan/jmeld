@@ -10,6 +10,9 @@ import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
 
+import java.awt.*;
+import java.awt.event.*;
+
 public class JMeld
        implements Runnable
 {
@@ -34,6 +37,24 @@ public class JMeld
     JFrame     frame;
     JMeldPanel panel;
     String     version;
+
+/*
+    KeyboardFocusManager.setCurrentKeyboardFocusManager(
+      new DefaultKeyboardFocusManager()
+      {
+        public boolean dispatchKeyEvent(KeyEvent e)
+        {
+          System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
+          //System.out.println("   event: " + e);
+          return super.dispatchKeyEvent(e);
+        }
+
+        public void setGlobalFocusOwner(Component c)
+        {
+          super.setGlobalFocusOwner(c);
+        }
+      });
+    */
 
     try
     {
