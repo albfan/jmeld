@@ -364,9 +364,7 @@ public class FilePanel
 
     try
     {
-      //diff = new Diff(original2);
-      //return diff.diff(revised2);
-      return new JMeldDiff().diff(original2, revised2);
+      return new JMDiff().diff(original2, revised2);
     }
     catch (Exception ex)
     {

@@ -23,21 +23,20 @@ public class BufferDiffPanel
        extends JPanel
        implements JMeldContentPanelIF
 {
-    private static int instanceCounter = 0;
-      private int        instanceCount = ++instanceCounter;
-
+  private static int instanceCounter = 0;
+  private int        instanceCount = ++instanceCounter;
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
   private Revision           currentRevision;
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
-  private JMeldDiff          diff;
+  private JMDiff             diff;
 
   BufferDiffPanel(JMeldPanel mainPanel)
   {
     this.mainPanel = mainPanel;
 
-    diff = new JMeldDiff();
+    diff = new JMDiff();
 
     filePanels = new FilePanel[3];
 
@@ -49,7 +48,7 @@ public class BufferDiffPanel
   public void setBufferDocuments(
     BufferDocumentIF bd1,
     BufferDocumentIF bd2,
-    JMeldDiff        diff,
+    JMDiff           diff,
     Revision         revision)
   {
     this.diff = diff;

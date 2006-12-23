@@ -339,7 +339,7 @@ public class JMeldPanel
     private String           mineName;
     private BufferDocumentIF bd1;
     private BufferDocumentIF bd2;
-    private JMeldDiff        diff;
+    private JMDiff           diff;
     private Revision         revision;
 
     NewFileComparisonPanel(
@@ -384,7 +384,7 @@ public class JMeldPanel
         bd2.read();
 
         StatusBar.setStatus("Calculating differences...");
-        diff = new JMeldDiff();
+        diff = new JMDiff();
         revision = diff.diff(
             bd1.getLines(),
             bd2.getLines());

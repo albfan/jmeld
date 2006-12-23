@@ -8,11 +8,11 @@ import org.jmeld.util.*;
 
 import java.util.*;
 
-public class JMeldDiff
+public class JMDiff
 {
   private List<DiffAlgorithm> algorithms;
 
-  public JMeldDiff()
+  public JMDiff()
   {
     MyersDiff myersDiff;
 
