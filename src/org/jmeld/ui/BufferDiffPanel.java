@@ -459,9 +459,10 @@ public class BufferDiffPanel
       zoom = (Zoom) c.getClientProperty("JMeld.zoom");
       if (zoom == null)
       {
+        // Save the orginal font because that's the font which will
+        //   give the derived font.
         zoom = new Zoom();
         zoom.font = c.getFont();
-        zoom.size = zoom.font.getSize();
         c.putClientProperty("JMeld.zoom", zoom);
       }
 
@@ -476,7 +477,6 @@ public class BufferDiffPanel
   class Zoom
   {
     Font  font;
-    float size;
   }
 
   public JMDelta getSelectedDelta()
