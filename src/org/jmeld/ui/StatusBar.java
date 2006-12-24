@@ -19,26 +19,27 @@ public class StatusBar
   private static StatusBar instance = new StatusBar();
 
   // Instance variables:
-  private JLabel    statusLabel;
-  private BusyLabel busyLabel;
-  private Timer     timer;
+  private JLabel       status;
+  private JProgressBar progress;
+  private BusyLabel    busy;
+  private Timer        timer;
 
   private StatusBar()
   {
     setLayout(new BorderLayout());
 
-    statusLabel = new JLabel(" ");
-    statusLabel.setBorder(
+    status = new JLabel(" ");
+    status.setBorder(
       new CompoundBorder(
         new EmptyBorder(2, 0, 2, 5),
         new CompoundBorder(
           new LineBorder(UIManager.getColor("controlShadow")),
           new EmptyBorder(2, 2, 2, 2))));
+    progress = new JProgressBar();
+    busy = new BusyLabel();
 
-    busyLabel = new BusyLabel();
-
-    add(statusLabel, BorderLayout.CENTER);
-    add(busyLabel, BorderLayout.EAST);
+    add(status, BorderLayout.CENTER);
+    add(busy, BorderLayout.EAST);
 
     timer = new Timer(
         3000,
@@ -56,23 +57,32 @@ public class StatusBar
 
   public static void start()
   {
-    instance.busyLabel.start();
+    instance.busy.start();
   }
 
   public static void setStatus(String text)
   {
-    instance.statusLabel.setText(text);
+    instance.status.setText(text);
+  }
+
+  public static void setStatus(
+    int    progress,
+    String text)
+  {
+    instance.status.setText(text);
+    instance.progress.setValue(progress);
   }
 
   public static void stop()
   {
     instance.timer.restart();
-    instance.busyLabel.stop();
+    instance.busy.stop();
   }
 
   private void clear()
   {
-    statusLabel.setText("");
+    status.setText("");
+    progress.setValue(0);
   }
 
   private ActionListener clearText()
