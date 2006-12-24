@@ -82,7 +82,7 @@ public class JMeld
     panel = new JMeldPanel(fileName1, fileName2);
     frame.add(panel);
     frame.setJMenuBar(panel.getMenuBar());
-    frame.setIconImage(ResourceLoader.getImageIcon("jmeld2-small").getImage());
+    frame.setIconImage(ResourceLoader.getImageIcon("jmeld-small").getImage());
     new WindowPreference(
       frame.getTitle(),
       frame);
