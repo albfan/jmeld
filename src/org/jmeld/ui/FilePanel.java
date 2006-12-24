@@ -1,6 +1,5 @@
 package org.jmeld.ui;
 
-import org.apache.commons.jrcs.diff.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.swing.*;
@@ -113,12 +112,12 @@ public class FilePanel
     return scrollPane;
   }
 
-  JTextComponent getEditor()
+  public JTextComponent getEditor()
   {
     return editor;
   }
 
-  BufferDocumentIF getBufferDocument()
+  public BufferDocumentIF getBufferDocument()
   {
     return bufferDocument;
   }
@@ -194,19 +193,17 @@ public class FilePanel
     }
   }
 
-  public void setRevision(Revision revision)
+  public void setRevision(JMRevision revision)
   {
-    Delta    delta;
-    Chunk    original;
-    Chunk    revised;
-    int      fromOffset;
-    int      toOffset;
-    int      fromOffset2;
-    int      toOffset2;
-    Revision changeRev;
-    Delta    changeDelta;
-    Chunk    changeOriginal;
-    Chunk    changeRevised;
+    JMChunk    original;
+    JMChunk    revised;
+    int        fromOffset;
+    int        toOffset;
+    int        fromOffset2;
+    int        toOffset2;
+    JMRevision changeRev;
+    JMChunk    changeOriginal;
+    JMChunk    changeRevised;
 
     if (bufferDocument == null)
     {
@@ -215,49 +212,50 @@ public class FilePanel
 
     removeHighlights(editor);
 
-    for (int i = 0; i < revision.size(); i++)
+    for (JMDelta delta : revision.getDeltas())
     {
-      delta = revision.getDelta(i);
       original = delta.getOriginal();
       revised = delta.getRevised();
 
       if (BufferDocumentIF.ORIGINAL.equals(name))
       {
-        fromOffset = bufferDocument.getOffsetForLine(original.anchor());
-        toOffset = bufferDocument.getOffsetForLine(original.anchor()
-            + original.size());
+        fromOffset = bufferDocument.getOffsetForLine(original.getAnchor());
+        toOffset = bufferDocument.getOffsetForLine(original.getAnchor()
+            + original.getSize());
 
-        if (delta instanceof AddDelta)
+        if (delta.isAdd())
         {
           setHighlight(fromOffset, fromOffset + 1, DiffHighlighter.ADDED_LINE);
         }
-        else if (delta instanceof DeleteDelta)
+        else if (delta.isDelete())
         {
           setHighlight(fromOffset, toOffset, DiffHighlighter.DELETED);
         }
-        else if (delta instanceof ChangeDelta)
+        else if (delta.isChange())
         {
           // Mark the changes in a change in a different color.
-          if (original.size() < MAXSIZE_CHANGE_DIFF
-            && revised.size() < MAXSIZE_CHANGE_DIFF)
+          if (original.getSize() < MAXSIZE_CHANGE_DIFF
+            && revised.getSize() < MAXSIZE_CHANGE_DIFF)
           {
+            changeRev = delta.getChangeRevision();
+            /*
             changeRev = getChangeRevision(
-                original.toString(),
-                revised.toString());
+                revision.getOriginalString(original),
+                revision.getRevisedString(revised));
+            */
             if (changeRev != null)
             {
-              for (int j = 0; j < changeRev.size(); j++)
+              for (JMDelta changeDelta : changeRev.getDeltas())
               {
-                changeDelta = changeRev.getDelta(j);
                 changeOriginal = changeDelta.getOriginal();
-                fromOffset2 = fromOffset + changeOriginal.anchor();
-                toOffset2 = fromOffset2 + changeOriginal.size();
+                fromOffset2 = fromOffset + changeOriginal.getAnchor();
+                toOffset2 = fromOffset2 + changeOriginal.getSize();
 
-                if (changeDelta instanceof DeleteDelta)
+                if (changeDelta.isDelete())
                 {
                   setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
                 }
-                else if (changeDelta instanceof ChangeDelta)
+                else if (changeDelta.isChange())
                 {
                   setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
                 }
@@ -272,40 +270,42 @@ public class FilePanel
       }
       else if (BufferDocumentIF.REVISED.equals(name))
       {
-        fromOffset = bufferDocument.getOffsetForLine(revised.anchor());
-        toOffset = bufferDocument.getOffsetForLine(revised.anchor()
-            + revised.size());
+        fromOffset = bufferDocument.getOffsetForLine(revised.getAnchor());
+        toOffset = bufferDocument.getOffsetForLine(revised.getAnchor()
+            + revised.getSize());
 
-        if (delta instanceof AddDelta)
+        if (delta.isAdd())
         {
           setHighlight(fromOffset, toOffset, DiffHighlighter.ADDED);
         }
-        else if (delta instanceof DeleteDelta)
+        else if (delta.isDelete())
         {
           setHighlight(fromOffset, fromOffset + 1, DiffHighlighter.DELETED_LINE);
         }
-        else if (delta instanceof ChangeDelta)
+        else if (delta.isChange())
         {
-          if (original.size() < MAXSIZE_CHANGE_DIFF
-            && revised.size() < MAXSIZE_CHANGE_DIFF)
+          if (original.getSize() < MAXSIZE_CHANGE_DIFF
+            && revised.getSize() < MAXSIZE_CHANGE_DIFF)
           {
+            changeRev = delta.getChangeRevision();
+            /*
             changeRev = getChangeRevision(
-                original.toString(),
-                revised.toString());
+                revision.getOriginalString(original),
+                revision.getRevisedString(revised));
+            */
             if (changeRev != null)
             {
-              for (int j = 0; j < changeRev.size(); j++)
+              for (JMDelta changeDelta : changeRev.getDeltas())
               {
-                changeDelta = changeRev.getDelta(j);
                 changeRevised = changeDelta.getRevised();
-                fromOffset2 = fromOffset + changeRevised.anchor();
-                toOffset2 = fromOffset2 + changeRevised.size();
+                fromOffset2 = fromOffset + changeRevised.getAnchor();
+                toOffset2 = fromOffset2 + changeRevised.getSize();
 
-                if (changeDelta instanceof AddDelta)
+                if (changeDelta.isAdd())
                 {
                   setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
                 }
-                else if (changeDelta instanceof ChangeDelta)
+                else if (changeDelta.isChange())
                 {
                   setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
                 }
@@ -338,11 +338,11 @@ public class FilePanel
     }
   }
 
-  private Revision getChangeRevision(
+  private JMRevision getChangeRevision(
     String original,
     String revised)
   {
-    Diff        diff;
+    JMDiff      diff;
     char[]      original1;
     Character[] original2;
     char[]      revised1;

@@ -260,4 +260,9 @@ public class FolderDiffPanel
   public void doDown()
   {
   }
+
+  public void doZoom(boolean direction)
+  {
+  }
+
 }

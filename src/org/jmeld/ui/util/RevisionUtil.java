@@ -1,19 +1,19 @@
 package org.jmeld.ui.util;
 
-import org.apache.commons.jrcs.diff.*;
+import org.jmeld.diff.*;
 
 import java.awt.*;
 
 public class RevisionUtil
 {
-  public static Color getColor(Delta delta)
+  public static Color getColor(JMDelta delta)
   {
-    if (delta instanceof DeleteDelta)
+    if (delta.isDelete())
     {
       return Colors.DELETED;
     }
 
-    if (delta instanceof ChangeDelta)
+    if (delta.isChange())
     {
       return Colors.CHANGED;
     }

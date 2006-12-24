@@ -21,4 +21,6 @@ public interface JMeldContentPanelIF
   public void doUp();
 
   public void doDown();
+
+  public void doZoom(boolean direction);
 }

@@ -1,6 +1,6 @@
 package org.jmeld.util;
 
-import org.apache.commons.jrcs.diff.*;
+import org.jmeld.diff.*;
 import org.jmeld.ui.*;
 
 import java.io.*;
@@ -10,15 +10,15 @@ public class DiffUtil
   public static boolean debug = false;
 
   public static int getRevisedLine(
-    Revision revision,
-    int      originalLine)
+    JMRevision revision,
+    int        originalLine)
   {
-    Delta delta;
-    int   originalAnchor;
-    int   originalSize;
-    int   revisedAnchor;
-    int   revisedSize;
-    int   revisedLine;
+    JMDelta delta;
+    int     originalAnchor;
+    int     originalSize;
+    int     revisedAnchor;
+    int     revisedSize;
+    int     revisedLine;
 
     if (revision == null)
     {
@@ -30,10 +30,10 @@ public class DiffUtil
     delta = findOriginalDelta(revision, originalLine);
     if (delta != null)
     {
-      originalAnchor = delta.getOriginal().anchor();
-      originalSize = delta.getOriginal().size();
-      revisedAnchor = delta.getRevised().anchor();
-      revisedSize = delta.getRevised().size();
+      originalAnchor = delta.getOriginal().getAnchor();
+      originalSize = delta.getOriginal().getSize();
+      revisedAnchor = delta.getRevised().getAnchor();
+      revisedSize = delta.getRevised().getSize();
 
       if (originalLine - originalAnchor < originalSize)
       {
@@ -63,25 +63,25 @@ public class DiffUtil
   }
 
   public static int getOriginalLine(
-    Revision revision,
-    int      revisedLine)
+    JMRevision revision,
+    int        revisedLine)
   {
-    Delta delta;
-    int   originalAnchor;
-    int   originalSize;
-    int   revisedAnchor;
-    int   revisedSize;
-    int   originalLine;
+    JMDelta delta;
+    int     originalAnchor;
+    int     originalSize;
+    int     revisedAnchor;
+    int     revisedSize;
+    int     originalLine;
 
     originalLine = revisedLine;
 
     delta = findRevisedDelta(revision, revisedLine);
     if (delta != null)
     {
-      originalAnchor = delta.getOriginal().anchor();
-      originalSize = delta.getOriginal().size();
-      revisedAnchor = delta.getRevised().anchor();
-      revisedSize = delta.getRevised().size();
+      originalAnchor = delta.getOriginal().getAnchor();
+      originalSize = delta.getOriginal().getSize();
+      revisedAnchor = delta.getRevised().getAnchor();
+      revisedSize = delta.getRevised().getSize();
 
       if (revisedLine - revisedAnchor < revisedSize)
       {
@@ -110,27 +110,26 @@ public class DiffUtil
     return originalLine;
   }
 
-  private static Delta findOriginalDelta(
-    Revision revision,
-    int      line)
+  private static JMDelta findOriginalDelta(
+    JMRevision revision,
+    int        line)
   {
     return findDelta(revision, line, true);
   }
 
-  private static Delta findRevisedDelta(
-    Revision revision,
-    int      line)
+  private static JMDelta findRevisedDelta(
+    JMRevision revision,
+    int        line)
   {
     return findDelta(revision, line, false);
   }
 
-  private static Delta findDelta(
-    Revision revision,
-    int      line,
-    boolean  originalDelta)
+  private static JMDelta findDelta(
+    JMRevision revision,
+    int        line,
+    boolean    originalDelta)
   {
-    Delta delta;
-    Delta previousDelta;
+    JMDelta previousDelta;
     int   anchor;
 
     if (revision == null)
@@ -139,17 +138,15 @@ public class DiffUtil
     }
 
     previousDelta = null;
-    for (int i = 0; i < revision.size(); i++)
+    for (JMDelta delta : revision.getDeltas())
     {
-      delta = revision.getDelta(i);
-
       if (originalDelta)
       {
-        anchor = delta.getOriginal().anchor();
+        anchor = delta.getOriginal().getAnchor();
       }
       else
       {
-        anchor = delta.getRevised().anchor();
+        anchor = delta.getRevised().getAnchor();
       }
 
       if (anchor > line)

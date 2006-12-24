@@ -2,7 +2,6 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.layout.*;
 
-import org.apache.commons.jrcs.diff.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.text.*;
@@ -23,11 +22,12 @@ public class BufferDiffPanel
        extends JPanel
        implements JMeldContentPanelIF
 {
-  private static int instanceCounter = 0;
-  private int        instanceCount = ++instanceCounter;
+  private static int         instanceCounter = 0;
+  private int                instanceCount = ++instanceCounter;
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
-  private Revision           currentRevision;
+  private JMRevision         currentRevision;
+  private JMDelta            selectedDelta;
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
   private JMDiff             diff;
@@ -49,7 +49,7 @@ public class BufferDiffPanel
     BufferDocumentIF bd1,
     BufferDocumentIF bd2,
     JMDiff           diff,
-    Revision         revision)
+    JMRevision       revision)
   {
     this.diff = diff;
 
@@ -187,10 +187,19 @@ public class BufferDiffPanel
 
   void toNextDelta(boolean next)
   {
-    scrollSynchronizer.toNextDelta(next);
+    if (next)
+    {
+      doDown();
+    }
+    else
+    {
+      doUp();
+    }
+
+    //scrollSynchronizer.toNextDelta(next);
   }
 
-  Revision getCurrentRevision()
+  JMRevision getCurrentRevision()
   {
     return currentRevision;
   }
@@ -326,11 +335,15 @@ public class BufferDiffPanel
     mainPanel.checkActions();
   }
 
-  class MyUndoManager
+  public class MyUndoManager
          extends UndoManager
          implements UndoableEditListener
   {
     CompoundEdit activeEdit;
+
+    private MyUndoManager()
+    {
+    }
 
     public void start(String text)
     {
@@ -369,13 +382,123 @@ public class BufferDiffPanel
     System.out.println("doRight: " + instanceCount);
   }
 
-  public void doUp()
-  {
-    System.out.println("doUp: " + instanceCount);
-  }
-
   public void doDown()
   {
-    System.out.println("doDown: " + instanceCount);
+    JMDelta       d;
+    List<JMDelta> deltas;
+    int           index;
+
+    if (currentRevision == null)
+    {
+      return;
+    }
+
+    deltas = currentRevision.getDeltas();
+    index = deltas.indexOf(getSelectedDelta());
+    if (index == -1)
+    {
+      // I don't know it now anymore!
+      selectedDelta = null;
+    }
+    else
+    {
+      // Select the next delta if there is any.
+      if (index + 1 < deltas.size())
+      {
+        selectedDelta = deltas.get(index + 1);
+        scrollSynchronizer.showDelta(selectedDelta);
+      }
+    }
+  }
+
+  public void doUp()
+  {
+    JMDelta       d;
+    List<JMDelta> deltas;
+    int           index;
+
+    if (currentRevision == null)
+    {
+      return;
+    }
+
+    deltas = currentRevision.getDeltas();
+    index = deltas.indexOf(getSelectedDelta());
+    if (index == -1)
+    {
+      // I don't know it now anymore!
+      selectedDelta = null;
+    }
+    else
+    {
+      // Select the next delta if there is any.
+      if (index - 1 >= 0)
+      {
+        selectedDelta = deltas.get(index - 1);
+        scrollSynchronizer.showDelta(selectedDelta);
+      }
+    }
+  }
+
+  public void doZoom(boolean direction)
+  {
+    JTextComponent c;
+    Font           font;
+    float          size;
+    Zoom zoom;
+
+    for (FilePanel p : filePanels)
+    {
+      if(p == null)
+      {
+        continue;
+      }
+      
+      c = p.getEditor();
+
+      zoom = (Zoom) c.getClientProperty("JMeld.zoom");
+      if (zoom == null)
+      {
+        zoom = new Zoom();
+        zoom.font = c.getFont();
+        zoom.size = zoom.font.getSize();
+        c.putClientProperty("JMeld.zoom", zoom);
+      }
+
+      size = c.getFont().getSize() + (direction ? 1.0f : -1.0f);
+      size = size > 100.0f ? 100.0f : size;
+      size = size < 5.0f ? 5.0f : size;
+
+      c.setFont(zoom.font.deriveFont(size));
+    }
+  }
+
+  class Zoom
+  {
+    Font  font;
+    float size;
+  }
+
+  public JMDelta getSelectedDelta()
+  {
+    List<JMDelta> deltas;
+
+    if (currentRevision == null)
+    {
+      return null;
+    }
+
+    deltas = currentRevision.getDeltas();
+    if (deltas.size() == 0)
+    {
+      return null;
+    }
+
+    if (selectedDelta == null)
+    {
+      selectedDelta = deltas.get(0);
+    }
+
+    return selectedDelta;
   }
 }

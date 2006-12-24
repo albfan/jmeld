@@ -1,6 +1,7 @@
 package org.jmeld.ui;
 
-import org.apache.commons.jrcs.diff.*;
+import org.jmeld.diff.*;
+import org.jmeld.ui.command.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 
@@ -102,7 +103,7 @@ public class DiffScrollComponent
 
     middle = r.height / 2;
     g2.setColor(Color.LIGHT_GRAY);
-    g2.drawLine(r.x + 15, r.y + middle, r.x + r.width - 15, r.y + middle);
+    g2.drawLine(r.x + 20, r.y + middle, r.x + r.width - 20, r.y + middle);
 
     paintDiffs(g2);
   }
@@ -113,7 +114,7 @@ public class DiffScrollComponent
     JViewport        viewportRevised;
     JTextComponent   editorOriginal;
     JTextComponent   editorRevised;
-    Revision         revision;
+    JMRevision       revision;
     BufferDocumentIF bdOriginal;
     BufferDocumentIF bdRevised;
     int              firstLineOriginal;
@@ -123,9 +124,8 @@ public class DiffScrollComponent
     int              offset;
     Rectangle        r;
     Point            p;
-    Delta            delta;
-    Chunk            original;
-    Chunk            revised;
+    JMChunk          original;
+    JMChunk          revised;
     Rectangle        viewportRect;
     Rectangle        fromRect;
     Rectangle        toRect;
@@ -143,6 +143,8 @@ public class DiffScrollComponent
     Color            color;
     Polygon          shape;
     Rectangle        rect;
+    boolean          selected;
+    int              selectionWidth;
 
     bounds = g2.getClipBounds();
 
@@ -189,36 +191,39 @@ public class DiffScrollComponent
     offset = editorRevised.viewToModel(p);
     lastLineRevised = bdRevised.getLineForOffset(offset) + 1;
 
+    int count = 0;
+
     try
     {
       // Draw only the delta's that have some line's drawn in one of the viewports.
-      for (int i = 0; i < revision.size(); i++)
+      for (JMDelta delta : revision.getDeltas())
       {
-        delta = revision.getDelta(i);
         original = delta.getOriginal();
         revised = delta.getRevised();
 
         // This delta is before the firstLine of the screen: Keep on searching!
-        if (original.anchor() + original.size() < firstLineOriginal
-          && revised.anchor() + revised.size() < firstLineRevised)
+        if (original.getAnchor() + original.getSize() < firstLineOriginal
+          && revised.getAnchor() + revised.getSize() < firstLineRevised)
         {
           continue;
         }
 
         // This delta is after the lastLine of the screen: stop! 
-        if (original.anchor() > lastLineOriginal
-          && revised.anchor() > lastLineRevised)
+        if (original.getAnchor() > lastLineOriginal
+          && revised.getAnchor() > lastLineRevised)
         {
           break;
         }
+
+        selected = (delta == diffPanel.getSelectedDelta());
 
         // OK, this delta has some visible lines. Now draw it!
         color = RevisionUtil.getColor(delta);
         g2.setColor(color);
 
         // Draw original chunk:
-        fromLine = original.anchor();
-        toLine = original.anchor() + original.size();
+        fromLine = original.getAnchor();
+        toLine = original.getAnchor() + original.getSize();
         viewportRect = viewportOriginal.getViewRect();
         offset = bdOriginal.getOffsetForLine(fromLine);
         fromRect = editorOriginal.modelToView(offset);
@@ -268,9 +273,25 @@ public class DiffScrollComponent
           g2.drawLine(x, y + height, x + width, y + height);
         }
 
+        if (selected)
+        {
+          x = x + width + 1;
+          selectionWidth = 5;
+
+          g2.setColor(Color.yellow);
+          g2.fillRect(x, y, selectionWidth, height);
+          g2.setColor(Color.yellow.darker());
+          g2.drawLine(x, y, x + selectionWidth, y);
+          if (height > 0)
+          {
+            g2.drawLine(x + selectionWidth, y, x + selectionWidth, y + height);
+            g2.drawLine(x, y + height, x + selectionWidth, y + height);
+          }
+        }
+
         // Draw revised chunk:
-        fromLine = revised.anchor();
-        toLine = revised.anchor() + revised.size();
+        fromLine = revised.getAnchor();
+        toLine = revised.getAnchor() + revised.getSize();
         viewportRect = viewportRevised.getViewRect();
         offset = bdRevised.getOffsetForLine(fromLine);
         fromRect = editorRevised.modelToView(offset);
@@ -320,6 +341,23 @@ public class DiffScrollComponent
           g2.drawLine(x, y + height, x + width, y + height);
         }
 
+        if (selected)
+        {
+          selectionWidth = 5;
+          x = x - selectionWidth;
+
+          g2.setColor(Color.yellow);
+          g2.fillRect(x, y, selectionWidth, height);
+          g2.setColor(Color.yellow.darker());
+          g2.drawLine(x, y, x + selectionWidth, y);
+          if (height > 0)
+          {
+            g2.drawLine(x, y, x, y + height);
+            g2.drawLine(x, y + height, x + selectionWidth, y + height);
+          }
+          g2.setColor(color);
+        }
+
         // Draw the chunk connection:
         g2.drawLine(x0, y0, x0 + 15, y0);
         setAntiAlias(g2);
@@ -338,16 +376,16 @@ public class DiffScrollComponent
         g2.setColor(color.darker());
         g2.draw(shape);
         resetAntiAlias(g2);
-        commands.add(new ChangeCommand(shape, delta, false));
+        commands.add(new DiffChangeCommand(shape, delta, false));
 
         // Draw delete original command
-        if (original.size() > 0)
+        if (original.getSize() > 0)
         {
           g2.setColor(Color.red);
           g2.drawLine(x0 + 3 - width, y0 + 3, x0 + 7 - width, y0 + 7);
           g2.drawLine(x0 + 7 - width, y0 + 3, x0 + 3 - width, y0 + 7);
           rect = new Rectangle(x0 + 2 - width, y0 + 2, 6, 6);
-          commands.add(new DeleteCommand(rect, delta, true));
+          commands.add(new DiffDeleteCommand(rect, delta, true));
         }
 
         // Draw merge original->revised command.
@@ -361,16 +399,16 @@ public class DiffScrollComponent
         g2.setColor(color.darker());
         g2.drawPolygon(shape);
         resetAntiAlias(g2);
-        commands.add(new ChangeCommand(shape, delta, true));
+        commands.add(new DiffChangeCommand(shape, delta, true));
 
         // Draw delete revision command
-        if (revised.size() > 0)
+        if (revised.getSize() > 0)
         {
           g2.setColor(Color.red);
           g2.drawLine(x1 + 3, y1 + 3, x1 + 7, y1 + 7);
           g2.drawLine(x1 + 7, y1 + 3, x1 + 3, y1 + 7);
           rect = new Rectangle(x1 + 2, y1 + 2, 6, 6);
-          commands.add(new DeleteCommand(rect, delta, false));
+          commands.add(new DiffDeleteCommand(rect, delta, false));
         }
       }
     }
@@ -382,12 +420,12 @@ public class DiffScrollComponent
     resetAntiAlias(g2);
   }
 
-  class ChangeCommand
+  class DiffChangeCommand
          extends Command
   {
-    ChangeCommand(
+    DiffChangeCommand(
       Shape   shape,
-      Delta   delta,
+      JMDelta delta,
       boolean originalToRevised)
     {
       super(shape, delta, originalToRevised);
@@ -395,78 +433,17 @@ public class DiffScrollComponent
 
     public void execute()
     {
-      BufferDocumentIF fromBufferDocument;
-      BufferDocumentIF toBufferDocument;
-      PlainDocument    from;
-      PlainDocument    to;
-      String           s;
-      int              fromLine;
-      int              toLine;
-      int              fromOffset;
-      int              toOffset;
-      int              size;
-      Chunk            fromChunk;
-      Chunk            toChunk;
-      JTextComponent   toEditor;
-
-      try
-      {
-        if (originalToRevised)
-        {
-          fromBufferDocument = filePanelOriginal.getBufferDocument();
-          toBufferDocument = filePanelRevised.getBufferDocument();
-          fromChunk = delta.getOriginal();
-          toChunk = delta.getRevised();
-          toEditor = filePanelRevised.getEditor();
-        }
-        else
-        {
-          fromBufferDocument = filePanelRevised.getBufferDocument();
-          toBufferDocument = filePanelOriginal.getBufferDocument();
-          fromChunk = delta.getRevised();
-          toChunk = delta.getOriginal();
-          toEditor = filePanelOriginal.getEditor();
-        }
-
-        if (fromBufferDocument == null || toBufferDocument == null)
-        {
-          return;
-        }
-
-        from = fromBufferDocument.getDocument();
-        to = toBufferDocument.getDocument();
-
-        fromLine = fromChunk.anchor();
-        size = fromChunk.size();
-        fromOffset = fromBufferDocument.getOffsetForLine(fromLine);
-        toOffset = fromBufferDocument.getOffsetForLine(fromLine + size);
-
-        s = from.getText(fromOffset, toOffset - fromOffset);
-
-        fromLine = toChunk.anchor();
-        size = toChunk.size();
-        fromOffset = toBufferDocument.getOffsetForLine(fromLine);
-        toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
-
-        diffPanel.getUndoHandler().start("replace");
-        toEditor.setSelectionStart(fromOffset);
-        toEditor.setSelectionEnd(toOffset);
-        toEditor.replaceSelection(s);
-        diffPanel.getUndoHandler().end("replace");
-      }
-      catch (Exception ex)
-      {
-        ex.printStackTrace();
-      }
+      new ChangeCommand(diffPanel, filePanelOriginal, filePanelRevised,
+        originalToRevised, delta).run();
     }
   }
 
-  class DeleteCommand
+  class DiffDeleteCommand
          extends Command
   {
-    DeleteCommand(
+    DiffDeleteCommand(
       Shape   shape,
-      Delta   delta,
+      JMDelta delta,
       boolean originalToRevised)
     {
       super(shape, delta, originalToRevised);
@@ -474,65 +451,20 @@ public class DiffScrollComponent
 
     public void execute()
     {
-      BufferDocumentIF bufferDocument;
-      PlainDocument    document;
-      String           s;
-      int              fromLine;
-      int              fromOffset;
-      int              toOffset;
-      int              size;
-      Chunk            chunk;
-      JTextComponent   toEditor;
-
-      try
-      {
-        if (originalToRevised)
-        {
-          bufferDocument = filePanelOriginal.getBufferDocument();
-          chunk = delta.getOriginal();
-          toEditor = filePanelOriginal.getEditor();
-        }
-        else
-        {
-          bufferDocument = filePanelRevised.getBufferDocument();
-          chunk = delta.getRevised();
-          toEditor = filePanelRevised.getEditor();
-        }
-
-        if (bufferDocument == null)
-        {
-          return;
-        }
-
-        document = bufferDocument.getDocument();
-
-        fromLine = chunk.anchor();
-        size = chunk.size();
-        fromOffset = bufferDocument.getOffsetForLine(fromLine);
-        toOffset = bufferDocument.getOffsetForLine(fromLine + size);
-
-        diffPanel.getUndoHandler().start("remove");
-        toEditor.setSelectionStart(fromOffset);
-        toEditor.setSelectionEnd(toOffset);
-        toEditor.replaceSelection("");
-        diffPanel.getUndoHandler().end("remove");
-      }
-      catch (Exception ex)
-      {
-        ex.printStackTrace();
-      }
+      new DeleteCommand(diffPanel, filePanelOriginal, filePanelRevised,
+        originalToRevised, delta).run();
     }
   }
 
   abstract class Command
   {
     Rectangle bounds;
-    Delta     delta;
+    JMDelta   delta;
     boolean   originalToRevised;
 
     Command(
       Shape   shape,
-      Delta   delta,
+      JMDelta delta,
       boolean originalToRevised)
     {
       this.bounds = shape.getBounds();

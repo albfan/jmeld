@@ -1,6 +1,6 @@
 package org.jmeld.ui;
 
-import org.apache.commons.jrcs.diff.*;
+import org.jmeld.diff.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
 
@@ -10,6 +10,7 @@ import javax.swing.text.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 public class ScrollSynchronizer
 {
@@ -51,10 +52,10 @@ public class ScrollSynchronizer
 
   private void scroll(boolean originalScrolled)
   {
-    Revision  revision;
-    FilePanel fp1;
-    FilePanel fp2;
-    int       line;
+    JMRevision revision;
+    FilePanel  fp1;
+    FilePanel  fp2;
+    int        line;
 
     revision = diffPanel.getCurrentRevision();
     if (revision == null)
@@ -89,16 +90,17 @@ public class ScrollSynchronizer
 
   void toNextDelta(boolean next)
   {
-    int      line;
-    Revision revision;
-    Delta    delta;
-    Delta    previousDelta;
-    Delta    currentDelta;
-    Delta    nextDelta;
-    Delta    toDelta;
-    Chunk    original;
-    int      currentIndex;
-    int      nextIndex;
+    int           line;
+    JMRevision    revision;
+    JMDelta       previousDelta;
+    JMDelta       currentDelta;
+    JMDelta       nextDelta;
+    JMDelta       toDelta;
+    JMChunk       original;
+    int           currentIndex;
+    int           nextIndex;
+    List<JMDelta> deltas;
+    int           i;
 
     revision = diffPanel.getCurrentRevision();
     if (revision == null)
@@ -106,21 +108,24 @@ public class ScrollSynchronizer
       return;
     }
 
+    deltas = revision.getDeltas();
+
     line = getCurrentLineCenter(filePanelOriginal);
 
     currentDelta = null;
     currentIndex = -1;
 
-    for (int i = 0; i < revision.size(); i++)
+    i = 0;
+    for (JMDelta delta : deltas)
     {
-      delta = revision.getDelta(i);
       original = delta.getOriginal();
 
       currentIndex = i;
+      i++;
 
-      if (line >= original.anchor())
+      if (line >= original.getAnchor())
       {
-        if (line <= original.anchor() + original.size())
+        if (line <= original.getAnchor() + original.getSize())
         {
           currentDelta = delta;
           break;
@@ -138,7 +143,7 @@ public class ScrollSynchronizer
     {
       if (currentIndex > 0)
       {
-        previousDelta = revision.getDelta(currentIndex - 1);
+        previousDelta = deltas.get(currentIndex - 1);
       }
 
       nextIndex = currentIndex;
@@ -147,9 +152,9 @@ public class ScrollSynchronizer
         nextIndex++;
       }
 
-      if (nextIndex < revision.size())
+      if (nextIndex < deltas.size())
       {
-        nextDelta = revision.getDelta(nextIndex);
+        nextDelta = deltas.get(nextIndex);
       }
     }
 
@@ -166,14 +171,21 @@ public class ScrollSynchronizer
     {
       scrollToLine(
         filePanelOriginal,
-        toDelta.getOriginal().anchor());
+        toDelta.getOriginal().getAnchor());
       scroll(true);
     }
   }
 
+  void showDelta(JMDelta delta)
+  {
+    scrollToLine(
+      filePanelOriginal,
+      delta.getOriginal().getAnchor());
+    scroll(true);
+  }
+
   private int getCurrentLineCenter(FilePanel fp)
   {
-    Revision         revision;
     JScrollPane      scrollPane;
     BufferDocumentIF bd;
     JTextComponent   editor;
@@ -203,7 +215,6 @@ public class ScrollSynchronizer
     FilePanel fp,
     int       line)
   {
-    Revision         revision;
     JScrollPane      scrollPane;
     FilePanel        fp2;
     BufferDocumentIF bd;

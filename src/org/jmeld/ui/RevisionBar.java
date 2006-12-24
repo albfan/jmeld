@@ -1,6 +1,6 @@
 package org.jmeld.ui;
 
-import org.apache.commons.jrcs.diff.*;
+import org.jmeld.diff.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 
@@ -40,16 +40,17 @@ public class RevisionBar
         {
           Rectangle        r;
           int              y;
-          int              line, lineBefore, lineAfter;
-          Revision         revision;
+          int              line;
+          int              lineBefore;
+          int              lineAfter;
+          JMRevision       revision;
           Point            p;
           BufferDocumentIF bd;
           int              offset;
           JTextComponent   editor;
           JViewport        viewport;
-          int numberOfLines;
-          Delta delta;
-          Chunk original;
+          int              numberOfLines;
+          JMChunk          original;
 
           r = getDrawableRectangle();
           y = me.getY() - r.y;
@@ -68,17 +69,17 @@ public class RevisionBar
           //   those lines and if there is position on that chunk.
           lineBefore = ((y - 2) * numberOfLines) / r.height;
           lineAfter = ((y + 2) * numberOfLines) / r.height;
-          for (int i = 0; i < revision.size(); i++)
+          for (JMDelta delta : revision.getDeltas())
           {
-             delta = revision.getDelta(i);
-             original = delta.getOriginal();
+            original = delta.getOriginal();
 
-             // The chunk starts within the bounds of the line-resolution.
-             if (original.anchor() > lineBefore && original.anchor() < lineAfter)
-             {
-               line = original.anchor();
-               break;
-             }
+            // The chunk starts within the bounds of the line-resolution.
+            if (original.getAnchor() > lineBefore
+              && original.getAnchor() < lineAfter)
+            {
+              line = original.getAnchor();
+              break;
+            }
           }
 
           bd = filePanel.getBufferDocument();
@@ -131,9 +132,8 @@ public class RevisionBar
   {
     Rectangle  r;
     Graphics2D g2;
-    Revision   revision;
-    Chunk      chunk;
-    Delta      delta;
+    JMRevision revision;
+    JMChunk    chunk;
     int        y;
     int        height;
     int        numberOfLines;
@@ -162,14 +162,13 @@ public class RevisionBar
       return;
     }
 
-    for (int i = 0; i < revision.size(); i++)
+    for (JMDelta delta : revision.getDeltas())
     {
-      delta = revision.getDelta(i);
       chunk = original ? delta.getOriginal() : delta.getRevised();
 
       g.setColor(RevisionUtil.getColor(delta));
-      y = r.y + (r.height * chunk.anchor()) / numberOfLines;
-      height = (r.height * chunk.size()) / numberOfLines;
+      y = r.y + (r.height * chunk.getAnchor()) / numberOfLines;
+      height = (r.height * chunk.getSize()) / numberOfLines;
       if (height <= 0)
       {
         height = 1;
@@ -179,7 +178,7 @@ public class RevisionBar
     }
   }
 
-  private int getNumberOfLines(Revision revision)
+  private int getNumberOfLines(JMRevision revision)
   {
     return original ? revision.getOrgSize() : revision.getRevSize();
   }

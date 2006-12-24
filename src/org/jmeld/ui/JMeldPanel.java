@@ -2,7 +2,6 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.builder.*;
 
-import org.apache.commons.jrcs.diff.*;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
@@ -38,6 +37,8 @@ public class JMeldPanel
   private static final String LEFT_ACTION = "Left";
   private static final String UP_ACTION = "Up";
   private static final String DOWN_ACTION = "Down";
+  private static final String ZOOMPLUS_ACTION = "ZoomPlus";
+  private static final String ZOOMMIN_ACTION = "ZoomMin";
 
   // instance variables:
   private ActionHandler actionHandler;
@@ -187,22 +188,38 @@ public class JMeldPanel
     action = actionHandler.createAction(this, UNDO_ACTION);
     action.setIcon("stock_undo");
     action.setToolTip("Undo the latest change");
+    installKey("control Z", action);
 
     action = actionHandler.createAction(this, REDO_ACTION);
     action.setIcon("stock_redo");
     action.setToolTip("Redo the latest change");
+    installKey("control R", action);
 
     action = actionHandler.createAction(this, LEFT_ACTION);
     installKey("alt LEFT", action);
+    installKey("alt KP_LEFT", action);
 
     action = actionHandler.createAction(this, RIGHT_ACTION);
     installKey("alt RIGHT", action);
+    installKey("alt KP_RIGHT", action);
 
     action = actionHandler.createAction(this, UP_ACTION);
     installKey("alt UP", action);
+    installKey("alt KP_UP", action);
 
     action = actionHandler.createAction(this, DOWN_ACTION);
     installKey("alt DOWN", action);
+    installKey("alt KP_DOWN", action);
+
+    action = actionHandler.createAction(this, ZOOMPLUS_ACTION);
+    installKey("alt EQUALS", action);
+    installKey("shift alt EQUALS", action);
+    installKey("alt ADD", action);
+
+    action = actionHandler.createAction(this, ZOOMMIN_ACTION);
+    installKey("alt MINUS", action);
+    installKey("shift alt MINUS", action);
+    installKey("alt SUBTRACT", action);
   }
 
   public ActionHandler getActionHandler()
@@ -244,14 +261,14 @@ public class JMeldPanel
 
   public void doSave(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doSave();
+    getCurrentJMeldContentPanel().doSave();
   }
 
   public boolean isSaveEnabled()
   {
     JMeldContentPanelIF panel;
 
-    panel = getCurrentJMeldPanel();
+    panel = getCurrentJMeldContentPanel();
     if (panel == null)
     {
       return false;
@@ -262,14 +279,14 @@ public class JMeldPanel
 
   public void doUndo(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doUndo();
+    getCurrentJMeldContentPanel().doUndo();
   }
 
   public boolean isUndoEnabled()
   {
     JMeldContentPanelIF panel;
 
-    panel = getCurrentJMeldPanel();
+    panel = getCurrentJMeldContentPanel();
     if (panel == null)
     {
       return false;
@@ -280,14 +297,14 @@ public class JMeldPanel
 
   public void doRedo(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doRedo();
+    getCurrentJMeldContentPanel().doRedo();
   }
 
   public boolean isRedoEnabled()
   {
     JMeldContentPanelIF panel;
 
-    panel = getCurrentJMeldPanel();
+    panel = getCurrentJMeldContentPanel();
     if (panel == null)
     {
       return false;
@@ -298,22 +315,38 @@ public class JMeldPanel
 
   public void doLeft(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doLeft();
+    getCurrentJMeldContentPanel().doLeft();
+    repaint();
   }
 
   public void doRight(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doRight();
+    getCurrentJMeldContentPanel().doRight();
+    repaint();
   }
 
   public void doUp(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doUp();
+    getCurrentJMeldContentPanel().doUp();
+    repaint();
   }
 
   public void doDown(ActionEvent ae)
   {
-    getCurrentJMeldPanel().doDown();
+    getCurrentJMeldContentPanel().doDown();
+    repaint();
+  }
+
+  public void doZoomPlus(ActionEvent ae)
+  {
+    getCurrentJMeldContentPanel().doZoom(true);
+    repaint();
+  }
+
+  public void doZoomMin(ActionEvent ae)
+  {
+    getCurrentJMeldContentPanel().doZoom(false);
+    repaint();
   }
 
   private ChangeListener getChangeListener()
@@ -327,7 +360,7 @@ public class JMeldPanel
       };
   }
 
-  private JMeldContentPanelIF getCurrentJMeldPanel()
+  private JMeldContentPanelIF getCurrentJMeldContentPanel()
   {
     return (JMeldContentPanelIF) tabbedPane.getSelectedComponent();
   }
@@ -340,7 +373,7 @@ public class JMeldPanel
     private BufferDocumentIF bd1;
     private BufferDocumentIF bd2;
     private JMDiff           diff;
-    private Revision         revision;
+    private JMRevision       revision;
 
     NewFileComparisonPanel(
       String originalName,
