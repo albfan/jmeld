@@ -141,6 +141,7 @@ public class DiffScrollComponent
     int              x1;
     int              y1;
     Color            color;
+    Color            darkerColor;
     Polygon          shape;
     Rectangle        rect;
     boolean          selected;
@@ -219,6 +220,7 @@ public class DiffScrollComponent
 
         // OK, this delta has some visible lines. Now draw it!
         color = RevisionUtil.getColor(delta);
+        darkerColor = RevisionUtil.getDarkerColor(delta);
         g2.setColor(color);
 
         // Draw original chunk:
@@ -265,7 +267,7 @@ public class DiffScrollComponent
           g2.fillRect(x, y, width, height);
         }
 
-        g2.setColor(color.darker());
+        g2.setColor(darkerColor);
         g2.drawLine(x, y, x + width, y);
         if (height > 0)
         {
@@ -333,7 +335,7 @@ public class DiffScrollComponent
           g2.fillRect(x, y, width, height);
         }
 
-        g2.setColor(color.darker());
+        g2.setColor(darkerColor);
         g2.drawLine(x, y, x + width, y);
         if (height > 0)
         {
@@ -359,6 +361,7 @@ public class DiffScrollComponent
         }
 
         // Draw the chunk connection:
+        g2.setColor(darkerColor);
         g2.drawLine(x0, y0, x0 + 15, y0);
         setAntiAlias(g2);
         g2.drawLine(x0 + 15, y0, x1 - 15, y1);
@@ -373,7 +376,7 @@ public class DiffScrollComponent
         setAntiAlias(g2);
         g2.setColor(color);
         g2.fill(shape);
-        g2.setColor(color.darker());
+        g2.setColor(darkerColor);
         g2.draw(shape);
         resetAntiAlias(g2);
         commands.add(new DiffChangeCommand(shape, delta, false));
@@ -396,7 +399,7 @@ public class DiffScrollComponent
         setAntiAlias(g2);
         g2.setColor(color);
         g2.fillPolygon(shape);
-        g2.setColor(color.darker());
+        g2.setColor(darkerColor);
         g2.drawPolygon(shape);
         resetAntiAlias(g2);
         commands.add(new DiffChangeCommand(shape, delta, true));
