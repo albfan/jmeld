@@ -238,11 +238,6 @@ public class FilePanel
             && revised.getSize() < MAXSIZE_CHANGE_DIFF)
           {
             changeRev = delta.getChangeRevision();
-            /*
-            changeRev = getChangeRevision(
-                revision.getOriginalString(original),
-                revision.getRevisedString(revised));
-            */
             if (changeRev != null)
             {
               for (JMDelta changeDelta : changeRev.getDeltas())
@@ -288,11 +283,6 @@ public class FilePanel
             && revised.getSize() < MAXSIZE_CHANGE_DIFF)
           {
             changeRev = delta.getChangeRevision();
-            /*
-            changeRev = getChangeRevision(
-                revision.getOriginalString(original),
-                revision.getRevisedString(revised));
-            */
             if (changeRev != null)
             {
               for (JMDelta changeDelta : changeRev.getDeltas())

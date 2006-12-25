@@ -23,4 +23,10 @@ public interface JMeldContentPanelIF
   public void doDown();
 
   public void doZoom(boolean direction);
+
+  public void doGoToSelected();
+
+  public void doGoToFirst();
+
+  public void doGoToLast();
 }

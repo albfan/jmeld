@@ -265,4 +265,15 @@ public class FolderDiffPanel
   {
   }
 
+  public void doGoToSelected()
+  {
+  }
+
+  public void doGoToFirst()
+  {
+  }
+
+  public void doGoToLast()
+  {
+  }
 }

@@ -164,7 +164,7 @@ public class BufferDiffPanel
       cc.xyw(4, 4, 3));
 
     add(
-      new DiffScrollComponent(this, filePanels[0], filePanels[1]),
+      new DiffScrollComponent(this, 0, 1),
       cc.xy(7, 4));
 
     // panel for file2
@@ -374,12 +374,166 @@ public class BufferDiffPanel
 
   public void doLeft()
   {
-    System.out.println("doLeft: " + instanceCount);
+    runChange(1, 0);
   }
 
   public void doRight()
   {
-    System.out.println("doRight: " + instanceCount);
+    runChange(0, 1);
+  }
+
+  void runChange(
+    int fromPanelIndex,
+    int toPanelIndex)
+  {
+    JMDelta          delta;
+    BufferDocumentIF fromBufferDocument;
+    BufferDocumentIF toBufferDocument;
+    PlainDocument    from;
+    PlainDocument    to;
+    String           s;
+    int              fromLine;
+    int              toLine;
+    int              fromOffset;
+    int              toOffset;
+    int              size;
+    JMChunk          fromChunk;
+    JMChunk          toChunk;
+    JTextComponent   toEditor;
+
+    delta = getSelectedDelta();
+    if (delta == null)
+    {
+      return;
+    }
+
+    // Some sanity checks.
+    if (fromPanelIndex < 0 || fromPanelIndex >= filePanels.length)
+    {
+      return;
+    }
+
+    if (toPanelIndex < 0 || toPanelIndex >= filePanels.length)
+    {
+      return;
+    }
+
+    try
+    {
+      fromBufferDocument = filePanels[fromPanelIndex].getBufferDocument();
+      toBufferDocument = filePanels[toPanelIndex].getBufferDocument();
+
+      // TODO: delta and revision are not yet ready for 3-way merge!
+      if (fromPanelIndex < toPanelIndex)
+      {
+        fromChunk = delta.getOriginal();
+        toChunk = delta.getRevised();
+      }
+      else
+      {
+        fromChunk = delta.getRevised();
+        toChunk = delta.getOriginal();
+      }
+      toEditor = filePanels[toPanelIndex].getEditor();
+
+      if (fromBufferDocument == null || toBufferDocument == null)
+      {
+        return;
+      }
+
+      from = fromBufferDocument.getDocument();
+      to = toBufferDocument.getDocument();
+
+      fromLine = fromChunk.getAnchor();
+      size = fromChunk.getSize();
+      fromOffset = fromBufferDocument.getOffsetForLine(fromLine);
+      toOffset = fromBufferDocument.getOffsetForLine(fromLine + size);
+
+      s = from.getText(fromOffset, toOffset - fromOffset);
+
+      fromLine = toChunk.getAnchor();
+      size = toChunk.getSize();
+      fromOffset = toBufferDocument.getOffsetForLine(fromLine);
+      toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
+
+      getUndoHandler().start("replace");
+      toEditor.setSelectionStart(fromOffset);
+      toEditor.setSelectionEnd(toOffset);
+      toEditor.replaceSelection(s);
+      getUndoHandler().end("replace");
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  void runDelete(
+    int fromPanelIndex,
+    int toPanelIndex)
+  {
+    JMDelta          delta;
+    BufferDocumentIF bufferDocument;
+    PlainDocument    document;
+    String           s;
+    int              fromLine;
+    int              fromOffset;
+    int              toOffset;
+    int              size;
+    JMChunk          chunk;
+    JTextComponent   toEditor;
+
+    try
+    {
+      delta = getSelectedDelta();
+      if (delta == null)
+      {
+        return;
+      }
+
+      // Some sanity checks.
+      if (fromPanelIndex < 0 || fromPanelIndex >= filePanels.length)
+      {
+        return;
+      }
+
+      if (toPanelIndex < 0 || toPanelIndex >= filePanels.length)
+      {
+        return;
+      }
+
+      bufferDocument = filePanels[fromPanelIndex].getBufferDocument();
+      if (fromPanelIndex < toPanelIndex)
+      {
+        chunk = delta.getOriginal();
+      }
+      else
+      {
+        chunk = delta.getRevised();
+      }
+      toEditor = filePanels[fromPanelIndex].getEditor();
+
+      if (bufferDocument == null)
+      {
+        return;
+      }
+
+      document = bufferDocument.getDocument();
+      fromLine = chunk.getAnchor();
+      size = chunk.getSize();
+      fromOffset = bufferDocument.getOffsetForLine(fromLine);
+      toOffset = bufferDocument.getOffsetForLine(fromLine + size);
+
+      getUndoHandler().start("remove");
+      toEditor.setSelectionStart(fromOffset);
+      toEditor.setSelectionEnd(toOffset);
+      toEditor.replaceSelection("");
+      getUndoHandler().end("remove");
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
   }
 
   public void doDown()
@@ -398,15 +552,15 @@ public class BufferDiffPanel
     if (index == -1)
     {
       // I don't know it now anymore!
-      selectedDelta = null;
+      setSelectedDelta(null);
     }
     else
     {
       // Select the next delta if there is any.
       if (index + 1 < deltas.size())
       {
-        selectedDelta = deltas.get(index + 1);
-        scrollSynchronizer.showDelta(selectedDelta);
+        setSelectedDelta(deltas.get(index + 1));
+        showSelectedDelta();
       }
     }
   }
@@ -427,15 +581,15 @@ public class BufferDiffPanel
     if (index == -1)
     {
       // I don't know it now anymore!
-      selectedDelta = null;
+      setSelectedDelta(null);
     }
     else
     {
       // Select the next delta if there is any.
       if (index - 1 >= 0)
       {
-        selectedDelta = deltas.get(index - 1);
-        scrollSynchronizer.showDelta(selectedDelta);
+        setSelectedDelta(deltas.get(index - 1));
+        showSelectedDelta();
       }
     }
   }
@@ -445,15 +599,15 @@ public class BufferDiffPanel
     JTextComponent c;
     Font           font;
     float          size;
-    Zoom zoom;
+    Zoom           zoom;
 
     for (FilePanel p : filePanels)
     {
-      if(p == null)
+      if (p == null)
       {
         continue;
       }
-      
+
       c = p.getEditor();
 
       zoom = (Zoom) c.getClientProperty("JMeld.zoom");
@@ -474,9 +628,60 @@ public class BufferDiffPanel
     }
   }
 
+  public void doGoToSelected()
+  {
+    showSelectedDelta();
+  }
+
+  public void doGoToFirst()
+  {
+    JMDelta       d;
+    List<JMDelta> deltas;
+
+    if (currentRevision == null)
+    {
+      return;
+    }
+
+    deltas = currentRevision.getDeltas();
+    if (deltas.size() > 0)
+    {
+      setSelectedDelta(deltas.get(0));
+      showSelectedDelta();
+    }
+  }
+
+  public void doGoToLast()
+  {
+    JMDelta       d;
+    List<JMDelta> deltas;
+
+    if (currentRevision == null)
+    {
+      return;
+    }
+
+    deltas = currentRevision.getDeltas();
+    if (deltas.size() > 0)
+    {
+      setSelectedDelta(deltas.get(deltas.size() - 1));
+      showSelectedDelta();
+    }
+  }
+
   class Zoom
   {
-    Font  font;
+    Font font;
+  }
+
+  void setSelectedDelta(JMDelta delta)
+  {
+    this.selectedDelta = delta;
+  }
+
+  private void showSelectedDelta()
+  {
+    scrollSynchronizer.showDelta(getSelectedDelta());
   }
 
   public JMDelta getSelectedDelta()
@@ -496,9 +701,19 @@ public class BufferDiffPanel
 
     if (selectedDelta == null)
     {
-      selectedDelta = deltas.get(0);
+      setSelectedDelta(deltas.get(0));
     }
 
     return selectedDelta;
+  }
+
+  FilePanel getFilePanel(int index)
+  {
+    if (index < 0 || index > filePanels.length)
+    {
+      return null;
+    }
+
+    return filePanels[index];
   }
 }

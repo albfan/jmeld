@@ -29,12 +29,7 @@ public class StatusBar
     setLayout(new BorderLayout());
 
     status = new JLabel(" ");
-    status.setBorder(
-      new CompoundBorder(
-        new EmptyBorder(2, 0, 2, 5),
-        new CompoundBorder(
-          new LineBorder(UIManager.getColor("controlShadow")),
-          new EmptyBorder(2, 2, 2, 2))));
+    status.setBorder(new EmptyBorder(4, 2, 4, 2));
     progress = new JProgressBar();
     busy = new BusyLabel();
 

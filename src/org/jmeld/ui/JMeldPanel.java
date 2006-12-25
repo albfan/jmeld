@@ -1,6 +1,7 @@
 package org.jmeld.ui;
 
 import com.jgoodies.forms.builder.*;
+import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.diff.*;
@@ -39,10 +40,19 @@ public class JMeldPanel
   private static final String DOWN_ACTION = "Down";
   private static final String ZOOMPLUS_ACTION = "ZoomPlus";
   private static final String ZOOMMIN_ACTION = "ZoomMin";
+  private static final String GOTOSELECTED_ACTION = "GoToSelected";
+  private static final String GOTOFIRST_ACTION = "GoToFirst";
+  private static final String GOTOLAST_ACTION = "GoToLast";
+  private static final String STARTSEARCH_ACTION = "StartSearch";
+  private static final String STOPSEARCH_ACTION = "StopSearch";
+  private static final String NEXTSEARCH_ACTION = "NextSearch";
+  private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
 
   // instance variables:
   private ActionHandler actionHandler;
   private JTabbedPane   tabbedPane;
+  private JPanel        bar;
+  private SearchBar     searchBar;
 
   public JMeldPanel(
     String originalName,
@@ -58,7 +68,7 @@ public class JMeldPanel
       BorderLayout.PAGE_START);
     add(tabbedPane, BorderLayout.CENTER);
     add(
-      getStatusBar(),
+      getBar(),
       BorderLayout.PAGE_END);
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
@@ -166,9 +176,28 @@ public class JMeldPanel
     return toolBar;
   }
 
-  private JComponent getStatusBar()
+  private JComponent getBar()
   {
-    return StatusBar.getInstance();
+    CellConstraints cc;
+
+    cc = new CellConstraints();
+
+    bar = new JPanel(new FormLayout("0:grow", "pref, pref"));
+    bar.add(
+      StatusBar.getInstance(),
+      cc.xy(1, 2));
+
+    return bar;
+  }
+
+  private SearchBar getSearchBar()
+  {
+    if (searchBar == null)
+    {
+      searchBar = new SearchBar(this);
+    }
+
+    return searchBar;
   }
 
   public void initActions()
@@ -220,6 +249,25 @@ public class JMeldPanel
     installKey("alt MINUS", action);
     installKey("shift alt MINUS", action);
     installKey("alt SUBTRACT", action);
+
+    action = actionHandler.createAction(this, GOTOSELECTED_ACTION);
+    installKey("alt ENTER", action);
+
+    action = actionHandler.createAction(this, GOTOFIRST_ACTION);
+    installKey("alt HOME", action);
+
+    action = actionHandler.createAction(this, GOTOLAST_ACTION);
+    installKey("alt END", action);
+
+    action = actionHandler.createAction(this, STARTSEARCH_ACTION);
+    installKey("ctrl F", action);
+
+    action = actionHandler.createAction(this, NEXTSEARCH_ACTION);
+    installKey("F3", action);
+    installKey("ctrl G", action);
+
+    action = actionHandler.createAction(this, PREVIOUSSEARCH_ACTION);
+    installKey("shift F3", action);
   }
 
   public ActionHandler getActionHandler()
@@ -347,6 +395,58 @@ public class JMeldPanel
   {
     getCurrentJMeldContentPanel().doZoom(false);
     repaint();
+  }
+
+  public void doGoToSelected(ActionEvent ae)
+  {
+    getCurrentJMeldContentPanel().doGoToSelected();
+    repaint();
+  }
+
+  public void doGoToFirst(ActionEvent ae)
+  {
+    getCurrentJMeldContentPanel().doGoToFirst();
+    repaint();
+  }
+
+  public void doGoToLast(ActionEvent ae)
+  {
+    getCurrentJMeldContentPanel().doGoToLast();
+    repaint();
+  }
+
+  public void doStartSearch(ActionEvent ae)
+  {
+    CellConstraints cc;
+    SearchBar       sb;
+
+    sb = getSearchBar();
+
+    cc = new CellConstraints();
+    bar.add(
+      sb,
+      cc.xy(1, 1));
+    sb.activate();
+    bar.revalidate();
+  }
+
+  public void doStopSearch(ActionEvent ae)
+  {
+    CellConstraints cc;
+
+    cc = new CellConstraints();
+    bar.remove(getSearchBar());
+    bar.revalidate();
+  }
+
+  public void doNextSearch(ActionEvent ae)
+  {
+    System.out.println("next search");
+  }
+
+  public void doPreviousSearch(ActionEvent ae)
+  {
+    System.out.println("previous search");
   }
 
   private ChangeListener getChangeListener()

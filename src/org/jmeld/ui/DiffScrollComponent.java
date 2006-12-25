@@ -1,7 +1,6 @@
 package org.jmeld.ui;
 
 import org.jmeld.diff.*;
-import org.jmeld.ui.command.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 
@@ -19,22 +18,22 @@ public class DiffScrollComponent
        implements ChangeListener
 {
   private BufferDiffPanel diffPanel;
-  private FilePanel       filePanelOriginal;
-  private FilePanel       filePanelRevised;
+  private int             fromPanelIndex;
+  private int             toPanelIndex;
   private List<Command>   commands;
   private Object          antiAlias;
 
   public DiffScrollComponent(
     BufferDiffPanel diffPanel,
-    FilePanel       filePanelOriginal,
-    FilePanel       filePanelRevised)
+    int             fromPanelIndex,
+    int             toPanelIndex)
   {
     this.diffPanel = diffPanel;
-    this.filePanelOriginal = filePanelOriginal;
-    this.filePanelRevised = filePanelRevised;
+    this.fromPanelIndex = fromPanelIndex;
+    this.toPanelIndex = toPanelIndex;
 
-    filePanelOriginal.getScrollPane().getViewport().addChangeListener(this);
-    filePanelRevised.getScrollPane().getViewport().addChangeListener(this);
+    getFromPanel().getScrollPane().getViewport().addChangeListener(this);
+    getToPanel().getScrollPane().getViewport().addChangeListener(this);
 
     addMouseListener(getMouseListener());
     addMouseWheelListener(getMouseWheelListener());
@@ -110,17 +109,17 @@ public class DiffScrollComponent
 
   private void paintDiffs(Graphics2D g2)
   {
-    JViewport        viewportOriginal;
-    JViewport        viewportRevised;
-    JTextComponent   editorOriginal;
-    JTextComponent   editorRevised;
+    JViewport        viewportFrom;
+    JViewport        viewportTo;
+    JTextComponent   editorFrom;
+    JTextComponent   editorTo;
     JMRevision       revision;
-    BufferDocumentIF bdOriginal;
-    BufferDocumentIF bdRevised;
-    int              firstLineOriginal;
-    int              lastLineOriginal;
-    int              firstLineRevised;
-    int              lastLineRevised;
+    BufferDocumentIF bdFrom;
+    BufferDocumentIF bdTo;
+    int              firstLineFrom;
+    int              lastLineFrom;
+    int              firstLineTo;
+    int              lastLineTo;
     int              offset;
     Rectangle        r;
     Point            p;
@@ -146,6 +145,8 @@ public class DiffScrollComponent
     Rectangle        rect;
     boolean          selected;
     int              selectionWidth;
+    FilePanel        fromPanel;
+    FilePanel        toPanel;
 
     bounds = g2.getClipBounds();
 
@@ -159,38 +160,40 @@ public class DiffScrollComponent
 
     antiAlias = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 
-    // Original side:
-    viewportOriginal = filePanelOriginal.getScrollPane().getViewport();
-    editorOriginal = filePanelOriginal.getEditor();
-    bdOriginal = filePanelOriginal.getBufferDocument();
-    r = viewportOriginal.getViewRect();
+    // From side:
+    fromPanel = getFromPanel();
+    viewportFrom = fromPanel.getScrollPane().getViewport();
+    editorFrom = fromPanel.getEditor();
+    bdFrom = fromPanel.getBufferDocument();
+    r = viewportFrom.getViewRect();
 
     // Calculate firstLine shown of the first document. 
     p = new Point(r.x, r.y);
-    offset = editorOriginal.viewToModel(p);
-    firstLineOriginal = bdOriginal.getLineForOffset(offset);
+    offset = editorFrom.viewToModel(p);
+    firstLineFrom = bdFrom.getLineForOffset(offset);
 
     // Calculate lastLine shown of the first document. 
     p = new Point(r.x, r.y + r.height);
-    offset = editorOriginal.viewToModel(p);
-    bdOriginal = filePanelOriginal.getBufferDocument();
-    lastLineOriginal = bdOriginal.getLineForOffset(offset) + 1;
+    offset = editorFrom.viewToModel(p);
+    bdFrom = fromPanel.getBufferDocument();
+    lastLineFrom = bdFrom.getLineForOffset(offset) + 1;
 
-    // Revised side:
-    viewportRevised = filePanelRevised.getScrollPane().getViewport();
-    editorRevised = filePanelRevised.getEditor();
-    bdRevised = filePanelRevised.getBufferDocument();
-    r = viewportRevised.getViewRect();
+    // To side:
+    toPanel = getToPanel();
+    viewportTo = toPanel.getScrollPane().getViewport();
+    editorTo = toPanel.getEditor();
+    bdTo = toPanel.getBufferDocument();
+    r = viewportTo.getViewRect();
 
     // Calculate firstLine shown of the second document. 
     p = new Point(r.x, r.y);
-    offset = editorRevised.viewToModel(p);
-    firstLineRevised = bdRevised.getLineForOffset(offset);
+    offset = editorTo.viewToModel(p);
+    firstLineTo = bdTo.getLineForOffset(offset);
 
     // Calculate lastLine shown of the second document. 
     p = new Point(r.x, r.y + r.height);
-    offset = editorRevised.viewToModel(p);
-    lastLineRevised = bdRevised.getLineForOffset(offset) + 1;
+    offset = editorTo.viewToModel(p);
+    lastLineTo = bdTo.getLineForOffset(offset) + 1;
 
     int count = 0;
 
@@ -203,15 +206,15 @@ public class DiffScrollComponent
         revised = delta.getRevised();
 
         // This delta is before the firstLine of the screen: Keep on searching!
-        if (original.getAnchor() + original.getSize() < firstLineOriginal
-          && revised.getAnchor() + revised.getSize() < firstLineRevised)
+        if (original.getAnchor() + original.getSize() < firstLineFrom
+          && revised.getAnchor() + revised.getSize() < firstLineTo)
         {
           continue;
         }
 
         // This delta is after the lastLine of the screen: stop! 
-        if (original.getAnchor() > lastLineOriginal
-          && revised.getAnchor() > lastLineRevised)
+        if (original.getAnchor() > lastLineFrom
+          && revised.getAnchor() > lastLineTo)
         {
           break;
         }
@@ -226,11 +229,11 @@ public class DiffScrollComponent
         // Draw original chunk:
         fromLine = original.getAnchor();
         toLine = original.getAnchor() + original.getSize();
-        viewportRect = viewportOriginal.getViewRect();
-        offset = bdOriginal.getOffsetForLine(fromLine);
-        fromRect = editorOriginal.modelToView(offset);
-        offset = bdOriginal.getOffsetForLine(toLine);
-        toRect = editorOriginal.modelToView(offset);
+        viewportRect = viewportFrom.getViewRect();
+        offset = bdFrom.getOffsetForLine(fromLine);
+        fromRect = editorFrom.modelToView(offset);
+        offset = bdFrom.getOffsetForLine(toLine);
+        toRect = editorFrom.modelToView(offset);
 
         x = 0;
         y = fromRect.y - viewportRect.y + 1;
@@ -294,11 +297,11 @@ public class DiffScrollComponent
         // Draw revised chunk:
         fromLine = revised.getAnchor();
         toLine = revised.getAnchor() + revised.getSize();
-        viewportRect = viewportRevised.getViewRect();
-        offset = bdRevised.getOffsetForLine(fromLine);
-        fromRect = editorRevised.modelToView(offset);
-        offset = bdRevised.getOffsetForLine(toLine);
-        toRect = editorRevised.modelToView(offset);
+        viewportRect = viewportTo.getViewRect();
+        offset = bdTo.getOffsetForLine(fromLine);
+        fromRect = editorTo.modelToView(offset);
+        offset = bdTo.getOffsetForLine(toLine);
+        toRect = editorTo.modelToView(offset);
 
         x = bounds.x + bounds.width - 10;
         y = fromRect.y - viewportRect.y + 1;
@@ -379,7 +382,8 @@ public class DiffScrollComponent
         g2.setColor(darkerColor);
         g2.draw(shape);
         resetAntiAlias(g2);
-        commands.add(new DiffChangeCommand(shape, delta, false));
+        commands.add(
+          new DiffChangeCommand(shape, delta, toPanelIndex, fromPanelIndex));
 
         // Draw delete original command
         if (original.getSize() > 0)
@@ -388,7 +392,8 @@ public class DiffScrollComponent
           g2.drawLine(x0 + 3 - width, y0 + 3, x0 + 7 - width, y0 + 7);
           g2.drawLine(x0 + 7 - width, y0 + 3, x0 + 3 - width, y0 + 7);
           rect = new Rectangle(x0 + 2 - width, y0 + 2, 6, 6);
-          commands.add(new DiffDeleteCommand(rect, delta, true));
+          commands.add(
+            new DiffDeleteCommand(rect, delta, fromPanelIndex, toPanelIndex));
         }
 
         // Draw merge original->revised command.
@@ -402,7 +407,8 @@ public class DiffScrollComponent
         g2.setColor(darkerColor);
         g2.drawPolygon(shape);
         resetAntiAlias(g2);
-        commands.add(new DiffChangeCommand(shape, delta, true));
+        commands.add(
+          new DiffChangeCommand(shape, delta, fromPanelIndex, toPanelIndex));
 
         // Draw delete revision command
         if (revised.getSize() > 0)
@@ -411,7 +417,8 @@ public class DiffScrollComponent
           g2.drawLine(x1 + 3, y1 + 3, x1 + 7, y1 + 7);
           g2.drawLine(x1 + 7, y1 + 3, x1 + 3, y1 + 7);
           rect = new Rectangle(x1 + 2, y1 + 2, 6, 6);
-          commands.add(new DiffDeleteCommand(rect, delta, false));
+          commands.add(
+            new DiffDeleteCommand(rect, delta, toPanelIndex, fromPanelIndex));
         }
       }
     }
@@ -429,15 +436,16 @@ public class DiffScrollComponent
     DiffChangeCommand(
       Shape   shape,
       JMDelta delta,
-      boolean originalToRevised)
+      int     fromIndex,
+      int     toIndex)
     {
-      super(shape, delta, originalToRevised);
+      super(shape, delta, fromIndex, toIndex);
     }
 
     public void execute()
     {
-      new ChangeCommand(diffPanel, filePanelOriginal, filePanelRevised,
-        originalToRevised, delta).run();
+      diffPanel.setSelectedDelta(delta);
+      diffPanel.runChange(fromIndex, toIndex);
     }
   }
 
@@ -447,15 +455,16 @@ public class DiffScrollComponent
     DiffDeleteCommand(
       Shape   shape,
       JMDelta delta,
-      boolean originalToRevised)
+      int     fromIndex,
+      int     toIndex)
     {
-      super(shape, delta, originalToRevised);
+      super(shape, delta, fromIndex, toIndex);
     }
 
     public void execute()
     {
-      new DeleteCommand(diffPanel, filePanelOriginal, filePanelRevised,
-        originalToRevised, delta).run();
+      diffPanel.setSelectedDelta(delta);
+      diffPanel.runDelete(fromIndex, toIndex);
     }
   }
 
@@ -463,16 +472,19 @@ public class DiffScrollComponent
   {
     Rectangle bounds;
     JMDelta   delta;
-    boolean   originalToRevised;
+    int       fromIndex;
+    int       toIndex;
 
     Command(
       Shape   shape,
       JMDelta delta,
-      boolean originalToRevised)
+      int     fromIndex,
+      int     toIndex)
     {
       this.bounds = shape.getBounds();
       this.delta = delta;
-      this.originalToRevised = originalToRevised;
+      this.fromIndex = fromIndex;
+      this.toIndex = toIndex;
     }
 
     boolean contains(
@@ -494,5 +506,15 @@ public class DiffScrollComponent
   private void resetAntiAlias(Graphics2D g2)
   {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antiAlias);
+  }
+
+  private FilePanel getFromPanel()
+  {
+    return diffPanel.getFilePanel(fromPanelIndex);
+  }
+
+  private FilePanel getToPanel()
+  {
+    return diffPanel.getFilePanel(toPanelIndex);
   }
 }
