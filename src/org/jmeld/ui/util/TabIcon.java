@@ -21,6 +21,11 @@ public class TabIcon
   private int         stringWidth;
   private Rectangle   closeBounds;
   private JTabbedPane tabbedPane;
+  private Icon        currentIcon;
+  private Icon        closeIcon;
+  private Icon        closeIcon_rollover;
+  private Icon        closeIcon_pressed;
+  private boolean     pressed;
 
   public TabIcon(
     Icon   icon,
@@ -39,6 +44,15 @@ public class TabIcon
 
     height = 0;
     width = 0;
+
+    closeIcon = ImageUtil.getImageIcon("jmeld_close");
+    closeIcon_rollover = ImageUtil.getImageIcon("jmeld_close-rollover");
+    closeIcon_pressed = ImageUtil.getImageIcon("jmeld_close-pressed");
+    if (closeIcon != null)
+    {
+      CLOSE_ICON_WIDTH = closeIcon.getIconWidth();
+      CLOSE_ICON_HEIGHT = closeIcon.getIconHeight();
+    }
 
     if (icon != null)
     {
@@ -98,6 +112,7 @@ public class TabIcon
     {
       tabbedPane = (JTabbedPane) c;
       tabbedPane.addMouseListener(getMouseListener());
+      tabbedPane.addMouseMotionListener(getMouseMotionListener());
     }
 
     if (icon != null)
@@ -120,9 +135,22 @@ public class TabIcon
     }
 
     y0 = y + (height - CLOSE_ICON_HEIGHT) / 2;
-    g.drawLine(x0, y0, x0 + CLOSE_ICON_HEIGHT, y0 + CLOSE_ICON_WIDTH);
-    g.drawLine(x0 + CLOSE_ICON_HEIGHT, y0, x0, y0 + CLOSE_ICON_WIDTH);
-    closeBounds = new Rectangle(x0, y0, CLOSE_ICON_WIDTH, CLOSE_ICON_HEIGHT);
+    if (closeIcon != null)
+    {
+      if (currentIcon == null)
+      {
+        currentIcon = closeIcon;
+      }
+
+      currentIcon.paintIcon(c, g, x0, y0);
+      closeBounds = new Rectangle(x0, y0, CLOSE_ICON_WIDTH, CLOSE_ICON_HEIGHT);
+    }
+    else
+    {
+      g.drawLine(x0, y0, x0 + CLOSE_ICON_HEIGHT, y0 + CLOSE_ICON_WIDTH);
+      g.drawLine(x0 + CLOSE_ICON_HEIGHT, y0, x0, y0 + CLOSE_ICON_WIDTH);
+      closeBounds = new Rectangle(x0, y0, CLOSE_ICON_WIDTH, CLOSE_ICON_HEIGHT);
+    }
 
     x0 += CLOSE_ICON_WIDTH;
   }
@@ -132,6 +160,30 @@ public class TabIcon
     return new MouseAdapter()
       {
         public void mousePressed(MouseEvent me)
+        {
+          Icon icon;
+
+          if (!me.isConsumed() && closeBounds != null
+            && closeBounds.contains(
+              me.getX(),
+              me.getY()))
+          {
+            pressed = true;
+
+            icon = closeIcon_pressed;
+            if (currentIcon != icon)
+            {
+              currentIcon = icon;
+              tabbedPane.repaint();
+            }
+          }
+          else
+          {
+            pressed = false;
+          }
+        }
+
+        public void mouseReleased(MouseEvent me)
         {
           int       index;
           Component component;
@@ -157,6 +209,42 @@ public class TabIcon
               tabbedPane.remove(index);
               me.consume();
             }
+          }
+
+          if (currentIcon != closeIcon)
+          {
+            currentIcon = closeIcon;
+            tabbedPane.repaint();
+          }
+        }
+      };
+  }
+
+  private MouseMotionListener getMouseMotionListener()
+  {
+    return new MouseMotionAdapter()
+      {
+        public void mouseMoved(MouseEvent me)
+        {
+          Icon icon;
+
+          if (!me.isConsumed() && closeBounds != null
+            && closeBounds.contains(
+              me.getX(),
+              me.getY()))
+          {
+            icon = closeIcon_rollover;
+          }
+          else
+          {
+            pressed = false;
+            icon = closeIcon;
+          }
+
+          if (icon != currentIcon)
+          {
+            currentIcon = icon;
+            tabbedPane.repaint();
           }
         }
       };
