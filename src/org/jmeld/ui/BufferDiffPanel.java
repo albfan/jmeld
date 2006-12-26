@@ -325,6 +325,11 @@ public class BufferDiffPanel
     }
   }
 
+  public void doSearch(String text)
+  {
+    filePanels[0].doSearch(text);
+  }
+
   public MyUndoManager getUndoHandler()
   {
     return undoManager;

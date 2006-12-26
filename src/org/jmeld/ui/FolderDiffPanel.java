@@ -276,4 +276,8 @@ public class FolderDiffPanel
   public void doGoToLast()
   {
   }
+
+  public void doSearch(String text)
+  {
+  }
 }

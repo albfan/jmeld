@@ -101,6 +101,11 @@ public abstract class AbstractBufferDocument
     return lines[lineNumber].toString();
   }
 
+  public int getNumberOfLines()
+  {
+    return getLines().length;
+  }
+
   public int getOffsetForLine(int lineNumber)
   {
     int lineCounter;

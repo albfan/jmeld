@@ -193,6 +193,27 @@ public class FilePanel
     }
   }
 
+  void doSearch(String searchText)
+  {
+    int numberOfLines;
+    BufferDocumentIF doc;
+    String text;
+
+    doc = getBufferDocument();
+    numberOfLines = doc.getNumberOfLines();
+
+    System.out.println("filePanel search for " + searchText);
+    for(int lineNumber=0; lineNumber<numberOfLines; lineNumber++)
+    {
+      text = doc.getLineText(lineNumber);
+      if(text.contains(searchText))
+      {
+        System.out.println("  " + text);
+        return;
+      }
+    }
+  }
+
   public void setRevision(JMRevision revision)
   {
     JMChunk    original;

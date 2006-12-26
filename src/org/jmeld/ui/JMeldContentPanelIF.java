@@ -29,4 +29,6 @@ public interface JMeldContentPanelIF
   public void doGoToFirst();
 
   public void doGoToLast();
+
+  public void doSearch(String text);
 }

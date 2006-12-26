@@ -26,6 +26,8 @@ public interface BufferDocumentIF
 
   public String getLineText(int lineNumber);
 
+  public int getNumberOfLines();
+
   public int getOffsetForLine(int lineNumber);
 
   public int getLineForOffset(int offset);

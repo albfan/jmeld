@@ -15,9 +15,15 @@ import java.awt.event.*;
 public class SearchBar
        extends JPanel
 {
+  // class variables:
+  private static final String CP_FOREGROUND = "JMeld.foreground";
+  private static final String CP_BACKGROUND = "JMeld.background";
+
   // Instance variables:
-  private JMeldPanel meldPanel;
-  private JTextField searchField;
+  private JMeldPanel    meldPanel;
+  private JTextField    searchField;
+  private JLabel        searchResult;
+  private JToggleButton highlightAllButton;
 
   public SearchBar(JMeldPanel meldPanel)
   {
@@ -43,7 +49,7 @@ public class SearchBar
     closeButton.setBorder(null);
 
     // Incremental search:
-    searchField = new JTextField(20);
+    searchField = new JTextField(15);
     searchField.getDocument().addDocumentListener(getSearchAction());
     searchField.addKeyListener(getSearchKeyAction());
 
@@ -61,18 +67,43 @@ public class SearchBar
     nextButton.addActionListener(getNextAction());
     initButton(nextButton);
 
+    // Highlight all:
+    highlightAllButton = new JToggleButton(
+        "Highlight all",
+        ImageUtil.getImageIcon("highlight-all"));
+    highlightAllButton.setDisabledIcon(
+      ImageUtil.getImageIcon("highlight-all-disabled"));
+    highlightAllButton.setSelectedIcon(
+      ImageUtil.getImageIcon("highlight-all-selected"));
+    highlightAllButton.setEnabled(false);
+    //highlightAllButton.addActionListener(getNextAction());
+    initButton(highlightAllButton);
+     highlightAllButton.setContentAreaFilled(false);
+
+    searchResult = new JLabel();
+
+    initButton(previousButton);
     add(closeButton);
+    add(Box.createHorizontalStrut(5));
     add(new JLabel("Find:"));
     add(searchField);
     add(previousButton);
     add(nextButton);
+    add(highlightAllButton);
+    add(Box.createHorizontalStrut(10));
+    add(searchResult);
   }
 
-  private void initButton(JButton button)
+  private void initButton(AbstractButton button)
   {
     button.setFocusable(false);
     button.setBorderPainted(false);
     button.setBorder(new EmptyBorder(0, 5, 0, 5));
+  }
+
+  public String getText()
+  {
+    return searchField.getText();
   }
 
   public void activate()
@@ -87,17 +118,72 @@ public class SearchBar
       {
         public void changedUpdate(DocumentEvent e)
         {
-          System.out.println("change: " + e);
+          doSearch();
         }
 
         public void insertUpdate(DocumentEvent e)
         {
-          System.out.println("insert: " + e);
+          doSearch();
         }
 
         public void removeUpdate(DocumentEvent e)
         {
-          System.out.println("remove: " + e);
+          doSearch();
+        }
+
+        private void doSearch()
+        {
+          boolean notFound;
+          Color   color;
+          String  searchText;
+
+          searchText = searchField.getText();
+
+          notFound = (searchText.length() > 2);
+
+          highlightAllButton.setEnabled(searchText.length() > 0);
+          if(!highlightAllButton.isEnabled())
+          {
+            highlightAllButton.setSelected(false);
+          }
+
+          if (notFound)
+          {
+            // I would love to set the background to red and foreground
+            //   to white but the jdk won't let me set the background if
+            //   GTK look&feel is chosen.
+            if (searchField.getForeground() != Color.red)
+            {
+              // Remember the original colors:
+              searchField.putClientProperty(
+                CP_FOREGROUND,
+                searchField.getForeground());
+
+              // Set the new colors:
+              searchField.setForeground(Color.red);
+            }
+
+            searchResult.setIcon(ImageUtil.getImageIcon("bullet-warning"));
+            searchResult.setText("Phrase not found");
+          }
+          else
+          {
+            // Set the original colors:
+            color = (Color) searchField.getClientProperty(CP_FOREGROUND);
+            if (color != null)
+            {
+              searchField.setForeground(color);
+              searchField.putClientProperty(CP_FOREGROUND, null);
+            }
+
+            if (!StringUtil.isEmpty(searchResult.getText()))
+            {
+              searchResult.setIcon(null);
+              searchResult.setText("");
+            }
+          }
+
+          meldPanel.doSearch(null);
         }
       };
   }

@@ -309,14 +309,14 @@ public class JMeldPanel
 
   public void doSave(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doSave();
+    getCurrentContentPanel().doSave();
   }
 
   public boolean isSaveEnabled()
   {
     JMeldContentPanelIF panel;
 
-    panel = getCurrentJMeldContentPanel();
+    panel = getCurrentContentPanel();
     if (panel == null)
     {
       return false;
@@ -327,14 +327,14 @@ public class JMeldPanel
 
   public void doUndo(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doUndo();
+    getCurrentContentPanel().doUndo();
   }
 
   public boolean isUndoEnabled()
   {
     JMeldContentPanelIF panel;
 
-    panel = getCurrentJMeldContentPanel();
+    panel = getCurrentContentPanel();
     if (panel == null)
     {
       return false;
@@ -345,14 +345,14 @@ public class JMeldPanel
 
   public void doRedo(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doRedo();
+    getCurrentContentPanel().doRedo();
   }
 
   public boolean isRedoEnabled()
   {
     JMeldContentPanelIF panel;
 
-    panel = getCurrentJMeldContentPanel();
+    panel = getCurrentContentPanel();
     if (panel == null)
     {
       return false;
@@ -363,55 +363,55 @@ public class JMeldPanel
 
   public void doLeft(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doLeft();
+    getCurrentContentPanel().doLeft();
     repaint();
   }
 
   public void doRight(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doRight();
+    getCurrentContentPanel().doRight();
     repaint();
   }
 
   public void doUp(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doUp();
+    getCurrentContentPanel().doUp();
     repaint();
   }
 
   public void doDown(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doDown();
+    getCurrentContentPanel().doDown();
     repaint();
   }
 
   public void doZoomPlus(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doZoom(true);
+    getCurrentContentPanel().doZoom(true);
     repaint();
   }
 
   public void doZoomMin(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doZoom(false);
+    getCurrentContentPanel().doZoom(false);
     repaint();
   }
 
   public void doGoToSelected(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doGoToSelected();
+    getCurrentContentPanel().doGoToSelected();
     repaint();
   }
 
   public void doGoToFirst(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doGoToFirst();
+    getCurrentContentPanel().doGoToFirst();
     repaint();
   }
 
   public void doGoToLast(ActionEvent ae)
   {
-    getCurrentJMeldContentPanel().doGoToLast();
+    getCurrentContentPanel().doGoToLast();
     repaint();
   }
 
@@ -439,6 +439,11 @@ public class JMeldPanel
     bar.revalidate();
   }
 
+  public void doSearch(ActionEvent ae)
+  {
+    getCurrentContentPanel().doSearch(searchBar.getText());
+  }
+
   public void doNextSearch(ActionEvent ae)
   {
     System.out.println("next search");
@@ -460,7 +465,7 @@ public class JMeldPanel
       };
   }
 
-  private JMeldContentPanelIF getCurrentJMeldContentPanel()
+  private JMeldContentPanelIF getCurrentContentPanel()
   {
     return (JMeldContentPanelIF) tabbedPane.getSelectedComponent();
   }
