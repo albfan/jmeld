@@ -3,29 +3,41 @@ package org.jmeld.ui.util;
 import org.jmeld.ui.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
+/** Very ugly hack to make possible a close button on a 
+ *    tabbedpane (use it for jdk's before 1.6).
+ */
 public class TabIcon
        implements Icon
 {
-  private static int  CLOSE_ICON_HEIGHT = 7;
-  private static int  CLOSE_ICON_WIDTH = 7;
-  private static int  SPACE_WIDTH = 6;
-  private Icon        icon;
-  private String      text;
-  private int         width;
-  private int         height;
-  private JLabel      label;
-  private int         stringWidth;
-  private Rectangle   closeBounds;
-  private JTabbedPane tabbedPane;
-  private Icon        currentIcon;
-  private Icon        closeIcon;
-  private Icon        closeIcon_rollover;
-  private Icon        closeIcon_pressed;
-  private boolean     pressed;
+  // class variables:
+  private static int CLOSE_ICON_HEIGHT = 7;
+  private static int CLOSE_ICON_WIDTH = 7;
+  private static int SPACE_WIDTH = 6;
+
+  // instance variables:
+  private Icon                icon;
+  private String              text;
+  private int                 width;
+  private int                 height;
+  private JLabel              label;
+  private int                 stringWidth;
+  private Rectangle           closeBounds;
+  private JTabbedPane         tabbedPane;
+  private Icon                currentIcon;
+  private Icon                closeIcon;
+  private Icon                closeIcon_rollover;
+  private Icon                closeIcon_pressed;
+  private Icon                closeIcon_disabled;
+  private boolean             pressed;
+  private boolean             ignoreNextMousePressed;
+  private ChangeListener      changeListener;
+  private MouseListener       mouseListener;
+  private MouseMotionListener mouseMotionListener;
 
   public TabIcon(
     Icon   icon,
@@ -48,6 +60,7 @@ public class TabIcon
     closeIcon = ImageUtil.getImageIcon("jmeld_close");
     closeIcon_rollover = ImageUtil.getImageIcon("jmeld_close-rollover");
     closeIcon_pressed = ImageUtil.getImageIcon("jmeld_close-pressed");
+    closeIcon_disabled = ImageUtil.getImageIcon("jmeld_close-disabled");
     if (closeIcon != null)
     {
       CLOSE_ICON_WIDTH = closeIcon.getIconWidth();
@@ -105,6 +118,7 @@ public class TabIcon
     int         x0;
     int         y0;
     Rectangle   b;
+    Icon        cIcon;
 
     x0 = x;
 
@@ -113,6 +127,7 @@ public class TabIcon
       tabbedPane = (JTabbedPane) c;
       tabbedPane.addMouseListener(getMouseListener());
       tabbedPane.addMouseMotionListener(getMouseMotionListener());
+      tabbedPane.addChangeListener(getChangeListener());
     }
 
     if (icon != null)
@@ -137,12 +152,18 @@ public class TabIcon
     y0 = y + (height - CLOSE_ICON_HEIGHT) / 2;
     if (closeIcon != null)
     {
-      if (currentIcon == null)
+      cIcon = currentIcon;
+      if (!isSelected())
       {
-        currentIcon = closeIcon;
+        cIcon = closeIcon_disabled;
       }
 
-      currentIcon.paintIcon(c, g, x0, y0);
+      if (cIcon == null)
+      {
+        cIcon = closeIcon;
+      }
+
+      cIcon.paintIcon(c, g, x0, y0);
       closeBounds = new Rectangle(x0, y0, CLOSE_ICON_WIDTH, CLOSE_ICON_HEIGHT);
     }
     else
@@ -157,96 +178,157 @@ public class TabIcon
 
   private MouseListener getMouseListener()
   {
-    return new MouseAdapter()
-      {
-        public void mousePressed(MouseEvent me)
-        {
-          Icon icon;
-
-          if (!me.isConsumed() && closeBounds != null
-            && closeBounds.contains(
-              me.getX(),
-              me.getY()))
+    if (mouseListener == null)
+    {
+      mouseListener = new MouseAdapter()
           {
-            pressed = true;
-
-            icon = closeIcon_pressed;
-            if (currentIcon != icon)
+            public void mousePressed(MouseEvent me)
             {
-              currentIcon = icon;
-              tabbedPane.repaint();
-            }
-          }
-          else
-          {
-            pressed = false;
-          }
-        }
+              Icon icon;
 
-        public void mouseReleased(MouseEvent me)
-        {
-          int       index;
-          Component component;
-
-          if (!me.isConsumed() && closeBounds != null
-            && closeBounds.contains(
-              me.getX(),
-              me.getY()))
-          {
-            index = tabbedPane.indexOfTab(TabIcon.this);
-            if (index != -1)
-            {
-              component = tabbedPane.getComponentAt(index);
-              if (component instanceof BufferDiffPanel)
+              System.out.println("mousePressed = true");
+              System.out.println("state changed: " + isSelected());
+              if (ignoreNextMousePressed)
               {
-                if (!((BufferDiffPanel) component).checkSave())
+                ignoreNextMousePressed = false;
+                return;
+              }
+
+              if (isCloseHit(me))
+              {
+                System.out.println("pressed = true");
+                pressed = true;
+
+                icon = closeIcon_pressed;
+                if (currentIcon != icon)
                 {
-                  me.consume();
+                  currentIcon = icon;
+                  tabbedPane.repaint();
+                }
+              }
+              else
+              {
+                pressed = false;
+              }
+            }
+
+            public void mouseReleased(MouseEvent me)
+            {
+              int       index;
+              Component component;
+
+              if (pressed && isCloseHit(me))
+              {
+                index = tabbedPane.indexOfTab(TabIcon.this);
+
+                // Only allow selected tabs to be closed.
+                if (index != tabbedPane.getSelectedIndex())
+                {
                   return;
+                }
+
+                if (index != -1)
+                {
+                  component = tabbedPane.getComponentAt(index);
+                  if (component instanceof BufferDiffPanel)
+                  {
+                    if (!((BufferDiffPanel) component).checkSave())
+                    {
+                      me.consume();
+                      return;
+                    }
+                  }
+
+                  tabbedPane.remove(index);
+                  me.consume();
+
+                  // Don't create memory leaks!
+                  tabbedPane.removeMouseListener(getMouseListener());
+                  tabbedPane.removeMouseMotionListener(
+                    getMouseMotionListener());
+                  tabbedPane.removeChangeListener(getChangeListener());
                 }
               }
 
-              tabbedPane.remove(index);
-              me.consume();
+              if (currentIcon != closeIcon)
+              {
+                currentIcon = closeIcon;
+                tabbedPane.repaint();
+              }
             }
-          }
+          };
+    }
 
-          if (currentIcon != closeIcon)
-          {
-            currentIcon = closeIcon;
-            tabbedPane.repaint();
-          }
-        }
-      };
+    return mouseListener;
   }
 
   private MouseMotionListener getMouseMotionListener()
   {
-    return new MouseMotionAdapter()
-      {
-        public void mouseMoved(MouseEvent me)
-        {
-          Icon icon;
+    if (mouseMotionListener == null)
+    {
+      mouseMotionListener = new MouseMotionAdapter()
+          {
+            public void mouseMoved(MouseEvent me)
+            {
+              Icon icon;
 
-          if (!me.isConsumed() && closeBounds != null
-            && closeBounds.contains(
-              me.getX(),
-              me.getY()))
-          {
-            icon = closeIcon_rollover;
-          }
-          else
-          {
-            pressed = false;
-            icon = closeIcon;
-          }
+              if (isSelected())
+              {
+                ignoreNextMousePressed = false;
+              }
 
-          if (icon != currentIcon)
+              if (isCloseHit(me))
+              {
+                icon = closeIcon_rollover;
+              }
+              else
+              {
+                pressed = false;
+                icon = closeIcon;
+              }
+
+              if (icon != currentIcon)
+              {
+                currentIcon = icon;
+                tabbedPane.repaint();
+              }
+            }
+          };
+    }
+
+    return mouseMotionListener;
+  }
+
+  private ChangeListener getChangeListener()
+  {
+    if (changeListener == null)
+    {
+      changeListener = new ChangeListener()
           {
-            currentIcon = icon;
-            tabbedPane.repaint();
-          }
-        }
-      };
+            public void stateChanged(ChangeEvent ce)
+            {
+              ignoreNextMousePressed = true;
+            }
+          };
+    }
+
+    return changeListener;
+  }
+
+  private boolean isCloseHit(MouseEvent me)
+  {
+    return (!me.isConsumed() && closeBounds != null
+    && closeBounds.contains(
+      me.getX(),
+      me.getY()) && isSelected());
+  }
+
+  private boolean isSelected()
+  {
+    int index;
+
+    index = tabbedPane.indexOfTab(this);
+
+    return (index != -1 && tabbedPane.getSelectedIndex() == index);
   }
 }
