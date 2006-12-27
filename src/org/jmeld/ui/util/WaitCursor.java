@@ -21,8 +21,8 @@ public class WaitCursor
     {
       pane = frame.getRootPane().getGlassPane();
 
-      pane.setVisible(true);
-      pane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+      //pane.setVisible(true);
+      //pane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     }
   }
 
@@ -37,8 +37,8 @@ public class WaitCursor
     {
       pane = frame.getRootPane().getGlassPane();
 
-      pane.setVisible(false);
-      pane.setCursor(null);
+      //pane.setVisible(false);
+      //pane.setCursor(null);
     }
   }
 }
