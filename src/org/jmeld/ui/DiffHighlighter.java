@@ -15,6 +15,8 @@ public class DiffHighlighter
   public static final DiffHighlighter CHANGED2;
   public static final DiffHighlighter DELETED;
   public static final DiffHighlighter DELETED_LINE;
+  public static final DiffHighlighter CURRENT_SEARCH;
+  public static final DiffHighlighter SEARCH;
 
   static
   {
@@ -24,6 +26,8 @@ public class DiffHighlighter
     CHANGED2 = new DiffHighlighter(Colors.CHANGED2);
     DELETED = new DiffHighlighter(Colors.DELETED);
     DELETED_LINE = new DiffHighlighter(Colors.DELETED, true);
+    SEARCH = new DiffHighlighter(Color.yellow);
+    CURRENT_SEARCH = new DiffHighlighter(Color.yellow.darker());
   }
 
   private Color   color;
@@ -44,13 +48,13 @@ public class DiffHighlighter
     this.line = line;
   }
 
-  public Shape paintLayer(
+  public void paint(
     Graphics       g,
     int            p0,
     int            p1,
     Shape          shape,
-    JTextComponent comp,
-    View           view)
+    JTextComponent comp
+    )
   {
     Rectangle b;
     Rectangle r1;
@@ -63,19 +67,20 @@ public class DiffHighlighter
       r2 = comp.modelToView(p1);
 
       g.setColor(color);
+
       if (line)
       {
         g.drawLine(r1.x, r1.y, r1.x + b.width, r1.y);
       }
       else
       {
-        if (this == CHANGED2)
+        if (this == CHANGED2 || this == SEARCH || this == CURRENT_SEARCH)
         {
           g.fillRect(r1.x, r1.y, r2.x - r1.x, r1.height);
         }
         else
         {
-          g.fillRect(r1.x, r1.y, r1.x + b.width, r1.height);
+          g.fillRect(r1.x, r1.y, r1.x + b.width, r2.y - r1.y);
         }
       }
     }
@@ -83,7 +88,5 @@ public class DiffHighlighter
     {
       ex.printStackTrace();
     }
-
-    return b;
   }
 }
