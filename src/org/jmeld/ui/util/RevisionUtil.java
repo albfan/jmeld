@@ -34,11 +34,8 @@ public class RevisionUtil
     result = darker.get(c);
     if (result == null)
     {
-      System.out.println("color = " + c);
       result = c.darker();
-      System.out.println("darker = " + result);
       darker.put(c, result);
-      System.out.println("result = " + darker.get(c));
     }
 
     return result;
