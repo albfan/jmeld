@@ -123,7 +123,7 @@ class RETokenizer
     String       s;
 
     list = new ArrayList<String>();
-    for (; hasNext();)
+    while (hasNext())
     {
       s = next();
       if (s.length() > 0)
