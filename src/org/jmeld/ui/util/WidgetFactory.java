@@ -33,6 +33,7 @@ public class WidgetFactory
     button = new JButton(action);
     button.setVerticalTextPosition(AbstractButton.BOTTOM);
     button.setHorizontalTextPosition(AbstractButton.CENTER);
+    button.setFocusable(false);
 
     icon = (ImageIcon) action.getValue(MeldAction.LARGE_ICON_KEY);
     if (icon != null)
