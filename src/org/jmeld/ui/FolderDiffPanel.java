@@ -10,6 +10,7 @@ import org.jdesktop.swingx.table.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
+import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -277,7 +278,16 @@ public class FolderDiffPanel
   {
   }
 
-  public void doSearch(String text)
+  public SearchHits doSearch(SearchCommand command)
+  {
+    return null;
+  }
+
+  public void doNextSearch()
+  {
+  }
+
+  public void doPreviousSearch()
   {
   }
 }

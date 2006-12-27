@@ -2,9 +2,11 @@ package org.jmeld.ui;
 
 import org.jmeld.*;
 import org.jmeld.diff.*;
+import org.jmeld.ui.search.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.util.*;
 import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
@@ -35,6 +37,7 @@ public class FilePanel
   private BufferDocumentIF bufferDocument;
   private JButton          saveButton;
   private Timer            timer;
+  private SearchHits       searchHits;
 
   FilePanel(
     BufferDiffPanel diffPanel,
@@ -42,6 +45,8 @@ public class FilePanel
   {
     this.diffPanel = diffPanel;
     this.name = name;
+
+    searchHits = new SearchHits();
 
     init();
   }
@@ -57,7 +62,7 @@ public class FilePanel
     editor = new JTextArea();
     editor.setDragEnabled(true);
     editor.setFont(font);
-    editor.setSelectedTextColor(Color.red);
+    editor.setHighlighter(new JMHighlighter());
     fm = editor.getFontMetrics(font);
 
     scrollPane = new JScrollPane(editor);
@@ -193,28 +198,102 @@ public class FilePanel
     }
   }
 
-  void doSearch(String searchText)
+  SearchHits doSearch(SearchCommand searchCommand)
   {
-    int numberOfLines;
+    int              numberOfLines;
     BufferDocumentIF doc;
-    String text;
+    String           text;
+    int              index;
+    int              fromIndex;
+    boolean          regularExpression;
+    String           searchText;
+    SearchHit        searchHit;
+    int              offset;
+    int              length;
+    StopWatch        stopWatch;
+
+    searchText = searchCommand.getSearchText();
+    regularExpression = searchCommand.isRegularExpression();
 
     doc = getBufferDocument();
     numberOfLines = doc.getNumberOfLines();
 
-    System.out.println("filePanel search for " + searchText);
-    for(int lineNumber=0; lineNumber<numberOfLines; lineNumber++)
+    searchHits = new SearchHits();
+
+    stopWatch = new StopWatch();
+    stopWatch.start();
+
+    if (!StringUtil.isEmpty(searchText))
     {
-      text = doc.getLineText(lineNumber);
-      if(text.contains(searchText))
+      for (int line = 0; line < numberOfLines; line++)
       {
-        System.out.println("  " + text);
-        return;
+        text = doc.getLineText(line);
+        if (!regularExpression)
+        {
+          fromIndex = 0;
+          while ((index = text.indexOf(searchText, fromIndex)) != -1)
+          {
+            offset = bufferDocument.getOffsetForLine(line);
+            searchHit = new SearchHit(
+                line,
+                offset + index,
+                searchText.length());
+            searchHits.add(searchHit);
+
+            fromIndex = index + searchHit.getSize() + 1;
+          }
+        }
       }
+    }
+
+    System.out.println("Search for : " + searchText + " took "
+      + stopWatch.getElapsedTime() + " msec.");
+
+    reDisplay();
+
+    return getSearchHits();
+  }
+
+  SearchHits getSearchHits()
+  {
+    return searchHits;
+  }
+
+  public void reDisplay()
+  {
+    getHighlighter().setDoNotRepaint(true);
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    System.out.println("Start redisplay");
+    removeHighlights();
+    System.out.println("  remove took " + stopWatch.getElapsedTime()
+      + " msec.");
+    paintSearchHighlights();
+    System.out.println("  paint search took " + stopWatch.getElapsedTime()
+      + " msec.");
+    paintRevisionHighlights();
+    System.out.println("  paint revision took " + stopWatch.getElapsedTime()
+      + " msec.");
+
+    getHighlighter().setDoNotRepaint(false);
+    getHighlighter().repaint();
+  }
+
+  private void paintSearchHighlights()
+  {
+    for (SearchHit sh : searchHits.getSearchHits())
+    {
+      setHighlight(
+        JMHighlighter.LAYER2,
+        sh.getFromOffset(),
+        sh.getToOffset(),
+        searchHits.isCurrent(sh) ? DiffHighlighter.CURRENT_SEARCH
+                                 : DiffHighlighter.SEARCH);
     }
   }
 
-  public void setRevision(JMRevision revision)
+  private void paintRevisionHighlights()
   {
     JMChunk    original;
     JMChunk    revised;
@@ -222,6 +301,7 @@ public class FilePanel
     int        toOffset;
     int        fromOffset2;
     int        toOffset2;
+    JMRevision revision;
     JMRevision changeRev;
     JMChunk    changeOriginal;
     JMChunk    changeRevised;
@@ -231,7 +311,11 @@ public class FilePanel
       return;
     }
 
-    removeHighlights(editor);
+    revision = diffPanel.getCurrentRevision();
+    if (revision == null)
+    {
+      return;
+    }
 
     for (JMDelta delta : revision.getDeltas())
     {
@@ -269,11 +353,13 @@ public class FilePanel
 
                 if (changeDelta.isDelete())
                 {
-                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                    DiffHighlighter.CHANGED2);
                 }
                 else if (changeDelta.isChange())
                 {
-                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                    DiffHighlighter.CHANGED2);
                 }
               }
             }
@@ -314,11 +400,13 @@ public class FilePanel
 
                 if (changeDelta.isAdd())
                 {
-                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                    DiffHighlighter.CHANGED2);
                 }
                 else if (changeDelta.isChange())
                 {
-                  setHighlight(fromOffset2, toOffset2, DiffHighlighter.CHANGED2);
+                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                    DiffHighlighter.CHANGED2);
                 }
               }
             }
@@ -330,23 +418,34 @@ public class FilePanel
     }
   }
 
-  public void removeHighlights(JTextComponent textComp)
+  private JMHighlighter getHighlighter()
   {
-    Highlighter             hilite;
-    Highlighter.Highlight[] hilites;
+    return (JMHighlighter) editor.getHighlighter();
+  }
+
+  private void removeHighlights()
+  {
+    JMHighlighter jmhl;
 
     // Don't remove highlights which have not been added by some diff!
     //   (for instance: the highlights made by selecting text)
-    hilite = textComp.getHighlighter();
-    hilites = hilite.getHighlights();
+    jmhl = getHighlighter();
+    jmhl.removeHighlights(JMHighlighter.LAYER0);
+    jmhl.removeHighlights(JMHighlighter.LAYER1);
+    jmhl.removeHighlights(JMHighlighter.LAYER2);
 
-    for (int i = 0; i < hilites.length; i++)
-    {
-      if (hilites[i].getPainter() instanceof org.jmeld.ui.DiffHighlighter)
-      {
-        hilite.removeHighlight(hilites[i]);
-      }
-    }
+    /*
+       hilites = hilite.getHighlights();
+       for (int i = 0; i < hilites.length; i++)
+       {
+         if (hilites[i].getPainter() instanceof org.jmeld.ui.DiffHighlighter)
+         {
+           hilite.removeHighlight(hilites[i]);
+         }
+       }
+     */
+
+    //hilite.removeAllHighlights();
   }
 
   private JMRevision getChangeRevision(
@@ -390,9 +489,18 @@ public class FilePanel
     int                          size,
     Highlighter.HighlightPainter highlight)
   {
+    setHighlight(JMHighlighter.LAYER0, offset, size, highlight);
+  }
+
+  private void setHighlight(
+    Integer                      layer,
+    int                          offset,
+    int                          size,
+    Highlighter.HighlightPainter highlight)
+  {
     try
     {
-      editor.getHighlighter().addHighlight(offset, size, highlight);
+      getHighlighter().addHighlight(layer, offset, size, highlight);
     }
     catch (BadLocationException ex)
     {

@@ -4,7 +4,9 @@ import com.jgoodies.forms.layout.*;
 
 import org.jmeld.*;
 import org.jmeld.diff.*;
+import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
+import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 
 import javax.swing.*;
@@ -53,6 +55,8 @@ public class BufferDiffPanel
   {
     this.diff = diff;
 
+    currentRevision = revision;
+
     if (bd1 != null)
     {
       filePanels[0].setBufferDocument(bd1);
@@ -65,11 +69,15 @@ public class BufferDiffPanel
 
     if (bd1 != null && bd2 != null)
     {
-      filePanels[0].setRevision(revision);
-      filePanels[1].setRevision(revision);
+      for (FilePanel fp : filePanels)
+      {
+        if (fp != null)
+        {
+          fp.reDisplay();
+        }
+      }
     }
 
-    currentRevision = revision;
     repaint();
   }
 
@@ -120,8 +128,13 @@ public class BufferDiffPanel
             bd1.getLines(),
             bd2.getLines());
 
-        filePanels[0].setRevision(currentRevision);
-        filePanels[1].setRevision(currentRevision);
+        for (FilePanel fp : filePanels)
+        {
+          if (fp != null)
+          {
+            fp.reDisplay();
+          }
+        }
       }
       catch (Exception ex)
       {
@@ -195,8 +208,6 @@ public class BufferDiffPanel
     {
       doUp();
     }
-
-    //scrollSynchronizer.toNextDelta(next);
   }
 
   JMRevision getCurrentRevision()
@@ -325,9 +336,59 @@ public class BufferDiffPanel
     }
   }
 
-  public void doSearch(String text)
+  public SearchHits doSearch(SearchCommand command)
   {
-    filePanels[0].doSearch(text);
+    FilePanel fp;
+    SearchHits searchHits;
+
+    fp = getSearchPanel();
+    searchHits = fp.doSearch(command);
+
+    scrollToSearch(fp, searchHits);
+
+    return searchHits;
+  }
+
+  public void doNextSearch()
+  {
+    FilePanel  fp;
+    SearchHits searchHits;
+
+    fp = getSearchPanel();
+    searchHits = fp.getSearchHits();
+    searchHits.next();
+    fp.reDisplay();
+
+    scrollToSearch(fp, searchHits);
+  }
+
+  public void doPreviousSearch()
+  {
+    FilePanel  fp;
+    SearchHits searchHits;
+
+    fp = getSearchPanel();
+    searchHits = fp.getSearchHits();
+    searchHits.previous();
+    fp.reDisplay();
+
+    scrollToSearch(fp, searchHits);
+  }
+
+  private void scrollToSearch(FilePanel fp, SearchHits searchHits)
+  {
+    SearchHit  currentHit;
+
+    currentHit = searchHits.getCurrent();
+    if(currentHit != null)
+    {
+      scrollSynchronizer.scrollToLine(fp, currentHit.getLine());
+    }
+  }
+
+  private FilePanel getSearchPanel()
+  {
+    return filePanels[0];
   }
 
   public MyUndoManager getUndoHandler()

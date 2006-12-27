@@ -1,5 +1,7 @@
 package org.jmeld.ui;
 
+import org.jmeld.ui.search.*;
+
 public interface JMeldContentPanelIF
 {
   public boolean isSaveEnabled();
@@ -30,5 +32,9 @@ public interface JMeldContentPanelIF
 
   public void doGoToLast();
 
-  public void doSearch(String text);
+  public SearchHits doSearch(SearchCommand command);
+
+  public void doNextSearch();
+
+  public void doPreviousSearch();
 }

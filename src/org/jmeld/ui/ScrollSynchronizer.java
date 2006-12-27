@@ -211,7 +211,7 @@ public class ScrollSynchronizer
     return line;
   }
 
-  private void scrollToLine(
+  public void scrollToLine(
     FilePanel fp,
     int       line)
   {

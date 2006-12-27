@@ -6,6 +6,7 @@ import com.jgoodies.forms.layout.*;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
+import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -182,10 +183,13 @@ public class JMeldPanel
 
     cc = new CellConstraints();
 
-    bar = new JPanel(new FormLayout("0:grow", "pref, pref"));
+    bar = new JPanel(new FormLayout("0:grow", "pref, pref, pref"));
+    bar.add(
+      new JSeparator(),
+      cc.xy(1, 2));
     bar.add(
       StatusBar.getInstance(),
-      cc.xy(1, 2));
+      cc.xy(1, 3));
 
     return bar;
   }
@@ -439,19 +443,19 @@ public class JMeldPanel
     bar.revalidate();
   }
 
-  public void doSearch(ActionEvent ae)
+  public SearchHits doSearch(ActionEvent ae)
   {
-    getCurrentContentPanel().doSearch(searchBar.getText());
+    return getCurrentContentPanel().doSearch(searchBar.getCommand());
   }
 
   public void doNextSearch(ActionEvent ae)
   {
-    System.out.println("next search");
+    getCurrentContentPanel().doNextSearch();
   }
 
   public void doPreviousSearch(ActionEvent ae)
   {
-    System.out.println("previous search");
+    getCurrentContentPanel().doPreviousSearch();
   }
 
   private ChangeListener getChangeListener()

@@ -1,5 +1,7 @@
-package org.jmeld.ui;
+package org.jmeld.ui.search;
 
+import org.jmeld.ui.*;
+import org.jmeld.ui.search.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -20,14 +22,15 @@ public class SearchBar
   private static final String CP_BACKGROUND = "JMeld.background";
 
   // Instance variables:
-  private JMeldPanel    meldPanel;
-  private JTextField    searchField;
-  private JLabel        searchResult;
-  private JToggleButton highlightAllButton;
+  private JMeldPanel meldPanel;
+  private JTextField searchField;
+  private JLabel     searchResult;
+  private Timer      timer;
 
   public SearchBar(JMeldPanel meldPanel)
   {
     this.meldPanel = meldPanel;
+
     init();
   }
 
@@ -67,19 +70,6 @@ public class SearchBar
     nextButton.addActionListener(getNextAction());
     initButton(nextButton);
 
-    // Highlight all:
-    highlightAllButton = new JToggleButton(
-        "Highlight all",
-        ImageUtil.getImageIcon("highlight-all"));
-    highlightAllButton.setDisabledIcon(
-      ImageUtil.getImageIcon("highlight-all-disabled"));
-    highlightAllButton.setSelectedIcon(
-      ImageUtil.getImageIcon("highlight-all-selected"));
-    highlightAllButton.setEnabled(false);
-    //highlightAllButton.addActionListener(getNextAction());
-    initButton(highlightAllButton);
-     highlightAllButton.setContentAreaFilled(false);
-
     searchResult = new JLabel();
 
     initButton(previousButton);
@@ -89,9 +79,13 @@ public class SearchBar
     add(searchField);
     add(previousButton);
     add(nextButton);
-    add(highlightAllButton);
     add(Box.createHorizontalStrut(10));
     add(searchResult);
+
+    timer = new Timer(
+        500,
+        executeSearch());
+    timer.setRepeats(false);
   }
 
   private void initButton(AbstractButton button)
@@ -101,9 +95,11 @@ public class SearchBar
     button.setBorder(new EmptyBorder(0, 5, 0, 5));
   }
 
-  public String getText()
+  public SearchCommand getCommand()
   {
-    return searchField.getText();
+    return new SearchCommand(
+      searchField.getText(),
+      false);
   }
 
   public void activate()
@@ -118,34 +114,36 @@ public class SearchBar
       {
         public void changedUpdate(DocumentEvent e)
         {
-          doSearch();
+          timer.restart();
         }
 
         public void insertUpdate(DocumentEvent e)
         {
-          doSearch();
+          timer.restart();
         }
 
         public void removeUpdate(DocumentEvent e)
         {
-          doSearch();
+          timer.restart();
         }
+      };
+  }
 
-        private void doSearch()
+  private ActionListener executeSearch()
+  {
+    return new ActionListener()
+      {
+        public void actionPerformed(ActionEvent ae)
         {
-          boolean notFound;
-          Color   color;
-          String  searchText;
+          boolean    notFound;
+          Color      color;
+          String     searchText;
+          SearchHits searchHits;
 
           searchText = searchField.getText();
 
-          notFound = (searchText.length() > 2);
-
-          highlightAllButton.setEnabled(searchText.length() > 0);
-          if(!highlightAllButton.isEnabled())
-          {
-            highlightAllButton.setSelected(false);
-          }
+          searchHits = meldPanel.doSearch(null);
+          notFound = (searchHits.getSearchHits().size() == 0);
 
           if (notFound)
           {
@@ -182,8 +180,6 @@ public class SearchBar
               searchResult.setText("");
             }
           }
-
-          meldPanel.doSearch(null);
         }
       };
   }
