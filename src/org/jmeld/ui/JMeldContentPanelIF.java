@@ -37,4 +37,6 @@ public interface JMeldContentPanelIF
   public void doNextSearch();
 
   public void doPreviousSearch();
+
+  public void doRefresh();
 }

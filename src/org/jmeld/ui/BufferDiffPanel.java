@@ -38,12 +38,9 @@ public class BufferDiffPanel
     this.mainPanel = mainPanel;
 
     diff = new JMDiff();
-
     filePanels = new FilePanel[3];
 
     init();
-
-    setFocusable(true);
   }
 
   public void setBufferDocuments(
@@ -372,6 +369,11 @@ public class BufferDiffPanel
     fp.reDisplay();
 
     scrollToSearch(fp, searchHits);
+  }
+
+  public void doRefresh()
+  {
+    diff();
   }
 
   private void scrollToSearch(

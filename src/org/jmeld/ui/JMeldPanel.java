@@ -48,6 +48,7 @@ public class JMeldPanel
   private static final String STOPSEARCH_ACTION = "StopSearch";
   private static final String NEXTSEARCH_ACTION = "NextSearch";
   private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
+  private static final String REFRESH_ACTION = "Refresh";
 
   // instance variables:
   private ActionHandler actionHandler;
@@ -272,6 +273,9 @@ public class JMeldPanel
 
     action = actionHandler.createAction(this, PREVIOUSSEARCH_ACTION);
     installKey("shift F3", action);
+
+    action = actionHandler.createAction(this, REFRESH_ACTION);
+    installKey("F5", action);
   }
 
   public ActionHandler getActionHandler()
@@ -456,6 +460,11 @@ public class JMeldPanel
   public void doPreviousSearch(ActionEvent ae)
   {
     getCurrentContentPanel().doPreviousSearch();
+  }
+
+  public void doRefresh(ActionEvent ae)
+  {
+    getCurrentContentPanel().doRefresh();
   }
 
   private ChangeListener getChangeListener()

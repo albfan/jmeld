@@ -79,4 +79,8 @@ public class AbstractContentPanel
   public void doPreviousSearch()
   {
   }
+
+  public void doRefresh()
+  {
+  }
 }
