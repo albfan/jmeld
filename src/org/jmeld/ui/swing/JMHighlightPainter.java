@@ -6,39 +6,39 @@ import javax.swing.text.*;
 
 import java.awt.*;
 
-public class DiffHighlighter
+public class JMHighlightPainter
        extends DefaultHighlighter.DefaultHighlightPainter
 {
-  public static final DiffHighlighter ADDED;
-  public static final DiffHighlighter ADDED_LINE;
-  public static final DiffHighlighter CHANGED;
-  public static final DiffHighlighter CHANGED2;
-  public static final DiffHighlighter DELETED;
-  public static final DiffHighlighter DELETED_LINE;
-  public static final DiffHighlighter CURRENT_SEARCH;
-  public static final DiffHighlighter SEARCH;
+  public static final JMHighlightPainter ADDED;
+  public static final JMHighlightPainter ADDED_LINE;
+  public static final JMHighlightPainter CHANGED;
+  public static final JMHighlightPainter CHANGED2;
+  public static final JMHighlightPainter DELETED;
+  public static final JMHighlightPainter DELETED_LINE;
+  public static final JMHighlightPainter CURRENT_SEARCH;
+  public static final JMHighlightPainter SEARCH;
 
   static
   {
-    ADDED = new DiffHighlighter(Colors.ADDED);
-    ADDED_LINE = new DiffHighlighter(Colors.ADDED, true);
-    CHANGED = new DiffHighlighter(Colors.CHANGED);
-    CHANGED2 = new DiffHighlighter(Colors.CHANGED2);
-    DELETED = new DiffHighlighter(Colors.DELETED);
-    DELETED_LINE = new DiffHighlighter(Colors.DELETED, true);
-    SEARCH = new DiffHighlighter(Color.yellow);
-    CURRENT_SEARCH = new DiffHighlighter(Color.yellow.darker());
+    ADDED = new JMHighlightPainter(Colors.ADDED);
+    ADDED_LINE = new JMHighlightPainter(Colors.ADDED, true);
+    CHANGED = new JMHighlightPainter(Colors.CHANGED);
+    CHANGED2 = new JMHighlightPainter(Colors.CHANGED2);
+    DELETED = new JMHighlightPainter(Colors.DELETED);
+    DELETED_LINE = new JMHighlightPainter(Colors.DELETED, true);
+    SEARCH = new JMHighlightPainter(Color.yellow);
+    CURRENT_SEARCH = new JMHighlightPainter(Color.yellow.darker());
   }
 
   private Color   color;
   private boolean line;
 
-  private DiffHighlighter(Color color)
+  private JMHighlightPainter(Color color)
   {
     this(color, false);
   }
 
-  private DiffHighlighter(
+  private JMHighlightPainter(
     Color   color,
     boolean line)
   {

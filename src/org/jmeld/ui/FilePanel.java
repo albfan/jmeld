@@ -288,8 +288,8 @@ public class FilePanel
         JMHighlighter.LAYER2,
         sh.getFromOffset(),
         sh.getToOffset(),
-        searchHits.isCurrent(sh) ? DiffHighlighter.CURRENT_SEARCH
-                                 : DiffHighlighter.SEARCH);
+        searchHits.isCurrent(sh) ? JMHighlightPainter.CURRENT_SEARCH
+                                 : JMHighlightPainter.SEARCH);
     }
   }
 
@@ -330,11 +330,12 @@ public class FilePanel
 
         if (delta.isAdd())
         {
-          setHighlight(fromOffset, fromOffset + 1, DiffHighlighter.ADDED_LINE);
+          setHighlight(fromOffset, fromOffset + 1,
+            JMHighlightPainter.ADDED_LINE);
         }
         else if (delta.isDelete())
         {
-          setHighlight(fromOffset, toOffset, DiffHighlighter.DELETED);
+          setHighlight(fromOffset, toOffset, JMHighlightPainter.DELETED);
         }
         else if (delta.isChange())
         {
@@ -354,12 +355,12 @@ public class FilePanel
                 if (changeDelta.isDelete())
                 {
                   setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    DiffHighlighter.CHANGED2);
+                    JMHighlightPainter.CHANGED2);
                 }
                 else if (changeDelta.isChange())
                 {
                   setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    DiffHighlighter.CHANGED2);
+                    JMHighlightPainter.CHANGED2);
                 }
               }
             }
@@ -367,7 +368,7 @@ public class FilePanel
 
           // First color the changes in changes and after that the entire change
           //   (It seems that you can only color a range once!)
-          setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
+          setHighlight(fromOffset, toOffset, JMHighlightPainter.CHANGED);
         }
       }
       else if (BufferDocumentIF.REVISED.equals(name))
@@ -378,11 +379,12 @@ public class FilePanel
 
         if (delta.isAdd())
         {
-          setHighlight(fromOffset, toOffset, DiffHighlighter.ADDED);
+          setHighlight(fromOffset, toOffset, JMHighlightPainter.ADDED);
         }
         else if (delta.isDelete())
         {
-          setHighlight(fromOffset, fromOffset + 1, DiffHighlighter.DELETED_LINE);
+          setHighlight(fromOffset, fromOffset + 1,
+            JMHighlightPainter.DELETED_LINE);
         }
         else if (delta.isChange())
         {
@@ -401,18 +403,18 @@ public class FilePanel
                 if (changeDelta.isAdd())
                 {
                   setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    DiffHighlighter.CHANGED2);
+                    JMHighlightPainter.CHANGED2);
                 }
                 else if (changeDelta.isChange())
                 {
                   setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    DiffHighlighter.CHANGED2);
+                    JMHighlightPainter.CHANGED2);
                 }
               }
             }
           }
 
-          setHighlight(fromOffset, toOffset, DiffHighlighter.CHANGED);
+          setHighlight(fromOffset, toOffset, JMHighlightPainter.CHANGED);
         }
       }
     }
@@ -427,25 +429,10 @@ public class FilePanel
   {
     JMHighlighter jmhl;
 
-    // Don't remove highlights which have not been added by some diff!
-    //   (for instance: the highlights made by selecting text)
     jmhl = getHighlighter();
     jmhl.removeHighlights(JMHighlighter.LAYER0);
     jmhl.removeHighlights(JMHighlighter.LAYER1);
     jmhl.removeHighlights(JMHighlighter.LAYER2);
-
-    /*
-       hilites = hilite.getHighlights();
-       for (int i = 0; i < hilites.length; i++)
-       {
-         if (hilites[i].getPainter() instanceof org.jmeld.ui.DiffHighlighter)
-         {
-           hilite.removeHighlight(hilites[i]);
-         }
-       }
-     */
-
-    //hilite.removeAllHighlights();
   }
 
   private JMRevision getChangeRevision(
