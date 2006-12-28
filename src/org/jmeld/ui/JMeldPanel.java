@@ -49,12 +49,14 @@ public class JMeldPanel
   private static final String NEXTSEARCH_ACTION = "NextSearch";
   private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
   private static final String REFRESH_ACTION = "Refresh";
+  private static final String MERGEMODE_ACTION = "MergeMode";
 
   // instance variables:
   private ActionHandler actionHandler;
   private JTabbedPane   tabbedPane;
   private JPanel        bar;
   private SearchBar     searchBar;
+  private boolean       mergeMode;
 
   public JMeldPanel(
     String originalName,
@@ -230,19 +232,23 @@ public class JMeldPanel
     installKey("control R", action);
 
     action = actionHandler.createAction(this, LEFT_ACTION);
+    installKey("LEFT", action);
     installKey("alt LEFT", action);
     installKey("alt KP_LEFT", action);
 
     action = actionHandler.createAction(this, RIGHT_ACTION);
+    installKey("RIGHT", action);
     installKey("alt RIGHT", action);
     installKey("alt KP_RIGHT", action);
 
     action = actionHandler.createAction(this, UP_ACTION);
+    installKey("UP", action);
     installKey("alt UP", action);
     installKey("alt KP_UP", action);
     installKey("F7", action);
 
     action = actionHandler.createAction(this, DOWN_ACTION);
+    installKey("DOWN", action);
     installKey("alt DOWN", action);
     installKey("alt KP_DOWN", action);
     installKey("F8", action);
@@ -278,6 +284,9 @@ public class JMeldPanel
 
     action = actionHandler.createAction(this, REFRESH_ACTION);
     installKey("F5", action);
+
+    action = actionHandler.createAction(this, MERGEMODE_ACTION);
+    installKey("F9", action);
   }
 
   public ActionHandler getActionHandler()
@@ -467,6 +476,39 @@ public class JMeldPanel
   public void doRefresh(ActionEvent ae)
   {
     getCurrentContentPanel().doRefresh();
+  }
+
+  public void doMergeMode(ActionEvent ae)
+  {
+    MeldAction action;
+
+    mergeMode = !mergeMode;
+
+    action = actionHandler.get(LEFT_ACTION);
+    installKey(mergeMode, "LEFT", action);
+
+    action = actionHandler.get(RIGHT_ACTION);
+    installKey(mergeMode, "RIGHT", action);
+
+    action = actionHandler.get(UP_ACTION);
+    installKey(mergeMode, "UP", action);
+
+    action = actionHandler.get(DOWN_ACTION);
+    installKey(mergeMode, "DOWN", action);
+
+    getCurrentContentPanel().doMergeMode(mergeMode);
+    requestFocus();
+
+    if (mergeMode)
+    {
+      StatusBar.setNotification(
+        MERGEMODE_ACTION,
+        ImageUtil.getSmallImageIcon("jmeld_mergemode-on"));
+    }
+    else
+    {
+      StatusBar.removeNotification(MERGEMODE_ACTION);
+    }
   }
 
   private ChangeListener getChangeListener()
@@ -686,20 +728,61 @@ public class JMeldPanel
   }
 
   private void installKey(
+    boolean    enabled,
+    String     key,
+    MeldAction action)
+  {
+    if (!enabled)
+    {
+      deInstallKey(key, action);
+    }
+    else
+    {
+      installKey(key, action);
+    }
+  }
+
+  private void installKey(
     String     key,
     MeldAction action)
   {
     InputMap  inputMap;
     ActionMap actionMap;
+    KeyStroke stroke;
+
+    stroke = KeyStroke.getKeyStroke(key);
 
     inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    inputMap.put(
-      KeyStroke.getKeyStroke(key),
-      action.getName());
+    if (inputMap.get(stroke) != action.getName())
+    {
+      inputMap.put(
+        stroke,
+        action.getName());
+    }
 
     actionMap = getActionMap();
-    actionMap.put(
-      action.getName(),
-      action);
+    if (actionMap.get(action.getName()) != action)
+    {
+      actionMap.put(
+        action.getName(),
+        action);
+    }
+  }
+
+  private void deInstallKey(
+    String     key,
+    MeldAction action)
+  {
+    InputMap  inputMap;
+    ActionMap actionMap;
+    KeyStroke stroke;
+
+    stroke = KeyStroke.getKeyStroke(key);
+    inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    inputMap.get(stroke);
+    inputMap.remove(stroke);
+
+    // Do not deinstall the action because I don't know how many other
+    //   inputmap residents will call the action.
   }
 }

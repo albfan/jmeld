@@ -210,7 +210,6 @@ public class FilePanel
     SearchHit        searchHit;
     int              offset;
     int              length;
-    StopWatch        stopWatch;
 
     searchText = searchCommand.getSearchText();
     regularExpression = searchCommand.isRegularExpression();
@@ -219,9 +218,6 @@ public class FilePanel
     numberOfLines = doc.getNumberOfLines();
 
     searchHits = new SearchHits();
-
-    stopWatch = new StopWatch();
-    stopWatch.start();
 
     if (!StringUtil.isEmpty(searchText))
     {
@@ -246,9 +242,6 @@ public class FilePanel
       }
     }
 
-    System.out.println("Search for : " + searchText + " took "
-      + stopWatch.getElapsedTime() + " msec.");
-
     reDisplay();
 
     return getSearchHits();
@@ -263,18 +256,9 @@ public class FilePanel
   {
     getHighlighter().setDoNotRepaint(true);
 
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    System.out.println("Start redisplay");
     removeHighlights();
-    System.out.println("  remove took " + stopWatch.getElapsedTime()
-      + " msec.");
     paintSearchHighlights();
-    System.out.println("  paint search took " + stopWatch.getElapsedTime()
-      + " msec.");
     paintRevisionHighlights();
-    System.out.println("  paint revision took " + stopWatch.getElapsedTime()
-      + " msec.");
 
     getHighlighter().setDoNotRepaint(false);
     getHighlighter().repaint();

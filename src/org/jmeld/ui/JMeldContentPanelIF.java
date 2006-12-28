@@ -39,4 +39,6 @@ public interface JMeldContentPanelIF
   public void doPreviousSearch();
 
   public void doRefresh();
+
+  public void doMergeMode(boolean mergeMode);
 }

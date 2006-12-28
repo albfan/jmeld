@@ -4,7 +4,7 @@ import org.jmeld.ui.search.*;
 
 import javax.swing.*;
 
-public class AbstractContentPanel
+public abstract class AbstractContentPanel
        extends JPanel
        implements JMeldContentPanelIF
 {
@@ -81,6 +81,10 @@ public class AbstractContentPanel
   }
 
   public void doRefresh()
+  {
+  }
+
+  public void doMergeMode(boolean mergeMode)
   {
   }
 }

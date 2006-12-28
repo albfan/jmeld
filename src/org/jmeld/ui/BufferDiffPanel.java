@@ -41,6 +41,8 @@ public class BufferDiffPanel
     filePanels = new FilePanel[3];
 
     init();
+
+    setFocusable(true);
   }
 
   public void setBufferDocuments(
@@ -374,6 +376,17 @@ public class BufferDiffPanel
   public void doRefresh()
   {
     diff();
+  }
+
+  public void doMergeMode(boolean mergeMode)
+  {
+    for (FilePanel fp : filePanels)
+    {
+      if (fp != null)
+      {
+        fp.getEditor().setFocusable(!mergeMode);
+      }
+    }
   }
 
   private void scrollToSearch(
