@@ -244,49 +244,4 @@ public class FolderDiffPanel
         }
       };
   }
-
-  public void doLeft()
-  {
-  }
-
-  public void doRight()
-  {
-  }
-
-  public void doUp()
-  {
-  }
-
-  public void doDown()
-  {
-  }
-
-  public void doZoom(boolean direction)
-  {
-  }
-
-  public void doGoToSelected()
-  {
-  }
-
-  public void doGoToFirst()
-  {
-  }
-
-  public void doGoToLast()
-  {
-  }
-
-  public SearchHits doSearch(SearchCommand command)
-  {
-    return null;
-  }
-
-  public void doNextSearch()
-  {
-  }
-
-  public void doPreviousSearch()
-  {
-  }
 }
