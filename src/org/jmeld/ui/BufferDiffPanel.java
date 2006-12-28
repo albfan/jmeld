@@ -21,8 +21,7 @@ import java.util.*;
 import java.util.List;
 
 public class BufferDiffPanel
-       extends JPanel
-       implements JMeldContentPanelIF
+       extends AbstractContentPanel
 {
   private static int         instanceCounter = 0;
   private int                instanceCount = ++instanceCounter;
@@ -338,7 +337,7 @@ public class BufferDiffPanel
 
   public SearchHits doSearch(SearchCommand command)
   {
-    FilePanel fp;
+    FilePanel  fp;
     SearchHits searchHits;
 
     fp = getSearchPanel();
@@ -375,14 +374,18 @@ public class BufferDiffPanel
     scrollToSearch(fp, searchHits);
   }
 
-  private void scrollToSearch(FilePanel fp, SearchHits searchHits)
+  private void scrollToSearch(
+    FilePanel  fp,
+    SearchHits searchHits)
   {
-    SearchHit  currentHit;
+    SearchHit currentHit;
 
     currentHit = searchHits.getCurrent();
-    if(currentHit != null)
+    if (currentHit != null)
     {
-      scrollSynchronizer.scrollToLine(fp, currentHit.getLine());
+      scrollSynchronizer.scrollToLine(
+        fp,
+        currentHit.getLine());
     }
   }
 

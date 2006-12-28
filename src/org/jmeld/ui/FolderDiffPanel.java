@@ -31,8 +31,7 @@ import java.util.*;
 import java.util.List;
 
 public class FolderDiffPanel
-       extends JPanel
-       implements JMeldContentPanelIF
+       extends AbstractContentPanel
 {
   private JMeldPanel             mainPanel;
   private FolderDiff             diff;
