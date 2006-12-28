@@ -240,10 +240,12 @@ public class JMeldPanel
     action = actionHandler.createAction(this, UP_ACTION);
     installKey("alt UP", action);
     installKey("alt KP_UP", action);
+    installKey("F7", action);
 
     action = actionHandler.createAction(this, DOWN_ACTION);
     installKey("alt DOWN", action);
     installKey("alt KP_DOWN", action);
+    installKey("F8", action);
 
     action = actionHandler.createAction(this, ZOOMPLUS_ACTION);
     installKey("alt EQUALS", action);
