@@ -35,4 +35,13 @@ public class ToolBarBuilder
     add(new ToolBarSeparator());
     nextColumn();
   }
+
+  public void addSpring()
+  {
+    appendColumn("pref:grow");
+
+    // Any old component will do here!
+    add(Box.createHorizontalGlue());
+    nextColumn();
+  }
 }
