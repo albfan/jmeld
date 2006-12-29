@@ -11,7 +11,7 @@
 
   <style type="text/css">
   <!--
-    .jmeldkey      { color: #155d89; }
+    .jmeldkey      { color: #155d89; width: 100px; }
     .jmeldkeytable { margin-left: 1cm; width: 90%; }
     .jmeldheader   { margin-left: 0.5cm; background: #868557; color: white; padding: 5px; }
   -->
@@ -21,13 +21,8 @@
 <body bgcolor="white">
   <h2>Shortcuts</h2>
 
-  <h3 class="jmeldheader">Search:</h3>
+  <h3 class="jmeldheader">Searching:</h3>
   <table class="jmeldkeytable">
-    <tr>
-      <th width="100px" align="left">Key</th>
-      <th align="left">Action</th>
-    </tr>
-
     <tr>
       <td class="jmeldkey">
         <img src="images/keyCTRL.png">
@@ -45,18 +40,30 @@
         <img src="images/keyF3.png"></td>
       <td> Find previous occurence.</td>
     </tr>
+    <tr>
+      <td class="jmeldkey">
+        <img src="images/keyESC.png"></td>
+      <td> Close search.</td>
+    </tr>
   </table>
 
   <h3 class="jmeldheader">Moving around:</h3>
   <table class="jmeldkeytable">
     <tr>
-      <th width="100px" align="left">Key</th>
-      <th align="left">Action</th>
-    </tr>
-
-    <tr>
       <td class="jmeldkey"><img src="images/keyF7.png"></td>
       <td> Goto next difference.</td>
+    </tr>
+    <tr>
+      <td class="jmeldkey">
+        <img src="images/keyALT.png">
+        <img src="images/keyDOWN.png"></td>
+      <td> Goto next difference.</td>
+    </tr>
+    <tr>
+      <td class="jmeldkey">
+        <img src="images/mergeModeOn.png">
+        <img src="images/keyDOWN.png"></td>
+      <td> Goto next difference. (only in mergemode)</td>
     </tr>
     <tr>
       <td class="jmeldkey"><img src="images/keyF8.png"></td>
@@ -70,9 +77,9 @@
     </tr>
     <tr>
       <td class="jmeldkey">
-        <img src="images/keyALT.png">
-        <img src="images/keyDOWN.png"></td>
-      <td> Goto next difference.</td>
+        <img src="images/mergeModeOn.png">
+        <img src="images/keyUP.png"></td>
+      <td> Goto previous difference. (only in mergemode)</td>
     </tr>
     <tr>
       <td class="jmeldkey">
@@ -92,27 +99,10 @@
         <img src="images/keyEND.png"></td>
       <td> Goto last difference. </td>
     </tr>
-    <tr>
-      <td class="jmeldkey">
-        <img src="images/mergeModeOn.png">
-        <img src="images/keyUP.png"></td>
-      <td> Goto previous difference. (only in mergemode)</td>
-    </tr>
-    <tr>
-      <td class="jmeldkey">
-        <img src="images/mergeModeOn.png">
-        <img src="images/keyDOWN.png"></td>
-      <td> Goto next difference. (only in mergemode)</td>
-    </tr>
   </table>
 
   <h3 class="jmeldheader">Diff/Merging :</h3>
   <table class="jmeldkeytable">
-    <tr>
-      <th width="100px" align="left">Key</th>
-      <th align="left">Action</th>
-    </tr>
-
     <tr>
       <td class="jmeldkey"><img src="images/keyF9.png"></td>
       <td> Turn merge mode on. </td>
@@ -158,13 +148,8 @@
   <h3 class="jmeldheader">Miscellaneous:</h3>
   <table class="jmeldkeytable">
     <tr>
-      <th width="100px" align="left">Key</th>
-      <th align="left">Action</th>
-    </tr>
-
-    <tr>
       <td class="jmeldkey"><img src="images/keyF5.png"></td>
-      <td> Refresh.</td>
+      <td> Refresh (diff again).</td>
     </tr>
     <tr>
       <td class="jmeldkey">
