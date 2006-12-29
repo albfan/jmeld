@@ -4,7 +4,7 @@ import org.jmeld.ui.search.*;
 
 import javax.swing.*;
 
-public abstract class AbstractContentPanel
+public class AbstractContentPanel
        extends JPanel
        implements JMeldContentPanelIF
 {
