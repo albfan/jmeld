@@ -39,11 +39,16 @@ public class JMDiff
     Object[] b)
     throws JMeldException
   {
+    JMRevision revision;
+
     for (JMDiffAlgorithmIF algorithm : algorithms)
     {
       try
       {
-        return algorithm.diff(a, b);
+        revision = algorithm.diff(a, b);
+        revision.filter();
+
+        return revision;
       }
       catch (MaxTimeExceededException ex)
       {

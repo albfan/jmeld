@@ -26,18 +26,7 @@ public class JMDelta
     this.original = original;
     this.revised = revised;
 
-    if (original.getSize() > 0 && revised.getSize() == 0)
-    {
-      type = DELETE;
-    }
-    else if (original.getSize() == 0 && revised.getSize() > 0)
-    {
-      type = ADD;
-    }
-    else
-    {
-      type = CHANGE;
-    }
+    initType();
   }
 
   void setRevision(JMRevision revision)
@@ -208,6 +197,22 @@ public class JMDelta
     }
 
     return null;
+  }
+
+  void initType()
+  {
+    if (original.getSize() > 0 && revised.getSize() == 0)
+    {
+      type = DELETE;
+    }
+    else if (original.getSize() == 0 && revised.getSize() > 0)
+    {
+      type = ADD;
+    }
+    else
+    {
+      type = CHANGE;
+    }
   }
 
   public boolean equals(Object o)

@@ -4,9 +4,10 @@ import java.util.*;
 
 public class JMRevision
 {
-  private Object[]      org;
-  private Object[]      rev;
-  private List<JMDelta> deltas;
+  private Object[]            org;
+  private Object[]            rev;
+  private LinkedList<JMDelta> deltas;
+  private List<String>        regexes;
 
   public JMRevision(
     Object[] org,
@@ -15,7 +16,9 @@ public class JMRevision
     this.org = org;
     this.rev = rev;
 
-    deltas = new ArrayList<JMDelta>();
+    deltas = new LinkedList<JMDelta>();
+
+    skip("Kees Kuip");
   }
 
   public void add(JMDelta delta)
@@ -70,5 +73,100 @@ public class JMRevision
     }
 
     return sb.toString();
+  }
+
+  public void skip(String regex)
+  {
+    if (regexes == null)
+    {
+      regexes = new ArrayList<String>();
+    }
+
+    regexes.add(regex);
+  }
+
+  public void filter()
+  {
+    JMChunk   original;
+    JMChunk   revised;
+    boolean[] originalSkip;
+    boolean[] revisedSkip;
+    int       end;
+    Object    o;
+    JMDelta   delta;
+
+    // Skip changes in lines that match a regex.
+    if (regexes != null)
+    {
+      for (ListIterator<JMDelta> it = deltas.listIterator(0); it.hasNext();)
+      {
+        delta = it.next();
+
+        original = delta.getOriginal();
+        revised = delta.getRevised();
+
+        originalSkip = null;
+        revisedSkip = null;
+
+        end = original.getAnchor() + original.getSize();
+        for (int index = original.getAnchor(); index < end; index++)
+        {
+          o = org[index];
+          if (o == null)
+          {
+            continue;
+          }
+
+          for (String regex : regexes)
+          {
+            if (o.toString().contains(regex))
+            {
+              if (originalSkip == null)
+              {
+                originalSkip = new boolean[original.getSize()];
+              }
+
+              originalSkip[index - original.getAnchor()] = true;
+            }
+          }
+        }
+
+        end = revised.getAnchor() + revised.getSize();
+        for (int index = revised.getAnchor(); index < end; index++)
+        {
+          o = rev[index];
+          if (o == null)
+          {
+            continue;
+          }
+
+          for (String regex : regexes)
+          {
+            if (o.toString().contains(regex))
+            {
+              if (revisedSkip == null)
+              {
+                revisedSkip = new boolean[revised.getSize()];
+              }
+
+              revisedSkip[index - revised.getAnchor()] = true;
+            }
+          }
+        }
+
+        // There are some matches in the delta's that should be 
+        //   skipped.
+        if (originalSkip != null || revisedSkip != null)
+        {
+          // I must look at this. It seems that gnu's diff only
+          //   can skip whole chunks. So only if ALL the lines in
+          //   the original AND in the revised match a regular
+          //   expression the chunk is skipped. (Is this useful?)
+
+          // I was planning on creating new chunks here (hence the
+          //   linkedlist). But I beter wait a bit.
+        }
+      }
+    }
   }
 }
