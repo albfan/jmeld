@@ -17,7 +17,7 @@ public class TabIcon
   // class variables:
   private static int CLOSE_ICON_HEIGHT = 7;
   private static int CLOSE_ICON_WIDTH = 7;
-  private static int SPACE_WIDTH = 6;
+  private static int SPACE_WIDTH = 20;
 
   // instance variables:
   private Icon                icon;
