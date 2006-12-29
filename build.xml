@@ -6,7 +6,8 @@
     <description>Builds, tests, and runs the project JMeld.</description>
     <import file="nbproject/executionprofile-impl.xml"/>
     <import file="nbproject/build-impl.xml"/>
-    <import file="nbproject/profiler-build-impl.xml"/>
+
+    <import file="nbproject/profiler-build-impl.xml"/>    <import file="nbproject/profiler-build-impl.xml"/>
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -71,11 +72,19 @@
     <!--target name="-pre-init">
 
     </target-->
+
+
     <target name="-pre-compile">
         <copy todir="${build.classes.dir}">
             <fileset dir="." includes="images/**,ini/**"/>
         </copy>
     </target>
+
+   <target name="-pre-jar">
+     <jar destfile="lib/jmeld-help.jar">
+       <fileset dir="doc/help/jmeld"/>
+     </jar>
+   </target>
 
    <target name="-post-jar">
      <jar destfile="${dist.jar}" manifest="${manifest.file}" update="true">
@@ -83,7 +92,33 @@
        <zipfileset src="lib/looks-2.0.jar"/>
        <zipfileset src="lib/swinglabs-0.8.0.jar"/>
        <zipfileset src="lib/swing-worker.jar"/>
+       <zipfileset src="lib/jmeld-help.jar"/>
      </jar>
+   </target>
+
+   <path id="pmd.classpath">
+     <pathelement location="${build}"/>
+     <fileset dir="/usr/local/java/pmd/pmd-3.9/lib">
+       <include name="*.jar"/>
+     </fileset>
+   </path>
+
+   <target name="pmd">
+     <taskdef name="pmd" 
+              classname="net.sourceforge.pmd.ant.PMDTask"
+              classpathref="pmd.classpath"/>
+
+     <pmd shortFilenames="true"
+          targetjdk="1.5">
+       <ruleset>basic</ruleset>
+       <formatter type="summaryhtml" 
+                  toFile="pmd_report.html"
+                  toConsole="true"
+                  linkPrefix="file:///projecten/jmeld/trunk/src/"/>
+       <fileset dir="src">
+         <include name="**/*.java"/>
+       </fileset>
+     </pmd>
    </target>
 
     <!-- ============================================================= -->
@@ -91,29 +126,36 @@
     <!--   compileren                                                  -->
     <!-- ============================================================= -->
     <path id="development.classpath">
-        <pathElement path="build/classes"/>
-        <fileset dir="./lib">
-            <include name="**/*.jar"/>
-        </fileset>
+      <pathElement path="build/classes"/>
+      <fileset dir="./lib">
+        <include name="**/*.jar"/>
+      </fileset>
     </path>
+
     <!-- ============================================================= -->
     <!-- Create batch-files to initialize the environment-variables    -->
     <!-- ============================================================= -->
     <target depends="initMyPathSeparator" name="scripts">
-        <mkdir dir="${basedir}/bin"/>
-        <delete file="${basedir}/bin/setDevelopment.sh" quiet="true"/>
-        <pathconvert dirsep="/" pathsep="${myPathSeparator}" property="setEnvironment" refid="development.classpath"/>
-        <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash
+      <mkdir dir="${basedir}/bin"/>
+      <delete file="${basedir}/bin/setDevelopment.sh" quiet="true"/>
+      <pathconvert dirsep="/"  
+                   pathsep="${myPathSeparator}"  
+                   property="setEnvironment"  
+                   refid="development.classpath"/>
+      <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash
 export CLASSPATH='${setEnvironment}'
-    </echo>
-        <chmod file="${basedir}/bin/setDevelopment.sh" perm="ugo+x"/>
+      </echo>
+      <chmod file="${basedir}/bin/setDevelopment.sh" perm="ugo+x"/>
     </target>
+
     <target name="initMyPathSeparator">
-        <condition property="myPathSeparator" value=";">
-            <os family="windows"/>
-        </condition>
-        <condition property="myPathSeparator" value=":">
-            <os family="unix"/>
-        </condition>
+      <condition property="myPathSeparator" value=";">
+        <os family="windows"/>
+      </condition>
+
+      <condition property="myPathSeparator" value=":">
+        <os family="unix"/>
+      </condition>
     </target>
+
 </project>
