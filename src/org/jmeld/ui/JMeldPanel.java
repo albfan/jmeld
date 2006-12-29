@@ -12,6 +12,7 @@ import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.file.*;
 
+import javax.help.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.*;
@@ -50,6 +51,8 @@ public class JMeldPanel
   private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
   private static final String REFRESH_ACTION = "Refresh";
   private static final String MERGEMODE_ACTION = "MergeMode";
+  private static final String HELP_ACTION = "Help";
+  private static final String ABOUT_ACTION = "About";
 
   // instance variables:
   private ActionHandler actionHandler;
@@ -62,7 +65,10 @@ public class JMeldPanel
     String originalName,
     String mineName)
   {
+    setFocusable(true);
+
     tabbedPane = new JTabbedPane();
+    tabbedPane.setFocusable(false);
 
     initActions();
 
@@ -177,6 +183,14 @@ public class JMeldPanel
     button = WidgetFactory.getToolBarButton(actionHandler.get(REDO_ACTION));
     builder.addButton(button);
 
+    builder.addSpring();
+
+    button = WidgetFactory.getToolBarButton(actionHandler.get(HELP_ACTION));
+    builder.addButton(button);
+
+    button = WidgetFactory.getToolBarButton(actionHandler.get(ABOUT_ACTION));
+    builder.addButton(button);
+
     return toolBar;
   }
 
@@ -287,6 +301,13 @@ public class JMeldPanel
 
     action = actionHandler.createAction(this, MERGEMODE_ACTION);
     installKey("F9", action);
+
+    action = actionHandler.createAction(this, HELP_ACTION);
+    action.setIcon("stock_help-agent");
+    installKey("F1", action);
+
+    action = actionHandler.createAction(this, ABOUT_ACTION);
+    action.setIcon("stock_about");
   }
 
   public ActionHandler getActionHandler()
@@ -509,6 +530,70 @@ public class JMeldPanel
     {
       StatusBar.removeNotification(MERGEMODE_ACTION);
     }
+  }
+
+  public void doHelp(ActionEvent ae)
+  {
+    try
+    {
+      JPanel               panel;
+      AbstractContentPanel content;
+      URL                  url;
+      HelpSet              helpSet;
+      JHelpContentViewer   viewer;
+      JHelpNavigator       navigator;
+      NavigatorView        navigatorView;
+      JSplitPane           splitPane;
+
+      url = HelpSet.findHelpSet(
+          getClass().getClassLoader(),
+          "jmeld");
+      helpSet = new HelpSet(
+          getClass().getClassLoader(),
+          url);
+      viewer = new JHelpContentViewer(helpSet);
+
+      navigatorView = helpSet.getNavigatorView("TOC");
+      navigator = (JHelpNavigator) navigatorView.createNavigator(
+          viewer.getModel());
+
+      splitPane = new JSplitPane();
+      splitPane.setLeftComponent(navigator);
+      splitPane.setRightComponent(viewer);
+
+      content = new AbstractContentPanel();
+      content.setLayout(new BorderLayout());
+      content.add(splitPane,  BorderLayout.CENTER);
+
+      tabbedPane.add(
+        content,
+        new TabIcon(
+          ImageUtil.getImageIcon("stock_help-agent"),
+          "Help"));
+      tabbedPane.setSelectedComponent(content);
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  public void doAbout(ActionEvent ae)
+  {
+    AbstractContentPanel content;
+
+    content = new AbstractContentPanel();
+    content.setLayout(new BorderLayout());
+    content.add(
+      new JButton("What's this all about?"),
+      BorderLayout.CENTER);
+
+    tabbedPane.add(
+      content,
+      new TabIcon(
+        ImageUtil.getImageIcon("stock_about"),
+        "About"));
+    tabbedPane.setSelectedComponent(content);
   }
 
   private ChangeListener getChangeListener()
