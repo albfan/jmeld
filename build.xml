@@ -2,7 +2,7 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project basedir="." default="compile" name="JMeld">
+<project basedir="." default="jmeld" name="JMeld">
     <description>Builds, tests, and runs the project JMeld.</description>
     <import file="nbproject/executionprofile-impl.xml"/>
     <import file="nbproject/build-impl.xml"/>
@@ -73,11 +73,56 @@
 
     </target-->
 
+  <!-- ============================================================= -->
+  <!-- Classpath waarin alle jar-files zijn om deze applicatie te    -->
+  <!--   compileren                                                  -->
+  <!-- ============================================================= -->
+  <path id="compile.classpath">
+    <fileset dir="./lib">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+
+  <target name="jmeld-prepare">
+    <mkdir dir="build/classes"/>
+
+    <copy todir="build/classes">
+      <fileset dir="." includes="images/**,ini/**"/>
+    </copy>
+  </target>
+
+  <target name="jmeld" depends="jmeld-prepare">
+
+    <javac srcdir="src"
+           destdir="build/classes"
+           debug="on"
+           source="1.5"
+           excludes="**/bak/**"
+           optimize="on" >
+      <classpath refid="compile.classpath"/>
+    </javac>
+
+    <antcall target="createExecutable"/>
+
+  </target>
+
+   <target name="createExecutable">
+     <jar destfile="JMeld.jar" 
+          manifest="etc/manifest.mf"
+          update="false">
+       <fileset dir="build/classes"/>
+       <fileset dir="doc/help/jmeld"/>
+       <zipfileset src="lib/forms-1.0.5.jar"/>
+       <zipfileset src="lib/looks-2.0.jar"/>
+       <zipfileset src="lib/swinglabs-0.8.0.jar"/>
+       <zipfileset src="lib/swing-worker.jar"/>
+       <zipfileset src="lib/jhall.jar"/>
+     </jar>
+   </target>
 
     <target name="-pre-compile">
-        <copy todir="${build.classes.dir}">
-            <fileset dir="." includes="images/**,ini/**"/>
-        </copy>
+       <antcall target="jmeld-prepare"/>
     </target>
 
    <target name="-pre-jar">
@@ -87,14 +132,9 @@
    </target>
 
    <target name="-post-jar">
-     <jar destfile="${dist.jar}" manifest="${manifest.file}" update="true">
-       <zipfileset src="lib/forms-1.0.5.jar"/>
-       <zipfileset src="lib/looks-2.0.jar"/>
-       <zipfileset src="lib/swinglabs-0.8.0.jar"/>
-       <zipfileset src="lib/swing-worker.jar"/>
-       <zipfileset src="lib/jmeld-help.jar"/>
-     </jar>
+     <antcall target="createExecutable"/>
    </target>
+
 
    <path id="pmd.classpath">
      <pathelement location="${build}"/>
