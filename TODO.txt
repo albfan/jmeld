@@ -9,6 +9,8 @@ Release 1.1:
    a strange way.
 5. Show linenumbers bar in FilePanel.
 6. Select a diff when searching. (linenumberselection?)
+7. Create nice website
+8. Create manual
 
 Release 2.0:
 1. Implement directory diff.
