@@ -8,7 +8,7 @@ import javax.swing.*;
 public class ToolBarBuilder
        extends AbstractFormBuilder
 {
-  public ToolBarBuilder(JToolBar toolBar)
+  public ToolBarBuilder(JComponent toolBar)
   {
     super(toolBar, new FormLayout("", "fill:p"));
 
@@ -26,6 +26,13 @@ public class ToolBarBuilder
     getLayout().addGroupedColumn(getColumn());
     //button.putClientProperty(NARROW_KEY, Boolean.TRUE);
     add(button);
+    nextColumn();
+  }
+
+  public void addComponent(JComponent component)
+  {
+    appendColumn("pref:none");
+    add(component);
     nextColumn();
   }
 

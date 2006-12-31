@@ -33,11 +33,13 @@ public class FilePanel
   private JButton          browseButton;
   private JComboBox        fileBox;
   private JScrollPane      scrollPane;
-  private JTextComponent   editor;
+  private JTextArea        editor;
   private BufferDocumentIF bufferDocument;
   private JButton          saveButton;
   private Timer            timer;
   private SearchHits       searchHits;
+  private boolean          selected;
+  private FilePanelBar     filePanelBar;
 
   FilePanel(
     BufferDiffPanel diffPanel,
@@ -64,6 +66,9 @@ public class FilePanel
     editor.setFont(font);
     editor.setHighlighter(new JMHighlighter());
     fm = editor.getFontMetrics(font);
+
+    editor.addFocusListener(getFocusListener());
+    editor.addCaretListener(getCaretListener());
 
     scrollPane = new JScrollPane(editor);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());
@@ -97,6 +102,16 @@ public class FilePanel
     timer.setRepeats(false);
   }
 
+  FilePanelBar getFilePanelBar()
+  {
+    if (filePanelBar == null)
+    {
+      filePanelBar = new FilePanelBar(this);
+    }
+
+    return filePanelBar;
+  }
+
   JButton getBrowseButton()
   {
     return browseButton;
@@ -117,7 +132,7 @@ public class FilePanel
     return scrollPane;
   }
 
-  public JTextComponent getEditor()
+  public JTextArea getEditor()
   {
     return editor;
   }
@@ -568,5 +583,46 @@ public class FilePanel
           diffPanel.diff();
         }
       };
+  }
+
+  public FocusListener getFocusListener()
+  {
+    return new FocusAdapter()
+      {
+        public void focusGained(FocusEvent fe)
+        {
+          diffPanel.setSelectedPanel(FilePanel.this);
+        }
+      };
+  }
+
+  public CaretListener getCaretListener()
+  {
+    return new CaretListener()
+      {
+        public void caretUpdate(CaretEvent fe)
+        {
+          updateFilePanelBar();
+        }
+      };
+  }
+
+  public void setSelected(boolean selected)
+  {
+    this.selected = selected;
+    updateFilePanelBar();
+  }
+
+  private void updateFilePanelBar()
+  {
+    if(filePanelBar != null)
+    {
+      filePanelBar.update();
+    }
+  }
+
+  public boolean isSelected()
+  {
+    return selected;
   }
 }

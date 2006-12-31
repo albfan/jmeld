@@ -27,6 +27,7 @@ public class BufferDiffPanel
   private int                instanceCount = ++instanceCounter;
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
+  int                        filePanelSelectedIndex = -1;
   private JMRevision         currentRevision;
   private JMDelta            selectedDelta;
   private int                selectedLine;
@@ -152,7 +153,7 @@ public class BufferDiffPanel
     CellConstraints cc;
 
     columns = "3px, pref, 3px, 0:grow, 5px, min, 60px, 0:grow, 25px, min, 3px, pref, 3px";
-    rows = "6px, pref, 3px, fill:0:grow, 6px";
+    rows = "6px, pref, 3px, fill:0:grow, pref";
     layout = new FormLayout(columns, rows);
     cc = new CellConstraints();
 
@@ -174,6 +175,9 @@ public class BufferDiffPanel
     add(
       filePanels[0].getScrollPane(),
       cc.xyw(4, 4, 3));
+    add(
+      filePanels[0].getFilePanelBar(),
+      cc.xyw(4, 5, 3));
 
     add(
       new DiffScrollComponent(this, 0, 1),
@@ -192,6 +196,9 @@ public class BufferDiffPanel
     add(
       filePanels[1].getSaveButton(),
       cc.xy(12, 2));
+    add(
+      filePanels[1].getFilePanelBar(),
+      cc.xyw(8, 5, 3));
 
     scrollSynchronizer = new ScrollSynchronizer(this, filePanels[0],
         filePanels[1]);
@@ -407,7 +414,42 @@ public class BufferDiffPanel
 
   private FilePanel getSelectedPanel()
   {
-    return filePanels[0];
+    if (filePanelSelectedIndex >= 0
+      && filePanelSelectedIndex < filePanels.length)
+    {
+      return filePanels[filePanelSelectedIndex];
+    }
+
+    return null;
+  }
+
+  void setSelectedPanel(FilePanel fp)
+  {
+    int index;
+
+    index = -1;
+    for (int i = 0; i < filePanels.length; i++)
+    {
+      if (filePanels[i] == fp)
+      {
+        index = i;
+      }
+    }
+
+    if (index != filePanelSelectedIndex)
+    {
+      if (filePanelSelectedIndex != -1)
+      {
+        filePanels[filePanelSelectedIndex].setSelected(false);
+      }
+
+      filePanelSelectedIndex = index;
+
+      if (filePanelSelectedIndex != -1)
+      {
+        filePanels[filePanelSelectedIndex].setSelected(true);
+      }
+    }
   }
 
   public MyUndoManager getUndoHandler()
@@ -852,7 +894,7 @@ public class BufferDiffPanel
     JMDelta delta;
 
     delta = getSelectedDelta();
-    if(delta == null)
+    if (delta == null)
     {
       return;
     }
