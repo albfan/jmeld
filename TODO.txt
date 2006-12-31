@@ -1,0 +1,18 @@
+Things todo:
+
+Release 1.1:
+1. Save file dialog when closing the application with the closebutton.
+2. Use the filenode structure as preparation for directory diff.
+3. Change Revision when editing instead of creating a New revision 
+   every time. [PERFORMANCE]
+4. Click on RevisionBar below a certain point lets JTextArea paint in
+   a strange way.
+5. Show linenumbers bar in FilePanel.
+6. Select a diff when searching. (linenumberselection?)
+
+Release 2.0:
+1. Implement directory diff.
+2. Statusbar should have a bar which tells how far the diff is.
+3. Cancel the current diff.
+4. Exclude filters. (Create preferences and store with jaxb)
+
