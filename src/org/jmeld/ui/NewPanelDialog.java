@@ -110,9 +110,11 @@ public class NewPanelDialog
     tabbedPane.add(
       "File Comparison",
       getFileComparisonPanel());
+    /*
     tabbedPane.add(
       "Directory Comparison",
       getDirectoryComparisonPanel());
+    */
 
     panel = new JPanel(new BorderLayout());
     panel.add(tabbedPane, BorderLayout.CENTER);
