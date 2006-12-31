@@ -16,3 +16,8 @@ Release 2.0:
 3. Cancel the current diff.
 4. Exclude filters. (Create preferences and store with jaxb)
 
+Release 3.0:
+1. Implement subversion diff.
+
+Release 4.0:
+1. Implement directory/file diff with ftp, sftp etc.
