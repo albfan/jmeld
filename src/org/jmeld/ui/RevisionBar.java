@@ -78,30 +78,10 @@ public class RevisionBar
             if (original.getAnchor() > lineBefore
               && original.getAnchor() < lineAfter)
             {
-              //line = original.getAnchor();
               diffPanel.doGotoDelta(delta);
               return;
-              //break;
             }
           }
-
-/*
-          bd = filePanel.getBufferDocument();
-          offset = bd.getOffsetForLine(line);
-          viewport = filePanel.getScrollPane().getViewport();
-          editor = filePanel.getEditor();
-
-          try
-          {
-            p = editor.modelToView(offset).getLocation();
-            p.x = 0;
-
-            viewport.setViewPosition(p);
-          }
-          catch (BadLocationException ex)
-          {
-          }
-          */
 
           diffPanel.doGotoLine(line);
         }
