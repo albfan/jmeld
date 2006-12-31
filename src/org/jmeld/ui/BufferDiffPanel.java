@@ -340,7 +340,7 @@ public class BufferDiffPanel
     FilePanel  fp;
     SearchHits searchHits;
 
-    fp = getSearchPanel();
+    fp = getSelectedPanel();
     searchHits = fp.doSearch(command);
 
     scrollToSearch(fp, searchHits);
@@ -353,7 +353,7 @@ public class BufferDiffPanel
     FilePanel  fp;
     SearchHits searchHits;
 
-    fp = getSearchPanel();
+    fp = getSelectedPanel();
     searchHits = fp.getSearchHits();
     searchHits.next();
     fp.reDisplay();
@@ -366,7 +366,7 @@ public class BufferDiffPanel
     FilePanel  fp;
     SearchHits searchHits;
 
-    fp = getSearchPanel();
+    fp = getSelectedPanel();
     searchHits = fp.getSearchHits();
     searchHits.previous();
     fp.reDisplay();
@@ -405,7 +405,7 @@ public class BufferDiffPanel
     }
   }
 
-  private FilePanel getSearchPanel()
+  private FilePanel getSelectedPanel()
   {
     return filePanels[0];
   }
@@ -849,7 +849,15 @@ public class BufferDiffPanel
 
   private void showSelectedDelta()
   {
-    scrollSynchronizer.showDelta(getSelectedDelta());
+    JMDelta delta;
+
+    delta = getSelectedDelta();
+    if(delta == null)
+    {
+      return;
+    }
+
+    scrollSynchronizer.showDelta(delta);
   }
 
   public JMDelta getSelectedDelta()
