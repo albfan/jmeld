@@ -202,6 +202,8 @@ public class BufferDiffPanel
 
     scrollSynchronizer = new ScrollSynchronizer(this, filePanels[0],
         filePanels[1]);
+
+    setSelectedPanel(filePanels[0]);
   }
 
   void toNextDelta(boolean next)
@@ -348,6 +350,11 @@ public class BufferDiffPanel
     SearchHits searchHits;
 
     fp = getSelectedPanel();
+    if(fp == null)
+    {
+      return null;
+    }
+
     searchHits = fp.doSearch(command);
 
     scrollToSearch(fp, searchHits);
@@ -361,6 +368,11 @@ public class BufferDiffPanel
     SearchHits searchHits;
 
     fp = getSelectedPanel();
+    if(fp == null)
+    {
+      return;
+    }
+
     searchHits = fp.getSearchHits();
     searchHits.next();
     fp.reDisplay();
@@ -374,6 +386,11 @@ public class BufferDiffPanel
     SearchHits searchHits;
 
     fp = getSelectedPanel();
+    if(fp == null)
+    {
+      return;
+    }
+
     searchHits = fp.getSearchHits();
     searchHits.previous();
     fp.reDisplay();
