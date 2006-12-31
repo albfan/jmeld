@@ -143,7 +143,8 @@ public class SearchBar
           searchText = searchField.getText();
 
           searchHits = meldPanel.doSearch(null);
-          notFound = (searchHits.getSearchHits().size() == 0);
+          notFound = (searchHits == null
+            || searchHits.getSearchHits().size() == 0);
 
           if (notFound)
           {
@@ -193,6 +194,11 @@ public class SearchBar
           if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
           {
             meldPanel.doStopSearch(null);
+          }
+
+          if (e.getKeyCode() == KeyEvent.VK_ENTER)
+          {
+            meldPanel.doNextSearch(null);
           }
         }
       };
