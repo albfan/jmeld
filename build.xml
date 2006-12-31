@@ -143,6 +143,15 @@
      </fileset>
    </path>
 
+   <target name="gzip">
+    <delete file="JMeld.tgz" quiet="true"/>
+    <tar destfile="JMeld.tgz"
+         compression="gzip">
+       <tarfileset dir="." prefix="jmeld" defaultexcludes="yes">
+       </tarfileset>
+    </tar>
+   </target>
+
    <target name="pmd">
      <taskdef name="pmd" 
               classname="net.sourceforge.pmd.ant.PMDTask"
