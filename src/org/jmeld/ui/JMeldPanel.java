@@ -189,7 +189,7 @@ public class JMeldPanel
     builder.addButton(button);
 
     button = WidgetFactory.getToolBarButton(actionHandler.get(ABOUT_ACTION));
-    builder.addButton(button);
+    //builder.addButton(button);
 
     return toolBar;
   }
