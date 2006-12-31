@@ -4,6 +4,7 @@ import com.jgoodies.forms.builder.*;
 import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingworker.SwingWorker;
+import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.search.*;
@@ -189,7 +190,7 @@ public class JMeldPanel
     builder.addButton(button);
 
     button = WidgetFactory.getToolBarButton(actionHandler.get(ABOUT_ACTION));
-    //builder.addButton(button);
+    builder.addButton(button);
 
     return toolBar;
   }
@@ -563,7 +564,7 @@ public class JMeldPanel
 
       content = new AbstractContentPanel();
       content.setLayout(new BorderLayout());
-      content.add(splitPane,  BorderLayout.CENTER);
+      content.add(splitPane, BorderLayout.CENTER);
 
       tabbedPane.add(
         content,
@@ -585,7 +586,7 @@ public class JMeldPanel
     content = new AbstractContentPanel();
     content.setLayout(new BorderLayout());
     content.add(
-      new JButton("What's this all about?"),
+      new JButton("JMeld version: " + Version.getVersion()),
       BorderLayout.CENTER);
 
     tabbedPane.add(
