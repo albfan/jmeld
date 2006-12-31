@@ -64,9 +64,10 @@ public class RevisionBar
           numberOfLines = getNumberOfLines(revision);
           line = (y * numberOfLines) / r.height;
 
-          // If the files are very large the resolution of one pixel contains a lot
-          //   of lines of the document. Check if there is a chunk in the revision between
-          //   those lines and if there is position on that chunk.
+          // If the files are very large the resolution of one pixel contains 
+          //   a lot of lines of the document. Check if there is a chunk in 
+          //   the revision between those lines and if there is position on 
+          //   that chunk.
           lineBefore = ((y - 2) * numberOfLines) / r.height;
           lineAfter = ((y + 2) * numberOfLines) / r.height;
           for (JMDelta delta : revision.getDeltas())
@@ -77,11 +78,14 @@ public class RevisionBar
             if (original.getAnchor() > lineBefore
               && original.getAnchor() < lineAfter)
             {
-              line = original.getAnchor();
-              break;
+              //line = original.getAnchor();
+              diffPanel.doGotoDelta(delta);
+              return;
+              //break;
             }
           }
 
+/*
           bd = filePanel.getBufferDocument();
           offset = bd.getOffsetForLine(line);
           viewport = filePanel.getScrollPane().getViewport();
@@ -97,6 +101,9 @@ public class RevisionBar
           catch (BadLocationException ex)
           {
           }
+          */
+
+          diffPanel.doGotoLine(line);
         }
       };
   }

@@ -29,6 +29,7 @@ public class BufferDiffPanel
   private FilePanel[]        filePanels;
   private JMRevision         currentRevision;
   private JMDelta            selectedDelta;
+  private int                selectedLine;
   private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
   private JMDiff             diff;
@@ -545,6 +546,9 @@ public class BufferDiffPanel
       toEditor.setSelectionEnd(toOffset);
       toEditor.replaceSelection(s);
       getUndoHandler().end("replace");
+
+      setSelectedDelta(null);
+      setSelectedLine(delta.getOriginal().getAnchor());
     }
     catch (Exception ex)
     {
@@ -613,6 +617,9 @@ public class BufferDiffPanel
       toEditor.setSelectionEnd(toOffset);
       toEditor.replaceSelection("");
       getUndoHandler().end("remove");
+
+      setSelectedDelta(null);
+      setSelectedLine(delta.getOriginal().getAnchor());
     }
     catch (Exception ex)
     {
@@ -623,6 +630,7 @@ public class BufferDiffPanel
   public void doDown()
   {
     JMDelta       d;
+    JMDelta       sd;
     List<JMDelta> deltas;
     int           index;
 
@@ -632,11 +640,23 @@ public class BufferDiffPanel
     }
 
     deltas = currentRevision.getDeltas();
-    index = deltas.indexOf(getSelectedDelta());
-    if (index == -1)
+    sd = getSelectedDelta();
+    index = deltas.indexOf(sd);
+    if (index == -1 || sd.getOriginal().getAnchor() != selectedLine)
     {
-      // I don't know it now anymore!
-      setSelectedDelta(null);
+      // Find the delta that would have been next to the 
+      //   disappeared delta:
+      d = null;
+      for (JMDelta delta : deltas)
+      {
+        d = delta;
+        if (delta.getOriginal().getAnchor() > selectedLine)
+        {
+          break;
+        }
+      }
+
+      setSelectedDelta(d);
     }
     else
     {
@@ -644,14 +664,17 @@ public class BufferDiffPanel
       if (index + 1 < deltas.size())
       {
         setSelectedDelta(deltas.get(index + 1));
-        showSelectedDelta();
       }
     }
+
+    showSelectedDelta();
   }
 
   public void doUp()
   {
     JMDelta       d;
+    JMDelta       sd;
+    JMDelta       previousDelta;
     List<JMDelta> deltas;
     int           index;
 
@@ -661,11 +684,30 @@ public class BufferDiffPanel
     }
 
     deltas = currentRevision.getDeltas();
-    index = deltas.indexOf(getSelectedDelta());
-    if (index == -1)
+    sd = getSelectedDelta();
+    index = deltas.indexOf(sd);
+    if (index == -1 || sd.getOriginal().getAnchor() != selectedLine)
     {
-      // I don't know it now anymore!
-      setSelectedDelta(null);
+      // Find the delta that would have been previous to the 
+      //   disappeared delta:
+      d = null;
+      previousDelta = null;
+      for (JMDelta delta : deltas)
+      {
+        d = delta;
+        if (delta.getOriginal().getAnchor() > selectedLine)
+        {
+          if (previousDelta != null)
+          {
+            d = previousDelta;
+          }
+          break;
+        }
+
+        previousDelta = delta;
+      }
+
+      setSelectedDelta(d);
     }
     else
     {
@@ -673,8 +715,44 @@ public class BufferDiffPanel
       if (index - 1 >= 0)
       {
         setSelectedDelta(deltas.get(index - 1));
-        showSelectedDelta();
       }
+    }
+    showSelectedDelta();
+  }
+
+  public void doGotoDelta(JMDelta delta)
+  {
+    setSelectedDelta(delta);
+    showSelectedDelta();
+  }
+
+  public void doGotoLine(int line)
+  {
+    BufferDocumentIF bd;
+    int              offset;
+    JViewport        viewport;
+    JTextComponent   editor;
+    Point            p;
+    FilePanel        fp;
+
+    setSelectedLine(line);
+
+    fp = getFilePanel(0);
+
+    bd = fp.getBufferDocument();
+    offset = bd.getOffsetForLine(line);
+    viewport = fp.getScrollPane().getViewport();
+    editor = fp.getEditor();
+
+    try
+    {
+      p = editor.modelToView(offset).getLocation();
+      p.x = 0;
+
+      viewport.setViewPosition(p);
+    }
+    catch (BadLocationException ex)
+    {
     }
   }
 
@@ -760,7 +838,13 @@ public class BufferDiffPanel
 
   void setSelectedDelta(JMDelta delta)
   {
-    this.selectedDelta = delta;
+    selectedDelta = delta;
+    setSelectedLine(delta == null ? 0 : delta.getOriginal().getAnchor());
+  }
+
+  private void setSelectedLine(int line)
+  {
+    selectedLine = line;
   }
 
   private void showSelectedDelta()
@@ -781,11 +865,6 @@ public class BufferDiffPanel
     if (deltas.size() == 0)
     {
       return null;
-    }
-
-    if (selectedDelta == null)
-    {
-      setSelectedDelta(deltas.get(0));
     }
 
     return selectedDelta;
