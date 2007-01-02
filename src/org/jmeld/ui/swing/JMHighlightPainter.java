@@ -1,4 +1,4 @@
-package org.jmeld.ui;
+package org.jmeld.ui.swing;
 
 import org.jmeld.ui.util.*;
 
