@@ -7,6 +7,7 @@
     <import file="nbproject/executionprofile-impl.xml"/>
     <import file="nbproject/build-impl.xml"/>
 
+    <import file="nbproject/profiler-build-impl.xml"/>
     <import file="nbproject/profiler-build-impl.xml"/>    <import file="nbproject/profiler-build-impl.xml"/>
     <!--
 
@@ -98,6 +99,7 @@
            destdir="build/classes"
            debug="on"
            source="1.5"
+           target="1.5"
            excludes="**/bak/**"
            optimize="on" >
       <classpath refid="compile.classpath"/>
@@ -148,6 +150,14 @@
     <tar destfile="JMeld.tgz"
          compression="gzip">
        <tarfileset dir="." prefix="jmeld" defaultexcludes="yes">
+         <include name="src/**"/>
+         <include name="lib/**"/>
+         <include name="build.xml"/>
+         <include name="images/**"/>
+         <include name="etc/**"/>
+         <include name="doc/**"/>
+         <include name="*.txt"/>
+         <include name="nbproject/**"/>
        </tarfileset>
     </tar>
    </target>
