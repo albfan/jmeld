@@ -707,6 +707,16 @@ public class JMeldPanel
               null,
               panel.getTitle()));
           tabbedPane.setSelectedComponent(panel);
+
+          // Goto the first delta:
+          // This should be invoked after the panel is displayed!
+          SwingUtilities.invokeLater(new Runnable()
+          {
+            public void run()
+            {
+              doGoToFirst(null);
+            }
+          });
         }
       }
       catch (Exception ex)
