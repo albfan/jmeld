@@ -68,8 +68,8 @@ public class RevisionBar
           //   a lot of lines of the document. Check if there is a chunk in 
           //   the revision between those lines and if there is position on 
           //   that chunk.
-          lineBefore = ((y - 2) * numberOfLines) / r.height;
-          lineAfter = ((y + 2) * numberOfLines) / r.height;
+          lineBefore = ((y - 3) * numberOfLines) / r.height;
+          lineAfter = ((y + 3) * numberOfLines) / r.height;
           for (JMDelta delta : revision.getDeltas())
           {
             original = delta.getOriginal();
