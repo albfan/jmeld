@@ -72,6 +72,7 @@ public class FilePanel
 
     scrollPane = new JScrollPane(editor);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());
+    scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
     if (BufferDocumentIF.ORIGINAL.equals(name))
     {
       LeftScrollPaneLayout layout;

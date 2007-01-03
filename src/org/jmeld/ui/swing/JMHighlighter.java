@@ -59,10 +59,14 @@ public class JMHighlighter
     Rectangle                   clip;
     int                         startOffset;
     int                         endOffset;
+    int                         lineHeight;
 
     clip = g.getClipRect();
-    startOffset = component.viewToModel(new Point(clip.x, clip.y));
-    endOffset = component.viewToModel(new Point(clip.x, clip.y + clip.height));
+    lineHeight = component.getFontMetrics(component.getFont()).getHeight();
+    startOffset = component.viewToModel(
+        new Point(clip.x - lineHeight, clip.y));
+    endOffset = component.viewToModel(
+        new Point(clip.x, clip.y + clip.height + lineHeight));
 
     a = null;
     for (Integer layer : layers)
