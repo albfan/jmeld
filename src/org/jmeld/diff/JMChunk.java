@@ -41,4 +41,9 @@ public class JMChunk
 
     return c.size == size && c.anchor == anchor;
   }
+
+  public String toString()
+  {
+    return "anchor=" + anchor + ",size=" + size;
+  }
 }

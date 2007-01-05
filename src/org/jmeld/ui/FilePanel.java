@@ -349,19 +349,16 @@ public class FilePanel
               for (JMDelta changeDelta : changeRev.getDeltas())
               {
                 changeOriginal = changeDelta.getOriginal();
+                if (changeOriginal.getSize() <= 0)
+                {
+                  continue;
+                }
+
                 fromOffset2 = fromOffset + changeOriginal.getAnchor();
                 toOffset2 = fromOffset2 + changeOriginal.getSize();
 
-                if (changeDelta.isDelete())
-                {
-                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    JMHighlightPainter.CHANGED2);
-                }
-                else if (changeDelta.isChange())
-                {
-                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    JMHighlightPainter.CHANGED2);
-                }
+                setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                  JMHighlightPainter.CHANGED2);
               }
             }
           }
@@ -397,19 +394,16 @@ public class FilePanel
               for (JMDelta changeDelta : changeRev.getDeltas())
               {
                 changeRevised = changeDelta.getRevised();
+                if (changeRevised.getSize() <= 0)
+                {
+                  continue;
+                }
+
                 fromOffset2 = fromOffset + changeRevised.getAnchor();
                 toOffset2 = fromOffset2 + changeRevised.getSize();
 
-                if (changeDelta.isAdd())
-                {
-                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    JMHighlightPainter.CHANGED2);
-                }
-                else if (changeDelta.isChange())
-                {
-                  setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                    JMHighlightPainter.CHANGED2);
-                }
+                setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                  JMHighlightPainter.CHANGED2);
               }
             }
           }
@@ -616,7 +610,7 @@ public class FilePanel
 
   private void updateFilePanelBar()
   {
-    if(filePanelBar != null)
+    if (filePanelBar != null)
     {
       filePanelBar.update();
     }

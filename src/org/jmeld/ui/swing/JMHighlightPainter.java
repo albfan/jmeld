@@ -53,12 +53,15 @@ public class JMHighlightPainter
     int            p0,
     int            p1,
     Shape          shape,
-    JTextComponent comp
-    )
+    JTextComponent comp)
   {
     Rectangle b;
     Rectangle r1;
     Rectangle r2;
+    int       x;
+    int       y;
+    int       width;
+    int       count;
 
     b = shape.getBounds();
     try
@@ -70,17 +73,49 @@ public class JMHighlightPainter
 
       if (line)
       {
-        g.drawLine(r1.x, r1.y, r1.x + b.width, r1.y);
+        g.drawLine(r1.x, r1.y, b.width, r1.y);
       }
       else
       {
         if (this == CHANGED2 || this == SEARCH || this == CURRENT_SEARCH)
         {
-          g.fillRect(r1.x, r1.y, r2.x - r1.x, r1.height);
+          if (r1.y == r2.y)
+          {
+            g.fillRect(r1.x, r1.y, r2.x - r1.x, r1.height);
+          }
+          else
+          {
+            count = ((r2.y - r1.y) / r1.height) + 1;
+            y = r1.y;
+            for (int i = 0; i < count; i++)
+            {
+              y += (i * r1.height);
+              if (i == 0)
+              {
+                // firstline:
+                x = r1.x;
+                width = b.width;
+              }
+              else if (i == count - 1)
+              {
+                // lastline:
+                x = 0;
+                width = r2.x;
+              }
+              else
+              {
+                // all lines in between the first and the lastline:
+                x = 0;
+                width = b.width;
+              }
+
+              g.fillRect(x, y, width, r1.height);
+            }
+          }
         }
         else
         {
-          g.fillRect(r1.x, r1.y, r1.x + b.width, r2.y - r1.y);
+          g.fillRect(r1.x, r1.y, b.width, r2.y - r1.y);
         }
       }
     }

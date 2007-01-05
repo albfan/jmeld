@@ -7,15 +7,15 @@ import java.util.*;
 public class JMDelta
 {
   // Class variables:
-  private static int     ADD = 1;
-  private static int     DELETE = 2;
-  private static int     CHANGE = 3;
-  private static boolean debug = true;
+  private static char    ADD = 'A';
+  private static char    DELETE = 'D';
+  private static char    CHANGE = 'C';
+  private static boolean debug = false;
 
   // Instance variables:
   private JMChunk    original;
   private JMChunk    revised;
-  private int        type;
+  private char       type;
   private JMRevision revision;
   private JMRevision changeRevision;
 
@@ -71,18 +71,26 @@ public class JMDelta
 
   private JMRevision createChangeRevision()
   {
-    JMDiff       diff;
-    char[]       original1;
-    Character[]  original2;
-    char[]       revised1;
-    Character[]  revised2;
-    List<String> o2;
-    List<String> r2;
-    JMRevision   rev;
-    JMChunk      o;
-    JMChunk      r;
-    int          anchor;
-    int          size;
+    JMDiff        diff;
+    char[]        original1;
+    Character[]   original2;
+    char[]        revised1;
+    Character[]   revised2;
+    List<String>  o2;
+    List<String>  r2;
+    JMRevision    rev;
+    JMRevision    rev2;
+    JMChunk       o;
+    JMChunk       r;
+    int           anchor;
+    int           size;
+    WordTokenizer wt;
+    int[]         oIndex;
+    int[]         rIndex;
+    int           oAnchor;
+    int           oLength;
+    int           rAnchor;
+    int           rLength;
 
     original1 = revision.getOriginalString(original).toCharArray();
     original2 = new Character[original1.length];
@@ -97,99 +105,64 @@ public class JMDelta
       revised2[j] = new Character(revised1[j]);
     }
 
-    /*
-       o2 = new WordTokenizer(revision.getOriginalString(original)).getTokens();
-       r2 = new WordTokenizer(revision.getRevisedString(revised)).getTokens();
-       int[] start_o2;
-       int[] start_r2;
-       start_o2 = new int[o2.size()];
-       for (int i = 0; i < o2.size(); i++)
-       {
-         start_o2[i] = start_o2[i - 1] + o2.get(i).length();
-       }
-       start_r2 = new int[r2.size()];
-       for (int i = 0; i < r2.size(); i++)
-       {
-         start_r2[i] = start_r2[i - 1] + r2.get(i).length();
-       }
-       if (debug)
-       {
-         size = o2.size() > r2.size() ? o2.size() : r2.size();
-         System.out.println("START O2");
-         for (int i = 0; i < o2.size(); i++)
-         {
-           System.out.println(o2.get(i));
-         }
-         System.out.println("END O2");
-         System.out.println("START R2");
-         for (int i = 0; i < r2.size(); i++)
-         {
-           System.out.println(r2.get(i));
-         }
-         System.out.println("END r2");
-         size = o2.size() > r2.size() ? o2.size() : r2.size();
-         for (int i = 0; i < size; i++)
-         {
-           System.out.printf("[%03d] \"%s\" \"%s\"\n", i,
-             (i < o2.size() ? o2.get(i) : ""), (i < r2.size() ? r2.get(i) : ""));
-         }
-       }
-     */
     try
     {
-      rev = new JMDiff().diff(original2, revised2);
-      /*
-         rev = new JMDiff().diff(o2, r2);
-         for (JMDelta d : rev.getDeltas())
-         {
-           o = d.getOriginal();
-           r = d.getRevised();
-           if (debug)
-           {
-             System.out.printf(
-               "o[%03d,%03d] -> r[%03d,%03d]\n",
-               o.getAnchor(),
-               o.getSize(),
-               r.getAnchor(),
-               r.getSize());
-           }
-         }
-         for (JMDelta d : rev.getDeltas())
-         {
-           o = d.getOriginal();
-           anchor = o.getAnchor();
-           size = o.getSize();
-           o.setAnchor(start_o2[anchor]);
-           o.setSize(start_o2[anchor + size - 1] - start_o2[anchor]
-             + o2.get(anchor + size).length());
-           r = d.getRevised();
-           anchor = r.getAnchor();
-           size = r.getSize();
-           r.setAnchor(start_r2[anchor]);
-           r.setSize(start_r2[anchor + size - 1] - start_r2[anchor]
-             + r2.get(anchor + size).length());
-         }
-         if (debug)
-         {
-           System.out.println("after");
-         }
-         for (JMDelta d : rev.getDeltas())
-         {
-           o = d.getOriginal();
-           r = d.getRevised();
-           if (debug)
-           {
-             System.out.printf(
-               "o[%03d,%03d] -> r[%03d,%03d]\n",
-               o.getAnchor(),
-               o.getSize(),
-               r.getAnchor(),
-               r.getSize());
-           }
-         }
-         debug = false;
-       */
-      return rev;
+      //rev = new JMDiff().diff(original2, revised2);
+      wt = WordTokenizer.getInstance();
+      o2 = wt.getTokens(revision.getOriginalString(original));
+      r2 = wt.getTokens(revision.getRevisedString(revised));
+      rev = new JMDiff().diff(o2, r2);
+
+      oIndex = new int[o2.size()];
+      for (int i = 0; i < o2.size(); i++)
+      {
+        oIndex[i] = o2.get(i).length();
+        if (i > 0)
+        {
+          oIndex[i] += oIndex[i - 1];
+        }
+        debug("oIndex[" + i + "] = " + oIndex[i] + " \"" + o2.get(i) + "\"");
+      }
+
+      rIndex = new int[r2.size()];
+      for (int i = 0; i < r2.size(); i++)
+      {
+        rIndex[i] = r2.get(i).length();
+        if (i > 0)
+        {
+          rIndex[i] += rIndex[i - 1];
+        }
+        debug("rIndex[" + i + "] = " + rIndex[i] + " \"" + r2.get(i) + "\"");
+      }
+
+      rev2 = new JMRevision(original2, revised2);
+      for (JMDelta d : rev.getDeltas())
+      {
+        o = d.getOriginal();
+        r = d.getRevised();
+
+        int maxSize = Math.max(o.getSize(), r.getSize());
+
+        anchor = o.getAnchor();
+        size = o.getSize();
+        oAnchor = anchor == 0 ? 0 : oIndex[anchor - 1];
+        oLength = oIndex[anchor + size - 1] - oAnchor;
+
+        anchor = r.getAnchor();
+        size = r.getSize();
+        rAnchor = anchor == 0 ? 0 : rIndex[anchor - 1];
+        rLength = rIndex[anchor + size - 1] - rAnchor;
+
+        JMDelta d2;
+        d2 = new JMDelta(
+            new JMChunk(oAnchor, oLength),
+            new JMChunk(rAnchor, rLength));
+        rev2.add(d2);
+
+        debug("delta = " + d + " -> " + d2);
+      }
+
+      return rev2;
     }
     catch (Exception ex)
     {
@@ -231,5 +204,18 @@ public class JMDelta
     }
 
     return true;
+  }
+
+  private void debug(String s)
+  {
+    if (debug)
+    {
+      System.out.println(s);
+    }
+  }
+
+  public String toString()
+  {
+    return type + ": org[" + original + "] rev[" + revised + "]";
   }
 }
