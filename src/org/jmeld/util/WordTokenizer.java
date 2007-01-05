@@ -10,7 +10,7 @@ public class WordTokenizer
 
   private WordTokenizer()
   {
-    p = Pattern.compile("\\s+|;|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=]+i|\\.");
+    p = Pattern.compile("\\s+|;|:|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=<>`'\"|]+|\\.");
   }
 
   static public WordTokenizer getInstance()
