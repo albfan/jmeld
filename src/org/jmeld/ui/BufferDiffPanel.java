@@ -350,7 +350,7 @@ public class BufferDiffPanel
     SearchHits searchHits;
 
     fp = getSelectedPanel();
-    if(fp == null)
+    if (fp == null)
     {
       return null;
     }
@@ -368,7 +368,7 @@ public class BufferDiffPanel
     SearchHits searchHits;
 
     fp = getSelectedPanel();
-    if(fp == null)
+    if (fp == null)
     {
       return;
     }
@@ -386,7 +386,7 @@ public class BufferDiffPanel
     SearchHits searchHits;
 
     fp = getSelectedPanel();
-    if(fp == null)
+    if (fp == null)
     {
       return;
     }
@@ -789,10 +789,13 @@ public class BufferDiffPanel
   {
     BufferDocumentIF bd;
     int              offset;
+    int              startOffset;
+    int              endOffset;
     JViewport        viewport;
     JTextComponent   editor;
     Point            p;
     FilePanel        fp;
+    Rectangle        rect;
 
     setSelectedLine(line);
 
@@ -802,6 +805,15 @@ public class BufferDiffPanel
     offset = bd.getOffsetForLine(line);
     viewport = fp.getScrollPane().getViewport();
     editor = fp.getEditor();
+
+    // Don't go anywhere if the line is already visible.
+    rect = viewport.getViewRect();
+    startOffset = editor.viewToModel(rect.getLocation());
+    endOffset = editor.viewToModel(new Point(rect.x, rect.y + rect.height));
+    if (offset >= startOffset && offset <= endOffset)
+    {
+      return;
+    }
 
     try
     {

@@ -63,6 +63,15 @@ public class RevisionBar
 
           numberOfLines = getNumberOfLines(revision);
           line = (y * numberOfLines) / r.height;
+          if(line > numberOfLines)
+          {
+            line = numberOfLines;
+          }
+
+          if(line < 0)
+          {
+            line = 0;
+          }
 
           // If the files are very large the resolution of one pixel contains 
           //   a lot of lines of the document. Check if there is a chunk in 

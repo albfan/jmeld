@@ -3,6 +3,11 @@ Release 1.0:
 - First release ever.
 
 Release 1.1:
-- Innerdiffs (the differences inside a change-delta).
-  Are now diffed as words instead as characters. (more human-readable)
+  New functionality:
+  - Innerdiffs (the differences inside a change-delta).
+    Are now diffed as words instead as characters. (more human-readable)
+
+  Bugs:
+  - Click on RevisionBar below a certain point lets JTextArea paint in
+    a strange way.
 
