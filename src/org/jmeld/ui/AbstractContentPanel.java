@@ -17,6 +17,11 @@ public class AbstractContentPanel
   {
   }
 
+  public boolean checkSave()
+  {
+    return true;
+  }
+
   public boolean isUndoEnabled()
   {
     return false;

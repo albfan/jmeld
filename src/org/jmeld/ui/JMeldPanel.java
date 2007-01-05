@@ -608,6 +608,28 @@ public class JMeldPanel
       };
   }
 
+  public WindowListener getWindowListener()
+  {
+    return new WindowAdapter()
+      {
+        public void windowClosing(WindowEvent we)
+        {
+          JMeldContentPanelIF contentPanel;
+
+          for (int i = 0; i < tabbedPane.getTabCount(); i++)
+          {
+            contentPanel = (JMeldContentPanelIF) tabbedPane.getComponentAt(i);
+            if (!contentPanel.checkSave())
+            {
+              return;
+            }
+          }
+
+          System.exit(1);
+        }
+      };
+  }
+
   private JMeldContentPanelIF getCurrentContentPanel()
   {
     return (JMeldContentPanelIF) tabbedPane.getSelectedComponent();
@@ -710,13 +732,14 @@ public class JMeldPanel
 
           // Goto the first delta:
           // This should be invoked after the panel is displayed!
-          SwingUtilities.invokeLater(new Runnable()
-          {
-            public void run()
+          SwingUtilities.invokeLater(
+            new Runnable()
             {
-              doGoToFirst(null);
-            }
-          });
+              public void run()
+              {
+                doGoToFirst(null);
+              }
+            });
         }
       }
       catch (Exception ex)

@@ -8,6 +8,8 @@ public interface JMeldContentPanelIF
 
   public void doSave();
 
+  public boolean checkSave();
+
   public boolean isUndoEnabled();
 
   public void doUndo();
