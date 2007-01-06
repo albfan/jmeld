@@ -11,6 +11,7 @@ import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
@@ -261,6 +262,24 @@ public class FilePanel
     reDisplay();
 
     return getSearchHits();
+  }
+
+  void doShowLineNumbers(boolean showLineNumbers)
+  {
+    if(showLineNumbers)
+    {
+      if(editor.getBorder() == null)
+      {
+        editor.setBorder(new LineNumberBorder(editor));
+      }
+    }
+    else
+    {
+      if(editor.getBorder() != null)
+      {
+        editor.setBorder(null);
+      }
+    }
   }
 
   SearchHits getSearchHits()

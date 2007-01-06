@@ -6,6 +6,7 @@ Release 1.1:
   New functionality:
   - Innerdiffs (the differences inside a change-delta).
     Are now diffed as words instead as characters. (more human-readable)
+  - Show linenumbers in textarea's.
 
   Bugs:
   - Click on RevisionBar below a certain point lets JTextArea paint in

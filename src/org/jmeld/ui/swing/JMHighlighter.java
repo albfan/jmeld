@@ -60,6 +60,7 @@ public class JMHighlighter
     int                         startOffset;
     int                         endOffset;
     int                         lineHeight;
+    LineNumberBorder lineNumberBorder;
 
     clip = g.getClipRect();
     lineHeight = component.getFontMetrics(component.getFont()).getHeight();
@@ -67,6 +68,17 @@ public class JMHighlighter
         new Point(clip.x - lineHeight, clip.y));
     endOffset = component.viewToModel(
         new Point(clip.x, clip.y + clip.height + lineHeight));
+
+    lineNumberBorder = null;
+    if(component.getBorder() instanceof LineNumberBorder)
+    {
+      lineNumberBorder = (LineNumberBorder) component.getBorder();
+    }
+
+    if(lineNumberBorder != null)
+    {
+      lineNumberBorder.paintBefore(g);
+    }
 
     a = null;
     for (Integer layer : layers)
@@ -108,6 +120,11 @@ public class JMHighlighter
           a,
           component);
       }
+    }
+
+    if(lineNumberBorder != null)
+    {
+      lineNumberBorder.paintAfter(g, startOffset, endOffset);
     }
   }
 

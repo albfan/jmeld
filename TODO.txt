@@ -5,10 +5,11 @@ Release 1.1:
 -        Use the filenode structure as preparation for directory diff.
 - [done] Click on RevisionBar below a certain point lets JTextArea paint in
          a strange way.
--        Show linenumbers bar in FilePanel.
+- [done] Show linenumbers bar in FilePanel.
 -        Select a diff when searching. (linenumberselection?)
 - [done] Create nice website
 -        Create manual
+-        Create preferences/configuration tab 
 
 Release 2.0:
 -        Implement directory diff.

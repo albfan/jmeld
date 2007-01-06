@@ -64,16 +64,16 @@ public class JMHighlightPainter
     int       count;
 
     b = shape.getBounds();
+
     try
     {
       r1 = comp.modelToView(p0);
       r2 = comp.modelToView(p1);
 
       g.setColor(color);
-
       if (line)
       {
-        g.drawLine(r1.x, r1.y, b.width, r1.y);
+        g.drawLine(0, r1.y, b.x + b.width, r1.y);
       }
       else
       {
@@ -94,19 +94,19 @@ public class JMHighlightPainter
               {
                 // firstline:
                 x = r1.x;
-                width = b.width;
+                width = b.width - b.x;
               }
               else if (i == count - 1)
               {
                 // lastline:
-                x = 0;
+                x = b.x;
                 width = r2.x;
               }
               else
               {
                 // all lines in between the first and the lastline:
-                x = 0;
-                width = b.width;
+                x = b.x;
+                width = b.width - b.x;
               }
 
               g.fillRect(x, y, width, r1.height);
@@ -115,7 +115,7 @@ public class JMHighlightPainter
         }
         else
         {
-          g.fillRect(r1.x, r1.y, b.width, r2.y - r1.y);
+          g.fillRect(0, r1.y, b.x + b.width, r2.y - r1.y);
         }
       }
     }
