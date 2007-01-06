@@ -60,17 +60,18 @@ public class LineNumberBorder
     int       lineHeight;
     String    s;
     int       heightCorrection;
+    Rectangle r1;
 
     clip = g.getClipRect();
-    lineHeight = textArea.getFontMetrics(textArea.getFont()).getHeight();
-
-    heightCorrection = (lineHeight - fontHeight) / 2;
 
     try
     {
       startLine = textArea.getLineOfOffset(startOffset);
       endLine = textArea.getLineOfOffset(endOffset);
-      y = clip.y;
+      r1 = textArea.modelToView(startOffset);
+      y = r1.y;
+      lineHeight = r1.height;
+      heightCorrection = (lineHeight - fontHeight) / 2;
 
       g.setColor(lineColor);
       g.drawLine(left, clip.y, left, clip.y + clip.height);
