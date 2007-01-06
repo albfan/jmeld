@@ -419,13 +419,15 @@ public class BufferDiffPanel
     SearchHits searchHits)
   {
     SearchHit currentHit;
+    int       line;
 
     currentHit = searchHits.getCurrent();
     if (currentHit != null)
     {
-      scrollSynchronizer.scrollToLine(
-        fp,
-        currentHit.getLine());
+      line = currentHit.getLine();
+
+      scrollSynchronizer.scrollToLine(fp, line);
+      setSelectedLine(line);
     }
   }
 

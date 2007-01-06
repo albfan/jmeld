@@ -12,4 +12,5 @@ Release 1.1:
   - Click on RevisionBar below a certain point lets JTextArea paint in
     a strange way.
   - Save file dialog when closing the application with the frame-closebutton.
+  - Position on selected line when searching.
 
