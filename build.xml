@@ -86,6 +86,8 @@
 
 
   <target name="jmeld-prepare">
+    <delete dir="build" quiet="true"/>
+
     <mkdir dir="build/classes"/>
 
     <copy todir="build/classes">
