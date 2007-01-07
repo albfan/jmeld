@@ -69,6 +69,16 @@ public class BufferDiffPanel
 
     if (bd1 != null && bd2 != null)
     {
+      filePanels[0].updateFileLabel(
+        bd1.getName(),
+        bd2.getName());
+      filePanels[1].updateFileLabel(
+        bd2.getName(),
+        bd1.getName());
+    }
+
+    if (bd1 != null && bd2 != null)
+    {
       for (FilePanel fp : filePanels)
       {
         if (fp != null)
@@ -398,9 +408,22 @@ public class BufferDiffPanel
     scrollToSearch(fp, searchHits);
   }
 
+  private boolean showLineNumbers;
+
   public void doRefresh()
   {
     diff();
+
+    showLineNumbers = !showLineNumbers;
+    for (FilePanel fp : filePanels)
+    {
+      if (fp == null)
+      {
+        continue;
+      }
+
+      fp.setShowLineNumbers(showLineNumbers);
+    }
   }
 
   public void doMergeMode(boolean mergeMode)

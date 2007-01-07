@@ -1,16 +1,17 @@
 
-Release 1.0:
-- First release ever.
-
 Release 1.1:
   New functionality:
   - Innerdiffs (the differences inside a change-delta).
     Are now diffed as words instead as characters. (more human-readable)
   - Show linenumbers in textarea's.
+  - Show differences in fileNames (above the editors) in bold.
 
   Bugs:
   - Click on RevisionBar below a certain point lets JTextArea paint in
     a strange way.
   - Save file dialog when closing the application with the frame-closebutton.
   - Position on selected line when searching.
+
+Release 1.0:
+- First release ever.
 

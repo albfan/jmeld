@@ -28,7 +28,7 @@ public class TokenizerFactory
   {
     if (instance.innerDiffTokenizer == null)
     {
-      instance.innerDiffTokenizer = new WordTokenizer("\\/");
+      instance.innerDiffTokenizer = new WordTokenizer("[/\\\\]+");
     }
 
     return instance.innerDiffTokenizer;

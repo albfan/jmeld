@@ -30,7 +30,7 @@ public class FilePanel
   // Instance variables:
   private BufferDiffPanel  diffPanel;
   private String           name;
-  private JLabel           fileLabel;
+  private JTextPane        fileLabel;
   private JButton          browseButton;
   private JComboBox        fileBox;
   private JScrollPane      scrollPane;
@@ -88,7 +88,7 @@ public class FilePanel
     fileBox = new JComboBox();
     fileBox.addActionListener(getFileBoxAction());
 
-    fileLabel = new JLabel();
+    fileLabel = createFileLabel();
 
     saveButton = new JButton();
     saveButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -124,7 +124,7 @@ public class FilePanel
     return fileBox;
   }
 
-  JLabel getFileLabel()
+  JTextPane getFileLabel()
   {
     return fileLabel;
   }
@@ -172,7 +172,6 @@ public class FilePanel
     Document previousDocument;
     Document document;
     String   fileName;
-    String   text;
 
     try
     {
@@ -199,8 +198,7 @@ public class FilePanel
       fileBox.addItem(fileName);
       fileBox.setSelectedItem(fileName);
 
-      text = fileName;
-      fileLabel.setText(text);
+      fileLabel.setText(fileName);
 
       checkActions();
     }
@@ -212,6 +210,79 @@ public class FilePanel
         "Could not read file: " + bufferDocument.getName() + "\n"
         + ex.getMessage(), "Error opening file", JOptionPane.ERROR_MESSAGE);
       return;
+    }
+  }
+
+  private JTextPane createFileLabel()
+  {
+    JTextPane      jtp;
+    Style          s;
+    Style          defaultStyle;
+    StyledDocument doc;
+
+    jtp = new JTextPane();
+    jtp.setEditable(false);
+    //jtp.setFocusable(false);
+    jtp.setOpaque(false);
+
+    defaultStyle = jtp.getStyle(StyleContext.DEFAULT_STYLE);
+
+    doc = jtp.getStyledDocument();
+
+    s = doc.addStyle("bold", defaultStyle);
+    StyleConstants.setBold(s, true);
+    //StyleConstants.setForeground(s, Color.blue);
+
+    return jtp;
+  }
+
+  void updateFileLabel(
+    String name1,
+    String name2)
+  {
+    try
+    {
+      WordTokenizer  wt;
+      List<String>   fn1;
+      List<String>   fn2;
+      JMRevision     revision;
+      JTextPane      fl;
+      String[]       styles;
+      JMChunk        chunk;
+      String         styleName;
+      StyledDocument doc;
+
+      wt = TokenizerFactory.getFileNameTokenizer();
+      fn1 = wt.getTokens(name1);
+      fn2 = wt.getTokens(name2);
+
+      revision = new JMDiff().diff(fn1, fn2);
+
+      styles = new String[fn1.size()];
+      for (JMDelta delta : revision.getDeltas())
+      {
+        chunk = delta.getOriginal();
+        for (int i = 0; i < chunk.getSize(); i++)
+        {
+          styles[chunk.getAnchor() + i] = "bold";
+        }
+      }
+
+      doc = getFileLabel().getStyledDocument();
+      doc.remove(0, doc.getLength());
+
+      for (int i = 0; i < fn1.size(); i++)
+      {
+        doc.insertString(
+          doc.getLength(),
+          fn1.get(i),
+          (styles[i] != null ? doc.getStyle(styles[i]) : null));
+      }
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+      getFileLabel().setText(name1);
     }
   }
 
@@ -264,19 +335,21 @@ public class FilePanel
     return getSearchHits();
   }
 
-  void doShowLineNumbers(boolean showLineNumbers)
+  void setShowLineNumbers(boolean showLineNumbers)
   {
-    if(showLineNumbers)
+    if (showLineNumbers)
     {
-      if(editor.getBorder() == null)
+      if (editor.getBorder() == null)
       {
+        System.out.println("setBorder()" + name);
         editor.setBorder(new LineNumberBorder(editor));
       }
     }
     else
     {
-      if(editor.getBorder() != null)
+      if (editor.getBorder() != null)
       {
+        System.out.println("removeBorder()" + name);
         editor.setBorder(null);
       }
     }
