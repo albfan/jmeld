@@ -107,7 +107,6 @@ public class JMDelta
 
     try
     {
-      //rev = new JMDiff().diff(original2, revised2);
       wt = TokenizerFactory.getInnerDiffTokenizer();
       o2 = wt.getTokens(revision.getOriginalString(original));
       r2 = wt.getTokens(revision.getRevisedString(revised));
