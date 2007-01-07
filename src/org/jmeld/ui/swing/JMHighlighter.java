@@ -69,6 +69,7 @@ public class JMHighlighter
     endOffset = component.viewToModel(
         new Point(clip.x, clip.y + clip.height + lineHeight));
 
+    // Just some hacks to allow linenumbers painted in the emptyborder.
     lineNumberBorder = null;
     if(component.getBorder() instanceof LineNumberBorder)
     {
