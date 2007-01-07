@@ -5,6 +5,7 @@ Release 1.1:
     Are now diffed as words instead as characters. (more human-readable)
   - Show linenumbers in textarea's.
   - Show differences in fileNames (above the editors) in bold.
+  - Title of tab can be shorter if both filenames are the same.
 
   Bugs:
   - Click on RevisionBar below a certain point lets JTextArea paint in

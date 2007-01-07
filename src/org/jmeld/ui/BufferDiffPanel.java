@@ -95,9 +95,11 @@ public class BufferDiffPanel
   {
     String           title;
     BufferDocumentIF bd;
+    List<String> titles;
 
     title = "";
 
+    titles = new ArrayList<String>();
     for (FilePanel filePanel : filePanels)
     {
       if (filePanel == null)
@@ -111,12 +113,30 @@ public class BufferDiffPanel
         continue;
       }
 
-      if (!StringUtil.isEmpty(title))
+      title = bd.getShortName();
+      if(StringUtil.isEmpty(title))
       {
-        title += "-";
+        continue;
       }
 
-      title += bd.getShortName();
+      titles.add(title);
+    }
+
+    title = "";
+    if(titles.size() == 1)
+    {
+      title = titles.get(0);
+    }
+    else
+    {
+      if(titles.get(0).equals(titles.get(1)))
+      {
+        title = titles.get(0);
+      }
+      else
+      {
+        title = titles.get(0) + "-" + titles.get(1);
+      }
     }
 
     return title;
