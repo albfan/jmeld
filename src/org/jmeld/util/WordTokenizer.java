@@ -5,17 +5,11 @@ import java.util.regex.*;
 
 public class WordTokenizer
 {
-  private static WordTokenizer instance = new WordTokenizer();
-  private Pattern              p;
+  private Pattern p;
 
-  private WordTokenizer()
+  public WordTokenizer(String pattern)
   {
-    p = Pattern.compile("\\s+|;|:|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=<>`'\"|]+|\\.");
-  }
-
-  static public WordTokenizer getInstance()
-  {
-    return instance;
+    p = Pattern.compile(pattern);
   }
 
   public List<String> getTokens(String text)
