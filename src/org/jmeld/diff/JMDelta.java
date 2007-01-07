@@ -141,7 +141,9 @@ public class JMDelta
         o = d.getOriginal();
         r = d.getRevised();
 
-        int maxSize = Math.max(o.getSize(), r.getSize());
+        int maxSize = Math.max(
+            o.getSize(),
+            r.getSize());
 
         anchor = o.getAnchor();
         size = o.getSize();
