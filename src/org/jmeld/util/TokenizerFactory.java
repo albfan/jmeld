@@ -26,11 +26,11 @@ public class TokenizerFactory
 
   public static synchronized WordTokenizer getFileNameTokenizer()
   {
-    if (instance.innerDiffTokenizer == null)
+    if (instance.fileNameTokenizer == null)
     {
-      instance.innerDiffTokenizer = new WordTokenizer("[/\\\\]+");
+      instance.fileNameTokenizer = new WordTokenizer("[/\\\\]+");
     }
 
-    return instance.innerDiffTokenizer;
+    return instance.fileNameTokenizer;
   }
 }
