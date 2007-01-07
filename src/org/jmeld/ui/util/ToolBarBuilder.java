@@ -23,7 +23,7 @@ public class ToolBarBuilder
   public void addButton(AbstractButton button)
   {
     appendColumn("pref:none");
-    getLayout().addGroupedColumn(getColumn());
+    //getLayout().addGroupedColumn(getColumn());
     //button.putClientProperty(NARROW_KEY, Boolean.TRUE);
     add(button);
     nextColumn();
