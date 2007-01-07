@@ -29,21 +29,23 @@ public class FolderDiffTableModel
     columns.add(new Column("orgNode", null, "Node", Icon.class, 40, null));
     columns.add(new Column("orgName", null, "Name", String.class, -1, null));
     columns.add(
-      new Column("orgState", "Original", "", Icon.class, 25,
-        Colors.TABLEROW_ORG));
-    columns.add(
       new Column("orgSize", "Original", "Size", Integer.class, 80,
         Colors.TABLEROW_ORG));
+    columns.add(
+      new Column("orgState", "Original", "", Icon.class, 25,
+        Colors.TABLEROW_ORG));
+    /*
     columns.add(
       new Column("copyToRight", "Original", "", Icon.class, 25,
         Colors.TABLEROW_ORG));
     columns.add(
       new Column("copyToLeft", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
+    */
+    columns.add(
+      new Column("mineState", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
     columns.add(
       new Column("mineSize", "Mine", "Size", Integer.class, 80,
         Colors.TABLEROW_MINE));
-    columns.add(
-      new Column("mineState", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
 
     nodeFilter = new NodeFilter();
   }
@@ -183,15 +185,15 @@ public class FolderDiffTableModel
         break;
 
       case JMeldNode.ADDED:
-        iconName = "stock_added";
+        iconName = "stock_added2";
         break;
 
       case JMeldNode.CHANGED:
-        iconName = "stock_changed";
+        iconName = "stock_changed2";
         break;
 
       case JMeldNode.DELETED:
-        iconName = "stock_deleted";
+        iconName = "stock_deleted2";
         break;
     }
 

@@ -7,6 +7,7 @@ import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
+import org.jmeld.ui.conf.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
@@ -54,6 +55,7 @@ public class JMeldPanel
   private static final String MERGEMODE_ACTION = "MergeMode";
   private static final String HELP_ACTION = "Help";
   private static final String ABOUT_ACTION = "About";
+  private static final String CONFIGURATION_ACTION = "Configuration";
 
   // instance variables:
   private ActionHandler actionHandler;
@@ -91,40 +93,42 @@ public class JMeldPanel
     String originalName,
     String mineName)
   {
-    File original;
-    File mine;
+    File originalFile;
+    File mineFile;
 
     if (!StringUtil.isEmpty(originalName) && !StringUtil.isEmpty(mineName))
     {
-      original = new File(originalName);
-      mine = new File(mineName);
-      if (original.isDirectory() && mine.isDirectory())
+      originalFile = new File(originalName);
+      mineFile = new File(mineName);
+      if (originalFile.isDirectory() && mineFile.isDirectory())
       {
-        openDirectoryComparison(originalName, mineName);
+        openDirectoryComparison(originalFile, mineFile);
       }
       else
       {
-        openFileComparison(originalName, mineName);
+        openFileComparison(originalFile, mineFile, true);
       }
     }
   }
 
   public void openFileComparison(
-    String originalName,
-    String mineName)
+    File    originalFile,
+    File    mineFile,
+    boolean openInBackground)
   {
     WaitCursor.wait(this);
 
-    new NewFileComparisonPanel(originalName, mineName).execute();
+    new NewFileComparisonPanel(originalFile, mineFile, openInBackground)
+    .execute();
   }
 
   public void openDirectoryComparison(
-    String originalName,
-    String mineName)
+    File originalFile,
+    File mineFile)
   {
     WaitCursor.wait(this);
 
-    new NewDirectoryComparisonPanel(originalName, mineName).execute();
+    new NewDirectoryComparisonPanel(originalFile, mineFile).execute();
   }
 
   public JMenuBar getMenuBar()
@@ -185,7 +189,11 @@ public class JMeldPanel
     builder.addButton(button);
 
     builder.addSpring();
-
+/*
+   button = WidgetFactory.getToolBarButton(
+       actionHandler.get(CONFIGURATION_ACTION));
+   builder.addButton(button);
+ */
     button = WidgetFactory.getToolBarButton(actionHandler.get(HELP_ACTION));
     builder.addButton(button);
 
@@ -309,6 +317,10 @@ public class JMeldPanel
 
     action = actionHandler.createAction(this, ABOUT_ACTION);
     action.setIcon("stock_about");
+
+    action = actionHandler.createAction(this, CONFIGURATION_ACTION);
+    action.setIcon("stock_new");
+    action.setToolTip("Configuration");
   }
 
   public ActionHandler getActionHandler()
@@ -337,14 +349,15 @@ public class JMeldPanel
     if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
     {
       openFileComparison(
-        dialog.getOriginalFileName(),
-        dialog.getMineFileName());
+        new File(dialog.getOriginalFileName()),
+        new File(dialog.getMineFileName()),
+        true);
     }
     else if (dialog.getValue() == NewPanelDialog.DIRECTORY_COMPARISON)
     {
       openDirectoryComparison(
-        dialog.getOriginalDirectoryName(),
-        dialog.getMineDirectoryName());
+        new File(dialog.getOriginalDirectoryName()),
+        new File(dialog.getMineDirectoryName()));
     }
   }
 
@@ -597,6 +610,20 @@ public class JMeldPanel
     tabbedPane.setSelectedComponent(content);
   }
 
+  public void doConfiguration(ActionEvent ae)
+  {
+    AbstractContentPanel content;
+
+    content = new ConfigurationPanel();
+
+    tabbedPane.add(
+      content,
+      new TabIcon(
+        ImageUtil.getImageIcon("stock_about"),
+        "About"));
+    tabbedPane.setSelectedComponent(content);
+  }
+
   private ChangeListener getChangeListener()
   {
     return new ChangeListener()
@@ -638,52 +665,56 @@ public class JMeldPanel
   class NewFileComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private String           originalName;
-    private String           mineName;
+    private File             originalFile;
+    private File             mineFile;
+    private boolean          openInBackground;
     private BufferDocumentIF bd1;
     private BufferDocumentIF bd2;
     private JMDiff           diff;
     private JMRevision       revision;
 
     NewFileComparisonPanel(
-      String originalName,
-      String mineName)
+      File    originalFile,
+      File    mineFile,
+      boolean openInBackground)
     {
-      this.originalName = originalName;
-      this.mineName = mineName;
+      this.originalFile = originalFile;
+      this.mineFile = mineFile;
+      this.openInBackground = openInBackground;
     }
 
     public String doInBackground()
     {
-      if (StringUtil.isEmpty(originalName))
+      if (StringUtil.isEmpty(originalFile.getName()))
       {
         return "original filename is empty";
       }
 
-      if (!new File(originalName).exists())
+      if (!originalFile.exists())
       {
-        return "original filename(" + originalName + ") doesn't exist";
+        return "original filename(" + originalFile.getName()
+        + ") doesn't exist";
       }
 
-      if (StringUtil.isEmpty(mineName))
+      if (StringUtil.isEmpty(mineFile.getName()))
       {
         return "mine filename is empty";
       }
 
-      if (!new File(mineName).exists())
+      if (!mineFile.exists())
       {
-        return "mine filename(" + mineName + ") doesn't exist";
+        return "mine filename(" + mineFile.getName() + ") doesn't exist";
       }
 
       try
       {
         StatusBar.start();
-        StatusBar.setStatus("Reading file: " + originalName);
-        bd1 = new FileDocument(new File(originalName));
+        StatusBar.setStatus("Reading file: " + originalFile.getName());
+        bd1 = new FileDocument(originalFile);
         bd1.read();
 
-        StatusBar.setStatus("Reading file: " + mineName);
-        bd2 = new FileDocument(new File(mineName));
+        StatusBar.setStatus("Reading file: " + mineFile.getName());
+        bd2 = new FileDocument(mineFile);
         bd2.read();
 
         StatusBar.setStatus("Calculating differences...");
@@ -728,18 +759,21 @@ public class JMeldPanel
             new TabIcon(
               null,
               panel.getTitle()));
-          tabbedPane.setSelectedComponent(panel);
+          if (!openInBackground)
+          {
+            tabbedPane.setSelectedComponent(panel);
 
-          // Goto the first delta:
-          // This should be invoked after the panel is displayed!
-          SwingUtilities.invokeLater(
-            new Runnable()
-            {
-              public void run()
+            // Goto the first delta:
+            // This should be invoked after the panel is displayed!
+            SwingUtilities.invokeLater(
+              new Runnable()
               {
-                doGoToFirst(null);
-              }
-            });
+                public void run()
+                {
+                  doGoToFirst(null);
+                }
+              });
+          }
         }
       }
       catch (Exception ex)
@@ -756,56 +790,54 @@ public class JMeldPanel
   class NewDirectoryComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private String        originalName;
-    private String        mineName;
-    private File          original;
-    private File          mine;
+    private File          originalFile;
+    private File          mineFile;
     private DirectoryDiff diff;
 
     NewDirectoryComparisonPanel(
-      String originalName,
-      String mineName)
+      File originalFile,
+      File mineFile)
     {
-      this.originalName = originalName;
-      this.mineName = mineName;
+      this.originalFile = originalFile;
+      this.mineFile = mineFile;
     }
 
     public String doInBackground()
     {
-      if (StringUtil.isEmpty(originalName))
+      if (StringUtil.isEmpty(originalFile.getName()))
       {
         return "original directoryName is empty";
       }
 
-      original = new File(originalName);
-      if (!original.exists())
+      if (!originalFile.exists())
       {
-        return "original directoryName(" + originalName + ") doesn't exist";
+        return "original directoryName(" + originalFile.getName()
+        + ") doesn't exist";
       }
 
-      if (!original.isDirectory())
+      if (!originalFile.isDirectory())
       {
-        return "original directoryName(" + originalName
+        return "original directoryName(" + originalFile.getName()
         + ") is not a directory";
       }
 
-      if (StringUtil.isEmpty(mineName))
+      if (StringUtil.isEmpty(mineFile.getName()))
       {
         return "mine directoryName is empty";
       }
 
-      mine = new File(mineName);
-      if (!mine.exists())
+      if (!mineFile.exists())
       {
-        return "mine directoryName(" + mineName + ") doesn't exist";
+        return "mine directoryName(" + mineFile.getName() + ") doesn't exist";
       }
 
-      if (!mine.isDirectory())
+      if (!mineFile.isDirectory())
       {
-        return "mine directoryName(" + mineName + ") is not a directory";
+        return "mine directoryName(" + mineFile.getName()
+        + ") is not a directory";
       }
 
-      diff = new DirectoryDiff(original, mine);
+      diff = new DirectoryDiff(originalFile, mineFile);
       diff.diff();
 
       return null;

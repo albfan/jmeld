@@ -149,8 +149,14 @@ public class FolderDiffPanel
               int       rowIndex;
               JMeldNode originalNode;
               JMeldNode mineNode;
+              boolean   open;
+              boolean   background;
 
-              if (me.getClickCount() == 2)
+              background = me.getClickCount() == 1
+                && me.getButton() == MouseEvent.BUTTON2;
+              open = me.getClickCount() == 2 || background;
+
+              if (open)
               {
                 rowIndex = ((JTable) me.getSource()).rowAtPoint(me.getPoint());
 
@@ -158,8 +164,13 @@ public class FolderDiffPanel
                 mineNode = tableModel.getMineNode(rowIndex);
 
                 mainPanel.openFileComparison(
-                  originalNode.getName(),
-                  mineNode.getName());
+                  new File(
+                    diff.getMineFolderName(),
+                    originalNode.getName()),
+                  new File(
+                    diff.getOriginalFolderName(),
+                    mineNode.getName()),
+                  background);
               }
             }
           };
