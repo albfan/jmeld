@@ -186,8 +186,6 @@ public class TabIcon
             {
               Icon icon;
 
-              System.out.println("mousePressed = true");
-              System.out.println("state changed: " + isSelected());
               if (ignoreNextMousePressed)
               {
                 ignoreNextMousePressed = false;
@@ -196,7 +194,6 @@ public class TabIcon
 
               if (isCloseHit(me))
               {
-                System.out.println("pressed = true");
                 pressed = true;
 
                 icon = closeIcon_pressed;
