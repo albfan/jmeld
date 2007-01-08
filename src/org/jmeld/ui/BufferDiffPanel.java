@@ -636,14 +636,32 @@ public class BufferDiffPanel
       fromLine = fromChunk.getAnchor();
       size = fromChunk.getSize();
       fromOffset = fromBufferDocument.getOffsetForLine(fromLine);
+      if(fromOffset < 0)
+      {
+        return;
+      }
+
       toOffset = fromBufferDocument.getOffsetForLine(fromLine + size);
+      if(toOffset < 0)
+      {
+        return;
+      }
 
       s = from.getText(fromOffset, toOffset - fromOffset);
 
       fromLine = toChunk.getAnchor();
       size = toChunk.getSize();
       fromOffset = toBufferDocument.getOffsetForLine(fromLine);
+      if(fromOffset < 0)
+      {
+        return;
+      }
+
       toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
+      if(toOffset < 0)
+      {
+        return;
+      }
 
       getUndoHandler().start("replace");
       toEditor.setSelectionStart(fromOffset);
@@ -714,7 +732,16 @@ public class BufferDiffPanel
       fromLine = chunk.getAnchor();
       size = chunk.getSize();
       fromOffset = bufferDocument.getOffsetForLine(fromLine);
+      if(fromOffset < 0)
+      {
+        return;
+      }
+
       toOffset = bufferDocument.getOffsetForLine(fromLine + size);
+      if(toOffset < 0)
+      {
+        return;
+      }
 
       getUndoHandler().start("remove");
       toEditor.setSelectionStart(fromOffset);

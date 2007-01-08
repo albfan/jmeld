@@ -231,8 +231,17 @@ public class DiffScrollComponent
         toLine = original.getAnchor() + original.getSize();
         viewportRect = viewportFrom.getViewRect();
         offset = bdFrom.getOffsetForLine(fromLine);
+        if(offset < 0)
+        {
+          continue;
+        }
+
         fromRect = editorFrom.modelToView(offset);
         offset = bdFrom.getOffsetForLine(toLine);
+        if(offset < 0)
+        {
+          continue;
+        }
         toRect = editorFrom.modelToView(offset);
 
         x = 0;
@@ -299,8 +308,17 @@ public class DiffScrollComponent
         toLine = revised.getAnchor() + revised.getSize();
         viewportRect = viewportTo.getViewRect();
         offset = bdTo.getOffsetForLine(fromLine);
+        if(offset < 0)
+        {
+          continue;
+        }
+
         fromRect = editorTo.modelToView(offset);
         offset = bdTo.getOffsetForLine(toLine);
+        if(offset < 0)
+        {
+          continue;
+        }
         toRect = editorTo.modelToView(offset);
 
         x = bounds.x + bounds.width - 10;

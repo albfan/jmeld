@@ -318,6 +318,11 @@ public class FilePanel
           while ((index = text.indexOf(searchText, fromIndex)) != -1)
           {
             offset = bufferDocument.getOffsetForLine(line);
+            if(offset < 0)
+            {
+              continue;
+            }
+
             searchHit = new SearchHit(
                 line,
                 offset + index,
@@ -417,8 +422,17 @@ public class FilePanel
       if (BufferDocumentIF.ORIGINAL.equals(name))
       {
         fromOffset = bufferDocument.getOffsetForLine(original.getAnchor());
+        if(fromOffset < 0)
+        {
+          continue;
+        }
+
         toOffset = bufferDocument.getOffsetForLine(original.getAnchor()
             + original.getSize());
+        if(toOffset < 0)
+        {
+          continue;
+        }
 
         if (delta.isAdd())
         {
@@ -463,8 +477,17 @@ public class FilePanel
       else if (BufferDocumentIF.REVISED.equals(name))
       {
         fromOffset = bufferDocument.getOffsetForLine(revised.getAnchor());
+        if(fromOffset < 0)
+        {
+          continue;
+        }
+
         toOffset = bufferDocument.getOffsetForLine(revised.getAnchor()
             + revised.getSize());
+        if(toOffset < 0)
+        {
+          continue;
+        }
 
         if (delta.isAdd())
         {

@@ -232,6 +232,11 @@ public class ScrollSynchronizer
 
     bd = fp.getBufferDocument();
     offset = bd.getOffsetForLine(line);
+    if(offset < 0)
+    {
+      return;
+    }
+
     viewport = fp.getScrollPane().getViewport();
     editor = fp.getEditor();
 
