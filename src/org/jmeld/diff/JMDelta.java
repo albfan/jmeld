@@ -147,12 +147,12 @@ public class JMDelta
         anchor = o.getAnchor();
         size = o.getSize();
         oAnchor = anchor == 0 ? 0 : oIndex[anchor - 1];
-        oLength = oIndex[anchor + size - 1] - oAnchor;
+        oLength = size > 0 ? (oIndex[anchor + size - 1] - oAnchor) : 0;
 
         anchor = r.getAnchor();
         size = r.getSize();
         rAnchor = anchor == 0 ? 0 : rIndex[anchor - 1];
-        rLength = rIndex[anchor + size - 1] - rAnchor;
+        rLength = size > 0 ? (rIndex[anchor + size - 1] - rAnchor) : 0;
 
         JMDelta d2;
         d2 = new JMDelta(
