@@ -1,6 +1,10 @@
 
 Release 1.1:
   New functionality:
+  - ESCAPE closes the current tab
+
+Release 1.1:
+  New functionality:
   - Innerdiffs (the differences inside a change-delta).
     Are now diffed as words instead as characters. (more human-readable)
   - Show linenumbers in textarea's.

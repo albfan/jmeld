@@ -56,6 +56,7 @@ public class JMeldPanel
   private static final String HELP_ACTION = "Help";
   private static final String ABOUT_ACTION = "About";
   private static final String CONFIGURATION_ACTION = "Configuration";
+  private static final String EXIT_ACTION = "Exit";
 
   // instance variables:
   private ActionHandler actionHandler;
@@ -106,7 +107,7 @@ public class JMeldPanel
       }
       else
       {
-        openFileComparison(originalFile, mineFile, true);
+        openFileComparison(originalFile, mineFile, false);
       }
     }
   }
@@ -321,6 +322,9 @@ public class JMeldPanel
     action = actionHandler.createAction(this, CONFIGURATION_ACTION);
     action.setIcon("stock_new");
     action.setToolTip("Configuration");
+
+    action = actionHandler.createAction(this, EXIT_ACTION);
+    installKey("ESCAPE", action);
   }
 
   public ActionHandler getActionHandler()
@@ -351,7 +355,7 @@ public class JMeldPanel
       openFileComparison(
         new File(dialog.getOriginalFileName()),
         new File(dialog.getMineFileName()),
-        true);
+        false);
     }
     else if (dialog.getValue() == NewPanelDialog.DIRECTORY_COMPARISON)
     {
@@ -581,9 +585,7 @@ public class JMeldPanel
 
       tabbedPane.add(
         content,
-        new TabIcon(
-          ImageUtil.getImageIcon("stock_help-agent"),
-          "Help"));
+        getTabIcon("stock_help-agent", "Help"));
       tabbedPane.setSelectedComponent(content);
     }
     catch (Exception ex)
@@ -604,10 +606,21 @@ public class JMeldPanel
 
     tabbedPane.add(
       content,
-      new TabIcon(
-        ImageUtil.getImageIcon("stock_about"),
-        "About"));
+      getTabIcon("stock_about", "About"));
     tabbedPane.setSelectedComponent(content);
+  }
+
+  public void doExit(ActionEvent ae)
+  {
+    // Stop the searchBar if it is showing.
+    if (getSearchBar().getParent() != null)
+    {
+      doStopSearch(ae);
+      return;
+    }
+
+    // Exit a tab!
+    doExitTab((Component) getCurrentContentPanel());
   }
 
   public void doConfiguration(ActionEvent ae)
@@ -618,9 +631,7 @@ public class JMeldPanel
 
     tabbedPane.add(
       content,
-      new TabIcon(
-        ImageUtil.getImageIcon("stock_about"),
-        "About"));
+      getTabIcon("stock_about", "About"));
     tabbedPane.setSelectedComponent(content);
   }
 
@@ -756,7 +767,7 @@ public class JMeldPanel
 
           tabbedPane.add(
             panel,
-            new TabIcon(
+            getTabIcon(
               null,
               panel.getTitle()));
           if (!openInBackground)
@@ -862,7 +873,7 @@ public class JMeldPanel
 
         tabbedPane.add(
           panel,
-          new TabIcon(
+          getTabIcon(
             null,
             panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);
@@ -935,5 +946,77 @@ public class JMeldPanel
 
     // Do not deinstall the action because I don't know how many other
     //   inputmap residents will call the action.
+  }
+
+  private TabIcon getTabIcon(
+    String iconName,
+    String text)
+  {
+    TabIcon icon;
+
+    icon = new TabIcon(
+        ImageUtil.getImageIcon(iconName),
+        text);
+    icon.addExitListener(getTabExitListener());
+
+    return icon;
+  }
+
+  private TabExitListenerIF getTabExitListener()
+  {
+    return new TabExitListenerIF()
+      {
+        public boolean doExit(TabExitEvent te)
+        {
+          int                  tabIndex;
+          Component            component;
+          AbstractContentPanel content;
+
+          tabIndex = te.getTabIndex();
+          if (tabIndex == -1)
+          {
+            return false;
+          }
+
+          return doExitTab(tabbedPane.getComponentAt(tabIndex));
+        }
+      };
+  }
+
+  private boolean doExitTab(Component component)
+  {
+    AbstractContentPanel content;
+    Icon                 icon;
+    int                  index;
+
+    if (component == null)
+    {
+      return false;
+    }
+
+    index = tabbedPane.indexOfComponent(component);
+    if (index == -1)
+    {
+      return false;
+    }
+
+    if (component instanceof AbstractContentPanel)
+    {
+      content = (AbstractContentPanel) component;
+      if (!content.checkSave())
+      {
+        return false;
+      }
+    }
+
+    icon = tabbedPane.getIconAt(index);
+    if (icon != null && icon instanceof TabIcon)
+    {
+      ((TabIcon) icon).exit();
+    }
+
+    tabbedPane.remove(component);
+
+    return true;
   }
 }

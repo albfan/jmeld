@@ -7,8 +7,10 @@ import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
-/** Very ugly hack to make possible a close button on a 
+/** Very ugly hack to make possible a close button on a
  *    tabbedpane (use it for jdk's before 1.6).
  */
 public class TabIcon
@@ -20,24 +22,25 @@ public class TabIcon
   private static int SPACE_WIDTH = 20;
 
   // instance variables:
-  private Icon                icon;
-  private String              text;
-  private int                 width;
-  private int                 height;
-  private JLabel              label;
-  private int                 stringWidth;
-  private Rectangle           closeBounds;
-  private JTabbedPane         tabbedPane;
-  private Icon                currentIcon;
-  private Icon                closeIcon;
-  private Icon                closeIcon_rollover;
-  private Icon                closeIcon_pressed;
-  private Icon                closeIcon_disabled;
-  private boolean             pressed;
-  private boolean             ignoreNextMousePressed;
-  private ChangeListener      changeListener;
-  private MouseListener       mouseListener;
-  private MouseMotionListener mouseMotionListener;
+  private Icon                    icon;
+  private String                  text;
+  private int                     width;
+  private int                     height;
+  private JLabel                  label;
+  private int                     stringWidth;
+  private Rectangle               closeBounds;
+  private JTabbedPane             tabbedPane;
+  private Icon                    currentIcon;
+  private Icon                    closeIcon;
+  private Icon                    closeIcon_rollover;
+  private Icon                    closeIcon_pressed;
+  private Icon                    closeIcon_disabled;
+  private boolean                 pressed;
+  private boolean                 ignoreNextMousePressed;
+  private ChangeListener          changeListener;
+  private MouseListener           mouseListener;
+  private MouseMotionListener     mouseMotionListener;
+  private List<TabExitListenerIF> tabExitListeners;
 
   public TabIcon(
     Icon   icon,
@@ -47,6 +50,8 @@ public class TabIcon
     this.text = text;
 
     init();
+
+    tabExitListeners = new ArrayList<TabExitListenerIF>();
   }
 
   private void init()
@@ -96,6 +101,24 @@ public class TabIcon
     {
       width += SPACE_WIDTH;
     }
+  }
+
+  public void addExitListener(TabExitListenerIF listener)
+  {
+    tabExitListeners.add(listener);
+  }
+
+  public void removeExitListener(TabExitListenerIF listener)
+  {
+    tabExitListeners.remove(listener);
+  }
+
+  public void exit()
+  {
+    // Don't create memory leaks!
+    tabbedPane.removeMouseListener(getMouseListener());
+    tabbedPane.removeMouseMotionListener(getMouseMotionListener());
+    tabbedPane.removeChangeListener(getChangeListener());
   }
 
   public int getIconWidth()
@@ -211,8 +234,7 @@ public class TabIcon
 
             public void mouseReleased(MouseEvent me)
             {
-              int       index;
-              Component component;
+              int index;
 
               if (pressed && isCloseHit(me))
               {
@@ -226,24 +248,12 @@ public class TabIcon
 
                 if (index != -1)
                 {
-                  component = tabbedPane.getComponentAt(index);
-                  if (component instanceof BufferDiffPanel)
+                  for (TabExitListenerIF listener : tabExitListeners)
                   {
-                    if (!((BufferDiffPanel) component).checkSave())
-                    {
-                      me.consume();
-                      return;
-                    }
+                    listener.doExit(new TabExitEvent(TabIcon.this, index));
                   }
 
-                  tabbedPane.remove(index);
                   me.consume();
-
-                  // Don't create memory leaks!
-                  tabbedPane.removeMouseListener(getMouseListener());
-                  tabbedPane.removeMouseMotionListener(
-                    getMouseMotionListener());
-                  tabbedPane.removeChangeListener(getChangeListener());
                 }
               }
 

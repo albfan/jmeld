@@ -191,11 +191,6 @@ public class SearchBar
       {
         public void keyReleased(KeyEvent e)
         {
-          if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-          {
-            meldPanel.doStopSearch(null);
-          }
-
           if (e.getKeyCode() == KeyEvent.VK_ENTER)
           {
             meldPanel.doNextSearch(null);
