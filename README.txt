@@ -10,7 +10,7 @@ JMeld can be compiled with the command:
 Start jmeld with the command:
 "java -jar JMeld.jar <file1> <file2>
 
-This license of this program is the GPL.
+This license of this program is the LGPL.
 
 Kees Kuip.
 
