@@ -7,8 +7,9 @@ import java.util.regex.*;
 public class Filter
        implements FileFilter
 {
-  private List<Matcher> includes;
-  private List<Matcher> excludes;
+  private List<Matcher>     includes;
+  private List<Matcher>     excludes;
+  private Map<File, String> debug;
 
   public Filter()
   {
@@ -34,9 +35,16 @@ public class Filter
       {
         if (m.reset(f.getName()).matches())
         {
-          return false;
+          return exclude(
+            m.pattern().toString(),
+            f);
         }
       }
+    }
+
+    if (f.isDirectory())
+    {
+      return include("isDirectory", f);
     }
 
     if (includes.size() > 0)
@@ -45,11 +53,37 @@ public class Filter
       {
         if (m.reset(f.getName()).matches())
         {
-          return true;
+          return include(
+            m.pattern().toString(),
+            f);
         }
       }
 
-      return false;
+      return exclude("at least 1 include", f);
+    }
+
+    return include("default", f);
+  }
+
+  private boolean exclude(
+    String text,
+    File   f)
+  {
+    if (debug != null)
+    {
+      debug.put(f, "Exclude: " + text);
+    }
+
+    return false;
+  }
+
+  private boolean include(
+    String text,
+    File   f)
+  {
+    if (debug != null)
+    {
+      debug.put(f, "Include: " + text);
     }
 
     return true;
