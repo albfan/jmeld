@@ -86,7 +86,6 @@
 
 
   <target name="jmeld-prepare">
-    <delete dir="build" quiet="true"/>
 
     <mkdir dir="build/classes"/>
 
@@ -95,7 +94,11 @@
     </copy>
   </target>
 
-  <target name="jmeld" depends="jmeld-prepare">
+  <target name="jmeld-clean">
+    <delete dir="build" quiet="true"/>
+  </target>
+
+  <target name="jmeld" depends="jmeld-clean, jmeld-prepare">
 
     <javac srcdir="src"
            destdir="build/classes"
