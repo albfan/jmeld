@@ -16,9 +16,22 @@
  */
 package org.jmeld.conf;
 
+import org.jmeld.util.conf.*;
+
+import javax.xml.bind.annotation.*;
+
+@XmlAccessorType(XmlAccessType.NONE)
 public class EditorConfiguration
+       extends AbstractConfigurationElement
 {
-  private boolean showLineNumbers;
+  @XmlElement
+  private boolean            showLineNumbers;
+  @XmlElement
+  private int                tabSize = 4;
+
+  public EditorConfiguration()
+  {
+  }
 
   public boolean getShowLineNumbers()
   {
@@ -28,5 +41,17 @@ public class EditorConfiguration
   public void setShowLineNumbers(boolean showLineNumbers)
   {
     this.showLineNumbers = showLineNumbers;
+    fireChanged();
+  }
+
+  public int getTabSize()
+  {
+    return tabSize;
+  }
+
+  public void setTabSize(int tabSize)
+  {
+    this.tabSize = tabSize;
+    fireChanged();
   }
 }

@@ -206,11 +206,11 @@ public class JMeldPanel
     builder.addButton(button);
 
     builder.addSpring();
-/*
-   button = WidgetFactory.getToolBarButton(
-       actionHandler.get(CONFIGURATION_ACTION));
-   builder.addButton(button);
- */
+
+    button = WidgetFactory.getToolBarButton(
+        actionHandler.get(CONFIGURATION_ACTION));
+    builder.addButton(button);
+
     button = WidgetFactory.getToolBarButton(actionHandler.get(HELP_ACTION));
     builder.addButton(button);
 
@@ -336,7 +336,7 @@ public class JMeldPanel
     action.setIcon("stock_about");
 
     action = actionHandler.createAction(this, CONFIGURATION_ACTION);
-    action.setIcon("stock_new");
+    action.setIcon("stock_preferences");
     action.setToolTip("Configuration");
 
     action = actionHandler.createAction(this, EXIT_ACTION);
@@ -647,7 +647,7 @@ public class JMeldPanel
 
     tabbedPane.add(
       content,
-      getTabIcon("stock_about", "About"));
+      getTabIcon("stock_preferences", "Configuration"));
     tabbedPane.setSelectedComponent(content);
   }
 

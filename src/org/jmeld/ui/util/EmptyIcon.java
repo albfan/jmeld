@@ -14,38 +14,41 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
-package org.jmeld.ui.conf;
-
-import org.jmeld.ui.*;
-import org.jmeld.ui.util.*;
+package org.jmeld.ui.util;
 
 import javax.swing.*;
 
 import java.awt.*;
 
-public class ConfigurationPanel
-       extends AbstractContentPanel
+public class EmptyIcon
+       implements Icon
 {
-  public ConfigurationPanel()
+  private int width;
+  private int height;
+
+  public EmptyIcon(
+    int width,
+    int height)
   {
-    init();
+    this.width = width;
+    this.height = height;
   }
 
-  private void init()
+  public int getIconWidth()
   {
-    JTabbedPane tabbedPane;
+    return width;
+  }
 
-    tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-    tabbedPane.addTab(
-      "Editor",
-      new EmptyIcon(10, 40),
-      new EditorPreferencePanel());
-    tabbedPane.addTab(
-      "Display",
-      new EmptyIcon(10, 40),
-      new JButton("Display"));
+  public int getIconHeight()
+  {
+    return height;
+  }
 
-    setLayout(new BorderLayout());
-    add(tabbedPane, BorderLayout.CENTER);
+  public void paintIcon(
+    Component c,
+    Graphics  g,
+    int       x,
+    int       y)
+  {
   }
 }

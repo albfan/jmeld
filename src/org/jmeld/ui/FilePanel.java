@@ -17,12 +17,14 @@
 package org.jmeld.ui;
 
 import org.jmeld.*;
+import org.jmeld.conf.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
+import org.jmeld.util.conf.*;
 import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
@@ -38,7 +40,7 @@ import java.util.*;
 import java.util.List;
 
 public class FilePanel
-       implements BufferDocumentChangeListenerIF
+       implements BufferDocumentChangeListenerIF, ConfigurationListenerIF
 {
   // Class variables:
   private static final int MAXSIZE_CHANGE_DIFF = 1000;
@@ -118,6 +120,9 @@ public class FilePanel
         100,
         refresh());
     timer.setRepeats(false);
+
+    initConfiguration();
+    Configuration.getInstance().addConfigurationListener(this);
   }
 
   FilePanelBar getFilePanelBar()
@@ -207,6 +212,7 @@ public class FilePanel
 
       document = bufferDocument.getDocument();
       editor.setDocument(document);
+      editor.setTabSize(Configuration.getInstance().getEditor().getTabSize());
       bufferDocument.addChangeListener(this);
       document.addUndoableEditListener(diffPanel.getUndoHandler());
 
@@ -248,7 +254,6 @@ public class FilePanel
     s = doc.addStyle("bold", defaultStyle);
     StyleConstants.setBold(s, true);
     //StyleConstants.setForeground(s, Color.blue);
-
     return jtp;
   }
 
@@ -285,7 +290,9 @@ public class FilePanel
       }
 
       doc = getFileLabel().getStyledDocument();
-      doc.remove(0, doc.getLength());
+      doc.remove(
+        0,
+        doc.getLength());
 
       for (int i = 0; i < fn1.size(); i++)
       {
@@ -334,7 +341,7 @@ public class FilePanel
           while ((index = text.indexOf(searchText, fromIndex)) != -1)
           {
             offset = bufferDocument.getOffsetForLine(line);
-            if(offset < 0)
+            if (offset < 0)
             {
               continue;
             }
@@ -438,14 +445,14 @@ public class FilePanel
       if (BufferDocumentIF.ORIGINAL.equals(name))
       {
         fromOffset = bufferDocument.getOffsetForLine(original.getAnchor());
-        if(fromOffset < 0)
+        if (fromOffset < 0)
         {
           continue;
         }
 
         toOffset = bufferDocument.getOffsetForLine(original.getAnchor()
             + original.getSize());
-        if(toOffset < 0)
+        if (toOffset < 0)
         {
           continue;
         }
@@ -493,14 +500,14 @@ public class FilePanel
       else if (BufferDocumentIF.REVISED.equals(name))
       {
         fromOffset = bufferDocument.getOffsetForLine(revised.getAnchor());
-        if(fromOffset < 0)
+        if (fromOffset < 0)
         {
           continue;
         }
 
         toOffset = bufferDocument.getOffsetForLine(revised.getAnchor()
             + revised.getSize());
-        if(toOffset < 0)
+        if (toOffset < 0)
         {
           continue;
         }
@@ -750,5 +757,20 @@ public class FilePanel
   public boolean isSelected()
   {
     return selected;
+  }
+
+  public void configurationChanged()
+  {
+    initConfiguration();
+  }
+
+  private void initConfiguration()
+  {
+    Configuration c;
+
+    c = Configuration.getInstance();
+    setShowLineNumbers(c.getEditor().getShowLineNumbers());
+    getEditor().setTabSize(c.getEditor().getTabSize());
+    System.out.println("set tabsize = " + getEditor().getTabSize());
   }
 }

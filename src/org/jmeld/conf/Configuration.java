@@ -16,12 +16,51 @@
  */
 package org.jmeld.conf;
 
+import org.jmeld.util.conf.*;
+
+import javax.xml.bind.annotation.*;
+
+import java.io.*;
+
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement(name = "jmeld")
 public class Configuration
+       extends AbstractConfiguration
 {
+  // class variables:
+  public static Configuration instance;
+
+  // Instance variables:
+  @XmlElement(name = "editor")
   private EditorConfiguration editor = new EditorConfiguration();
-  
+
   private Configuration()
   {
+    init();
+  }
+
+  public static synchronized Configuration getInstance()
+  {
+    if (instance == null)
+    {
+      try
+      {
+        instance = (Configuration) load(Configuration.class,
+            "JMeldConfiguration.xml");
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+        instance = new Configuration();
+      }
+    }
+
+    return instance;
+  }
+
+  public void init()
+  {
+    editor.init(this);
   }
 
   public EditorConfiguration getEditor()
