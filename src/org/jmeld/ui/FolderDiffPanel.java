@@ -70,7 +70,7 @@ public class FolderDiffPanel
   private void init()
   {
     JXTable                  table;
-    JXGroupableTableHeader   tableHeader;
+    //JXGroupableTableHeader   tableHeader;
     JScrollPane              sp;
     TableColumnModel         columnModel;
     TableColumn              column;
@@ -83,6 +83,8 @@ public class FolderDiffPanel
 
     table = new JXTable();
     table.setSortable(false);
+    table.setShowHorizontalLines(false);
+    //table.setShowVerticalLines(false);
     table.setHighlighters(
       new HighlighterPipeline(
         new Highlighter[]
@@ -102,10 +104,10 @@ public class FolderDiffPanel
 
     columnModel = table.getColumnModel();
 
-    tableHeader = new JXGroupableTableHeader(columnModel);
-    tableHeader.setReorderingAllowed(false);
-    tableHeader.setResizingAllowed(false);
-    table.setTableHeader(tableHeader);
+    //tableHeader = new JXGroupableTableHeader(columnModel);
+    //tableHeader.setReorderingAllowed(false);
+    //tableHeader.setResizingAllowed(false);
+    //table.setTableHeader(tableHeader);
 
     columnGroups = new HashMap<String, ColumnGroup>();
     for (int i = 0; i < tableModel.getColumnCount(); i++)
@@ -133,10 +135,12 @@ public class FolderDiffPanel
       }
     }
 
+/*
     for (ColumnGroup cg : columnGroups.values())
     {
       tableHeader.addColumnGroup(cg);
     }
+    */
 
     // Double-click will show the differences of a node.
     table.addMouseListener(getMouseListener());
