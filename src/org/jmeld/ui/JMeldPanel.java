@@ -784,7 +784,7 @@ public class JMeldPanel
           tabbedPane.add(
             panel,
             getTabIcon(
-              null,
+              "stock_new",
               panel.getTitle()));
           if (!openInBackground)
           {
@@ -890,7 +890,7 @@ public class JMeldPanel
         tabbedPane.add(
           panel,
           getTabIcon(
-            null,
+            "stock_folder",
             panel.getTitle()));
         tabbedPane.setSelectedComponent(panel);
       }
@@ -971,7 +971,7 @@ public class JMeldPanel
     TabIcon icon;
 
     icon = new TabIcon(
-        ImageUtil.getImageIcon(iconName),
+        ImageUtil.getSmallImageIcon(iconName),
         text);
     icon.addExitListener(getTabExitListener());
 
