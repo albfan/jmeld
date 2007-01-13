@@ -35,7 +35,7 @@ public class TabIcon
   // class variables:
   private static int CLOSE_ICON_HEIGHT = 7;
   private static int CLOSE_ICON_WIDTH = 7;
-  private static int SPACE_WIDTH = 20;
+  private static int SPACE_WIDTH = 5;
 
   // instance variables:
   private Icon                    icon;
@@ -171,7 +171,7 @@ public class TabIcon
 
     if (icon != null)
     {
-      icon.paintIcon(c, g, x0, y);
+      icon.paintIcon(c, g, x0, y + ((height - icon.getIconHeight()) / 2));
       x0 += icon.getIconWidth();
       x0 += SPACE_WIDTH;
     }
