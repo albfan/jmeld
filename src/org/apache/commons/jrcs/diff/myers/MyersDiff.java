@@ -290,8 +290,8 @@ public class MyersDiff
       int j = path.j;
 
       path = path.prev;
-      int   ianchor = path.i;
-      int   janchor = path.j;
+      int ianchor = path.i;
+      int janchor = path.j;
 
       Delta delta = Delta.newDelta(
           new Chunk(orig, ianchor, i - ianchor),

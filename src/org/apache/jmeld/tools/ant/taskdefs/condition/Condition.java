@@ -14,7 +14,6 @@
  *  limitations under the License.
  *
  */
-
 package org.apache.jmeld.tools.ant.taskdefs.condition;
 
 import org.apache.jmeld.tools.ant.BuildException;
@@ -23,12 +22,13 @@ import org.apache.jmeld.tools.ant.BuildException;
  * Interface for conditions to use inside the &lt;condition&gt; task.
  *
  */
-public interface Condition {
-    /**
-     * Is this condition true?
-     * @return true if the condition is true
-     * @exception BuildException if an error occurs
-     */
-    boolean eval() throws BuildException;
+public interface Condition
+{
+  /**
+   * Is this condition true?
+   * @return true if the condition is true
+   * @exception BuildException if an error occurs
+   */
+  boolean eval()
+    throws BuildException;
 }
-
