@@ -24,6 +24,8 @@ import java.awt.*;
 public class LineNumberBorder
        extends EmptyBorder
 {
+  static private int SPACE = 4;
+
   private JTextArea textArea;
   private Color     background;
   private Color     lineColor;
@@ -33,20 +35,21 @@ public class LineNumberBorder
 
   public LineNumberBorder(JTextArea textArea)
   {
-    super(0, 40, 0, 0);
+    super(0, 40 + SPACE, 0, 0);
 
     this.textArea = textArea;
 
     init();
-
   }
 
   private void init()
   {
     FontMetrics fm;
 
-    background = new Color(233, 232, 226);
-    lineColor = new Color(184, 184, 184);
+    //background = new Color(233, 232, 226);
+    //lineColor = new Color(184, 184, 184);
+    background = new Color(253, 253, 238);
+    lineColor = new Color(224, 224, 194);
     font = new Font("Monospaced", Font.PLAIN, 10);
 
     fm = textArea.getFontMetrics(font);
@@ -60,8 +63,8 @@ public class LineNumberBorder
 
     clip = g.getClipRect();
 
-    g.setColor(new Color(233, 232, 226));
-    g.fillRect(0, clip.y, left, clip.y + clip.height);
+    g.setColor(background);
+    g.fillRect(0, clip.y, left - SPACE, clip.y + clip.height);
   }
 
   public void paintAfter(
@@ -90,14 +93,14 @@ public class LineNumberBorder
       heightCorrection = (lineHeight - fontHeight) / 2;
 
       g.setColor(lineColor);
-      g.drawLine(left, clip.y, left, clip.y + clip.height);
+      g.drawLine(left - SPACE, clip.y, left - SPACE, clip.y + clip.height);
 
       g.setFont(font);
       g.setColor(Color.black);
       for (int line = startLine; line <= endLine; line++)
       {
         s = Integer.toString(line);
-        g.drawString(s, left - (fontWidth * s.length()) - 1,
+        g.drawString(s, left - (fontWidth * s.length()) - 1 - SPACE,
           y - heightCorrection);
         y += lineHeight;
       }
