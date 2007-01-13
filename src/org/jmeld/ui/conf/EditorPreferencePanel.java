@@ -6,7 +6,7 @@
 
 package org.jmeld.ui.conf;
 
-import org.jmeld.conf.Configuration;
+import org.jmeld.conf.JMeldConfiguration;
 
 /**
  *
@@ -55,7 +55,7 @@ public class EditorPreferencePanel extends javax.swing.JPanel
 
     jLabel3.setText("Tab size");
 
-    jSpinner1.setValue(Configuration.getInstance().getEditor().getTabSize());
+    jSpinner1.setValue(JMeldConfiguration.getInstance().getEditor().getTabSize());
     jSpinner1.addChangeListener(new javax.swing.event.ChangeListener()
     {
       public void stateChanged(javax.swing.event.ChangeEvent evt)
@@ -67,7 +67,7 @@ public class EditorPreferencePanel extends javax.swing.JPanel
     jCheckBox2.setText("Show line numbers");
     jCheckBox2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     jCheckBox2.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    jCheckBox2.setSelected(Configuration.getInstance().getEditor().getShowLineNumbers());
+    jCheckBox2.setSelected(JMeldConfiguration.getInstance().getEditor().getShowLineNumbers());
     jCheckBox2.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -128,12 +128,12 @@ public class EditorPreferencePanel extends javax.swing.JPanel
 
   private void jSpinner1StateChanged (javax.swing.event.ChangeEvent evt)//GEN-FIRST:event_jSpinner1StateChanged
   {//GEN-HEADEREND:event_jSpinner1StateChanged
-     Configuration.getInstance().getEditor().setTabSize((Integer) jSpinner1.getValue());
+     JMeldConfiguration.getInstance().getEditor().setTabSize((Integer) jSpinner1.getValue());
   }//GEN-LAST:event_jSpinner1StateChanged
 
   private void jCheckBox2ActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_jCheckBox2ActionPerformed
   {//GEN-HEADEREND:event_jCheckBox2ActionPerformed
-     Configuration.getInstance().getEditor().setShowLineNumbers(jCheckBox2.isSelected ());
+     JMeldConfiguration.getInstance().getEditor().setShowLineNumbers(jCheckBox2.isSelected ());
   }//GEN-LAST:event_jCheckBox2ActionPerformed
   
   

@@ -7,63 +7,70 @@ import java.util.*;
 
 public abstract class AbstractConfiguration
 {
-  private List<ConfigurationListenerIF> listeners;
-  private File                          configurationFile;
+  private String  configurationFileName;
+  private boolean changed;
 
   public AbstractConfiguration()
   {
-    listeners = new ArrayList<ConfigurationListenerIF>();
   }
 
   public abstract void init();
 
-  void setConfigurationFile(File configurationFile)
+  void setConfigurationFileName(String configurationFileName)
   {
-    this.configurationFile = configurationFile;
+    this.configurationFileName = configurationFileName;
   }
 
-  public static AbstractConfiguration load(
-    Class  clazz,
-    String fileName)
-    throws Exception
+  public boolean isChanged()
   {
-    return ConfigurationPersister.getInstance().load(
-      clazz,
-      new File(fileName));
+    return changed;
+  }
+
+  public String getConfigurationFileName()
+  {
+    return configurationFileName;
   }
 
   public void save()
   {
-    if (configurationFile != null)
+    if (configurationFileName != null)
     {
       try
       {
-        ConfigurationPersister.getInstance().save(this, configurationFile);
+        ConfigurationPersister.getInstance().save(
+          this,
+          new File(configurationFileName));
+        changed = false;
       }
       catch (Exception ex)
       {
-	ex.printStackTrace();
+        ex.printStackTrace();
       }
     }
   }
 
   public void addConfigurationListener(ConfigurationListenerIF listener)
   {
-    listeners.add(listener);
+    getManager().addConfigurationListener(
+      getClass(),
+      listener);
   }
 
   public void removeConfigurationListener(ConfigurationListenerIF listener)
   {
-    listeners.remove(listener);
+    getManager().removeConfigurationListener(
+      getClass(),
+      listener);
   }
 
   public void fireChanged()
   {
-    for (ConfigurationListenerIF listener : listeners)
-    {
-      listener.configurationChanged();
-    }
+    changed = true;
+    getManager().fireChanged(getClass());
+  }
 
-    save();
+  private ConfigurationManager getManager()
+  {
+    return ConfigurationManager.getInstance();
   }
 }

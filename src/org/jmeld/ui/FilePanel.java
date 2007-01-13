@@ -122,7 +122,7 @@ public class FilePanel
     timer.setRepeats(false);
 
     initConfiguration();
-    Configuration.getInstance().addConfigurationListener(this);
+    getConfiguration().addConfigurationListener(this);
   }
 
   FilePanelBar getFilePanelBar()
@@ -212,7 +212,7 @@ public class FilePanel
 
       document = bufferDocument.getDocument();
       editor.setDocument(document);
-      editor.setTabSize(Configuration.getInstance().getEditor().getTabSize());
+      editor.setTabSize(getConfiguration().getEditor().getTabSize());
       bufferDocument.addChangeListener(this);
       document.addUndoableEditListener(diffPanel.getUndoHandler());
 
@@ -365,20 +365,27 @@ public class FilePanel
 
   void setShowLineNumbers(boolean showLineNumbers)
   {
+    Border originalBorder;
+    String propertyName;
+
+    propertyName = "JMeld.originalBorder";
+    originalBorder = (Border) editor.getClientProperty(propertyName);
+
     if (showLineNumbers)
     {
-      if (editor.getBorder() == null)
+      if (originalBorder == null)
       {
-        System.out.println("setBorder()" + name);
+        originalBorder = editor.getBorder();
         editor.setBorder(new LineNumberBorder(editor));
+        editor.putClientProperty(propertyName, originalBorder);
       }
     }
     else
     {
-      if (editor.getBorder() != null)
+      if (originalBorder != null)
       {
-        System.out.println("removeBorder()" + name);
-        editor.setBorder(null);
+        editor.setBorder(originalBorder);
+        editor.putClientProperty(propertyName, null);
       }
     }
   }
@@ -766,11 +773,16 @@ public class FilePanel
 
   private void initConfiguration()
   {
-    Configuration c;
+    JMeldConfiguration c;
 
-    c = Configuration.getInstance();
+    c = getConfiguration();
+
     setShowLineNumbers(c.getEditor().getShowLineNumbers());
     getEditor().setTabSize(c.getEditor().getTabSize());
-    System.out.println("set tabsize = " + getEditor().getTabSize());
+  }
+
+  private JMeldConfiguration getConfiguration()
+  {
+    return JMeldConfiguration.getInstance();
   }
 }

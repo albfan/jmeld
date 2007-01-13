@@ -24,38 +24,25 @@ import java.io.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "jmeld")
-public class Configuration
+public class JMeldConfiguration
        extends AbstractConfiguration
 {
   // class variables:
-  public static Configuration instance;
+  public static JMeldConfiguration instance;
 
   // Instance variables:
   @XmlElement(name = "editor")
   private EditorConfiguration editor = new EditorConfiguration();
 
-  private Configuration()
+  public JMeldConfiguration()
   {
     init();
   }
 
-  public static synchronized Configuration getInstance()
+  public static synchronized JMeldConfiguration getInstance()
   {
-    if (instance == null)
-    {
-      try
-      {
-        instance = (Configuration) load(Configuration.class,
-            "JMeldConfiguration.xml");
-      }
-      catch (Exception ex)
-      {
-        ex.printStackTrace();
-        instance = new Configuration();
-      }
-    }
-
-    return instance;
+    return (JMeldConfiguration) ConfigurationManager.getInstance()
+                                                    .get(JMeldConfiguration.class);
   }
 
   public void init()
