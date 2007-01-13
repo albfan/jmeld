@@ -16,6 +16,7 @@
  */
 package org.jmeld.util.file;
 
+import org.apache.jmeld.tools.ant.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.node.*;
 import org.jmeld.util.scan.*;
@@ -101,15 +102,33 @@ public class DirectoryDiff
     Map<String, FileNode> originalMap;
     JMeldNode             mineNode;
     JMeldNode             originalNode;
+    DirectoryScanner      ds;
 
     filter = getFilter();
 
     StatusBar.start();
     StatusBar.setStatus("Start scanning directories...");
 
-    mineMap = new DirectoryScan(mineDirectory, filter).scan();
-    originalMap = new DirectoryScan(originalDirectory, filter).scan();
+    ds = new DirectoryScanner();
+    ds.setBasedir(mineDirectory);
+    ds.setExcludes(new String[] { "**/*.class", "tags" });
+    ds.addDefaultExcludes();
+    ds.setCaseSensitive(true);
+    ds.scan();
+    mineMap = ds.getIncludedFilesMap();
+    mineMap.putAll(ds.getIncludedDirectoriesMap());
 
+    ds = new DirectoryScanner();
+    ds.setBasedir(originalDirectory);
+    ds.setExcludes(new String[] { "**/*.class", "tags" });
+    ds.addDefaultExcludes();
+    ds.setCaseSensitive(true);
+    ds.scan();
+    originalMap = ds.getIncludedFilesMap();
+    originalMap.putAll(ds.getIncludedDirectoriesMap());
+
+    //mineMap = new DirectoryScan(mineDirectory, filter).scan();
+    //originalMap = new DirectoryScan(originalDirectory, filter).scan();
     for (JMeldNode node : mineMap.values())
     {
       name = node.getName();

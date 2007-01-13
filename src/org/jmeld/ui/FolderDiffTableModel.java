@@ -202,6 +202,8 @@ public class FolderDiffTableModel
 
       case JMeldNode.ADDED:
         iconName = "stock_added2";
+        iconName = "stock_equal";
+        iconName = "stock_changed2";
         break;
 
       case JMeldNode.CHANGED:
@@ -210,6 +212,7 @@ public class FolderDiffTableModel
 
       case JMeldNode.DELETED:
         iconName = "stock_deleted2";
+        iconName = "stock_deleted3";
         break;
     }
 
