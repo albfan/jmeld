@@ -16,25 +16,14 @@
  */
 package org.apache.jmeld.tools.ant;
 
-import org.apache.jmeld.tools.ant.taskdefs.condition.Os;
-import org.apache.jmeld.tools.ant.types.Resource;
-import org.apache.jmeld.tools.ant.types.ResourceFactory;
-import org.apache.jmeld.tools.ant.types.selectors.FileSelector;
-import org.apache.jmeld.tools.ant.types.selectors.SelectorScanner;
-import org.apache.jmeld.tools.ant.types.selectors.SelectorUtils;
-import org.apache.jmeld.tools.ant.util.FileUtils;
+import org.apache.jmeld.tools.ant.taskdefs.condition.*;
+import org.apache.jmeld.tools.ant.types.*;
+import org.apache.jmeld.tools.ant.types.selectors.*;
+import org.apache.jmeld.tools.ant.util.*;
+import org.jmeld.util.node.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
 /**
  * Class for scanning a directory for files/directories which match certain
@@ -195,6 +184,7 @@ public class DirectoryScanner
    * and were selected.
    */
   protected Vector filesIncluded;
+  protected Map<String, FileNode> filesIncludedMap;
 
   /** The files which did not match any includes or selectors. */
   protected Vector filesNotIncluded;
@@ -210,6 +200,7 @@ public class DirectoryScanner
    * and were selected.
    */
   protected Vector dirsIncluded;
+  protected Map<String, FileNode> dirsIncludedMap;
 
   /** The directories which were found and did not match any includes. */
   protected Vector dirsNotIncluded;
@@ -1013,10 +1004,12 @@ public class DirectoryScanner
   protected synchronized void clearResults()
   {
     filesIncluded = new Vector();
+    filesIncludedMap = new HashMap<String, FileNode>();
     filesNotIncluded = new Vector();
     filesExcluded = new Vector();
     filesDeselected = new Vector();
     dirsIncluded = new Vector();
+    dirsIncludedMap = new HashMap<String, FileNode>();
     dirsNotIncluded = new Vector();
     dirsExcluded = new Vector();
     dirsDeselected = new Vector();
@@ -1133,6 +1126,7 @@ public class DirectoryScanner
     String  vpath,
     boolean fast)
   {
+    System.out.println("scan : " + dir);
     if (dir == null)
     {
       throw new BuildException("dir must not be null.");
@@ -1243,7 +1237,7 @@ public class DirectoryScanner
     String name,
     File   file)
   {
-    if (filesIncluded.contains(name) || filesExcluded.contains(name)
+    if (filesIncludedMap.get(name) != null || filesExcluded.contains(name)
       || filesDeselected.contains(name))
     {
       return;
@@ -1257,6 +1251,9 @@ public class DirectoryScanner
     {
       included = true;
       filesIncluded.addElement(name);
+      filesIncludedMap.put(
+        name,
+        new FileNode(name, file));
     }
     else
     {
@@ -1291,6 +1288,9 @@ public class DirectoryScanner
     {
       included = true;
       dirsIncluded.addElement(name);
+      dirsIncludedMap.put(
+        name,
+        new FileNode(name, file));
     }
     else
     {
@@ -1503,6 +1503,11 @@ public class DirectoryScanner
     return files;
   }
 
+  public synchronized Map<String, FileNode> getIncludedFilesMap()
+  {
+    return filesIncludedMap;
+  }
+
   /**
    * Return the count of included files.
    * @return <code>int</code>.
@@ -1591,6 +1596,11 @@ public class DirectoryScanner
     dirsIncluded.copyInto(directories);
     Arrays.sort(directories);
     return directories;
+  }
+
+  public synchronized Map<String, FileNode> getIncludedDirectoriesMap()
+  {
+    return dirsIncludedMap;
   }
 
   /**
