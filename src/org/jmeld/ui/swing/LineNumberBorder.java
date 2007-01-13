@@ -24,7 +24,7 @@ import java.awt.*;
 public class LineNumberBorder
        extends EmptyBorder
 {
-  static private int SPACE = 4;
+  static private int MARGIN = 4;
 
   private JTextArea textArea;
   private Color     background;
@@ -35,7 +35,7 @@ public class LineNumberBorder
 
   public LineNumberBorder(JTextArea textArea)
   {
-    super(0, 40 + SPACE, 0, 0);
+    super(0, 40 + MARGIN, 0, 0);
 
     this.textArea = textArea;
 
@@ -64,7 +64,7 @@ public class LineNumberBorder
     clip = g.getClipRect();
 
     g.setColor(background);
-    g.fillRect(0, clip.y, left - SPACE, clip.y + clip.height);
+    g.fillRect(0, clip.y, left - MARGIN, clip.y + clip.height);
   }
 
   public void paintAfter(
@@ -93,14 +93,14 @@ public class LineNumberBorder
       heightCorrection = (lineHeight - fontHeight) / 2;
 
       g.setColor(lineColor);
-      g.drawLine(left - SPACE, clip.y, left - SPACE, clip.y + clip.height);
+      g.drawLine(left - MARGIN, clip.y, left - MARGIN, clip.y + clip.height);
 
       g.setFont(font);
       g.setColor(Color.black);
       for (int line = startLine; line <= endLine; line++)
       {
         s = Integer.toString(line);
-        g.drawString(s, left - (fontWidth * s.length()) - 1 - SPACE,
+        g.drawString(s, left - (fontWidth * s.length()) - 1 - MARGIN,
           y - heightCorrection);
         y += lineHeight;
       }
