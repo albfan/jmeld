@@ -444,22 +444,9 @@ public class BufferDiffPanel
     scrollToSearch(fp, searchHits);
   }
 
-  private boolean showLineNumbers;
-
   public void doRefresh()
   {
     diff();
-
-    showLineNumbers = !showLineNumbers;
-    for (FilePanel fp : filePanels)
-    {
-      if (fp == null)
-      {
-        continue;
-      }
-
-      fp.setShowLineNumbers(showLineNumbers);
-    }
   }
 
   public void doMergeMode(boolean mergeMode)
