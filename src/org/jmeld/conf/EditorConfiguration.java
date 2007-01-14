@@ -16,18 +16,27 @@
  */
 package org.jmeld.conf;
 
+import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 
 import javax.xml.bind.annotation.*;
+
+import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class EditorConfiguration
        extends AbstractConfigurationElement
 {
   @XmlElement
-  private boolean            showLineNumbers;
+  private boolean              showLineNumbers;
   @XmlElement
-  private int                tabSize = 4;
+  private int                  tabSize = 4;
+  @XmlElement
+  private ColorConf            addedColor;
+  @XmlElement
+  private ColorConf            changedColor;
+  @XmlElement
+  private ColorConf            deletedColor;
 
   public EditorConfiguration()
   {
@@ -53,5 +62,66 @@ public class EditorConfiguration
   {
     this.tabSize = tabSize;
     fireChanged();
+  }
+
+  public void restoreColors()
+  {
+    addedColor = null;
+    changedColor = null;
+    deletedColor = null;
+    fireChanged();
+  }
+
+  public void setAddedColor(Color color)
+  {
+    addedColor = new ColorConf(color);
+    fireChanged();
+  }
+
+  public Color getAddedColor()
+  {
+    return getColor(addedColor, Colors.ADDED);
+  }
+
+  public void setChangedColor(Color color)
+  {
+    changedColor = new ColorConf(color);
+    fireChanged();
+  }
+
+  public Color getChangedColor()
+  {
+    return getColor(changedColor, Colors.CHANGED);
+  }
+
+  public void setDeletedColor(Color color)
+  {
+    deletedColor = new ColorConf(color);
+    fireChanged();
+  }
+
+  public Color getDeletedColor()
+  {
+    return getColor(deletedColor, Colors.DELETED);
+  }
+
+  private Color getColor(
+    ColorConf cc,
+    Color     defaultColor)
+  {
+    Color c;
+
+    c = null;
+    if (cc != null)
+    {
+      c = cc.getColor();
+    }
+
+    if (c == null)
+    {
+      c = defaultColor;
+    }
+
+    return c;
   }
 }

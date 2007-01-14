@@ -6,19 +6,26 @@
 
 package org.jmeld.ui.conf;
 
+import java.awt.Color;
+import javax.swing.JColorChooser;
+import org.jmeld.conf.EditorConfiguration;
 import org.jmeld.conf.JMeldConfiguration;
+import org.jmeld.util.conf.ConfigurationListenerIF;
 
 /**
  *
  * @author  kees
  */
 public class EditorPreferencePanel extends javax.swing.JPanel
+    implements ConfigurationListenerIF
 {
   
   /** Creates new form EditorPreferencePanel */
   public EditorPreferencePanel ()
   {
     initComponents ();
+    updateFromConfiguration();
+    JMeldConfiguration.getInstance().addConfigurationListener(this);
   }
   
   /** This method is called from within the constructor to
@@ -30,49 +37,107 @@ public class EditorPreferencePanel extends javax.swing.JPanel
   private void initComponents()
   {
     buttonGroup1 = new javax.swing.ButtonGroup();
-    jLabel1 = new javax.swing.JLabel();
     jRadioButton1 = new javax.swing.JRadioButton();
     jRadioButton2 = new javax.swing.JRadioButton();
-    jComboBox1 = new javax.swing.JComboBox();
-    jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
-    jSpinner1 = new javax.swing.JSpinner();
-    jCheckBox2 = new javax.swing.JCheckBox();
+    tabSizeSpinner = new javax.swing.JSpinner();
+    showLineNumbersCheckBox = new javax.swing.JCheckBox();
+    detailHeader1 = new org.jmeld.ui.swing.DetailHeader();
+    detailHeader2 = new org.jmeld.ui.swing.DetailHeader();
+    detailHeader3 = new org.jmeld.ui.swing.DetailHeader();
+    colorAddedButton = new javax.swing.JButton();
+    jLabel1 = new javax.swing.JLabel();
+    colorDeletedButton = new javax.swing.JButton();
+    colorChangedButton = new javax.swing.JButton();
+    jLabel2 = new javax.swing.JLabel();
+    jLabel4 = new javax.swing.JLabel();
+    restoreOriginalColorsButton = new javax.swing.JButton();
 
-    jLabel1.setText("Font");
-
+    buttonGroup1.add(jRadioButton1);
     jRadioButton1.setText("Use default font");
     jRadioButton1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     jRadioButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
+    buttonGroup1.add(jRadioButton2);
     jRadioButton2.setText("Use custom font");
     jRadioButton2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     jRadioButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-    jLabel2.setText("Miscellaneous");
-
     jLabel3.setText("Tab size");
 
-    jSpinner1.setValue(JMeldConfiguration.getInstance().getEditor().getTabSize());
-    jSpinner1.addChangeListener(new javax.swing.event.ChangeListener()
+    tabSizeSpinner.addChangeListener(new javax.swing.event.ChangeListener()
     {
       public void stateChanged(javax.swing.event.ChangeEvent evt)
       {
-        jSpinner1StateChanged(evt);
+        tabSizeSpinnerStateChanged(evt);
       }
     });
 
-    jCheckBox2.setText("Show line numbers");
-    jCheckBox2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    jCheckBox2.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    jCheckBox2.setSelected(JMeldConfiguration.getInstance().getEditor().getShowLineNumbers());
-    jCheckBox2.addActionListener(new java.awt.event.ActionListener()
+    showLineNumbersCheckBox.setText("Show line numbers");
+    showLineNumbersCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    showLineNumbersCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    showLineNumbersCheckBox.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
-        jCheckBox2ActionPerformed(evt);
+        showLineNumbersCheckBoxActionPerformed(evt);
+      }
+    });
+
+    detailHeader1.setText("Font");
+
+    detailHeader2.setText("Miscellaneous");
+
+    detailHeader3.setText("Colors");
+
+    colorAddedButton.setBackground(new java.awt.Color(255, 255, 0));
+    colorAddedButton.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+    colorAddedButton.setDefaultCapable(false);
+    colorAddedButton.setFocusable(false);
+    colorAddedButton.addActionListener(new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        colorAddedButtonActionPerformed(evt);
+      }
+    });
+
+    jLabel1.setText("Chunk of code has been added");
+
+    colorDeletedButton.setBackground(new java.awt.Color(255, 255, 0));
+    colorDeletedButton.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+    colorDeletedButton.setDefaultCapable(false);
+    colorDeletedButton.setFocusable(false);
+    colorDeletedButton.addActionListener(new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        colorDeletedButtonActionPerformed(evt);
+      }
+    });
+
+    colorChangedButton.setBackground(new java.awt.Color(255, 255, 0));
+    colorChangedButton.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+    colorChangedButton.setDefaultCapable(false);
+    colorChangedButton.setFocusable(false);
+    colorChangedButton.addActionListener(new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        colorChangedButtonActionPerformed(evt);
+      }
+    });
+
+    jLabel2.setText("Chunk of code has been deleted");
+
+    jLabel4.setText("Chunk of code has changed");
+
+    restoreOriginalColorsButton.setText("Restore original colors");
+    restoreOriginalColorsButton.addActionListener(new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        RestoreColors(evt);
       }
     });
 
@@ -85,68 +150,168 @@ public class EditorPreferencePanel extends javax.swing.JPanel
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
             .addGap(12, 12, 12)
-            .addComponent(jRadioButton1))
-          .addComponent(jLabel1)
-          .addGroup(layout.createSequentialGroup()
-            .addGap(12, 12, 12)
-            .addComponent(jRadioButton2)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addComponent(jLabel2)
+            .addComponent(jRadioButton2))
           .addGroup(layout.createSequentialGroup()
             .addGap(12, 12, 12)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jCheckBox2)
+              .addComponent(showLineNumbersCheckBox)
               .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-        .addGap(105, 105, 105))
+                .addComponent(tabSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))
+          .addGroup(layout.createSequentialGroup()
+            .addGap(12, 12, 12)
+            .addComponent(jRadioButton1))
+          .addComponent(detailHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(detailHeader2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(detailHeader3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addGroup(layout.createSequentialGroup()
+            .addGap(12, 12, 12)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(colorDeletedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2))
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(colorAddedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(jLabel1))
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(colorChangedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4))
+              .addComponent(restoreOriginalColorsButton))))
+        .addContainerGap(142, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(jLabel1)
+        .addComponent(detailHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(jRadioButton1)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jRadioButton2)
-          .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        .addComponent(jRadioButton2)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jLabel2)
+        .addComponent(detailHeader2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jLabel3)
-          .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(tabSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jCheckBox2)
-        .addGap(186, 186, 186))
+        .addComponent(showLineNumbersCheckBox)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(detailHeader3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(colorAddedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel1))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(colorDeletedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel2))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+          .addComponent(colorChangedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jLabel4))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(restoreOriginalColorsButton)
+        .addGap(71, 71, 71))
     );
   }// </editor-fold>//GEN-END:initComponents
 
-  private void jSpinner1StateChanged (javax.swing.event.ChangeEvent evt)//GEN-FIRST:event_jSpinner1StateChanged
-  {//GEN-HEADEREND:event_jSpinner1StateChanged
-     JMeldConfiguration.getInstance().getEditor().setTabSize((Integer) jSpinner1.getValue());
-  }//GEN-LAST:event_jSpinner1StateChanged
+  private void colorChangedButtonActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_colorChangedButtonActionPerformed
+  {//GEN-HEADEREND:event_colorChangedButtonActionPerformed
+     Color color;
+     
+     color = JColorChooser.showDialog(this, "Choose Color", getEditorSettings().getChangedColor());
+     if(color != null)
+     {
+       getEditorSettings().setChangedColor(color);
+     }
+  }//GEN-LAST:event_colorChangedButtonActionPerformed
 
-  private void jCheckBox2ActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_jCheckBox2ActionPerformed
-  {//GEN-HEADEREND:event_jCheckBox2ActionPerformed
-     JMeldConfiguration.getInstance().getEditor().setShowLineNumbers(jCheckBox2.isSelected ());
-  }//GEN-LAST:event_jCheckBox2ActionPerformed
+  private void colorDeletedButtonActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_colorDeletedButtonActionPerformed
+  {//GEN-HEADEREND:event_colorDeletedButtonActionPerformed
+     Color color;
+     
+     color = JColorChooser.showDialog(this, "Choose Color", getEditorSettings().getDeletedColor());
+     if(color != null)
+     {
+       getEditorSettings().setDeletedColor(color);
+     }
+  }//GEN-LAST:event_colorDeletedButtonActionPerformed
+
+  private void RestoreColors (java.awt.event.ActionEvent evt)//GEN-FIRST:event_RestoreColors
+  {//GEN-HEADEREND:event_RestoreColors
+    getEditorSettings().restoreColors();
+  }//GEN-LAST:event_RestoreColors
+
+  private void colorAddedButtonActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_colorAddedButtonActionPerformed
+  {//GEN-HEADEREND:event_colorAddedButtonActionPerformed
+     Color color;
+     
+     color = JColorChooser.showDialog(this, "Choose Color", getEditorSettings().getAddedColor());
+     if(color != null)
+     {
+       getEditorSettings().setAddedColor(color);
+     }
+  }//GEN-LAST:event_colorAddedButtonActionPerformed
+
+  private void tabSizeSpinnerStateChanged (javax.swing.event.ChangeEvent evt)//GEN-FIRST:event_tabSizeSpinnerStateChanged
+  {//GEN-HEADEREND:event_tabSizeSpinnerStateChanged
+     getEditorSettings().setTabSize((Integer) tabSizeSpinner.getValue());
+  }//GEN-LAST:event_tabSizeSpinnerStateChanged
+
+  private void showLineNumbersCheckBoxActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_showLineNumbersCheckBoxActionPerformed
+  {//GEN-HEADEREND:event_showLineNumbersCheckBoxActionPerformed
+     getEditorSettings().setShowLineNumbers(showLineNumbersCheckBox.isSelected ());
+  }//GEN-LAST:event_showLineNumbersCheckBoxActionPerformed
   
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.ButtonGroup buttonGroup1;
-  private javax.swing.JCheckBox jCheckBox2;
-  private javax.swing.JComboBox jComboBox1;
+  private javax.swing.JButton colorAddedButton;
+  private javax.swing.JButton colorChangedButton;
+  private javax.swing.JButton colorDeletedButton;
+  private org.jmeld.ui.swing.DetailHeader detailHeader1;
+  private org.jmeld.ui.swing.DetailHeader detailHeader2;
+  private org.jmeld.ui.swing.DetailHeader detailHeader3;
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
+  private javax.swing.JLabel jLabel4;
   private javax.swing.JRadioButton jRadioButton1;
   private javax.swing.JRadioButton jRadioButton2;
-  private javax.swing.JSpinner jSpinner1;
+  private javax.swing.JButton restoreOriginalColorsButton;
+  private javax.swing.JCheckBox showLineNumbersCheckBox;
+  private javax.swing.JSpinner tabSizeSpinner;
   // End of variables declaration//GEN-END:variables
-  
+ 
+  public void stop()
+  {
+    JMeldConfiguration.getInstance().removeConfigurationListener(this);
+  }
+
+  private void updateFromConfiguration()
+  {
+    EditorConfiguration settings;
+
+    settings = getEditorSettings();
+    colorAddedButton.setBackground(settings.getAddedColor());
+    colorDeletedButton.setBackground(settings.getDeletedColor());
+    colorChangedButton.setBackground(settings.getChangedColor());
+    showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
+    tabSizeSpinner.setValue(settings.getTabSize());
+  }
+
+  public void configurationChanged()
+  {
+    updateFromConfiguration();
+  }
+
+  private EditorConfiguration getEditorSettings()
+  {
+    return JMeldConfiguration.getInstance().getEditor();
+  }
 }
