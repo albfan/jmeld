@@ -52,6 +52,7 @@ public class NewPanelDialog
   private String      mineDirectoryName;
   private JComboBox   originalDirectoryComboBox;
   private JComboBox   mineDirectoryComboBox;
+    private JDialog     dialog;
 
   public NewPanelDialog(JMeldPanel meldPanel)
   {
@@ -61,7 +62,6 @@ public class NewPanelDialog
   public void show()
   {
     JOptionPane pane;
-    JDialog     dialog;
 
     pane = new JOptionPane(getChooseFilePanel());
     pane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
@@ -232,6 +232,7 @@ public class NewPanelDialog
               {
                 comboBox.insertItemAt(fileName, 0);
                 comboBox.setSelectedIndex(0);
+	        dialog.pack();
               }
             }
             catch (Exception ex)
@@ -361,6 +362,7 @@ public class NewPanelDialog
               {
                 comboBox.insertItemAt(fileName, 0);
                 comboBox.setSelectedIndex(0);
+	        dialog.pack();
               }
             }
             catch (Exception ex)
