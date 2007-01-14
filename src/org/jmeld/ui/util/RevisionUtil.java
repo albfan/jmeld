@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui.util;
 
+import org.jmeld.conf.*;
 import org.jmeld.diff.*;
 
 import java.awt.*;
@@ -29,15 +30,15 @@ public class RevisionUtil
   {
     if (delta.isDelete())
     {
-      return Colors.DELETED;
+      return getSettings().getDeletedColor();
     }
 
     if (delta.isChange())
     {
-      return Colors.CHANGED;
+      return getSettings().getChangedColor();
     }
 
-    return Colors.ADDED;
+    return getSettings().getAddedColor();
   }
 
   public static Color getDarkerColor(JMDelta delta)
@@ -55,5 +56,10 @@ public class RevisionUtil
     }
 
     return result;
+  }
+
+  static private EditorConfiguration getSettings()
+  {
+    return JMeldConfiguration.getInstance().getEditor();
   }
 }

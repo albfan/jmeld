@@ -16,7 +16,9 @@
  */
 package org.jmeld.ui.swing;
 
+import org.jmeld.conf.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.util.conf.*;
 
 import javax.swing.text.*;
 
@@ -24,6 +26,7 @@ import java.awt.*;
 
 public class JMHighlightPainter
        extends DefaultHighlighter.DefaultHighlightPainter
+       implements ConfigurationListenerIF
 {
   public static final JMHighlightPainter ADDED;
   public static final JMHighlightPainter ADDED_LINE;
@@ -37,13 +40,21 @@ public class JMHighlightPainter
   static
   {
     ADDED = new JMHighlightPainter(Colors.ADDED);
+    ADDED.initConfiguration();
     ADDED_LINE = new JMHighlightPainter(Colors.ADDED, true);
+    ADDED_LINE.initConfiguration();
     CHANGED = new JMHighlightPainter(Colors.CHANGED);
+    CHANGED.initConfiguration();
     CHANGED2 = new JMHighlightPainter(Colors.CHANGED2);
+    CHANGED2.initConfiguration();
     DELETED = new JMHighlightPainter(Colors.DELETED);
+    DELETED.initConfiguration();
     DELETED_LINE = new JMHighlightPainter(Colors.DELETED, true);
+    DELETED_LINE.initConfiguration();
     SEARCH = new JMHighlightPainter(Color.yellow);
+    SEARCH.initConfiguration();
     CURRENT_SEARCH = new JMHighlightPainter(Color.yellow.darker());
+    CURRENT_SEARCH.initConfiguration();
   }
 
   private Color   color;
@@ -62,6 +73,8 @@ public class JMHighlightPainter
 
     this.color = color;
     this.line = line;
+
+    JMeldConfiguration.getInstance().addConfigurationListener(this);
   }
 
   public void paint(
@@ -139,5 +152,31 @@ public class JMHighlightPainter
     {
       ex.printStackTrace();
     }
+  }
+
+  public void configurationChanged()
+  {
+    initConfiguration();
+  }
+
+  private void initConfiguration()
+  {
+    if (this == ADDED || this == ADDED_LINE)
+    {
+      color = getSettings().getAddedColor();
+    }
+    else if (this == DELETED || this == DELETED_LINE)
+    {
+      color = getSettings().getDeletedColor();
+    }
+    else if (this == CHANGED)
+    {
+      color = getSettings().getChangedColor();
+    }
+  }
+
+  private EditorConfiguration getSettings()
+  {
+    return JMeldConfiguration.getInstance().getEditor();
   }
 }
