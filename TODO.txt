@@ -8,8 +8,11 @@ Release 1.1:
 - [done] Show linenumbers bar in FilePanel.
 - [done] Select a diff when searching. (linenumberselection?)
 - [done] Create nice website
+
+Release 1.2:
 -        Create manual
--        Create preferences/configuration tab 
+- [done] Create settings tab 
+-        Import/Export settings
 
 Release 2.0:
 -        Implement directory diff.
