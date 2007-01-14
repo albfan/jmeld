@@ -23,15 +23,30 @@ import java.awt.*;
 public class EmptyIcon
        implements Icon
 {
-  private int width;
-  private int height;
+  private int   width;
+  private int   height;
+  private Color color;
+
+  public EmptyIcon(
+    Color color,
+    int   width,
+    int   height)
+  {
+    this.color = color;
+    this.width = width;
+    this.height = height;
+  }
 
   public EmptyIcon(
     int width,
     int height)
   {
-    this.width = width;
-    this.height = height;
+    this(null, width, height);
+  }
+
+  public void setColor(Color color)
+  {
+    this.color = color;
   }
 
   public int getIconWidth()
@@ -50,5 +65,14 @@ public class EmptyIcon
     int       x,
     int       y)
   {
+    if (color != null)
+    {
+      g.setColor(color);
+      g.fillRect(
+        x,
+        y,
+        getIconWidth(),
+        getIconHeight());
+    }
   }
 }

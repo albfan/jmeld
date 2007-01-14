@@ -11,6 +11,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.jmeld.conf.EditorConfiguration;
 import org.jmeld.conf.JMeldConfiguration;
+import org.jmeld.ui.util.EmptyIcon;
 import org.jmeld.util.conf.ConfigurationListenerIF;
 
 /**
@@ -93,10 +94,9 @@ public class EditorPreferencePanel extends javax.swing.JPanel
 
     detailHeader3.setText("Colors");
 
-    colorAddedButton.setBackground(new java.awt.Color(255, 255, 0));
-    colorAddedButton.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-    colorAddedButton.setDefaultCapable(false);
+    colorAddedButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     colorAddedButton.setFocusable(false);
+    colorAddedButton.setPreferredSize(new java.awt.Dimension(20, 20));
     colorAddedButton.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -107,10 +107,9 @@ public class EditorPreferencePanel extends javax.swing.JPanel
 
     jLabel1.setText("Chunk of code has been added");
 
-    colorDeletedButton.setBackground(new java.awt.Color(255, 255, 0));
-    colorDeletedButton.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-    colorDeletedButton.setDefaultCapable(false);
+    colorDeletedButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     colorDeletedButton.setFocusable(false);
+    colorDeletedButton.setPreferredSize(new java.awt.Dimension(20, 20));
     colorDeletedButton.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -119,10 +118,9 @@ public class EditorPreferencePanel extends javax.swing.JPanel
       }
     });
 
-    colorChangedButton.setBackground(new java.awt.Color(255, 255, 0));
-    colorChangedButton.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-    colorChangedButton.setDefaultCapable(false);
+    colorChangedButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     colorChangedButton.setFocusable(false);
+    colorChangedButton.setPreferredSize(new java.awt.Dimension(20, 20));
     colorChangedButton.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
@@ -172,19 +170,19 @@ public class EditorPreferencePanel extends javax.swing.JPanel
             .addGap(12, 12, 12)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(layout.createSequentialGroup()
-                .addComponent(colorDeletedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2))
-              .addGroup(layout.createSequentialGroup()
-                .addComponent(colorAddedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(colorAddedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jLabel1))
               .addGroup(layout.createSequentialGroup()
-                .addComponent(colorChangedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(colorDeletedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(colorChangedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addComponent(jLabel4)
+                  .addComponent(jLabel2)))
               .addComponent(restoreOriginalColorsButton))))
-        .addContainerGap(142, Short.MAX_VALUE))
+        .addContainerGap(143, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,19 +205,19 @@ public class EditorPreferencePanel extends javax.swing.JPanel
         .addComponent(detailHeader3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(colorAddedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(colorAddedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel1))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(colorDeletedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(colorDeletedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel2))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(colorChangedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(colorChangedButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jLabel4))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(restoreOriginalColorsButton)
-        .addGap(71, 71, 71))
+        .addGap(100, 100, 100))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -313,9 +311,11 @@ public class EditorPreferencePanel extends javax.swing.JPanel
     EditorConfiguration settings;
 
     settings = getEditorSettings();
-    colorAddedButton.setBackground(settings.getAddedColor());
-    colorDeletedButton.setBackground(settings.getDeletedColor());
-    colorChangedButton.setBackground(settings.getChangedColor());
+    colorAddedButton.setIcon(new EmptyIcon(settings.getAddedColor(), 20, 20));
+    colorDeletedButton.setIcon(new EmptyIcon(settings.getDeletedColor(), 20, 20));
+    colorChangedButton.setIcon(new EmptyIcon(settings.getChangedColor(), 20, 20));
+    //colorDeletedButton.setBackground(settings.getDeletedColor());
+    //colorChangedButton.setBackground(settings.getChangedColor());
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
     tabSizeSpinner.setValue(settings.getTabSize());
   }
