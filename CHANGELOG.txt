@@ -1,7 +1,16 @@
 
-Release 1.1:
-  New functionality:
+Release 1.2:
   - ESCAPE closes the current tab
+  - New FileDiff/DirectoryDiff: pack dialog again after choosing a
+      file because the name of the file can be larger than the combobox.
+  - Add LGPL license text.
+  - BUG 1630226 resolved: Exception when doing compare
+  - Use directoryscanner of 'ant' instead of my own. The 'regular expressions'
+      of that scanner are more understandable for mortal humans.
+  - Settings are written to an xml-file with JAXB.
+  - Settings 'tabsize' and 'show linenumbers' work now.
+  - Small icons on tabs. Align icon to the middle of the height.
+  - Add a margin between linenumbers and text.
 
 Release 1.1:
   New functionality:
