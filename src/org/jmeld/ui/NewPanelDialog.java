@@ -52,7 +52,7 @@ public class NewPanelDialog
   private String      mineDirectoryName;
   private JComboBox   originalDirectoryComboBox;
   private JComboBox   mineDirectoryComboBox;
-    private JDialog     dialog;
+  private JDialog     dialog;
 
   public NewPanelDialog(JMeldPanel meldPanel)
   {
@@ -68,23 +68,31 @@ public class NewPanelDialog
 
     dialog = pane.createDialog(meldPanel, "Choose files");
     dialog.setResizable(true);
-    dialog.show();
-
-    if (ObjectUtil.equals(
-        pane.getValue(),
-        JOptionPane.OK_OPTION))
+    try
     {
-      switch (tabbedPane.getSelectedIndex())
+      dialog.show();
+
+      if (ObjectUtil.equals(
+          pane.getValue(),
+          JOptionPane.OK_OPTION))
       {
+        switch (tabbedPane.getSelectedIndex())
+        {
 
-        case 0:
-          setValue(FILE_COMPARISON);
-          break;
+          case 0:
+            setValue(FILE_COMPARISON);
+            break;
 
-        case 1:
-          setValue(DIRECTORY_COMPARISON);
-          break;
+          case 1:
+            setValue(DIRECTORY_COMPARISON);
+            break;
+        }
       }
+    }
+    finally
+    {
+      // Always dispose a dialog -> otherwise there is a memory leak
+      dialog.dispose();
     }
   }
 
@@ -232,7 +240,7 @@ public class NewPanelDialog
               {
                 comboBox.insertItemAt(fileName, 0);
                 comboBox.setSelectedIndex(0);
-	        dialog.pack();
+                dialog.pack();
               }
             }
             catch (Exception ex)
@@ -362,7 +370,7 @@ public class NewPanelDialog
               {
                 comboBox.insertItemAt(fileName, 0);
                 comboBox.setSelectedIndex(0);
-	        dialog.pack();
+                dialog.pack();
               }
             }
             catch (Exception ex)

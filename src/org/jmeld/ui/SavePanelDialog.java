@@ -61,13 +61,21 @@ public class SavePanelDialog
 
     dialog = pane.createDialog(meldPanel, "Save files");
     dialog.setResizable(true);
-    dialog.show();
-
-    if (ObjectUtil.equals(
-        pane.getValue(),
-        JOptionPane.OK_OPTION))
+    try
     {
-      ok = true;
+      dialog.show();
+
+      if (ObjectUtil.equals(
+          pane.getValue(),
+          JOptionPane.OK_OPTION))
+      {
+        ok = true;
+      }
+    }
+    finally
+    {
+      // Don't allow memoryleaks!
+      dialog.dispose();
     }
   }
 
