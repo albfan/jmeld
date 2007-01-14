@@ -17,6 +17,7 @@
 package org.jmeld.ui.util;
 
 import org.jmeld.ui.*;
+import org.jmeld.util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -38,25 +39,25 @@ public class TabIcon
   private static int SPACE_WIDTH = 5;
 
   // instance variables:
-  private Icon                    icon;
-  private String                  text;
-  private int                     width;
-  private int                     height;
-  private JLabel                  label;
-  private int                     stringWidth;
-  private Rectangle               closeBounds;
-  private JTabbedPane             tabbedPane;
-  private Icon                    currentIcon;
-  private Icon                    closeIcon;
-  private Icon                    closeIcon_rollover;
-  private Icon                    closeIcon_pressed;
-  private Icon                    closeIcon_disabled;
-  private boolean                 pressed;
-  private boolean                 ignoreNextMousePressed;
-  private ChangeListener          changeListener;
-  private MouseListener           mouseListener;
-  private MouseMotionListener     mouseMotionListener;
-  private List<TabExitListenerIF> tabExitListeners;
+  private Icon                         icon;
+  private String                       text;
+  private int                          width;
+  private int                          height;
+  private JLabel                       label;
+  private int                          stringWidth;
+  private Rectangle                    closeBounds;
+  private JTabbedPane                  tabbedPane;
+  private Icon                         currentIcon;
+  private Icon                         closeIcon;
+  private Icon                         closeIcon_rollover;
+  private Icon                         closeIcon_pressed;
+  private Icon                         closeIcon_disabled;
+  private boolean                      pressed;
+  private boolean                      ignoreNextMousePressed;
+  private ChangeListener               changeListener;
+  private MouseListener                mouseListener;
+  private MouseMotionListener          mouseMotionListener;
+  private ArrayList<TabExitListenerIF> tabExitListeners;
 
   public TabIcon(
     Icon   icon,
@@ -131,6 +132,11 @@ public class TabIcon
 
   public void exit()
   {
+    // This exit can be called in 2 different ways:
+    // 1. From within this Icon itself (pressing the close-button on the tab)
+    // 2. From within the application (for instance when pressing ESCAPE)
+    // This method was primarily made 'public' for the second way.
+
     // Don't create memory leaks!
     tabbedPane.removeMouseListener(getMouseListener());
     tabbedPane.removeMouseMotionListener(getMouseMotionListener());
