@@ -1,6 +1,7 @@
 package org.jmeld.util.conf;
 
 import org.jmeld.*;
+import org.jmeld.util.*;
 
 import java.io.*;
 import java.util.*;
@@ -11,13 +12,13 @@ public class ConfigurationManager
   private static ConfigurationManager instance = new ConfigurationManager();
 
   // instance variables:
-  private Map<String, AbstractConfiguration>         configurations;
-  private Map<String, List<ConfigurationListenerIF>> listenerMap;
+  private Map<String, AbstractConfiguration>                configurations;
+  private Map<String, WeakHashSet<ConfigurationListenerIF>> listenerMap;
 
   private ConfigurationManager()
   {
     configurations = new HashMap<String, AbstractConfiguration>();
-    listenerMap = new HashMap<String, List<ConfigurationListenerIF>>();
+    listenerMap = new HashMap<String, WeakHashSet<ConfigurationListenerIF>>();
   }
 
   public static ConfigurationManager getInstance()
@@ -84,15 +85,15 @@ public class ConfigurationManager
     Class                   clazz,
     ConfigurationListenerIF listener)
   {
-    List<ConfigurationListenerIF> listeners;
-    String                        key;
+    WeakHashSet<ConfigurationListenerIF> listeners;
+    String                               key;
 
     key = clazz.getName();
 
     listeners = listenerMap.get(key);
     if (listeners == null)
     {
-      listeners = new ArrayList<ConfigurationListenerIF>();
+      listeners = new WeakHashSet<ConfigurationListenerIF>();
       listenerMap.put(key, listeners);
     }
 
@@ -103,7 +104,7 @@ public class ConfigurationManager
     Class                   clazz,
     ConfigurationListenerIF listener)
   {
-    List<ConfigurationListenerIF> listeners;
+    Set<ConfigurationListenerIF> listeners;
 
     listeners = listenerMap.get(clazz.getName());
     if (listeners != null)
@@ -114,7 +115,7 @@ public class ConfigurationManager
 
   void fireChanged(Class clazz)
   {
-    List<ConfigurationListenerIF> listeners;
+    Set<ConfigurationListenerIF> listeners;
 
     listeners = listenerMap.get(clazz.getName());
     if (listeners != null)
