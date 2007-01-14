@@ -8,6 +8,7 @@ package org.jmeld.ui.conf;
 
 import java.awt.Color;
 import javax.swing.JColorChooser;
+import javax.swing.JDialog;
 import org.jmeld.conf.EditorConfiguration;
 import org.jmeld.conf.JMeldConfiguration;
 import org.jmeld.util.conf.ConfigurationListenerIF;
@@ -19,6 +20,8 @@ import org.jmeld.util.conf.ConfigurationListenerIF;
 public class EditorPreferencePanel extends javax.swing.JPanel
     implements ConfigurationListenerIF
 {
+  static private JDialog       colorDialog;
+  static private JColorChooser colorChooser;
   
   /** Creates new form EditorPreferencePanel */
   public EditorPreferencePanel ()
@@ -224,7 +227,7 @@ public class EditorPreferencePanel extends javax.swing.JPanel
   {//GEN-HEADEREND:event_colorChangedButtonActionPerformed
      Color color;
      
-     color = JColorChooser.showDialog(this, "Choose Color", getEditorSettings().getChangedColor());
+     color = chooseColor(getEditorSettings().getChangedColor());
      if(color != null)
      {
        getEditorSettings().setChangedColor(color);
@@ -235,7 +238,7 @@ public class EditorPreferencePanel extends javax.swing.JPanel
   {//GEN-HEADEREND:event_colorDeletedButtonActionPerformed
      Color color;
      
-     color = JColorChooser.showDialog(this, "Choose Color", getEditorSettings().getDeletedColor());
+     color = chooseColor(getEditorSettings().getDeletedColor());
      if(color != null)
      {
        getEditorSettings().setDeletedColor(color);
@@ -251,7 +254,7 @@ public class EditorPreferencePanel extends javax.swing.JPanel
   {//GEN-HEADEREND:event_colorAddedButtonActionPerformed
      Color color;
      
-     color = JColorChooser.showDialog(this, "Choose Color", getEditorSettings().getAddedColor());
+     color = chooseColor(getEditorSettings().getAddedColor());
      if(color != null)
      {
        getEditorSettings().setAddedColor(color);
@@ -287,10 +290,22 @@ public class EditorPreferencePanel extends javax.swing.JPanel
   private javax.swing.JCheckBox showLineNumbersCheckBox;
   private javax.swing.JSpinner tabSizeSpinner;
   // End of variables declaration//GEN-END:variables
- 
-  public void stop()
-  {
-    JMeldConfiguration.getInstance().removeConfigurationListener(this);
+
+  private Color chooseColor(Color initialColor)
+  { 
+    // Do not instantiate ColorChooser multiple times because it contains
+    //   a memory leak.
+    if(colorDialog == null)
+    {
+      colorChooser = new JColorChooser(initialColor);
+      colorDialog = colorChooser.createDialog(null, "Choose color", true, 
+                                    colorChooser, null, null);
+    }
+
+    colorChooser.setColor(initialColor);
+    colorDialog.setVisible(true);
+
+    return colorChooser.getColor();
   }
 
   private void updateFromConfiguration()
