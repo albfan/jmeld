@@ -337,7 +337,7 @@ public class JMeldPanel
 
     action = actionHandler.createAction(this, CONFIGURATION_ACTION);
     action.setIcon("stock_preferences");
-    action.setToolTip("Configuration");
+    action.setToolTip("Settings");
 
     action = actionHandler.createAction(this, EXIT_ACTION);
     installKey("ESCAPE", action);

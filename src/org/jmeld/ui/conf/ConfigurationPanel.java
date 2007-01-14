@@ -33,6 +33,8 @@ public class ConfigurationPanel
        implements ConfigurationListenerIF
 {
   private JButton saveButton;
+  private JButton saveAsButton;
+  private JButton reloadButton;
   private JLabel  fileLabel;
 
   public ConfigurationPanel()
@@ -49,29 +51,30 @@ public class ConfigurationPanel
     FormLayout      layout;
     CellConstraints cc;
     JTabbedPane     tabbedPane;
-    ImageIcon       icon;
 
     tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
     tabbedPane.setFocusable(false);
     tabbedPane.addTab(
       "Editor",
-      new EmptyIcon(10, 40),
+      //new EmptyIcon(10, 40),
+    ImageUtil.getImageIcon("stock_edit"),
       new EditorPreferencePanel());
     tabbedPane.addTab(
       "Display",
       new EmptyIcon(10, 40),
       new JButton("Display"));
 
-    saveButton = new JButton();
-    saveButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    saveButton.setContentAreaFilled(false);
-    icon = ImageUtil.getSmallImageIcon("stock_save");
-    saveButton.setIcon(icon);
-    saveButton.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+    saveButton = createButton("stock_save", "Save settings");
     saveButton.addActionListener(getSaveButtonAction());
+
+    saveAsButton = createButton("stock_save-as",
+        "Save settings to a different file");
+    reloadButton = createButton("stock_reload",
+        "Reload settings from a different file");
+
     fileLabel = new JLabel();
 
-    columns = "3px, pref, 3px, 0:grow, 3px";
+    columns = "3px, pref, 3px, 0:grow, 3px, pref, 3px, pref, 3px";
     rows = "6px, pref, 3px, fill:0:grow, 6px";
     layout = new FormLayout(columns, rows);
     setLayout(layout);
@@ -81,13 +84,35 @@ public class ConfigurationPanel
       saveButton,
       cc.xy(2, 2));
     add(
+      saveAsButton,
+      cc.xy(6, 2));
+    add(
+      reloadButton,
+      cc.xy(8, 2));
+    add(
       fileLabel,
       cc.xy(4, 2));
     add(
       tabbedPane,
-      cc.xyw(2, 4, 3));
+      cc.xyw(2, 4, 7));
 
     initConfiguration();
+  }
+
+  private JButton createButton(String iconName, String toolTipText)
+  {
+    JButton   button;
+    ImageIcon icon;
+
+    button = new JButton();
+    button.setToolTipText(toolTipText);
+    button.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    button.setContentAreaFilled(false);
+    icon = ImageUtil.getSmallImageIcon(iconName);
+    button.setIcon(icon);
+    button.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+
+    return button;
   }
 
   public ActionListener getSaveButtonAction()
