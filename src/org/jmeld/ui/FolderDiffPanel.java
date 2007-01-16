@@ -22,7 +22,6 @@ import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.Highlighter;
-import org.jdesktop.swingx.table.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
@@ -33,6 +32,7 @@ import org.jmeld.util.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
 import org.jmeld.util.scan.*;
+import org.jmeld.ui.swing.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -70,7 +70,7 @@ public class FolderDiffPanel
   private void init()
   {
     JXTable                  table;
-    //JXGroupableTableHeader   tableHeader;
+    GroupableTableHeader   tableHeader;
     JScrollPane              sp;
     TableColumnModel         columnModel;
     TableColumn              column;
@@ -104,10 +104,8 @@ public class FolderDiffPanel
 
     columnModel = table.getColumnModel();
 
-    //tableHeader = new JXGroupableTableHeader(columnModel);
-    //tableHeader.setReorderingAllowed(false);
-    //tableHeader.setResizingAllowed(false);
-    //table.setTableHeader(tableHeader);
+    tableHeader = new GroupableTableHeader(columnModel);
+    table.setTableHeader(tableHeader);
 
     columnGroups = new HashMap<String, ColumnGroup>();
     for (int i = 0; i < tableModel.getColumnCount(); i++)
@@ -135,12 +133,10 @@ public class FolderDiffPanel
       }
     }
 
-/*
     for (ColumnGroup cg : columnGroups.values())
     {
       tableHeader.addColumnGroup(cg);
     }
-    */
 
     // Double-click will show the differences of a node.
     table.addMouseListener(getMouseListener());
