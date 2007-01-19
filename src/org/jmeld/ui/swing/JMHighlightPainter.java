@@ -16,7 +16,8 @@
  */
 package org.jmeld.ui.swing;
 
-import org.jmeld.conf.*;
+import org.jmeld.settings.EditorSettings;
+import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 
@@ -175,7 +176,7 @@ public class JMHighlightPainter
     }
   }
 
-  private EditorConfiguration getSettings()
+  private EditorSettings getSettings()
   {
     return JMeldSettings.getInstance().getEditor();
   }

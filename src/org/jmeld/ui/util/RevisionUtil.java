@@ -16,11 +16,12 @@
  */
 package org.jmeld.ui.util;
 
-import org.jmeld.conf.*;
 import org.jmeld.diff.*;
 
 import java.awt.*;
 import java.util.*;
+import org.jmeld.settings.EditorSettings;
+import org.jmeld.settings.JMeldSettings;
 
 public class RevisionUtil
 {
@@ -58,7 +59,7 @@ public class RevisionUtil
     return result;
   }
 
-  static private EditorConfiguration getSettings()
+  static private EditorSettings getSettings()
   {
     return JMeldSettings.getInstance().getEditor();
   }

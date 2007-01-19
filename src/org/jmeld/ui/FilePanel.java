@@ -17,8 +17,8 @@
 package org.jmeld.ui;
 
 import org.jmeld.*;
-import org.jmeld.conf.*;
 import org.jmeld.diff.*;
+import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.ui.text.*;

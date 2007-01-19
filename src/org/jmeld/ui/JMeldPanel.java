@@ -23,8 +23,8 @@ import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.action.*;
-import org.jmeld.ui.conf.*;
 import org.jmeld.ui.search.*;
+import org.jmeld.ui.settings.SettingsPanel;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -643,7 +643,7 @@ public class JMeldPanel
   {
     AbstractContentPanel content;
 
-    content = new ConfigurationPanel();
+    content = new SettingsPanel();
 
     tabbedPane.add(
       content,
