@@ -76,12 +76,14 @@ public class JMeld
     {
       System.setProperty("swing.aatext", "true");
 
+/*
       version = System.getProperty("java.version");
       if (version.startsWith("1.6"))
       {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
       }
       else
+	*/
       {
         PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
