@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.*;
 
 public class MultiLineHeaderRenderer
-       extends JList
+       extends JLabel
        implements TableCellRenderer
 {
   private Icon icon;
@@ -21,12 +21,14 @@ public class MultiLineHeaderRenderer
       "TableHeader.foreground", "TableHeader.font");
     LookAndFeel.installBorder(this, "TableHeader.cellBorder");
 
+/*
     renderer = getCellRenderer();
     if (renderer instanceof JLabel)
     {
       ((JLabel) renderer).setHorizontalAlignment(JLabel.CENTER);
       setCellRenderer(renderer);
     }
+    */
     
     setOpaque(false);
   }
@@ -40,28 +42,11 @@ public class MultiLineHeaderRenderer
     int     column)
   {
     String         str;
-    BufferedReader br;
-    String         line;
-    Vector         v;
 
     str = (value == null) ? "" : value.toString();
-    br = new BufferedReader(new StringReader(str));
-    v = new Vector();
-    icon = null;
 
-    try
-    {
-      while ((line = br.readLine()) != null)
-      {
-        v.addElement(line);
-      }
-    }
-    catch (IOException ex)
-    {
-      ex.printStackTrace();
-    }
-
-    setListData(v);
+    setText(str);
+    setHorizontalAlignment(JLabel.CENTER);
 
     return this;
   }
@@ -71,6 +56,7 @@ public class MultiLineHeaderRenderer
     this.icon = icon;
   }
 
+/*
   public void paintComponent(Graphics g)
   {
     Rectangle r;
@@ -88,6 +74,7 @@ public class MultiLineHeaderRenderer
       icon.paintIcon(this, g, x, y);
     }
   }
+  */
 
   private static final long serialVersionUID = 101783804743496189L;
 }

@@ -28,12 +28,14 @@ public class ColumnGroup
     {
       multiHeaderRenderer = new MultiLineHeaderRenderer();
 
+/*
       internalRenderer = multiHeaderRenderer.getCellRenderer();
       if (internalRenderer instanceof JLabel)
       {
         ((JLabel) internalRenderer).setOpaque(false);
         multiHeaderRenderer.setCellRenderer(internalRenderer);
       }
+      */
       this.renderer = multiHeaderRenderer;
     }
     else
