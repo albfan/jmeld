@@ -134,7 +134,7 @@ public class ConfigurationPanel
 
   private void initConfiguration()
   {
-    JMeldConfiguration c;
+    JMeldSettings c;
 
     c = getConfiguration();
 
@@ -142,8 +142,8 @@ public class ConfigurationPanel
     saveButton.setEnabled(c.isChanged());
   }
 
-  private JMeldConfiguration getConfiguration()
+  private JMeldSettings getConfiguration()
   {
-    return JMeldConfiguration.getInstance();
+    return JMeldSettings.getInstance();
   }
 }

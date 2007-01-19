@@ -773,7 +773,7 @@ public class FilePanel
 
   private void initConfiguration()
   {
-    JMeldConfiguration c;
+    JMeldSettings c;
 
     c = getConfiguration();
 
@@ -781,8 +781,8 @@ public class FilePanel
     getEditor().setTabSize(c.getEditor().getTabSize());
   }
 
-  private JMeldConfiguration getConfiguration()
+  private JMeldSettings getConfiguration()
   {
-    return JMeldConfiguration.getInstance();
+    return JMeldSettings.getInstance();
   }
 }

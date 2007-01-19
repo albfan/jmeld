@@ -60,6 +60,6 @@ public class RevisionUtil
 
   static private EditorConfiguration getSettings()
   {
-    return JMeldConfiguration.getInstance().getEditor();
+    return JMeldSettings.getInstance().getEditor();
   }
 }

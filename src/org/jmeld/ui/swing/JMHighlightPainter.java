@@ -74,7 +74,7 @@ public class JMHighlightPainter
     this.color = color;
     this.line = line;
 
-    JMeldConfiguration.getInstance().addConfigurationListener(this);
+    JMeldSettings.getInstance().addConfigurationListener(this);
   }
 
   public void paint(
@@ -177,6 +177,6 @@ public class JMHighlightPainter
 
   private EditorConfiguration getSettings()
   {
-    return JMeldConfiguration.getInstance().getEditor();
+    return JMeldSettings.getInstance().getEditor();
   }
 }

@@ -10,7 +10,7 @@ import java.awt.Color;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import org.jmeld.conf.EditorConfiguration;
-import org.jmeld.conf.JMeldConfiguration;
+import org.jmeld.conf.JMeldSettings;
 import org.jmeld.ui.util.EmptyIcon;
 import org.jmeld.util.conf.ConfigurationListenerIF;
 
@@ -29,7 +29,7 @@ public class EditorPreferencePanel extends javax.swing.JPanel
   {
     initComponents ();
     updateFromConfiguration();
-    JMeldConfiguration.getInstance().addConfigurationListener(this);
+    JMeldSettings.getInstance().addConfigurationListener(this);
   }
   
   /** This method is called from within the constructor to
@@ -341,6 +341,6 @@ public class EditorPreferencePanel extends javax.swing.JPanel
 
   private EditorConfiguration getEditorSettings()
   {
-    return JMeldConfiguration.getInstance().getEditor();
+    return JMeldSettings.getInstance().getEditor();
   }
 }
