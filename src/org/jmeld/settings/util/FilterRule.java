@@ -14,7 +14,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
-package org.jmeld.settings;
+package org.jmeld.settings.util;
 
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
@@ -24,42 +24,71 @@ import javax.xml.bind.annotation.*;
 import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
-public class ColorSetting
+public class FilterRule
        extends AbstractConfigurationElement
 {
   @XmlAttribute
-  private int              b = -1;
+  private boolean              active;
   @XmlAttribute
-  private int              g = -1;
+  private String               pattern;
   @XmlAttribute
-  private int              r = -1;
-  private Color            color;
+  private String               rule;
+  @XmlAttribute
+  private String               description;
 
-  public ColorSetting()
+  public FilterRule(
+    String  description,
+    String  rule,
+    String  pattern,
+    boolean active)
+  {
+    setDescription(description);
+    setRule(rule);
+    setPattern(pattern);
+    setActive(active);
+  }
+
+  public FilterRule()
   {
   }
 
-  public ColorSetting(Color color)
+  public void setDescription(String description)
   {
-    this.r = color.getRed();
-    this.g = color.getGreen();
-    this.b = color.getBlue();
-
-    this.color = color;
+    this.description = description;
   }
 
-  public Color getColor()
+  public String getDescription()
   {
-    if (r == -1 || g == -1 || b == -1)
-    {
-      return null;
-    }
+    return description;
+  }
 
-    if (color == null)
-    {
-      color = new Color(r, g, b);
-    }
+  public void setRule(String rule)
+  {
+    this.rule = rule;
+  }
 
-    return color;
+  public String getRule()
+  {
+    return rule;
+  }
+
+  public void setPattern(String pattern)
+  {
+    this.pattern = pattern;
+  }
+
+  public String getPattern()
+  {
+    return pattern;
+  }
+
+  public void setActive(boolean active)
+  {
+    this.active = active;
+  }
+
+  public boolean getActive()
+  {
+    return active;
   }
 }

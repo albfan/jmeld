@@ -16,50 +16,54 @@
  */
 package org.jmeld.settings;
 
+import org.jmeld.settings.util.*;
+import org.jmeld.ui.util.*;
+import org.jmeld.util.*;
 import org.jmeld.util.conf.*;
 
 import javax.xml.bind.annotation.*;
 
-import java.io.*;
+import java.util.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlRootElement(name = "jmeld")
-public class JMeldSettings
-       extends AbstractConfiguration
+public class FilterSettings
+       extends AbstractConfigurationElement
 {
-  // class variables:
-  public static JMeldSettings instance;
+  @XmlElement
+  private List<Filter> filters;
 
-  // Instance variables:
-  @XmlElement(name = "editor")
-  private EditorSettings editor = new EditorSettings();
-  @XmlElement(name = "filter")
-  private FilterSettings filter = new FilterSettings();
-
-
-  public JMeldSettings()
+  public FilterSettings()
   {
-    init();
+    filters = new ArrayList<Filter>();
   }
 
-  public static synchronized JMeldSettings getInstance()
+  public void addFilter(Filter filter)
   {
-    return (JMeldSettings) ConfigurationManager.getInstance()
-                                                    .get(JMeldSettings.class);
+    filters.add(filter);
   }
 
-  public void init()
+  public void removeFilter(Filter filter)
   {
-    editor.init(this);
+    filters.remove(filter);
   }
 
-  public EditorSettings getEditor()
+  public List<Filter> getFilters()
   {
-    return editor;
+    return filters;
   }
 
-  public FilterSettings getFilter()
+  public Filter getFilter(String name)
   {
-    return filter;
+    for (Filter f : filters)
+    {
+      if (ObjectUtil.equals(
+          f.getName(),
+          name))
+      {
+        return f;
+      }
+    }
+
+    return null;
   }
 }

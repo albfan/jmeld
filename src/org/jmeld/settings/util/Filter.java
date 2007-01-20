@@ -14,52 +14,60 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
-package org.jmeld.settings;
+package org.jmeld.settings.util;
 
+import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 
 import javax.xml.bind.annotation.*;
 
-import java.io.*;
+import java.util.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlRootElement(name = "jmeld")
-public class JMeldSettings
-       extends AbstractConfiguration
+public class Filter
+       extends AbstractConfigurationElement
 {
-  // class variables:
-  public static JMeldSettings instance;
-
-  // Instance variables:
-  @XmlElement(name = "editor")
-  private EditorSettings editor = new EditorSettings();
-  @XmlElement(name = "filter")
-  private FilterSettings filter = new FilterSettings();
-
-
-  public JMeldSettings()
+  @XmlAttribute
+  private Boolean                     includeDefault = Boolean.FALSE;
+  @XmlAttribute
+  private String                      name;
+  @XmlElement
+  private List<FilterRule>            rules;
   {
-    init();
+    rules = new ArrayList<FilterRule>();
   }
 
-  public static synchronized JMeldSettings getInstance()
+  public Filter(String name)
   {
-    return (JMeldSettings) ConfigurationManager.getInstance()
-                                                    .get(JMeldSettings.class);
+    setName(name);
   }
 
-  public void init()
+  public Filter()
   {
-    editor.init(this);
   }
 
-  public EditorSettings getEditor()
+  public void setName(String name)
   {
-    return editor;
+    this.name = name;
   }
 
-  public FilterSettings getFilter()
+  public String getName()
   {
-    return filter;
+    return name;
+  }
+
+  public void addRule(FilterRule rule)
+  {
+    rules.add(rule);
+  }
+
+  public void removeRule(FilterRule rule)
+  {
+    rules.remove(rule);
+  }
+
+  public List<FilterRule> getRules()
+  {
+    return rules;
   }
 }

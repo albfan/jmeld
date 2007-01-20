@@ -1,117 +1,84 @@
 /*
-   JMeld is a visual diff and merge tool.
-   Copyright (C) 2007  Kees Kuip
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public
-   License as published by the Free Software Foundation; either
-   version 2.1 of the License, or (at your option) any later version.
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA  02110-1301  USA
+ * SettingsPanel.java
+ *
  */
 package org.jmeld.ui.settings;
 
-import com.jgoodies.forms.layout.*;
 import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ *
+ * @author  kees
+ */
 public class SettingsPanel
-       extends AbstractContentPanel
+       extends SettingsPanelForm
        implements ConfigurationListenerIF
 {
-  private JButton saveButton;
-  private JButton saveAsButton;
-  private JButton reloadButton;
-  private JLabel  fileLabel;
+  private DefaultListModel listModel;
 
   public SettingsPanel()
   {
     init();
+    initConfiguration();
 
     getConfiguration().addConfigurationListener(this);
   }
 
   private void init()
   {
-    String          columns;
-    String          rows;
-    FormLayout      layout;
-    CellConstraints cc;
-    JTabbedPane     tabbedPane;
+    settingsPanel.setLayout(new CardLayout());
+    for (Settings setting : Settings.values())
+    {
+      settingsPanel.add(
+        setting.getPanel(),
+        setting.getName());
+    }
 
-    tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-    tabbedPane.setFocusable(false);
-    tabbedPane.addTab(
-      "Editor",
-      //new EmptyIcon(10, 40),
-    ImageUtil.getImageIcon("stock_edit"),
-      new EditorSettingsPanel());
-    tabbedPane.addTab(
-      "Display",
-      new EmptyIcon(10, 40),
-      new JButton("Display"));
-
-    saveButton = createButton("stock_save", "Save settings");
+    initButton(saveButton, "stock_save", "Save settings");
     saveButton.addActionListener(getSaveButtonAction());
 
-    saveAsButton = createButton("stock_save-as",
-        "Save settings to a different file");
-    reloadButton = createButton("stock_reload",
-        "Reload settings from a different file");
+    initButton(saveAsButton, "stock_save-as",
+      "Save settings to a different file");
+    initButton(reloadButton, "stock_reload",
+      "Reload settings from a different file");
 
-    fileLabel = new JLabel();
+    fileLabel.setText("");
 
-    columns = "3px, pref, 3px, 0:grow, 3px, pref, 3px, pref, 3px";
-    rows = "6px, pref, 3px, fill:0:grow, 6px";
-    layout = new FormLayout(columns, rows);
-    setLayout(layout);
-    cc = new CellConstraints();
-
-    add(
-      saveButton,
-      cc.xy(2, 2));
-    add(
-      saveAsButton,
-      cc.xy(6, 2));
-    add(
-      reloadButton,
-      cc.xy(8, 2));
-    add(
-      fileLabel,
-      cc.xy(4, 2));
-    add(
-      tabbedPane,
-      cc.xyw(2, 4, 7));
-
-    initConfiguration();
+    listModel = new DefaultListModel();
+    for (Settings setting : Settings.values())
+    {
+      listModel.addElement(setting);
+    }
+    settingItems.setModel(listModel);
+    settingItems.setCellRenderer(new SettingCellRenderer());
+    settingItems.setSelectedIndex(0);
+    settingItems.addListSelectionListener(getSettingItemsAction());
   }
 
-  private JButton createButton(String iconName, String toolTipText)
+  private void initButton(
+    JButton button,
+    String  iconName,
+    String  toolTipText)
   {
-    JButton   button;
     ImageIcon icon;
 
-    button = new JButton();
+    button.setText("");
     button.setToolTipText(toolTipText);
     button.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     button.setContentAreaFilled(false);
     icon = ImageUtil.getSmallImageIcon(iconName);
     button.setIcon(icon);
     button.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
-
-    return button;
+    button.setFocusable(false);
   }
 
   public ActionListener getSaveButtonAction()
@@ -123,6 +90,22 @@ public class SettingsPanel
           getConfiguration().save();
           initConfiguration();
         }
+      };
+  }
+
+  public ListSelectionListener getSettingItemsAction()
+  {
+    return new ListSelectionListener()
+      {
+        public void valueChanged(ListSelectionEvent event)
+        {
+	  CardLayout layout;
+	  Settings   settings;
+
+	  settings = (Settings) settingItems.getSelectedValue();
+	  layout = (CardLayout) settingsPanel.getLayout();
+	  layout.show(settingsPanel, settings.getName());
+	}
       };
   }
 
