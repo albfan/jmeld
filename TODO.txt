@@ -7,12 +7,21 @@ Release 1.1:
          a strange way.
 - [done] Show linenumbers bar in FilePanel.
 - [done] Select a diff when searching. (linenumberselection?)
-- [done] Create nice website
+- [done] Create a website
+
+Release 1.1.1:
+- [done] Create settings tab 
+- [done] Import/Export settings
+
+Release 1.1.2:
+-        Remember which filter the previous time was used in NewDirectoryDiff
+-        Implement treetable for directorydiff
+-        Import 'filters' in 'filters' (get rid of 'include default filter')
+-        Make checkbox 'Active' work.
+-        Implement 'flat' directorydiff (like 'Projects' tab in netbeans)
 
 Release 1.2:
 -        Create manual
-- [done] Create settings tab 
--        Import/Export settings
 
 Release 2.0:
 -        Implement directory diff.
@@ -23,9 +32,17 @@ Release 2.0:
 Release 2.1:
 -        Change Revision when editing instead of creating a New revision 
          every time. [PERFORMANCE]
+-        Ignore whitespace in diff.
+-        Exclude patterns in diff.
 
 Release 3.0:
 -        Implement subversion diff.
 
+Release 3.5:
+-        Implement 3-way diff.
+
 Release 4.0:
-1. Implement directory/file diff with ftp, sftp etc.
+-        Implement directory/file diff with ftp, sftp etc.
+
+
+

@@ -1,5 +1,5 @@
 
-Release 1.2:
+Release 1.1.1:
   - ESCAPE closes the current tab
   - New FileDiff/DirectoryDiff: pack dialog again after choosing a
       file because the name of the file can be larger than the combobox.
@@ -15,6 +15,8 @@ Release 1.2:
        (Listeners are in a WeakHashSet now)
   - BUG Memoryleak : Dispose New/Exit dialogs
   - BUG Memoryleak : JColorChooser has a memory leak. Make it static.
+  - Default L&F : Plastic look and feel
+  - Change GroupableTableHeader to the old version
 
 Release 1.1:
   New functionality:
