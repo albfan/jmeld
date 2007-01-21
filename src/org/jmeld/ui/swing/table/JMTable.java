@@ -32,7 +32,6 @@ import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
-import org.jmeld.util.scan.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
