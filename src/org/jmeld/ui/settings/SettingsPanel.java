@@ -8,6 +8,7 @@ import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
+import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -103,14 +104,18 @@ public class SettingsPanel
       {
         public void actionPerformed(ActionEvent ae)
         {
-          JFileChooser chooser;
-          int          result;
-          File         file;
+          JFileChooser          chooser;
+          int                   result;
+          File                  file;
+          FileChooserPreference pref;
 
           chooser = new JFileChooser();
+          pref = new FileChooserPreference("SettingsSave", chooser);
+
           result = chooser.showOpenDialog(SettingsPanel.this);
           if (result == JFileChooser.APPROVE_OPTION)
           {
+            pref.save();
             file = chooser.getSelectedFile();
             getConfiguration().setConfigurationFile(file);
             getConfiguration().save();
@@ -126,14 +131,18 @@ public class SettingsPanel
       {
         public void actionPerformed(ActionEvent ae)
         {
-          JFileChooser chooser;
-          int          result;
-          File         file;
+          JFileChooser          chooser;
+          int                   result;
+          File                  file;
+          FileChooserPreference pref;
 
           chooser = new JFileChooser();
+          pref = new FileChooserPreference("SettingsSave", chooser);
+
           result = chooser.showOpenDialog(SettingsPanel.this);
           if (result == JFileChooser.APPROVE_OPTION)
           {
+            pref.save();
             file = chooser.getSelectedFile();
             if (!ConfigurationManager.getInstance().reload(
                 file,
