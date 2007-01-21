@@ -42,8 +42,6 @@ public class ConfigurationPersister
       {
         configuration = (T) context.unmarshal(is);
 
-        configuration.setConfigurationFileName(file.getCanonicalPath());
-
         // Initialize the root of the configuration. 
         // This can be used to prepare some transient maps, lists
         //   to speed up access (comparable with indexes in database)

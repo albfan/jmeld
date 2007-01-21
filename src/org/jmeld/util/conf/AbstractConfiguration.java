@@ -7,18 +7,26 @@ import java.util.*;
 
 public abstract class AbstractConfiguration
 {
-  private String  configurationFileName;
-  private boolean changed;
+  private boolean                 changed;
+  private ConfigurationPreference preference;
 
   public AbstractConfiguration()
   {
+    preference = new ConfigurationPreference(getClass());
   }
 
   public abstract void init();
 
-  void setConfigurationFileName(String configurationFileName)
+  public String getConfigurationFileName()
   {
-    this.configurationFileName = configurationFileName;
+    try
+    {
+      return preference.getFile().getCanonicalPath();
+    }
+    catch (IOException ex)
+    {
+      return "??";
+    }
   }
 
   public boolean isChanged()
@@ -26,26 +34,18 @@ public abstract class AbstractConfiguration
     return changed;
   }
 
-  public String getConfigurationFileName()
-  {
-    return configurationFileName;
-  }
-
   public void save()
   {
-    if (configurationFileName != null)
+    try
     {
-      try
-      {
-        ConfigurationPersister.getInstance().save(
-          this,
-          new File(configurationFileName));
-        changed = false;
-      }
-      catch (Exception ex)
-      {
-        ex.printStackTrace();
-      }
+      ConfigurationPersister.getInstance().save(
+        this,
+        preference.getFile());
+      changed = false;
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
     }
   }
 

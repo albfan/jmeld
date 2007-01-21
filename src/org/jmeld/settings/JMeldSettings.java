@@ -39,7 +39,6 @@ public class JMeldSettings
 
   public JMeldSettings()
   {
-    init();
   }
 
   public static synchronized JMeldSettings getInstance()

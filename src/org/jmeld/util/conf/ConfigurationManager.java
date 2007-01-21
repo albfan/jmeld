@@ -42,6 +42,7 @@ public class ConfigurationManager
         try
         {
           configuration = (AbstractConfiguration) clazz.newInstance();
+	  configuration.init();
         }
         catch (Exception ex)
         {
@@ -57,21 +58,21 @@ public class ConfigurationManager
 
   private AbstractConfiguration load(Class clazz)
   {
-    String fileName;
-    int    index;
+    String                  fileName;
+    int                     index;
+    ConfigurationPreference preference;
+    File                    file;
 
     try
     {
-      fileName = clazz.getName();
-      index = fileName.lastIndexOf(".");
-      if (index != -1)
+      preference = new ConfigurationPreference(clazz);
+      file = preference.getFile();
+      if (file.exists())
       {
-        fileName = fileName.substring(index + 1);
+        return ConfigurationPersister.getInstance().load(clazz, file);
       }
 
-      return ConfigurationPersister.getInstance().load(
-        clazz,
-        new File(fileName + ".xml"));
+      return null;
     }
     catch (Exception ex)
     {

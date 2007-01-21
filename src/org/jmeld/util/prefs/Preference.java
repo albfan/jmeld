@@ -26,7 +26,7 @@ public abstract class Preference
   // Instance variables:
   private String preferenceName;
 
-  Preference(String preferenceName)
+  public Preference(String preferenceName)
   {
     this.preferenceName = preferenceName;
   }

@@ -28,8 +28,8 @@ public class EditorSettingsPanel
 
   public EditorSettingsPanel()
   {
-    init();
     initConfiguration();
+    init();
 
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
