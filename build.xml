@@ -4,11 +4,9 @@
 <!-- (If you delete it and reopen the project it will be recreated.) -->
 <project basedir="." default="jmeld" name="JMeld">
     <description>Builds, tests, and runs the project JMeld.</description>
-    <import file="nbproject/executionprofile-impl.xml"/>
     <import file="nbproject/build-impl.xml"/>
 
     <import file="nbproject/profiler-build-impl.xml"/>
-    <import file="nbproject/profiler-build-impl.xml"/>    <import file="nbproject/profiler-build-impl.xml"/>
     <!--
 
     There exist several targets which are by default empty and which can be 
