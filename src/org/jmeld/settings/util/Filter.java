@@ -16,6 +16,7 @@
  */
 package org.jmeld.settings.util;
 
+import org.jmeld.settings.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 
@@ -44,11 +45,28 @@ public class Filter
 
   public Filter()
   {
+    // Non argument constructor for JAXB
+  }
+
+  public void init(JMeldSettings root)
+  {
+    super.init(root);
+
+    for (FilterRule rule : rules)
+    {
+      rule.init(root);
+    }
+  }
+
+  public boolean isDefault()
+  {
+    return "default".equals(name);
   }
 
   public void setName(String name)
   {
     this.name = name;
+    fireChanged();
   }
 
   public String getName()
@@ -56,14 +74,36 @@ public class Filter
     return name;
   }
 
+  public void insertRule(FilterRule ruleToInsertAfter, FilterRule rule)
+  {
+    int index;
+
+    rule.init(configuration);
+
+    index = rules.indexOf(ruleToInsertAfter);
+    if(index != -1)
+    {
+      rules.add(index + 1, rule);
+    }
+    else
+    {
+      rules.add(rule);
+    }
+
+    fireChanged();
+  }
+
   public void addRule(FilterRule rule)
   {
+    rule.init(configuration);
     rules.add(rule);
+    fireChanged();
   }
 
   public void removeRule(FilterRule rule)
   {
     rules.remove(rule);
+    fireChanged();
   }
 
   public List<FilterRule> getRules()

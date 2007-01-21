@@ -25,6 +25,7 @@ import org.jdesktop.swingx.decorator.Highlighter;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
+import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
@@ -69,7 +70,7 @@ public class FolderDiffPanel
 
   private void init()
   {
-    JXTable                  table;
+    JMTable                  table;
     GroupableTableHeader   tableHeader;
     JScrollPane              sp;
     TableColumnModel         columnModel;
@@ -81,7 +82,7 @@ public class FolderDiffPanel
 
     setLayout(new BorderLayout());
 
-    table = new JXTable();
+    table = new JMTable();
     table.setSortable(false);
     table.setShowHorizontalLines(false);
     //table.setShowVerticalLines(false);
@@ -95,48 +96,6 @@ public class FolderDiffPanel
 
     tableModel = new FolderDiffTableModel(diff);
     table.setModel(tableModel);
-
-    // Make sure the icons fit well.
-    if (table.getRowHeight() < 22)
-    {
-      table.setRowHeight(22);
-    }
-
-    columnModel = table.getColumnModel();
-
-    tableHeader = new GroupableTableHeader(columnModel);
-    table.setTableHeader(tableHeader);
-
-    columnGroups = new HashMap<String, ColumnGroup>();
-    for (int i = 0; i < tableModel.getColumnCount(); i++)
-    {
-      column = columnModel.getColumn(i);
-
-      preferredWidth = tableModel.getColumnSize(i);
-      if (preferredWidth > 0)
-      {
-        column.setMinWidth(preferredWidth);
-        column.setMaxWidth(preferredWidth);
-        column.setPreferredWidth(preferredWidth);
-      }
-
-      groupName = tableModel.getColumnGroupName(i);
-      if (groupName != null)
-      {
-        group = columnGroups.get(groupName);
-        if (group == null)
-        {
-          group = new ColumnGroup(groupName);
-          columnGroups.put(groupName, group);
-        }
-        group.add(column);
-      }
-    }
-
-    for (ColumnGroup cg : columnGroups.values())
-    {
-      tableHeader.addColumnGroup(cg);
-    }
 
     // Double-click will show the differences of a node.
     table.addMouseListener(getMouseListener());

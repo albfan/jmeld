@@ -27,18 +27,24 @@ import java.awt.*;
 public class FilterRule
        extends AbstractConfigurationElement
 {
+  public enum Rule
+  {
+    includes,
+    excludes;
+  }
+  
   @XmlAttribute
   private boolean              active;
   @XmlAttribute
   private String               pattern;
   @XmlAttribute
-  private String               rule;
+  private Rule                 rule;
   @XmlAttribute
   private String               description;
 
   public FilterRule(
     String  description,
-    String  rule,
+    Rule    rule,
     String  pattern,
     boolean active)
   {
@@ -55,6 +61,7 @@ public class FilterRule
   public void setDescription(String description)
   {
     this.description = description;
+    fireChanged();
   }
 
   public String getDescription()
@@ -62,12 +69,13 @@ public class FilterRule
     return description;
   }
 
-  public void setRule(String rule)
+  public void setRule(Rule rule)
   {
     this.rule = rule;
+    fireChanged();
   }
 
-  public String getRule()
+  public Rule getRule()
   {
     return rule;
   }
@@ -75,6 +83,7 @@ public class FilterRule
   public void setPattern(String pattern)
   {
     this.pattern = pattern;
+    fireChanged();
   }
 
   public String getPattern()
@@ -85,6 +94,7 @@ public class FilterRule
   public void setActive(boolean active)
   {
     this.active = active;
+    fireChanged();
   }
 
   public boolean getActive()

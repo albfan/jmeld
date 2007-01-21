@@ -4,7 +4,7 @@ import java.util.*;
 
 abstract public class AbstractConfigurationElement
 {
-  AbstractConfiguration configuration;
+  protected AbstractConfiguration configuration;
 
   public AbstractConfigurationElement()
   {

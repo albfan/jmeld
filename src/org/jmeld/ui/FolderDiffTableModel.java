@@ -17,6 +17,7 @@
 package org.jmeld.ui;
 
 import org.jmeld.diff.*;
+import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.file.*;
@@ -31,69 +32,35 @@ import java.util.*;
 import java.util.List;
 
 public class FolderDiffTableModel
-       extends AbstractTableModel
+       extends JMTableModel
 {
-  private FolderDiff   diff;
-  private List<Column> columns;
-  private NodeFilter   nodeFilter;
+  private FolderDiff diff;
+  private NodeFilter nodeFilter;
+  private Column     orgNodeColumn;
+  private Column     orgNameColumn;
+  private Column     orgSizeColumn;
+  private Column     orgStateColumn;
+  private Column     mineStateColumn;
+  private Column     mineSizeColumn;
 
   public FolderDiffTableModel(FolderDiff diff)
   {
     this.diff = diff;
 
-    columns = new ArrayList<Column>();
-    columns.add(new Column("orgNode", null, "Node", Icon.class, 40, null));
-    columns.add(new Column("orgName", null, "Name", String.class, -1, null));
-    columns.add(
-      new Column("orgSize", "Original", "Size", Integer.class, 80,
-        Colors.TABLEROW_ORG));
-    columns.add(
-      new Column("orgState", "Original", "", Icon.class, 25,
-        Colors.TABLEROW_ORG));
-    /*
-    columns.add(
-      new Column("copyToRight", "Original", "", Icon.class, 25,
-        Colors.TABLEROW_ORG));
-    columns.add(
-      new Column("copyToLeft", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
-    */
-    columns.add(
-      new Column("mineState", "Mine", "", Icon.class, 25, Colors.TABLEROW_MINE));
-    columns.add(
-      new Column("mineSize", "Mine", "Size", Integer.class, 80,
-        Colors.TABLEROW_MINE));
+    orgNodeColumn = addColumn("orgNode", null, "Node", Icon.class, 4, false,
+        null);
+    orgNameColumn = addColumn("orgName", null, "Name", String.class, -1,
+        false, null);
+    orgSizeColumn = addColumn("orgSize", "Original", "Size", Integer.class, 8,
+        false, Colors.TABLEROW_ORG);
+    orgStateColumn = addColumn("orgState", "Original", "", Icon.class, 3,
+        false, Colors.TABLEROW_ORG);
+    mineStateColumn = addColumn("mineState", "Mine", "", Icon.class, 3, false,
+        Colors.TABLEROW_MINE);
+    mineSizeColumn = addColumn("mineSize", "Mine", "Size", Integer.class, 8,
+        false, Colors.TABLEROW_MINE);
 
     nodeFilter = new NodeFilter();
-  }
-
-  public int getColumnSize(int columnIndex)
-  {
-    return columns.get(columnIndex).columnSize;
-  }
-
-  public String getColumnName(int columnIndex)
-  {
-    return columns.get(columnIndex).columnName;
-  }
-
-  public Class getColumnClass(int columnIndex)
-  {
-    return columns.get(columnIndex).columnClass;
-  }
-
-  public Color getColumnBackground(int columnIndex)
-  {
-    return columns.get(columnIndex).background;
-  }
-
-  public String getColumnGroupName(int columnIndex)
-  {
-    return columns.get(columnIndex).columnGroupName;
-  }
-
-  public int getColumnCount()
-  {
-    return columns.size();
   }
 
   public int getRowCount()
@@ -101,57 +68,38 @@ public class FolderDiffTableModel
     return nodeFilter.getMineNodes().size();
   }
 
-  public String getColumnId(int columnIndex)
-  {
-    return columns.get(columnIndex).id;
-  }
-
   public Object getValueAt(
-    int rowIndex,
-    int columnIndex)
+    int    rowIndex,
+    Column column)
   {
-    String id;
-
-    id = getColumnId(columnIndex);
-
-    if (id.equals("orgNode"))
+    if (column == orgNodeColumn)
     {
       return getNodeIcon(rowIndex);
     }
 
-    if (id.equals("orgState"))
+    if (column == orgStateColumn)
     {
       return getOriginalStateIcon(rowIndex);
     }
 
-    if (id.equals("orgName"))
+    if (column == orgNameColumn)
     {
       return getOriginalNode(rowIndex).getName();
     }
 
-    if (id.equals("orgSize"))
+    if (column == orgSizeColumn)
     {
       return getOriginalNode(rowIndex).getSize();
     }
 
-    if (id.equals("mineState"))
+    if (column == mineStateColumn)
     {
       return getMineStateIcon(rowIndex);
     }
 
-    if (id.equals("mineSize"))
+    if (column == mineSizeColumn)
     {
       return getMineNode(rowIndex).getSize();
-    }
-
-    if (id.equals("copyToRight"))
-    {
-      return ImageUtil.getSmallImageIcon("stock_copyToRight");
-    }
-
-    if (id.equals("copyToLeft"))
-    {
-      return ImageUtil.getSmallImageIcon("stock_copyToLeft");
     }
 
     return null;
@@ -323,31 +271,5 @@ public class FolderDiffTableModel
           }
         }
       };
-  }
-
-  public class Column
-  {
-    String id;
-    String columnGroupName;
-    String columnName;
-    Class  columnClass;
-    int    columnSize;
-    Color  background;
-
-    public Column(
-      String id,
-      String columnGroupName,
-      String columnName,
-      Class  columnClass,
-      int    columnSize,
-      Color  background)
-    {
-      this.id = id;
-      this.columnGroupName = columnGroupName;
-      this.columnName = columnName;
-      this.columnClass = columnClass;
-      this.columnSize = columnSize;
-      this.background = background;
-    }
   }
 }

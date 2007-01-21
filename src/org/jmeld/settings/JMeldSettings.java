@@ -51,6 +51,7 @@ public class JMeldSettings
   public void init()
   {
     editor.init(this);
+    filter.init(this);
   }
 
   public EditorSettings getEditor()

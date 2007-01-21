@@ -27,131 +27,129 @@ public class FilterSettingsForm extends javax.swing.JPanel
   // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
   private void initComponents()
   {
+    jScrollPane2 = new javax.swing.JScrollPane();
+    jMTable1 = new org.jmeld.ui.swing.table.JMTable();
     gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
-    jScrollPane3 = new javax.swing.JScrollPane();
-    jTable2 = new javax.swing.JTable();
-    jButton1 = new javax.swing.JButton();
+    newFilterButton = new javax.swing.JButton();
     detailHeader1 = new org.jmeld.ui.swing.DetailHeader();
-    jButton3 = new javax.swing.JButton();
+    deleteFilterButton = new javax.swing.JButton();
     detailHeader2 = new org.jmeld.ui.swing.DetailHeader();
-    jCheckBox1 = new javax.swing.JCheckBox();
-    jButton4 = new javax.swing.JButton();
-    jButton5 = new javax.swing.JButton();
+    includeDefaultFilterCheckbox = new javax.swing.JCheckBox();
+    newFilterRuleButton = new javax.swing.JButton();
+    deleteFilterRuleButton = new javax.swing.JButton();
+    filterNameLabel = new javax.swing.JLabel();
+    jScrollPane3 = new javax.swing.JScrollPane();
+    filterRuleTable = new org.jmeld.ui.swing.table.JMTable();
     jScrollPane1 = new javax.swing.JScrollPane();
-    jTable1 = new javax.swing.JTable();
-    filterName = new javax.swing.JLabel();
+    filterTable = new org.jmeld.ui.swing.table.JMTable();
+
+    jMTable1.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][]
+      {
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null}
+      },
+      new String []
+      {
+        "Title 1", "Title 2", "Title 3", "Title 4"
+      }
+    ));
+    jScrollPane2.setViewportView(jMTable1);
 
     gradientLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
     gradientLabel1.setText("Filter settings");
     gradientLabel1.setFont(new java.awt.Font("Dialog", 1, 18));
 
-    jTable2.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][]
-      {
-        {null, "includes", null},
-        {null, "excludes", null},
-        {null, null, null},
-        {null, null, null}
-      },
-      new String []
-      {
-        "Active", "Rule", "Pattern"
-      }
-    )
-    {
-      Class[] types = new Class []
-      {
-        java.lang.Boolean.class, java.lang.String.class, java.lang.String.class
-      };
-
-      public Class getColumnClass(int columnIndex)
-      {
-        return types [columnIndex];
-      }
-    });
-    jScrollPane3.setViewportView(jTable2);
-
-    jButton1.setText("New");
-    jButton1.addActionListener(new java.awt.event.ActionListener()
+    newFilterButton.setText("New");
+    newFilterButton.addActionListener(new java.awt.event.ActionListener()
     {
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
-        jButton1ActionPerformed(evt);
+        newFilterButtonActionPerformed(evt);
       }
     });
 
     detailHeader1.setText("Filters");
 
-    jButton3.setText("Delete");
+    deleteFilterButton.setText("Delete");
 
     detailHeader2.setText("Filter rules for: ");
 
-    jCheckBox1.setText("Include default filter");
-    jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    includeDefaultFilterCheckbox.setText("Include default filter");
+    includeDefaultFilterCheckbox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    includeDefaultFilterCheckbox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-    jButton4.setText("New");
+    newFilterRuleButton.setText("New");
 
-    jButton5.setText("Delete");
+    deleteFilterRuleButton.setText("Delete");
 
-    jTable1.setModel(new javax.swing.table.DefaultTableModel(
+    filterNameLabel.setText("FilterName");
+
+    filterRuleTable.setModel(new javax.swing.table.DefaultTableModel(
       new Object [][]
       {
-        {"Default"},
-        {"Java"},
-        {"ini-files"},
-        {null}
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null}
       },
       new String []
       {
-        "Name"
+        "Title 1", "Title 2", "Title 3", "Title 4"
       }
-    )
-    {
-      Class[] types = new Class []
-      {
-        java.lang.String.class
-      };
+    ));
+    jScrollPane3.setViewportView(filterRuleTable);
 
-      public Class getColumnClass(int columnIndex)
+    filterTable.setModel(new javax.swing.table.DefaultTableModel(
+      new Object [][]
       {
-        return types [columnIndex];
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null},
+        {null, null, null, null}
+      },
+      new String []
+      {
+        "Title 1", "Title 2", "Title 3", "Title 4"
       }
-    });
-    jScrollPane1.setViewportView(jTable1);
-
-    filterName.setText("FilterName");
+    ));
+    jScrollPane1.setViewportView(filterTable);
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addComponent(gradientLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
-      .addGroup(layout.createSequentialGroup()
-        .addGap(24, 24, 24)
-        .addComponent(jCheckBox1, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
-        .addContainerGap())
-      .addGroup(layout.createSequentialGroup()
-        .addGap(24, 24, 24)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
-          .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+      .addComponent(gradientLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
       .addGroup(layout.createSequentialGroup()
         .addContainerGap()
-        .addComponent(detailHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
-        .addContainerGap())
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(detailHeader2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(filterName, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE)
-        .addContainerGap())
+        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(layout.createSequentialGroup()
+            .addComponent(detailHeader2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(filterNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+            .addContainerGap())
+          .addGroup(layout.createSequentialGroup()
+            .addGap(12, 12, 12)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                  .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+                  .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                  .addComponent(newFilterRuleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(deleteFilterRuleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(deleteFilterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                  .addComponent(newFilterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(includeDefaultFilterCheckbox, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                .addContainerGap())))
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(detailHeader1, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
+            .addContainerGap())))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,48 +160,48 @@ public class FilterSettingsForm extends javax.swing.JPanel
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
-            .addComponent(jButton1)
+            .addComponent(newFilterButton)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton3))
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
-        .addGap(11, 11, 11)
+            .addComponent(deleteFilterButton))
+          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(detailHeader2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(filterName))
+          .addComponent(filterNameLabel))
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-        .addComponent(jCheckBox1)
-        .addGap(6, 6, 6)
+        .addComponent(includeDefaultFilterCheckbox)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(layout.createSequentialGroup()
+            .addComponent(newFilterRuleButton)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton4)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton5))
-          .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
-        .addContainerGap())
+            .addComponent(deleteFilterRuleButton))
+          .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 
-  private void jButton1ActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
-  {//GEN-HEADEREND:event_jButton1ActionPerformed
+  private void newFilterButtonActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_newFilterButtonActionPerformed
+  {//GEN-HEADEREND:event_newFilterButtonActionPerformed
  
-  }//GEN-LAST:event_jButton1ActionPerformed
+  }//GEN-LAST:event_newFilterButtonActionPerformed
   
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  protected javax.swing.JButton deleteFilterButton;
+  protected javax.swing.JButton deleteFilterRuleButton;
   protected org.jmeld.ui.swing.DetailHeader detailHeader1;
   protected org.jmeld.ui.swing.DetailHeader detailHeader2;
-  protected javax.swing.JLabel filterName;
+  protected javax.swing.JLabel filterNameLabel;
+  protected org.jmeld.ui.swing.table.JMTable filterRuleTable;
+  protected org.jmeld.ui.swing.table.JMTable filterTable;
   protected org.jmeld.ui.swing.GradientLabel gradientLabel1;
-  protected javax.swing.JButton jButton1;
-  protected javax.swing.JButton jButton3;
-  protected javax.swing.JButton jButton4;
-  protected javax.swing.JButton jButton5;
-  protected javax.swing.JCheckBox jCheckBox1;
-  protected javax.swing.JScrollPane jScrollPane1;
-  protected javax.swing.JScrollPane jScrollPane3;
-  protected javax.swing.JTable jTable1;
-  protected javax.swing.JTable jTable2;
+  protected javax.swing.JCheckBox includeDefaultFilterCheckbox;
+  public org.jmeld.ui.swing.table.JMTable jMTable1;
+  public javax.swing.JScrollPane jScrollPane1;
+  public javax.swing.JScrollPane jScrollPane2;
+  public javax.swing.JScrollPane jScrollPane3;
+  protected javax.swing.JButton newFilterButton;
+  protected javax.swing.JButton newFilterRuleButton;
   // End of variables declaration//GEN-END:variables
   
 }

@@ -37,14 +37,27 @@ public class FilterSettings
     filters = new ArrayList<Filter>();
   }
 
+  public void init(JMeldSettings parent)
+  {
+    super.init(parent);
+
+    for(Filter f : filters)
+    {
+      f.init(parent);
+    }
+  }
+
   public void addFilter(Filter filter)
   {
+    filter.init(configuration);
     filters.add(filter);
+    fireChanged();
   }
 
   public void removeFilter(Filter filter)
   {
     filters.remove(filter);
+    fireChanged();
   }
 
   public List<Filter> getFilters()
