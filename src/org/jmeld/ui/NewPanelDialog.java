@@ -18,6 +18,8 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.layout.*;
 
+import org.jmeld.settings.*;
+import org.jmeld.settings.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.prefs.*;
 
@@ -26,6 +28,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.util.*;
+import java.util.List;
 
 public class NewPanelDialog
 {
@@ -52,6 +56,7 @@ public class NewPanelDialog
   private String      mineDirectoryName;
   private JComboBox   originalDirectoryComboBox;
   private JComboBox   mineDirectoryComboBox;
+  private JComboBox   filterComboBox;
   private JDialog     dialog;
 
   public NewPanelDialog(JMeldPanel meldPanel)
@@ -124,6 +129,16 @@ public class NewPanelDialog
   public String getMineDirectoryName()
   {
     return mineDirectoryName;
+  }
+
+  public Filter getFilter()
+  {
+    if(filterComboBox.getSelectedItem() instanceof Filter)
+    {
+      return (Filter) filterComboBox.getSelectedItem();
+    }
+
+    return null;
   }
 
   private JComponent getChooseFilePanel()
@@ -284,7 +299,7 @@ public class NewPanelDialog
     JButton         button;
 
     columns = "10px, right:pref, 10px, max(150dlu;pref):grow, 5px, pref, 10px";
-    rows = "10px, fill:pref, 5px, fill:pref, 5px, fill:pref, 10px";
+    rows = "10px, fill:pref, 5px, fill:pref, 5px, fill:pref, 5px, fill:pref, 10px";
     layout = new FormLayout(columns, rows);
     cc = new CellConstraints();
 
@@ -326,6 +341,15 @@ public class NewPanelDialog
     panel.add(
       button,
       cc.xy(6, 4));
+
+    label = new JLabel("Filter");
+    filterComboBox = new JComboBox(getFilters());
+    panel.add(
+      label,
+      cc.xy(2, 6));
+    panel.add(
+      filterComboBox,
+      cc.xy(4, 6));
 
     return panel;
   }
@@ -402,5 +426,19 @@ public class NewPanelDialog
           }
         }
       };
+  }
+
+  private Object[] getFilters()
+  {
+    List filters;
+
+    filters = new ArrayList();
+    filters.add("No filter");
+    for (Filter f : JMeldSettings.getInstance().getFilter().getFilters())
+    {
+      filters.add(f);
+    }
+
+    return filters.toArray();
   }
 }

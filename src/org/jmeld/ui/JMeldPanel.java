@@ -22,6 +22,7 @@ import com.jgoodies.forms.layout.*;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.*;
 import org.jmeld.diff.*;
+import org.jmeld.settings.util.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.settings.SettingsPanel;
@@ -119,7 +120,7 @@ public class JMeldPanel
       mineFile = new File(mineName);
       if (originalFile.isDirectory() && mineFile.isDirectory())
       {
-        openDirectoryComparison(originalFile, mineFile);
+        openDirectoryComparison(originalFile, mineFile, null);
       }
       else
       {
@@ -140,12 +141,13 @@ public class JMeldPanel
   }
 
   public void openDirectoryComparison(
-    File originalFile,
-    File mineFile)
+    File   originalFile,
+    File   mineFile,
+    Filter filter)
   {
     WaitCursor.wait(this);
 
-    new NewDirectoryComparisonPanel(originalFile, mineFile).execute();
+    new NewDirectoryComparisonPanel(originalFile, mineFile, filter).execute();
   }
 
   public JMenuBar getMenuBar()
@@ -377,7 +379,8 @@ public class JMeldPanel
     {
       openDirectoryComparison(
         new File(dialog.getOriginalDirectoryName()),
-        new File(dialog.getMineDirectoryName()));
+        new File(dialog.getMineDirectoryName()),
+        dialog.getFilter());
     }
   }
 
@@ -819,14 +822,17 @@ public class JMeldPanel
   {
     private File          originalFile;
     private File          mineFile;
+    private Filter        filter;
     private DirectoryDiff diff;
 
     NewDirectoryComparisonPanel(
-      File originalFile,
-      File mineFile)
+      File   originalFile,
+      File   mineFile,
+      Filter filter)
     {
       this.originalFile = originalFile;
       this.mineFile = mineFile;
+      this.filter = filter;
     }
 
     public String doInBackground()
@@ -864,7 +870,7 @@ public class JMeldPanel
         + ") is not a directory";
       }
 
-      diff = new DirectoryDiff(originalFile, mineFile);
+      diff = new DirectoryDiff(originalFile, mineFile, filter);
       diff.diff();
 
       return null;

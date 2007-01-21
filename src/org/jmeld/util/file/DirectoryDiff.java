@@ -17,9 +17,10 @@
 package org.jmeld.util.file;
 
 import org.apache.jmeld.tools.ant.*;
+import org.jmeld.settings.*;
+import org.jmeld.settings.util.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.node.*;
-import org.jmeld.util.scan.*;
 
 import java.io.*;
 import java.util.*;
@@ -31,13 +32,16 @@ public class DirectoryDiff
   private File            originalDirectory;
   private List<JMeldNode> mine;
   private List<JMeldNode> original;
+  private Filter          filter;
 
   public DirectoryDiff(
-    File originalDirectory,
-    File mineDirectory)
+    File   originalDirectory,
+    File   mineDirectory,
+    Filter filter)
   {
     this.originalDirectory = originalDirectory;
     this.mineDirectory = mineDirectory;
+    this.filter = filter;
 
     try
     {
@@ -95,7 +99,6 @@ public class DirectoryDiff
 
   public void diff()
   {
-    Filter                filter;
     FileNode              newNode;
     String                name;
     Map<String, FileNode> mineMap;
@@ -104,26 +107,32 @@ public class DirectoryDiff
     JMeldNode             originalNode;
     DirectoryScanner      ds;
 
-    filter = getFilter();
-
     StatusBar.start();
     StatusBar.setStatus("Start scanning directories...");
 
     ds = new DirectoryScanner();
     ds.setBasedir(mineDirectory);
-    ds.setExcludes(new String[] { "**/*.class", "tags" });
-    ds.addDefaultExcludes();
+    if (filter != null)
+    {
+      ds.setIncludes(filter.getIncludes());
+      ds.setExcludes(filter.getExcludes());
+    }
     ds.setCaseSensitive(true);
     ds.scan();
+    
     mineMap = ds.getIncludedFilesMap();
     mineMap.putAll(ds.getIncludedDirectoriesMap());
 
     ds = new DirectoryScanner();
     ds.setBasedir(originalDirectory);
-    ds.setExcludes(new String[] { "**/*.class", "tags" });
-    ds.addDefaultExcludes();
+    if (filter != null)
+    {
+      ds.setIncludes(filter.getIncludes());
+      ds.setExcludes(filter.getExcludes());
+    }
     ds.setCaseSensitive(true);
     ds.scan();
+    
     originalMap = ds.getIncludedFilesMap();
     originalMap.putAll(ds.getIncludedDirectoriesMap());
 
@@ -189,19 +198,6 @@ public class DirectoryDiff
     StatusBar.stop();
   }
 
-  private Filter getFilter()
-  {
-    Filter filter;
-
-    filter = new Filter();
-    filter.exclude("classes");
-    filter.exclude(".svn");
-    filter.exclude("CVS");
-    filter.exclude("tags");
-
-    return filter;
-  }
-
   public void print()
   {
     System.out.println("original:");
@@ -224,7 +220,8 @@ public class DirectoryDiff
 
     diff = new DirectoryDiff(
         new File(args[0]),
-        new File(args[1]));
+        new File(args[1]),
+        JMeldSettings.getInstance().getFilter().getFilter("ini"));
     diff.diff();
     diff.print();
   }

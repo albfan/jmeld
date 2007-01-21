@@ -110,4 +110,35 @@ public class Filter
   {
     return rules;
   }
+
+  public String[] getExcludes()
+  {
+    return getPatterns(FilterRule.Rule.excludes);
+  }
+
+  public String[] getIncludes()
+  {
+    return getPatterns(FilterRule.Rule.includes);
+  }
+
+  private String[] getPatterns(FilterRule.Rule r)
+  {
+    List<String> list;
+
+    list = new ArrayList<String>();
+    for(FilterRule rule : rules)
+    {
+      if(rule.getRule() == r)
+      {
+	list.add(rule.getPattern());
+      }
+    }
+
+    return list.toArray(new String[list.size()]);
+  }
+
+  public String toString()
+  {
+    return name;
+  }
 }
