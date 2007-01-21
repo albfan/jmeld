@@ -19,6 +19,8 @@ Release 1.1.2:
 -        Import 'filters' in 'filters' (get rid of 'include default filter')
 -        Make checkbox 'Active' work.
 -        Implement 'flat' directorydiff (like 'Projects' tab in netbeans)
+-        Color of linenumbers more in line with the L&F
+-        L&F preference
 
 Release 1.2:
 -        Create manual
