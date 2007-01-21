@@ -76,6 +76,7 @@ public class ConfigurationPreference
   public void setFile(File file)
   {
     this.file = file;
+    save();
   }
 
   public void save()

@@ -89,6 +89,19 @@ public class StatusBar
     instance.status.setText(text);
   }
 
+  public static void setText(String text)
+  {
+    setStatus(text);
+    stop();
+  }
+
+  public static void setAlarm(String text)
+  {
+    instance.status.setForeground(Color.red);
+    setStatus(text);
+    stop();
+  }
+
   public static void setStatus(
     int    progress,
     String text)
@@ -106,6 +119,7 @@ public class StatusBar
   private void clear()
   {
     status.setText("");
+    status.setForeground(Color.black);
     progress.setValue(0);
   }
 

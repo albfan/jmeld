@@ -14,6 +14,7 @@ import javax.swing.event.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 
 /**
  *
@@ -44,12 +45,15 @@ public class SettingsPanel
     }
 
     initButton(saveButton, "stock_save", "Save settings");
-    saveButton.addActionListener(getSaveButtonAction());
+    saveButton.addActionListener(getSaveAction());
 
     initButton(saveAsButton, "stock_save-as",
       "Save settings to a different file");
+    saveAsButton.addActionListener(getSaveAsAction());
+
     initButton(reloadButton, "stock_reload",
       "Reload settings from a different file");
+    reloadButton.addActionListener(getReloadAction());
 
     fileLabel.setText("");
 
@@ -81,14 +85,63 @@ public class SettingsPanel
     button.setFocusable(false);
   }
 
-  public ActionListener getSaveButtonAction()
+  public ActionListener getSaveAction()
   {
     return new ActionListener()
       {
         public void actionPerformed(ActionEvent ae)
         {
           getConfiguration().save();
-          initConfiguration();
+          StatusBar.setText("Configuration saved");
+        }
+      };
+  }
+
+  public ActionListener getSaveAsAction()
+  {
+    return new ActionListener()
+      {
+        public void actionPerformed(ActionEvent ae)
+        {
+          JFileChooser chooser;
+          int          result;
+          File         file;
+
+          chooser = new JFileChooser();
+          result = chooser.showOpenDialog(SettingsPanel.this);
+          if (result == JFileChooser.APPROVE_OPTION)
+          {
+            file = chooser.getSelectedFile();
+            getConfiguration().setConfigurationFile(file);
+            getConfiguration().save();
+            StatusBar.setText("Configuration saved to " + file);
+          }
+        }
+      };
+  }
+
+  public ActionListener getReloadAction()
+  {
+    return new ActionListener()
+      {
+        public void actionPerformed(ActionEvent ae)
+        {
+          JFileChooser chooser;
+          int          result;
+          File         file;
+
+          chooser = new JFileChooser();
+          result = chooser.showOpenDialog(SettingsPanel.this);
+          if (result == JFileChooser.APPROVE_OPTION)
+          {
+            file = chooser.getSelectedFile();
+            if (!ConfigurationManager.getInstance().reload(
+                file,
+                getConfiguration().getClass()))
+            {
+              StatusBar.setAlarm("Failed to reload from " + file);
+            }
+          }
         }
       };
   }
@@ -99,13 +152,15 @@ public class SettingsPanel
       {
         public void valueChanged(ListSelectionEvent event)
         {
-	  CardLayout layout;
-	  Settings   settings;
+          CardLayout layout;
+          Settings   settings;
 
-	  settings = (Settings) settingItems.getSelectedValue();
-	  layout = (CardLayout) settingsPanel.getLayout();
-	  layout.show(settingsPanel, settings.getName());
-	}
+          settings = (Settings) settingItems.getSelectedValue();
+          layout = (CardLayout) settingsPanel.getLayout();
+          layout.show(
+            settingsPanel,
+            settings.getName());
+        }
       };
   }
 

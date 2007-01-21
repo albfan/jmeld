@@ -26,6 +26,31 @@ public class ConfigurationManager
     return instance;
   }
 
+  public boolean reload(
+    File  file,
+    Class clazz)
+  {
+    AbstractConfiguration configuration;
+
+    configuration = load(clazz, file);
+    if (configuration == null)
+    {
+      return false;
+    }
+
+    // Set the new filename AFTER the load was succesfull!
+    configuration.setConfigurationFile(file);
+
+    configurations.put(
+      clazz.getName(),
+      configuration);
+
+    // Let everybody know that there is a new configuration!
+    fireChanged(clazz);
+
+    return true;
+  }
+
   public AbstractConfiguration get(Class clazz)
   {
     AbstractConfiguration configuration;
@@ -42,7 +67,9 @@ public class ConfigurationManager
         try
         {
           configuration = (AbstractConfiguration) clazz.newInstance();
-	  configuration.init();
+          configuration.disableFireChanged(true);
+          configuration.init();
+          configuration.disableFireChanged(false);
         }
         catch (Exception ex)
         {
@@ -58,25 +85,29 @@ public class ConfigurationManager
 
   private AbstractConfiguration load(Class clazz)
   {
-    String                  fileName;
-    int                     index;
     ConfigurationPreference preference;
     File                    file;
 
-    try
+    preference = new ConfigurationPreference(clazz);
+    file = preference.getFile();
+
+    return load(clazz, file);
+  }
+
+  private AbstractConfiguration load(
+    Class clazz,
+    File  file)
+  {
+    if (file.exists())
     {
-      preference = new ConfigurationPreference(clazz);
-      file = preference.getFile();
-      if (file.exists())
+      try
       {
         return ConfigurationPersister.getInstance().load(clazz, file);
       }
-
-      return null;
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
     }
 
     return null;

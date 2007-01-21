@@ -9,6 +9,7 @@ public abstract class AbstractConfiguration
 {
   private boolean                 changed;
   private ConfigurationPreference preference;
+  private boolean                 disableFireChanged;
 
   public AbstractConfiguration()
   {
@@ -29,6 +30,11 @@ public abstract class AbstractConfiguration
     }
   }
 
+  public void setConfigurationFile(File file)
+  {
+    preference.setFile(file);
+  }
+
   public boolean isChanged()
   {
     return changed;
@@ -42,6 +48,7 @@ public abstract class AbstractConfiguration
         this,
         preference.getFile());
       changed = false;
+      fireChanged(changed);
     }
     catch (Exception ex)
     {
@@ -63,9 +70,24 @@ public abstract class AbstractConfiguration
       listener);
   }
 
+  void disableFireChanged(boolean disable)
+  {
+    disableFireChanged = true;
+  }
+
   public void fireChanged()
   {
-    changed = true;
+    if (disableFireChanged)
+    {
+      return;
+    }
+
+    fireChanged(true);
+  }
+
+  public void fireChanged(boolean changed)
+  {
+    this.changed = changed;
     getManager().fireChanged(getClass());
   }
 

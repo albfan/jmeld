@@ -51,7 +51,7 @@ public class ConfigurationPersister
     }
     catch (Exception ex)
     {
-      ex.printStackTrace();
+      //ex.printStackTrace();
     }
 
     return null;
