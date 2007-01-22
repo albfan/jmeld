@@ -1,3 +1,7 @@
+Release 1.1.2:
+  - Fixed Grouplayout issue
+    - Fixed JAXB issue
+    (Both issues made that 1.1.1 didn't run on jdk1.5)
 
 Release 1.1.1:
   - ESCAPE closes the current tab
