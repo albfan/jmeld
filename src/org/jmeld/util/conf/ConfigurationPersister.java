@@ -76,13 +76,10 @@ public class ConfigurationPersister
     OutputStream          os)
     throws JAXBException, IOException
   {
-    com.sun.xml.bind.marshaller.DataWriter writer;
+    Writer writer;
     Context                                context;
 
-    writer = new com.sun.xml.bind.marshaller.DataWriter(
-        new OutputStreamWriter(os),
-        "utf-8");
-    writer.setIndentStep("  ");
+    writer = new OutputStreamWriter(os);
 
     context = getContext(configuration.getClass());
     synchronized (context)
@@ -159,8 +156,8 @@ public class ConfigurationPersister
     }
 
     public void marshal(
-      Object                                 configuration,
-      com.sun.xml.bind.marshaller.DataWriter writer)
+      Object configuration,
+      Writer writer)
       throws JAXBException
     {
       marshaller.marshal(configuration, writer);
