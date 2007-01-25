@@ -200,14 +200,11 @@ public class DirectoryDiff
 
   public void print()
   {
-    System.out.println("original:");
     for (JMeldNode node : original)
     {
       node.print();
     }
 
-    System.out.println();
-    System.out.println("mine:");
     for (JMeldNode node : mine)
     {
       node.print();
