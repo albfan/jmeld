@@ -98,13 +98,13 @@ public class JMeld
     frame = new JFrame("JMeld");
     panel = new JMeldPanel(fileName1, fileName2);
     frame.add(panel);
-    frame.addWindowListener(panel.getWindowListener());
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     //frame.setJMenuBar(panel.getMenuBar());
     frame.setIconImage(ResourceLoader.getImageIcon("jmeld-small").getImage());
     new WindowPreference(
       frame.getTitle(),
       frame);
+    frame.addWindowListener(panel.getWindowListener());
 
     frame.setVisible(true);
 
