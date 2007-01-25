@@ -119,7 +119,6 @@ public class JMHighlightPainter
             y = r1.y;
             for (int i = 0; i < count; i++)
             {
-              y += (i * r1.height);
               if (i == 0)
               {
                 // firstline:
@@ -140,6 +139,8 @@ public class JMHighlightPainter
               }
 
               g.fillRect(x, y, width, r1.height);
+
+              y += r1.height;
             }
           }
         }
