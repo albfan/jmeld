@@ -163,7 +163,7 @@ public class FilterSettingsForm extends javax.swing.JPanel
             .add(newFilterButton)
             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
             .add(deleteFilterButton))
-          .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+          .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -175,8 +175,9 @@ public class FilterSettingsForm extends javax.swing.JPanel
           .add(layout.createSequentialGroup()
             .add(newFilterRuleButton)
             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(deleteFilterRuleButton))
-          .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 227, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+            .add(deleteFilterRuleButton)
+            .addContainerGap(149, Short.MAX_VALUE))
+          .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 

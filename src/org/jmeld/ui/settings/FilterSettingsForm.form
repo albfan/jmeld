@@ -90,7 +90,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="deleteFilterButton" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane1" pref="121" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" pref="83" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -105,8 +105,9 @@
                       <Component id="newFilterRuleButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="deleteFilterRuleButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="149" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane3" min="-2" pref="227" max="-2" attributes="0"/>
+                  <Component id="jScrollPane3" pref="205" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
