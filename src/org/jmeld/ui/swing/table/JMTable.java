@@ -20,8 +20,6 @@ import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
-import org.jdesktop.swingx.decorator.ComponentAdapter;
-import org.jdesktop.swingx.decorator.Highlighter;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
@@ -43,7 +41,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
-import java.util.List;
 
 public class JMTable
        extends JXTable
@@ -125,5 +122,44 @@ public class JMTable
         tableHeader.addColumnGroup(cg);
       }
     }
+  }
+
+  public TableCellEditor getCellEditor(
+    int row,
+    int column)
+  {
+    Class           clazz;
+    TableCellEditor editor;
+
+    clazz = ((JMTableModel) getModel()).getColumnClass(row, column);
+    editor = getDefaultEditor(clazz);
+    if (editor != null)
+    {
+      return editor;
+    }
+
+    return super.getCellEditor(row, column);
+  }
+
+  public TableCellRenderer getCellRenderer(
+    int row,
+    int column)
+  {
+    Class             clazz;
+    TableCellRenderer renderer;
+    TableModel        model;
+
+    model = getModel();
+    if (model instanceof JMTableModel)
+    {
+      clazz = ((JMTableModel) model).getColumnClass(row, column);
+      renderer = getDefaultRenderer(clazz);
+      if (renderer != null)
+      {
+        return renderer;
+      }
+    }
+
+    return super.getCellRenderer(row, column);
   }
 }

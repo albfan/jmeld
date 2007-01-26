@@ -44,8 +44,15 @@ public abstract class JMTableModel
   {
     Column column;
 
-    column = new Column(id, columnGroupName, columnName, columnClass,
-        columnSize, editable, background);
+    column = new Column(
+        id,
+        columns.size(),
+        columnGroupName,
+        columnName,
+        columnClass,
+        columnSize,
+        editable,
+        background);
     columns.add(column);
 
     return column;
@@ -78,6 +85,22 @@ public abstract class JMTableModel
   public Class getColumnClass(int columnIndex)
   {
     return getColumn(columnIndex).columnClass;
+  }
+
+  public Class getColumnClass(
+    int    rowIndex,
+    Column column)
+  {
+    return null;
+  }
+
+  public Class getColumnClass(
+    int rowIndex,
+    int columnIndex)
+  {
+    return getColumnClass(
+      rowIndex,
+      getColumn(columnIndex));
   }
 
   public Color getColumnBackground(int columnIndex)
@@ -174,6 +197,7 @@ public abstract class JMTableModel
   public class Column
   {
     private String            id;
+    private int               columnIndex;
     private String            columnGroupName;
     private String            columnName;
     private Class             columnClass;
@@ -185,6 +209,7 @@ public abstract class JMTableModel
 
     public Column(
       String  id,
+      int     columnIndex,
       String  columnGroupName,
       String  columnName,
       Class   columnClass,
@@ -193,6 +218,7 @@ public abstract class JMTableModel
       Color   background)
     {
       this.id = id;
+      this.columnIndex = columnIndex;
       this.columnGroupName = columnGroupName;
       this.columnName = columnName;
       this.columnClass = columnClass;
@@ -204,6 +230,11 @@ public abstract class JMTableModel
     public String getId()
     {
       return id;
+    }
+
+    public int getColumnIndex()
+    {
+      return columnIndex;
     }
 
     public String getColumnGroupName()

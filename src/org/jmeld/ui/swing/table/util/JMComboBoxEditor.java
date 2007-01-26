@@ -12,4 +12,9 @@ public class JMComboBoxEditor
   {
     super(new JComboBox(items));
   }
+
+  public JMComboBoxEditor(List items)
+  {
+    this(items.toArray());
+  }
 }

@@ -16,6 +16,11 @@ public class JMComboBoxRenderer
     super(items);
   }
 
+  public JMComboBoxRenderer(List items)
+  {
+    this(items.toArray());
+  }
+
   public Component getTableCellRendererComponent(
     JTable  table,
     Object  value,
