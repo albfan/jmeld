@@ -29,10 +29,23 @@ public class FilterRule
 {
   public enum Rule
   {
-    includes,
-    excludes;
+    includes("includes"),
+    excludes("excludes"),
+    importFilter("import filter");
+
+    // instance variables:
+    private String text;
+
+    private Rule(String text)
+    {
+      this.text = text;
+    }
+
+    public String toString()
+    {
+      return text;
+    }
   }
-  
   @XmlAttribute
   private boolean              active;
   @XmlAttribute
@@ -97,7 +110,7 @@ public class FilterRule
     fireChanged();
   }
 
-  public boolean getActive()
+  public boolean isActive()
   {
     return active;
   }

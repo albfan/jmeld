@@ -53,12 +53,29 @@ public class FilterSettingsPanel
 
     filterRuleTableModel = getFilterRuleTableModel(0);
     filterRuleTable.setModel(filterRuleTableModel);
+    filterRuleTable.setDefaultEditor(
+      Filter.class,
+      new JMComboBoxEditor(getFilters()));
+    filterRuleTable.setDefaultRenderer(
+      Filter.class,
+      new JMComboBoxRenderer(getFilters()));
+    filterRuleTable.setDefaultEditor(
+      FilterRule.Rule.class,
+      new JMComboBoxEditor(FilterRule.Rule.values()));
+    filterRuleTable.setDefaultRenderer(
+      FilterRule.Rule.class,
+      new JMComboBoxRenderer(FilterRule.Rule.values()));
     filterRuleTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 
     newFilterButton.addActionListener(getNewFilterAction());
     deleteFilterButton.addActionListener(getDeleteFilterAction());
     newFilterRuleButton.addActionListener(getNewFilterRuleAction());
     deleteFilterRuleButton.addActionListener(getDeleteFilterRuleAction());
+
+    if(filterTable.getRowCount() > 0)
+    {
+      filterTable.addRowSelectionInterval(0, 0);;
+    }
   }
 
   private JMTableModel getFilterTableModel()
@@ -261,14 +278,19 @@ public class FilterSettingsPanel
     {
       this.filterIndex = filterIndex;
 
+      init();
+    }
+
+    private void init()
+    {
       activeColumn = addColumn("active", null, "Active", Boolean.class, 5,
           true, null);
       descriptionColumn = addColumn("description", null, "Description",
           String.class, 15, true, null);
       ruleColumn = addColumn("rule", null, "Rule", FilterRule.Rule.class, 10,
           true, null);
-      ruleColumn.setRenderer(new JMComboBoxRenderer(FilterRule.Rule.values()));
-      ruleColumn.setEditor(new JMComboBoxEditor(FilterRule.Rule.values()));
+      //ruleColumn.setRenderer(new JMComboBoxRenderer(FilterRule.Rule.values()));
+      //ruleColumn.setEditor(new JMComboBoxEditor(FilterRule.Rule.values()));
       patternColumn = addColumn("pattern", null, "Pattern", String.class, -1,
           true, null);
     }
@@ -301,10 +323,16 @@ public class FilterSettingsPanel
         if (column == ruleColumn)
         {
           rule.setRule((FilterRule.Rule) value);
+          fireTableCellUpdated(rowIndex, column.getColumnIndex());
         }
 
         if (column == patternColumn)
         {
+          if (value instanceof Filter)
+          {
+            value = ((Filter) value).getName();
+          }
+
           rule.setPattern((String) value);
         }
       }
@@ -321,7 +349,7 @@ public class FilterSettingsPanel
       {
         if (column == activeColumn)
         {
-          return rule.getActive();
+          return rule.isActive();
         }
 
         if (column == descriptionColumn)
@@ -336,11 +364,34 @@ public class FilterSettingsPanel
 
         if (column == patternColumn)
         {
+          if (rule.getRule() == FilterRule.Rule.importFilter)
+          {
+            return getFilterSettings().getFilter(rule.getPattern());
+          }
+
           return rule.getPattern();
         }
       }
 
       return "??";
+    }
+
+    public Class getColumnClass(
+      int    rowIndex,
+      Column column)
+    {
+      FilterRule rule;
+
+      if (column == patternColumn)
+      {
+        rule = getRule(rowIndex);
+        if (rule != null && rule.getRule() == FilterRule.Rule.importFilter)
+        {
+          return Filter.class;
+        }
+      }
+
+      return null;
     }
 
     private FilterRule getRule(int rowIndex)

@@ -27,6 +27,7 @@ public class FilterSettingsForm extends javax.swing.JPanel
   // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
   private void initComponents()
   {
+
     jScrollPane2 = new javax.swing.JScrollPane();
     jMTable1 = new org.jmeld.ui.swing.table.JMTable();
     gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
@@ -34,7 +35,6 @@ public class FilterSettingsForm extends javax.swing.JPanel
     detailHeader1 = new org.jmeld.ui.swing.DetailHeader();
     deleteFilterButton = new javax.swing.JButton();
     detailHeader2 = new org.jmeld.ui.swing.DetailHeader();
-    includeDefaultFilterCheckbox = new javax.swing.JCheckBox();
     newFilterRuleButton = new javax.swing.JButton();
     deleteFilterRuleButton = new javax.swing.JButton();
     filterNameLabel = new javax.swing.JLabel();
@@ -77,10 +77,6 @@ public class FilterSettingsForm extends javax.swing.JPanel
 
     detailHeader2.setText("Filter rules for: ");
 
-    includeDefaultFilterCheckbox.setText("Include default filter");
-    includeDefaultFilterCheckbox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    includeDefaultFilterCheckbox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
     newFilterRuleButton.setText("New");
 
     deleteFilterRuleButton.setText("Delete");
@@ -121,64 +117,63 @@ public class FilterSettingsForm extends javax.swing.JPanel
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-      .add(gradientLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
+      .add(gradientLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE)
+      .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(layout.createSequentialGroup()
-            .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(filterNameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
-            .addContainerGap())
+            .add(24, 24, 24)
+            .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))
           .add(layout.createSequentialGroup()
             .add(12, 12, 12)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                  .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
-                  .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                  .add(newFilterRuleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                  .add(deleteFilterRuleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                  .add(deleteFilterButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                  .add(newFilterButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-              .add(layout.createSequentialGroup()
-                .add(includeDefaultFilterCheckbox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
-                .addContainerGap())))
+            .add(detailHeader1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
           .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+            .addContainerGap()
+            .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(detailHeader1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
-            .addContainerGap())))
+            .add(filterNameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE))
+          .add(layout.createSequentialGroup()
+            .add(24, 24, 24)
+            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+          .add(newFilterButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(deleteFilterButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(newFilterRuleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(deleteFilterRuleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 86, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
     );
+
+    layout.linkSize(new java.awt.Component[] {deleteFilterButton, deleteFilterRuleButton, newFilterButton, newFilterRuleButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
+
     layout.setVerticalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
       .add(layout.createSequentialGroup()
         .add(gradientLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(detailHeader1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(6, 6, 6)
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(layout.createSequentialGroup()
             .add(newFilterButton)
             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
             .add(deleteFilterButton))
-          .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+          .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 15, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(filterNameLabel))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(includeDefaultFilterCheckbox)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(layout.createSequentialGroup()
-            .add(newFilterRuleButton)
+            .add(newFilterRuleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
             .add(deleteFilterRuleButton)
-            .addContainerGap(149, Short.MAX_VALUE))
-          .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)))
+            .addContainerGap(143, Short.MAX_VALUE))
+          .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)))
     );
+
+    layout.linkSize(new java.awt.Component[] {deleteFilterButton, deleteFilterRuleButton, newFilterButton, newFilterRuleButton}, org.jdesktop.layout.GroupLayout.VERTICAL);
+
   }// </editor-fold>//GEN-END:initComponents
 
   private void newFilterButtonActionPerformed (java.awt.event.ActionEvent evt)//GEN-FIRST:event_newFilterButtonActionPerformed
@@ -196,7 +191,6 @@ public class FilterSettingsForm extends javax.swing.JPanel
   protected org.jmeld.ui.swing.table.JMTable filterRuleTable;
   protected org.jmeld.ui.swing.table.JMTable filterTable;
   protected org.jmeld.ui.swing.GradientLabel gradientLabel1;
-  protected javax.swing.JCheckBox includeDefaultFilterCheckbox;
   public org.jmeld.ui.swing.table.JMTable jMTable1;
   public javax.swing.JScrollPane jScrollPane1;
   public javax.swing.JScrollPane jScrollPane2;

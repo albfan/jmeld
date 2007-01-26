@@ -1,3 +1,10 @@
+Release 1.1.3:
+  - Removed 'include defaultFilter' and replaced it with importfilter.
+    It is now possible to have 'filters in filters'
+  - BUG: JMeld didn't remember position of it's frame
+  - BUG: Innerdiff didn't paint well when spanning more than 1 line.
+  - BUG: Installed JAXB 2.0 because 2.1 needs endorsement on jdk1.6
+
 Release 1.1.2:
   - Fixed Grouplayout issue
     - Fixed JAXB issue

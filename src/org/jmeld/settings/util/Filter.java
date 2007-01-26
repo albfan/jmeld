@@ -74,14 +74,16 @@ public class Filter
     return name;
   }
 
-  public void insertRule(FilterRule ruleToInsertAfter, FilterRule rule)
+  public void insertRule(
+    FilterRule ruleToInsertAfter,
+    FilterRule rule)
   {
     int index;
 
     rule.init(configuration);
 
     index = rules.indexOf(ruleToInsertAfter);
-    if(index != -1)
+    if (index != -1)
     {
       rules.add(index + 1, rule);
     }
@@ -123,22 +125,71 @@ public class Filter
 
   private String[] getPatterns(FilterRule.Rule r)
   {
-    List<String> list;
+    List<String> result;
 
-    list = new ArrayList<String>();
-    for(FilterRule rule : rules)
+    result = new ArrayList<String>();
+    for (FilterRule rule : new GetRules().getRules())
     {
-      if(rule.getRule() == r)
+      if (rule.getRule() == r)
       {
-	list.add(rule.getPattern());
+        result.add(rule.getPattern());
       }
     }
 
-    return list.toArray(new String[list.size()]);
+    return result.toArray(new String[result.size()]);
   }
 
   public String toString()
   {
     return name;
+  }
+
+  /** Recursively get all rules.
+   *  Recursively because the rule 'importFilter' will
+   *    import all rules from that filter!
+   */
+  class GetRules
+  {
+    HashSet<FilterRule> result = new HashSet<FilterRule>();
+    HashSet<Filter>     evaluatedFilters = new HashSet<Filter>();
+
+    List<FilterRule> getRules()
+    {
+      collectRules(Filter.this);
+      return new ArrayList(result);
+    }
+
+    void collectRules(Filter filter)
+    {
+      Filter nextFilter;
+
+      evaluatedFilters.add(filter);
+
+      for (FilterRule rule : filter.getRules())
+      {
+        // Rule is already evaluated or not active
+        if (result.contains(rule) || !rule.isActive())
+        {
+          continue;
+        }
+
+        // Rule 'importFilter' will add it's own rules to the result.
+        if (rule.getRule() == FilterRule.Rule.importFilter)
+        {
+          nextFilter = JMeldSettings.getInstance().getFilter().getFilter(
+              rule.getPattern());
+          
+          // Don't evaluate a filter twice! (otherwise there will be a never
+          //   ending recursive loop)
+          if (nextFilter != null
+            && !evaluatedFilters.contains(nextFilter))
+          {
+            collectRules(nextFilter);
+          }
+        }
+
+        result.add(rule);
+      }
+    }
   }
 }
