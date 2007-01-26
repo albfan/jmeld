@@ -15,7 +15,7 @@ Release 1.1.1:
 
 Release 1.1.3:
 - [done] Problem with highlight in PM1.xml - PM2.xml
--        Remember which filter the previous time was used in NewDirectoryDiff
+- [done] Remember which filter the previous time was used in NewDirectoryDiff
 -        Implement treetable for directorydiff
 - [done] Import 'filters' in 'filters' (get rid of 'include default filter')
 - [done] Make checkbox 'Active' work.

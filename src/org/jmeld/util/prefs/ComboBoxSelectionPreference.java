@@ -22,17 +22,17 @@ import javax.swing.event.*;
 import java.io.*;
 import java.util.*;
 
-public class ComboBoxPreference
+public class ComboBoxSelectionPreference
        extends Preference
 {
   // Class variables:
-  private static String ITEMS = "ITEMS";
+  private static String SELECTED_ITEM = "SELECTED_ITEM";
 
   // Instance variables:
   private JComboBox target;
   private int       maxItems = 10;
 
-  public ComboBoxPreference(
+  public ComboBoxSelectionPreference(
     String    preferenceName,
     JComboBox target)
   {
@@ -45,53 +45,54 @@ public class ComboBoxPreference
 
   private void init()
   {
-    DefaultComboBoxModel model;
+    Object object;
+    String selectedItem;
+    int    selectedIndex;
 
-    model = new DefaultComboBoxModel();
-    for (String item : getListOfString(ITEMS, maxItems))
-    {
-      model.addElement(item);
-    }
+    selectedItem = getString(SELECTED_ITEM, null);
 
-    target.setModel(model);
-    model.addListDataListener(getListDataListener());
+    target.getModel().addListDataListener(getListDataListener());
+
     if (target.getItemCount() > 0)
     {
-      target.setSelectedIndex(0);
+      selectedIndex = 0;
+      if (selectedItem != null)
+      {
+        for (int i = 0; i < target.getItemCount(); i++)
+        {
+          object = target.getItemAt(i);
+          if (object == null)
+          {
+            continue;
+          }
+
+          if (object.toString().equals(selectedItem))
+          {
+            selectedIndex = i;
+            break;
+          }
+        }
+      }
+
+      target.setSelectedIndex(selectedIndex);
     }
   }
 
   private void save()
   {
-    List<String>  list;
     ComboBoxModel model;
-    String        item;
-
-    list = new ArrayList<String>();
+    Object        item;
 
     model = target.getModel();
 
-    // Put the selectedItem on top.
-    item = (String) model.getSelectedItem();
+    // Save the selectedItem
+    item = model.getSelectedItem();
     if (item != null)
     {
-      list.add(item);
+      putString(
+        SELECTED_ITEM,
+        item.toString());
     }
-
-    for (int i = 0; i < model.getSize(); i++)
-    {
-      item = (String) model.getElementAt(i);
-
-      // Don't save items twice.
-      if (list.contains(item))
-      {
-        continue;
-      }
-
-      list.add(item);
-    }
-
-    putListOfString(ITEMS, maxItems, list);
   }
 
   private ListDataListener getListDataListener()

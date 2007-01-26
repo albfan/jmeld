@@ -350,6 +350,7 @@ public class NewPanelDialog
     panel.add(
       filterComboBox,
       cc.xy(4, 6));
+    new ComboBoxSelectionPreference("Filter", filterComboBox);
 
     return panel;
   }
