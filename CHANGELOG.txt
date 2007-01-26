@@ -1,4 +1,5 @@
 Release 1.1.3:
+  - BUG: directoryscanner couldn't handle includes-array with 0 elements.
   - JMTable can now have a different renderer/editor per row/column 
     (Standard swing can only handle 1 renderer/editor per column)
   - Removed 'include defaultFilter' and replaced it with importfilter.

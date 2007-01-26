@@ -818,7 +818,7 @@ public class DirectoryScanner
         clearResults();
 
         // set in/excludes to reasonable defaults if needed:
-        boolean nullIncludes = (includes == null);
+        boolean nullIncludes = (includes == null || includes.length == 0);
         includes = nullIncludes ? new String[] { "**" } : includes;
         boolean nullExcludes = (excludes == null);
         excludes = nullExcludes ? new String[0] : excludes;
@@ -990,7 +990,7 @@ public class DirectoryScanner
               : originalpattern.equalsIgnoreCase(currentelement);
             if (included)
             {
-              accountForIncludedFile(currentelement, myfile);
+              accountForIncludedFile(currentelement, myfile, null);
             }
           }
         }
@@ -1126,7 +1126,6 @@ public class DirectoryScanner
     String  vpath,
     boolean fast)
   {
-    System.out.println("scan : " + dir);
     if (dir == null)
     {
       throw new BuildException("dir must not be null.");
@@ -1217,7 +1216,7 @@ public class DirectoryScanner
       {
         if (isIncluded(name))
         {
-          accountForIncludedFile(name, file);
+          accountForIncludedFile(name, file, dir);
         }
         else
         {
@@ -1235,7 +1234,7 @@ public class DirectoryScanner
    */
   private void accountForIncludedFile(
     String name,
-    File   file)
+    File   file, File dir)
   {
     if (filesIncludedMap.get(name) != null || filesExcluded.contains(name)
       || filesDeselected.contains(name))
