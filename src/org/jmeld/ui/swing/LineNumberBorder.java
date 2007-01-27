@@ -16,6 +16,8 @@
  */
 package org.jmeld.ui.swing;
 
+import org.jmeld.ui.util.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -24,14 +26,13 @@ import java.awt.*;
 public class LineNumberBorder
        extends EmptyBorder
 {
-  static private int MARGIN = 4;
-
-  private JTextArea textArea;
-  private Color     background;
-  private Color     lineColor;
-  private Font      font;
-  private int       fontWidth;
-  private int       fontHeight;
+  private static int MARGIN = 4;
+  private JTextArea  textArea;
+  private Color      background;
+  private Color      lineColor;
+  private Font       font;
+  private int        fontWidth;
+  private int        fontHeight;
 
   public LineNumberBorder(JTextArea textArea)
   {
@@ -46,10 +47,8 @@ public class LineNumberBorder
   {
     FontMetrics fm;
 
-    //background = new Color(233, 232, 226);
-    //lineColor = new Color(184, 184, 184);
-    background = new Color(253, 253, 238);
-    lineColor = new Color(224, 224, 194);
+    lineColor = UIManager.getColor("Panel.background");
+    background = ColorUtil.brighter(lineColor);
     font = new Font("Monospaced", Font.PLAIN, 10);
 
     fm = textArea.getFontMetrics(font);
