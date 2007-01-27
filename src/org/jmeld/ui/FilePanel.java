@@ -94,10 +94,16 @@ public class FilePanel
     scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
     if (BufferDocumentIF.ORIGINAL.equals(name))
     {
+      // Dirty trick to have the scrollbar on the other side!
       LeftScrollPaneLayout layout;
       layout = new LeftScrollPaneLayout();
       scrollPane.setLayout(layout);
       layout.syncWithScrollPane(scrollPane);
+
+      // Normally the leftside is not painted of a scrollbar that is
+      //   NOT freestanding.
+      scrollPane.getVerticalScrollBar()
+                .putClientProperty("JScrollBar.isFreeStanding", Boolean.TRUE);
     }
 
     browseButton = new JButton("Browse...");

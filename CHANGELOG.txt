@@ -1,4 +1,6 @@
 Release 1.1.3:
+  - Paint the right side of the left scrollbar in the left JTextArea of the
+    editpanel. 
   - Remember previous filter in directory diff dialog.
   - BUG: directoryscanner couldn't handle includes-array with 0 elements.
   - JMTable can now have a different renderer/editor per row/column 
