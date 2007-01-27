@@ -162,6 +162,11 @@ public class DirectoryScanner
    */
   private static Vector defaultExcludes = new Vector();
 
+  /**
+   * Show state information in the statusbar.
+   */
+  private boolean showStateOn;
+
   static
   {
     resetDefaultExcludes();
@@ -1144,6 +1149,9 @@ public class DirectoryScanner
     {
       return;
     }
+
+    setState("Scan directory: %s", vpath);
+
     String[] newfiles = dir.list();
 
     if (newfiles == null)
@@ -1234,7 +1242,8 @@ public class DirectoryScanner
    */
   private void accountForIncludedFile(
     String name,
-    File   file, File dir)
+    File   file,
+    File   dir)
   {
     if (filesIncludedMap.get(name) != null || filesExcluded.contains(name)
       || filesDeselected.contains(name))
@@ -1933,5 +1942,20 @@ public class DirectoryScanner
     }
     return set.size() == 0 ? patterns
                            : (String[]) al.toArray(new String[al.size()]);
+  }
+
+  private void setState(
+    String format,
+    Object...args)
+  {
+    if (showStateOn)
+    {
+      org.jmeld.ui.StatusBar.setState(format, args);
+    }
+  }
+
+  public void setShowStateOn(boolean showStateOn)
+  {
+    this.showStateOn = showStateOn;
   }
 }

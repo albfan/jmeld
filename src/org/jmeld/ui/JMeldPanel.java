@@ -739,20 +739,24 @@ public class JMeldPanel
       try
       {
         StatusBar.start();
-        StatusBar.setStatus("Reading file: " + originalFile.getName());
+        StatusBar.setState(
+          "Reading file %s",
+          originalFile.getName());
         bd1 = new FileDocument(originalFile);
         bd1.read();
 
-        StatusBar.setStatus("Reading file: " + mineFile.getName());
+        StatusBar.setState(
+          "Reading file %s",
+          mineFile.getName());
         bd2 = new FileDocument(mineFile);
         bd2.read();
 
-        StatusBar.setStatus("Calculating differences...");
+        StatusBar.setState("Calculating differences...");
         diff = new JMDiff();
         revision = diff.diff(
             bd1.getLines(),
             bd2.getLines());
-        StatusBar.setStatus("Ready calculating differences");
+        StatusBar.setState("Ready calculating differences");
         StatusBar.stop();
       }
       catch (Exception ex)

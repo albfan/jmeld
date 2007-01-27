@@ -1,4 +1,5 @@
 Release 1.1.3:
+  - While scanning directory : Text "Scanning directory xxx" in StatusBar.
   - Background color of linenumber-border are now inline with the colors of
     the look and feel.
   - Paint the right side of the left scrollbar in the left JTextArea of the

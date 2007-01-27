@@ -84,29 +84,36 @@ public class StatusBar
     instance.busy.start();
   }
 
-  public static void setStatus(String text)
+  public static void setState(
+    String format,
+    Object...args)
   {
-    instance.status.setText(text);
+    instance.status.setText(String.format(format, args));
   }
 
-  public static void setText(String text)
+  public static void setText(
+    String format,
+    Object...args)
   {
-    setStatus(text);
+    setState(format, args);
     stop();
   }
 
-  public static void setAlarm(String text)
+  public static void setAlarm(
+    String format,
+    Object...args)
   {
     instance.status.setForeground(Color.red);
-    setStatus(text);
+    setState(format, args);
     stop();
   }
 
-  public static void setStatus(
+  public static void setText(
     int    progress,
-    String text)
+    String format,
+    Object...args)
   {
-    instance.status.setText(text);
+    instance.status.setText(String.format(format, args));
     instance.progress.setValue(progress);
   }
 
@@ -123,7 +130,9 @@ public class StatusBar
     progress.setValue(0);
   }
 
-  public static void setNotification(String id, ImageIcon icon)
+  public static void setNotification(
+    String    id,
+    ImageIcon icon)
   {
     JLabel label;
 
@@ -133,24 +142,28 @@ public class StatusBar
     setNotification(id, label);
   }
 
-  public static void setNotification(String id, JComponent component)
+  public static void setNotification(
+    String     id,
+    JComponent component)
   {
     instance._setNotification(id, component);
   }
 
-  private void _setNotification(String id, JComponent component)
+  private void _setNotification(
+    String     id,
+    JComponent component)
   {
     id = getNotificationId(id);
 
     // check if notification is already showing!
-    if(notificationArea.getClientProperty(id) != null)
+    if (notificationArea.getClientProperty(id) != null)
     {
       return;
     }
 
     notificationArea.add(component);
     notificationArea.putClientProperty(id, component);
-    
+
     revalidate();
   }
 
@@ -162,11 +175,11 @@ public class StatusBar
   public void _removeNotification(String id)
   {
     JComponent component;
-    
+
     id = getNotificationId(id);
 
     component = (JComponent) notificationArea.getClientProperty(id);
-    if(component == null)
+    if (component == null)
     {
       return;
     }

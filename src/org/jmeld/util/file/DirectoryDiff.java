@@ -108,9 +108,10 @@ public class DirectoryDiff
     DirectoryScanner      ds;
 
     StatusBar.start();
-    StatusBar.setStatus("Start scanning directories...");
+    StatusBar.setState("Start scanning directories...");
 
     ds = new DirectoryScanner();
+    ds.setShowStateOn(true);
     ds.setBasedir(mineDirectory);
     if (filter != null)
     {
@@ -124,6 +125,7 @@ public class DirectoryDiff
     mineMap.putAll(ds.getIncludedDirectoriesMap());
 
     ds = new DirectoryScanner();
+    ds.setShowStateOn(true);
     ds.setBasedir(originalDirectory);
     if (filter != null)
     {
@@ -136,8 +138,6 @@ public class DirectoryDiff
     originalMap = ds.getIncludedFilesMap();
     originalMap.putAll(ds.getIncludedDirectoriesMap());
 
-    //mineMap = new DirectoryScan(mineDirectory, filter).scan();
-    //originalMap = new DirectoryScan(originalDirectory, filter).scan();
     for (JMeldNode node : mineMap.values())
     {
       name = node.getName();
@@ -186,7 +186,7 @@ public class DirectoryDiff
       if (mineNode.getState() == JMeldNode.EQUAL
         && originalNode.getState() == JMeldNode.EQUAL)
       {
-        StatusBar.setStatus("Comparing file : " + mineNode.getName());
+        StatusBar.setState("Comparing file : %s", mineNode.getName());
         if (!mineNode.contentEquals(originalNode))
         {
           mineNode.setState(JMeldNode.CHANGED);
@@ -194,7 +194,7 @@ public class DirectoryDiff
         }
       }
     }
-    StatusBar.setStatus("Ready comparing directories");
+    StatusBar.setState("Ready comparing directories");
     StatusBar.stop();
   }
 
