@@ -34,7 +34,7 @@ public class TokenizerFactory
     if (instance.innerDiffTokenizer == null)
     {
       instance.innerDiffTokenizer = new WordTokenizer(
-          "\\s+|;|:|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=<>`'\"|]+|\\.");
+          "\\s|;|:|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=<>`'\"|]+|\\.");
     }
 
     return instance.innerDiffTokenizer;
