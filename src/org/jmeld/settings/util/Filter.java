@@ -113,17 +113,17 @@ public class Filter
     return rules;
   }
 
-  public String[] getExcludes()
+  public List<String> getExcludes()
   {
     return getPatterns(FilterRule.Rule.excludes);
   }
 
-  public String[] getIncludes()
+  public List<String> getIncludes()
   {
     return getPatterns(FilterRule.Rule.includes);
   }
 
-  private String[] getPatterns(FilterRule.Rule r)
+  private List<String> getPatterns(FilterRule.Rule r)
   {
     List<String> result;
 
@@ -136,7 +136,7 @@ public class Filter
       }
     }
 
-    return result.toArray(new String[result.size()]);
+    return result;
   }
 
   public String toString()
