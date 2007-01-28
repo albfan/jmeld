@@ -120,7 +120,6 @@
        <fileset dir="doc/help/jmeld"/>
        <zipfileset src="lib/forms-1.0.5.jar"/>
        <zipfileset src="lib/looks-2.0.jar"/>
-       <!--zipfileset src="lib/swinglabs-0.8.0.jar"/-->
        <zipfileset src="lib/swingx.jar"/>
        <zipfileset src="lib/swing-worker.jar"/>
        <zipfileset src="lib/jhall.jar"/>
