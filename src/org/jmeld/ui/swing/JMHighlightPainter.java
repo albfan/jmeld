@@ -60,6 +60,7 @@ public class JMHighlightPainter
 
   private Color   color;
   private boolean line;
+  private boolean debug;
 
   private JMHighlightPainter(Color color)
   {
@@ -115,32 +116,40 @@ public class JMHighlightPainter
           }
           else
           {
+            debug("r1: x=%d,y=%d,width=%d,height=%d\n", r1.x, r1.y, r1.width,
+              r1.height);
+            debug("r2: x=%d,y=%d,width=%d,height=%d\n", r2.x, r2.y, r2.width,
+              r2.height);
+
             count = ((r2.y - r1.y) / r1.height) + 1;
+            debug("count = " + count);
             y = r1.y;
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++, y += r1.height)
             {
               if (i == 0)
               {
                 // firstline:
                 x = r1.x;
                 width = b.width - b.x;
+                debug("first     : ");
               }
               else if (i == count - 1)
               {
                 // lastline:
                 x = b.x;
-                width = r2.x;
+                width = r2.x - x;
+                debug("last      : ");
               }
               else
               {
                 // all lines in between the first and the lastline:
                 x = b.x;
                 width = b.width - b.x;
+                debug("in between: ");
               }
 
+              debug("x=%d,y=%d,width=%d,height=%d\n", x, y, width, r1.height);
               g.fillRect(x, y, width, r1.height);
-
-              y += r1.height;
             }
           }
         }
@@ -180,5 +189,13 @@ public class JMHighlightPainter
   private EditorSettings getSettings()
   {
     return JMeldSettings.getInstance().getEditor();
+  }
+
+  private void debug(String format, Object... args)
+  {
+    if(debug)
+    {
+      System.out.printf(format, args);
+    }
   }
 }
