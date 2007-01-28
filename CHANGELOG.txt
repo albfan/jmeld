@@ -1,4 +1,5 @@
 Release 1.1.3:
+  - BUG: Innerdiff sometimes didn't paint correctly
   - While scanning directory : Text "Scanning directory xxx" in StatusBar.
   - Background color of linenumber-border are now inline with the colors of
     the look and feel.
