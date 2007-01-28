@@ -22,7 +22,8 @@ import java.nio.channels.*;
 import java.util.*;
 
 public class FileNode
-       extends JMeldNode
+       extends JMeldNode 
+       implements BufferNode
 {
   private File file;
 
