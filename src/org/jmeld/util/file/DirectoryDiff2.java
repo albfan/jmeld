@@ -107,16 +107,18 @@ public class DirectoryDiff2
       node.setBufferNode2(fileNode);
     }
 
+/*
     for(DiffNode node : nodes)
     {
       node.compareContents();
     }
+    */
 
     StatusBar.setState("Ready comparing directories");
     StatusBar.stop();
   }
 
-  private DiffNode addNode(String name);
+  private DiffNode addNode(String name)
   {
     DiffNode node;
 
