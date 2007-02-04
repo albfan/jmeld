@@ -583,7 +583,13 @@ public class FilePanel
           int                   result;
           File                  file;
 
+          // Don't allow accidentaly creation or rename of files.
+          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
           chooser = new JFileChooser();
+          // Reset the readOnly property as it is systemwide.
+          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+          chooser.setApproveButtonText("Choose");
+          chooser.setDialogTitle("Load file");
           pref = new FileChooserPreference("Browse", chooser);
           result = chooser.showOpenDialog(diffPanel);
 

@@ -229,7 +229,14 @@ public class NewPanelDialog
           String                fileName;
           JComboBox             comboBox;
 
+          // Don't allow accidentaly creation or rename of files.
+          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
           chooser = new JFileChooser();
+          // Reset the readOnly property as it is systemwide.
+          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+          chooser.setApproveButtonText("Choose");
+          chooser.setDialogTitle("Choose file");
+          chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
           pref = new FileChooserPreference("Browse", chooser);
           result = chooser.showOpenDialog(meldPanel);
 
@@ -368,7 +375,13 @@ public class NewPanelDialog
           String                     fileName;
           JComboBox                  comboBox;
 
+          // Don't allow accidentaly creation or rename of files.
+          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
           chooser = new JFileChooser();
+          // Reset the readOnly property as it is systemwide.
+          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+          chooser.setApproveButtonText("Choose");
+          chooser.setDialogTitle("Choose directory");
           chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
           pref = new DirectoryChooserPreference("Browse", chooser);
           result = chooser.showOpenDialog(meldPanel);

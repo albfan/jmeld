@@ -110,6 +110,8 @@ public class SettingsPanel
           FileChooserPreference pref;
 
           chooser = new JFileChooser();
+          chooser.setApproveButtonText("Save");
+          chooser.setDialogTitle("Save settings");
           pref = new FileChooserPreference("SettingsSave", chooser);
 
           result = chooser.showOpenDialog(SettingsPanel.this);
@@ -137,6 +139,8 @@ public class SettingsPanel
           FileChooserPreference pref;
 
           chooser = new JFileChooser();
+          chooser.setApproveButtonText("Reload");
+          chooser.setDialogTitle("Reload settings");
           pref = new FileChooserPreference("SettingsSave", chooser);
 
           result = chooser.showOpenDialog(SettingsPanel.this);
