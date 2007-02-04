@@ -40,21 +40,21 @@ public class FolderDiffPanel2
   {
     folder1Label.init();
     folder1Label.setText(
-      diff.getOriginalFolderName(),
-      diff.getMineFolderName());
+      diff.getLeftFolderName(),
+      diff.getRightFolderName());
 
     folder2Label.init();
     folder2Label.setText(
-      diff.getMineFolderName(),
-      diff.getOriginalFolderName());
+      diff.getRightFolderName(),
+      diff.getLeftFolderName());
 
     folderTreeTable.setTreeTableModel(getModel());
   }
 
   public String getTitle()
   {
-    return diff.getOriginalFolderShortName() + " - "
-    + diff.getMineFolderShortName();
+    return diff.getLeftFolderShortName() + " - "
+    + diff.getRightFolderShortName();
   }
 
   public DefaultTreeTableModel getModel()

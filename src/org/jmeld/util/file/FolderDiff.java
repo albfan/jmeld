@@ -22,62 +22,62 @@ import java.util.*;
 
 public abstract class FolderDiff
 {
-  private String mineFolderShortName;
-  private String originalFolderShortName;
-  private String mineFolderName;
-  private String originalFolderName;
+  private String rightFolderShortName;
+  private String leftFolderShortName;
+  private String rightFolderName;
+  private String leftFolderName;
 
   public FolderDiff()
   {
   }
 
-  protected void setOriginalFolderShortName(String originalFolderShortName)
+  protected void setLeftFolderShortName(String leftFolderShortName)
   {
-    this.originalFolderShortName = originalFolderShortName;
+    this.leftFolderShortName = leftFolderShortName;
   }
 
-  public String getOriginalFolderShortName()
+  public String getLeftFolderShortName()
   {
-    return originalFolderShortName;
+    return leftFolderShortName;
   }
 
-  protected void setMineFolderShortName(String mineFolderShortName)
+  protected void setRightFolderShortName(String rightFolderShortName)
   {
-    this.mineFolderShortName = mineFolderShortName;
+    this.rightFolderShortName = rightFolderShortName;
   }
 
-  public String getMineFolderShortName()
+  public String getRightFolderShortName()
   {
-    return mineFolderShortName;
+    return rightFolderShortName;
   }
 
-  protected void setOriginalFolderName(String originalFolderName)
+  protected void setLeftFolderName(String leftFolderName)
   {
-    this.originalFolderName = originalFolderName;
+    this.leftFolderName = leftFolderName;
   }
 
-  public String getOriginalFolderName()
+  public String getLeftFolderName()
   {
-    return originalFolderName;
+    return leftFolderName;
   }
 
-  protected void setMineFolderName(String mineFolderName)
+  protected void setRightFolderName(String rightFolderName)
   {
-    this.mineFolderName = mineFolderName;
+    this.rightFolderName = rightFolderName;
   }
 
-  public String getMineFolderName()
+  public String getRightFolderName()
   {
-    return mineFolderName;
+    return rightFolderName;
   }
 
-  public abstract String getMineNodeName(int index);
+  public abstract String getRightNodeName(int index);
 
-  public abstract List<JMeldNode> getMineNodes();
+  public abstract List<JMeldNode> getRightNodes();
 
-  public abstract String getOriginalNodeName(int index);
+  public abstract String getLeftNodeName(int index);
 
-  public abstract List<JMeldNode> getOriginalNodes();
+  public abstract List<JMeldNode> getLeftNodes();
 
   public abstract void diff();
 }

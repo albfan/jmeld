@@ -83,8 +83,8 @@ public class JMeldPanel
   private boolean       mergeMode;
 
   public JMeldPanel(
-    String originalName,
-    String mineName)
+    String leftName,
+    String rightName)
   {
     setFocusable(true);
 
@@ -104,50 +104,50 @@ public class JMeldPanel
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
-    openComparison(originalName, mineName);
+    openComparison(leftName, rightName);
   }
 
   public void openComparison(
-    String originalName,
-    String mineName)
+    String leftName,
+    String rightName)
   {
-    File originalFile;
-    File mineFile;
+    File leftFile;
+    File rightFile;
 
-    if (!StringUtil.isEmpty(originalName) && !StringUtil.isEmpty(mineName))
+    if (!StringUtil.isEmpty(leftName) && !StringUtil.isEmpty(rightName))
     {
-      originalFile = new File(originalName);
-      mineFile = new File(mineName);
-      if (originalFile.isDirectory() && mineFile.isDirectory())
+      leftFile = new File(leftName);
+      rightFile = new File(rightName);
+      if (leftFile.isDirectory() && rightFile.isDirectory())
       {
-        openDirectoryComparison(originalFile, mineFile, null);
+        openDirectoryComparison(leftFile, rightFile, null);
       }
       else
       {
-        openFileComparison(originalFile, mineFile, false);
+        openFileComparison(leftFile, rightFile, false);
       }
     }
   }
 
   public void openFileComparison(
-    File    originalFile,
-    File    mineFile,
+    File    leftFile,
+    File    rightFile,
     boolean openInBackground)
   {
     WaitCursor.wait(this);
 
-    new NewFileComparisonPanel(originalFile, mineFile, openInBackground)
+    new NewFileComparisonPanel(leftFile, rightFile, openInBackground)
     .execute();
   }
 
   public void openDirectoryComparison(
-    File   originalFile,
-    File   mineFile,
+    File   leftFile,
+    File   rightFile,
     Filter filter)
   {
     WaitCursor.wait(this);
 
-    new NewDirectoryComparisonPanel(originalFile, mineFile, filter).execute();
+    new NewDirectoryComparisonPanel(leftFile, rightFile, filter).execute();
   }
 
   public JMenuBar getMenuBar()
@@ -371,15 +371,15 @@ public class JMeldPanel
     if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
     {
       openFileComparison(
-        new File(dialog.getOriginalFileName()),
-        new File(dialog.getMineFileName()),
+        new File(dialog.getLeftFileName()),
+        new File(dialog.getRightFileName()),
         false);
     }
     else if (dialog.getValue() == NewPanelDialog.DIRECTORY_COMPARISON)
     {
       openDirectoryComparison(
-        new File(dialog.getOriginalDirectoryName()),
-        new File(dialog.getMineDirectoryName()),
+        new File(dialog.getLeftDirectoryName()),
+        new File(dialog.getRightDirectoryName()),
         dialog.getFilter());
     }
   }
@@ -695,8 +695,8 @@ public class JMeldPanel
   class NewFileComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private File             originalFile;
-    private File             mineFile;
+    private File             leftFile;
+    private File             rightFile;
     private boolean          openInBackground;
     private BufferDocumentIF bd1;
     private BufferDocumentIF bd2;
@@ -704,36 +704,36 @@ public class JMeldPanel
     private JMRevision       revision;
 
     NewFileComparisonPanel(
-      File    originalFile,
-      File    mineFile,
+      File    leftFile,
+      File    rightFile,
       boolean openInBackground)
     {
-      this.originalFile = originalFile;
-      this.mineFile = mineFile;
+      this.leftFile = leftFile;
+      this.rightFile = rightFile;
       this.openInBackground = openInBackground;
     }
 
     public String doInBackground()
     {
-      if (StringUtil.isEmpty(originalFile.getName()))
+      if (StringUtil.isEmpty(leftFile.getName()))
       {
-        return "original filename is empty";
+        return "left filename is empty";
       }
 
-      if (!originalFile.exists())
+      if (!leftFile.exists())
       {
-        return "original filename(" + originalFile.getName()
+        return "left filename(" + leftFile.getName()
         + ") doesn't exist";
       }
 
-      if (StringUtil.isEmpty(mineFile.getName()))
+      if (StringUtil.isEmpty(rightFile.getName()))
       {
-        return "mine filename is empty";
+        return "right filename is empty";
       }
 
-      if (!mineFile.exists())
+      if (!rightFile.exists())
       {
-        return "mine filename(" + mineFile.getName() + ") doesn't exist";
+        return "right filename(" + rightFile.getName() + ") doesn't exist";
       }
 
       try
@@ -741,14 +741,14 @@ public class JMeldPanel
         StatusBar.start();
         StatusBar.setState(
           "Reading file %s",
-          originalFile.getName());
-        bd1 = new FileDocument(originalFile);
+          leftFile.getName());
+        bd1 = new FileDocument(leftFile);
         bd1.read();
 
         StatusBar.setState(
           "Reading file %s",
-          mineFile.getName());
-        bd2 = new FileDocument(mineFile);
+          rightFile.getName());
+        bd2 = new FileDocument(rightFile);
         bd2.read();
 
         StatusBar.setState("Calculating differences...");
@@ -824,57 +824,57 @@ public class JMeldPanel
   class NewDirectoryComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private File          originalFile;
-    private File          mineFile;
+    private File          leftFile;
+    private File          rightFile;
     private Filter        filter;
     private DirectoryDiff diff;
 
     NewDirectoryComparisonPanel(
-      File   originalFile,
-      File   mineFile,
+      File   leftFile,
+      File   rightFile,
       Filter filter)
     {
-      this.originalFile = originalFile;
-      this.mineFile = mineFile;
+      this.leftFile = leftFile;
+      this.rightFile = rightFile;
       this.filter = filter;
     }
 
     public String doInBackground()
     {
-      if (StringUtil.isEmpty(originalFile.getName()))
+      if (StringUtil.isEmpty(leftFile.getName()))
       {
-        return "original directoryName is empty";
+        return "left directoryName is empty";
       }
 
-      if (!originalFile.exists())
+      if (!leftFile.exists())
       {
-        return "original directoryName(" + originalFile.getName()
+        return "left directoryName(" + leftFile.getName()
         + ") doesn't exist";
       }
 
-      if (!originalFile.isDirectory())
+      if (!leftFile.isDirectory())
       {
-        return "original directoryName(" + originalFile.getName()
+        return "left directoryName(" + leftFile.getName()
         + ") is not a directory";
       }
 
-      if (StringUtil.isEmpty(mineFile.getName()))
+      if (StringUtil.isEmpty(rightFile.getName()))
       {
-        return "mine directoryName is empty";
+        return "right directoryName is empty";
       }
 
-      if (!mineFile.exists())
+      if (!rightFile.exists())
       {
-        return "mine directoryName(" + mineFile.getName() + ") doesn't exist";
+        return "right directoryName(" + rightFile.getName() + ") doesn't exist";
       }
 
-      if (!mineFile.isDirectory())
+      if (!rightFile.isDirectory())
       {
-        return "mine directoryName(" + mineFile.getName()
+        return "right directoryName(" + rightFile.getName()
         + ") is not a directory";
       }
 
-      diff = new DirectoryDiff(originalFile, mineFile, filter);
+      diff = new DirectoryDiff(leftFile, rightFile, filter);
       diff.diff();
 
       return null;

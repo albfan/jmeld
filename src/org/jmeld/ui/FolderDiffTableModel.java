@@ -36,70 +36,70 @@ public class FolderDiffTableModel
 {
   private FolderDiff diff;
   private NodeFilter nodeFilter;
-  private Column     orgNodeColumn;
-  private Column     orgNameColumn;
-  private Column     orgSizeColumn;
-  private Column     orgStateColumn;
-  private Column     mineStateColumn;
-  private Column     mineSizeColumn;
+  private Column     leftNodeColumn;
+  private Column     leftNameColumn;
+  private Column     leftSizeColumn;
+  private Column     leftStateColumn;
+  private Column     rightStateColumn;
+  private Column     rightSizeColumn;
 
   public FolderDiffTableModel(FolderDiff diff)
   {
     this.diff = diff;
 
-    orgNodeColumn = addColumn("orgNode", null, "Node", Icon.class, 4, false,
+    leftNodeColumn = addColumn("leftNode", null, "Node", Icon.class, 4, false,
         null);
-    orgNameColumn = addColumn("orgName", null, "Name", String.class, -1,
+    leftNameColumn = addColumn("leftName", null, "Name", String.class, -1,
         false, null);
-    orgSizeColumn = addColumn("orgSize", "Original", "Size", Integer.class, 8,
-        false, Colors.TABLEROW_ORG);
-    orgStateColumn = addColumn("orgState", "Original", "", Icon.class, 3,
-        false, Colors.TABLEROW_ORG);
-    mineStateColumn = addColumn("mineState", "Mine", "", Icon.class, 3, false,
-        Colors.TABLEROW_MINE);
-    mineSizeColumn = addColumn("mineSize", "Mine", "Size", Integer.class, 8,
-        false, Colors.TABLEROW_MINE);
+    leftSizeColumn = addColumn("leftSize", "Left", "Size", Integer.class, 8,
+        false, Colors.TABLEROW_LEFT);
+    leftStateColumn = addColumn("leftState", "Left", "", Icon.class, 3, false,
+        Colors.TABLEROW_LEFT);
+    rightStateColumn = addColumn("rightState", "Right", "", Icon.class, 3,
+        false, Colors.TABLEROW_RIGHT);
+    rightSizeColumn = addColumn("rightSize", "Right", "Size", Integer.class,
+        8, false, Colors.TABLEROW_RIGHT);
 
     nodeFilter = new NodeFilter();
   }
 
   public int getRowCount()
   {
-    return nodeFilter.getMineNodes().size();
+    return nodeFilter.getRightNodes().size();
   }
 
   public Object getValueAt(
     int    rowIndex,
     Column column)
   {
-    if (column == orgNodeColumn)
+    if (column == leftNodeColumn)
     {
       return getNodeIcon(rowIndex);
     }
 
-    if (column == orgStateColumn)
+    if (column == leftStateColumn)
     {
-      return getOriginalStateIcon(rowIndex);
+      return getLeftStateIcon(rowIndex);
     }
 
-    if (column == orgNameColumn)
+    if (column == leftNameColumn)
     {
-      return getOriginalNode(rowIndex).getName();
+      return getLeftNode(rowIndex).getName();
     }
 
-    if (column == orgSizeColumn)
+    if (column == leftSizeColumn)
     {
-      return getOriginalNode(rowIndex).getSize();
+      return getLeftNode(rowIndex).getSize();
     }
 
-    if (column == mineStateColumn)
+    if (column == rightStateColumn)
     {
-      return getMineStateIcon(rowIndex);
+      return getRightStateIcon(rowIndex);
     }
 
-    if (column == mineSizeColumn)
+    if (column == rightSizeColumn)
     {
-      return getMineNode(rowIndex).getSize();
+      return getRightNode(rowIndex).getSize();
     }
 
     return null;
@@ -110,7 +110,7 @@ public class FolderDiffTableModel
     JMeldNode node;
     String    iconName;
 
-    node = getOriginalNode(rowIndex);
+    node = getLeftNode(rowIndex);
     iconName = node.isLeaf() ? "stock_leaf"
                              : node.isCollapsed() ? "stock_folder_closed"
                                                   : "stock_folder_open";
@@ -118,21 +118,21 @@ public class FolderDiffTableModel
     return ImageUtil.getSmallImageIcon(iconName);
   }
 
-  private ImageIcon getOriginalStateIcon(int rowIndex)
+  private ImageIcon getLeftStateIcon(int rowIndex)
   {
     JMeldNode node;
     String    iconName;
 
-    node = getOriginalNode(rowIndex);
+    node = getLeftNode(rowIndex);
     return getStateIcon(node.getState());
   }
 
-  private ImageIcon getMineStateIcon(int rowIndex)
+  private ImageIcon getRightStateIcon(int rowIndex)
   {
     JMeldNode node;
     String    iconName;
 
-    node = getMineNode(rowIndex);
+    node = getRightNode(rowIndex);
     return getStateIcon(node.getState());
   }
 
@@ -167,20 +167,20 @@ public class FolderDiffTableModel
     return ImageUtil.getSmallImageIcon(iconName);
   }
 
-  public JMeldNode getOriginalNode(int rowIndex)
+  public JMeldNode getLeftNode(int rowIndex)
   {
-    return nodeFilter.getOriginalNodes().get(rowIndex);
+    return nodeFilter.getLeftNodes().get(rowIndex);
   }
 
-  public JMeldNode getMineNode(int rowIndex)
+  public JMeldNode getRightNode(int rowIndex)
   {
-    return nodeFilter.getMineNodes().get(rowIndex);
+    return nodeFilter.getRightNodes().get(rowIndex);
   }
 
   class NodeFilter
   {
-    List<JMeldNode> filteredOriginalNodes;
-    List<JMeldNode> filteredMineNodes;
+    List<JMeldNode> filteredLeftNodes;
+    List<JMeldNode> filteredRightNodes;
 
     NodeFilter()
     {
@@ -189,54 +189,54 @@ public class FolderDiffTableModel
 
     void filter()
     {
-      List<JMeldNode> originalNodes;
-      List<JMeldNode> mineNodes;
-      JMeldNode       originalNode;
+      List<JMeldNode> leftNodes;
+      List<JMeldNode> rightNodes;
+      JMeldNode       leftNode;
       int             size;
       String          collapsedNodeName;
-      String          originalNodeName;
+      String          leftNodeName;
 
-      originalNodes = diff.getOriginalNodes();
-      mineNodes = diff.getMineNodes();
-      size = originalNodes.size();
+      leftNodes = diff.getLeftNodes();
+      rightNodes = diff.getRightNodes();
+      size = leftNodes.size();
 
-      filteredOriginalNodes = new ArrayList<JMeldNode>(size);
-      filteredMineNodes = new ArrayList<JMeldNode>(size);
+      filteredLeftNodes = new ArrayList<JMeldNode>(size);
+      filteredRightNodes = new ArrayList<JMeldNode>(size);
 
       collapsedNodeName = null;
       for (int i = 0; i < size; i++)
       {
-        originalNode = originalNodes.get(i);
-        originalNodeName = originalNode.getName();
+        leftNode = leftNodes.get(i);
+        leftNodeName = leftNode.getName();
 
         if (collapsedNodeName != null
-          && originalNodeName.startsWith(collapsedNodeName))
+          && leftNodeName.startsWith(collapsedNodeName))
         {
           continue;
         }
 
-        if (originalNode.isCollapsed())
+        if (leftNode.isCollapsed())
         {
-          collapsedNodeName = originalNodeName;
+          collapsedNodeName = leftNodeName;
         }
         else
         {
           collapsedNodeName = null;
         }
 
-        filteredOriginalNodes.add(originalNode);
-        filteredMineNodes.add(mineNodes.get(i));
+        filteredLeftNodes.add(leftNode);
+        filteredRightNodes.add(rightNodes.get(i));
       }
     }
 
-    List<JMeldNode> getOriginalNodes()
+    List<JMeldNode> getLeftNodes()
     {
-      return filteredOriginalNodes;
+      return filteredLeftNodes;
     }
 
-    List<JMeldNode> getMineNodes()
+    List<JMeldNode> getRightNodes()
     {
-      return filteredMineNodes;
+      return filteredRightNodes;
     }
   }
 
@@ -257,9 +257,9 @@ public class FolderDiffTableModel
             columnIndex = ((JTable) me.getSource()).columnAtPoint(
                 me.getPoint());
             id = getColumnId(columnIndex);
-            if (id.equals("orgNode"))
+            if (id.equals("leftNode"))
             {
-              node = getOriginalNode(rowIndex);
+              node = getLeftNode(rowIndex);
               if (!node.isLeaf())
               {
                 node.setCollapsed(!node.isCollapsed());

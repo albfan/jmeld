@@ -36,26 +36,26 @@ public class NewPanelDialog
 // Class variables:
 // File comparison:
   public static String  FILE_COMPARISON = "FILE_COMPARISON";
-  private static String MINE_FILENAME = "MINE_FILENAME";
-  private static String ORIGINAL_FILENAME = "ORIGINAL_FILENAME";
+  private static String RIGHT_FILENAME = "RIGHT_FILENAME";
+  private static String LEFT_FILENAME = "LEFT_FILENAME";
 
 // Directory comparison:
   public static String  DIRECTORY_COMPARISON = "DIRECTORY_COMPARISON";
-  private static String MINE_DIRECTORY = "MINE_DIRECTORY";
-  private static String ORIGINAL_DIRECTORY = "ORIGINAL_DIRECTORY";
+  private static String RIGHT_DIRECTORY = "RIGHT_DIRECTORY";
+  private static String LEFT_DIRECTORY = "LEFT_DIRECTORY";
 
 // Instance variables:
   private JMeldPanel  meldPanel;
   private JTabbedPane tabbedPane;
   private String      value;
-  private String      originalFileName;
-  private String      mineFileName;
-  private JComboBox   originalFileComboBox;
-  private JComboBox   mineFileComboBox;
-  private String      originalDirectoryName;
-  private String      mineDirectoryName;
-  private JComboBox   originalDirectoryComboBox;
-  private JComboBox   mineDirectoryComboBox;
+  private String      leftFileName;
+  private String      rightFileName;
+  private JComboBox   leftFileComboBox;
+  private JComboBox   rightFileComboBox;
+  private String      leftDirectoryName;
+  private String      rightDirectoryName;
+  private JComboBox   leftDirectoryComboBox;
+  private JComboBox   rightDirectoryComboBox;
   private JComboBox   filterComboBox;
   private JDialog     dialog;
 
@@ -111,24 +111,24 @@ public class NewPanelDialog
     return value;
   }
 
-  public String getOriginalFileName()
+  public String getLeftFileName()
   {
-    return originalFileName;
+    return leftFileName;
   }
 
-  public String getMineFileName()
+  public String getRightFileName()
   {
-    return mineFileName;
+    return rightFileName;
   }
 
-  public String getOriginalDirectoryName()
+  public String getLeftDirectoryName()
   {
-    return originalDirectoryName;
+    return leftDirectoryName;
   }
 
-  public String getMineDirectoryName()
+  public String getRightDirectoryName()
   {
-    return mineDirectoryName;
+    return rightDirectoryName;
   }
 
   public Filter getFilter()
@@ -176,38 +176,38 @@ public class NewPanelDialog
 
     panel = new JPanel(layout);
 
-    label = new JLabel("Original");
+    label = new JLabel("Left");
     button = new JButton("Browse...");
-    originalFileComboBox = new JComboBox();
-    originalFileComboBox.setEditable(false);
-    originalFileComboBox.addActionListener(getFileSelectAction());
-    new ComboBoxPreference("OriginalFile", originalFileComboBox);
+    leftFileComboBox = new JComboBox();
+    leftFileComboBox.setEditable(false);
+    leftFileComboBox.addActionListener(getFileSelectAction());
+    new ComboBoxPreference("LeftFile", leftFileComboBox);
 
-    button.setActionCommand(ORIGINAL_FILENAME);
+    button.setActionCommand(LEFT_FILENAME);
     button.addActionListener(getFileBrowseAction());
     panel.add(
       label,
       cc.xy(2, 2));
     panel.add(
-      originalFileComboBox,
+      leftFileComboBox,
       cc.xy(4, 2));
     panel.add(
       button,
       cc.xy(6, 2));
 
-    label = new JLabel("Mine");
+    label = new JLabel("Right");
     button = new JButton("Browse...");
-    button.setActionCommand(MINE_FILENAME);
+    button.setActionCommand(RIGHT_FILENAME);
     button.addActionListener(getFileBrowseAction());
-    mineFileComboBox = new JComboBox();
-    mineFileComboBox.setEditable(false);
-    mineFileComboBox.addActionListener(getFileSelectAction());
-    new ComboBoxPreference("MineFile", mineFileComboBox);
+    rightFileComboBox = new JComboBox();
+    rightFileComboBox.setEditable(false);
+    rightFileComboBox.addActionListener(getFileSelectAction());
+    new ComboBoxPreference("RightFile", rightFileComboBox);
     panel.add(
       label,
       cc.xy(2, 4));
     panel.add(
-      mineFileComboBox,
+      rightFileComboBox,
       cc.xy(4, 4));
     panel.add(
       button,
@@ -242,13 +242,13 @@ public class NewPanelDialog
               fileName = chooser.getSelectedFile().getCanonicalPath();
 
               comboBox = null;
-              if (ae.getActionCommand().equals(ORIGINAL_FILENAME))
+              if (ae.getActionCommand().equals(LEFT_FILENAME))
               {
-                comboBox = originalFileComboBox;
+                comboBox = leftFileComboBox;
               }
-              else if (ae.getActionCommand().equals(MINE_FILENAME))
+              else if (ae.getActionCommand().equals(RIGHT_FILENAME))
               {
-                comboBox = mineFileComboBox;
+                comboBox = rightFileComboBox;
               }
 
               if (comboBox != null)
@@ -276,13 +276,13 @@ public class NewPanelDialog
           Object source;
 
           source = ae.getSource();
-          if (source == originalFileComboBox)
+          if (source == leftFileComboBox)
           {
-            originalFileName = (String) originalFileComboBox.getSelectedItem();
+            leftFileName = (String) leftFileComboBox.getSelectedItem();
           }
-          else if (source == mineFileComboBox)
+          else if (source == rightFileComboBox)
           {
-            mineFileName = (String) mineFileComboBox.getSelectedItem();
+            rightFileName = (String) rightFileComboBox.getSelectedItem();
           }
         }
       };
@@ -305,38 +305,38 @@ public class NewPanelDialog
 
     panel = new JPanel(layout);
 
-    label = new JLabel("Original");
+    label = new JLabel("Left");
     button = new JButton("Browse...");
-    originalDirectoryComboBox = new JComboBox();
-    originalDirectoryComboBox.setEditable(false);
-    originalDirectoryComboBox.addActionListener(getDirectorySelectAction());
-    new ComboBoxPreference("OriginalDirectory", originalDirectoryComboBox);
+    leftDirectoryComboBox = new JComboBox();
+    leftDirectoryComboBox.setEditable(false);
+    leftDirectoryComboBox.addActionListener(getDirectorySelectAction());
+    new ComboBoxPreference("LeftDirectory", leftDirectoryComboBox);
 
-    button.setActionCommand(ORIGINAL_DIRECTORY);
+    button.setActionCommand(LEFT_DIRECTORY);
     button.addActionListener(getDirectoryBrowseAction());
     panel.add(
       label,
       cc.xy(2, 2));
     panel.add(
-      originalDirectoryComboBox,
+      leftDirectoryComboBox,
       cc.xy(4, 2));
     panel.add(
       button,
       cc.xy(6, 2));
 
-    label = new JLabel("Mine");
+    label = new JLabel("Right");
     button = new JButton("Browse...");
-    button.setActionCommand(MINE_DIRECTORY);
+    button.setActionCommand(RIGHT_DIRECTORY);
     button.addActionListener(getDirectoryBrowseAction());
-    mineDirectoryComboBox = new JComboBox();
-    mineDirectoryComboBox.setEditable(false);
-    mineDirectoryComboBox.addActionListener(getDirectorySelectAction());
-    new ComboBoxPreference("MineDirectory", mineDirectoryComboBox);
+    rightDirectoryComboBox = new JComboBox();
+    rightDirectoryComboBox.setEditable(false);
+    rightDirectoryComboBox.addActionListener(getDirectorySelectAction());
+    new ComboBoxPreference("RightDirectory", rightDirectoryComboBox);
     panel.add(
       label,
       cc.xy(2, 4));
     panel.add(
-      mineDirectoryComboBox,
+      rightDirectoryComboBox,
       cc.xy(4, 4));
     panel.add(
       button,
@@ -382,13 +382,13 @@ public class NewPanelDialog
               fileName = chooser.getSelectedFile().getCanonicalPath();
 
               comboBox = null;
-              if (ae.getActionCommand().equals(ORIGINAL_DIRECTORY))
+              if (ae.getActionCommand().equals(LEFT_DIRECTORY))
               {
-                comboBox = originalDirectoryComboBox;
+                comboBox = leftDirectoryComboBox;
               }
-              else if (ae.getActionCommand().equals(MINE_DIRECTORY))
+              else if (ae.getActionCommand().equals(RIGHT_DIRECTORY))
               {
-                comboBox = mineDirectoryComboBox;
+                comboBox = rightDirectoryComboBox;
               }
 
               if (comboBox != null)
@@ -416,14 +416,14 @@ public class NewPanelDialog
           Object source;
 
           source = ae.getSource();
-          if (source == originalDirectoryComboBox)
+          if (source == leftDirectoryComboBox)
           {
-            originalDirectoryName = (String) originalDirectoryComboBox
+            leftDirectoryName = (String) leftDirectoryComboBox
               .getSelectedItem();
           }
-          else if (source == mineDirectoryComboBox)
+          else if (source == rightDirectoryComboBox)
           {
-            mineDirectoryName = (String) mineDirectoryComboBox.getSelectedItem();
+            rightDirectoryName = (String) rightDirectoryComboBox.getSelectedItem();
           }
         }
       };

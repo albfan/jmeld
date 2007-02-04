@@ -31,19 +31,19 @@ import java.util.List;
 public class ScrollSynchronizer
 {
   private BufferDiffPanel    diffPanel;
-  private FilePanel          filePanelOriginal;
-  private FilePanel          filePanelRevised;
+  private FilePanel          filePanelLeft;
+  private FilePanel          filePanelRight;
   private AdjustmentListener horizontalAdjustmentListener;
   private AdjustmentListener verticalAdjustmentListener;
 
   public ScrollSynchronizer(
     BufferDiffPanel diffPanel,
-    FilePanel       filePanelOriginal,
-    FilePanel       filePanelRevised)
+    FilePanel       filePanelLeft,
+    FilePanel       filePanelRight)
   {
     this.diffPanel = diffPanel;
-    this.filePanelOriginal = filePanelOriginal;
-    this.filePanelRevised = filePanelRevised;
+    this.filePanelLeft = filePanelLeft;
+    this.filePanelRight = filePanelRight;
 
     init();
   }
@@ -54,19 +54,19 @@ public class ScrollSynchronizer
     JScrollBar r;
 
     // Synchronize the horizontal scrollbars:
-    o = filePanelOriginal.getScrollPane().getHorizontalScrollBar();
-    r = filePanelRevised.getScrollPane().getHorizontalScrollBar();
+    o = filePanelLeft.getScrollPane().getHorizontalScrollBar();
+    r = filePanelRight.getScrollPane().getHorizontalScrollBar();
     r.addAdjustmentListener(getHorizontalAdjustmentListener());
     o.addAdjustmentListener(getHorizontalAdjustmentListener());
 
     // Synchronize the vertical scrollbars:
-    o = filePanelOriginal.getScrollPane().getVerticalScrollBar();
-    r = filePanelRevised.getScrollPane().getVerticalScrollBar();
+    o = filePanelLeft.getScrollPane().getVerticalScrollBar();
+    r = filePanelRight.getScrollPane().getVerticalScrollBar();
     r.addAdjustmentListener(getVerticalAdjustmentListener());
     o.addAdjustmentListener(getVerticalAdjustmentListener());
   }
 
-  private void scroll(boolean originalScrolled)
+  private void scroll(boolean leftScrolled)
   {
     JMRevision revision;
     FilePanel  fp1;
@@ -79,20 +79,20 @@ public class ScrollSynchronizer
       return;
     }
 
-    if (originalScrolled)
+    if (leftScrolled)
     {
-      fp1 = filePanelOriginal;
-      fp2 = filePanelRevised;
+      fp1 = filePanelLeft;
+      fp2 = filePanelRight;
     }
     else
     {
-      fp1 = filePanelRevised;
-      fp2 = filePanelOriginal;
+      fp1 = filePanelRight;
+      fp2 = filePanelLeft;
     }
 
     line = getCurrentLineCenter(fp1);
 
-    if (originalScrolled)
+    if (leftScrolled)
     {
       line = DiffUtil.getRevisedLine(revision, line);
     }
@@ -126,7 +126,7 @@ public class ScrollSynchronizer
 
     deltas = revision.getDeltas();
 
-    line = getCurrentLineCenter(filePanelOriginal);
+    line = getCurrentLineCenter(filePanelLeft);
 
     currentDelta = null;
     currentIndex = -1;
@@ -186,7 +186,7 @@ public class ScrollSynchronizer
     if (toDelta != null)
     {
       scrollToLine(
-        filePanelOriginal,
+        filePanelLeft,
         toDelta.getOriginal().getAnchor());
       scroll(true);
     }
@@ -195,7 +195,7 @@ public class ScrollSynchronizer
   void showDelta(JMDelta delta)
   {
     scrollToLine(
-      filePanelOriginal,
+      filePanelLeft,
       delta.getOriginal().getAnchor());
     scroll(true);
   }
@@ -244,11 +244,11 @@ public class ScrollSynchronizer
     Dimension        extentSize;
     int              x;
 
-    fp2 = fp == filePanelOriginal ? filePanelRevised : filePanelOriginal;
+    fp2 = fp == filePanelLeft ? filePanelRight : filePanelLeft;
 
     bd = fp.getBufferDocument();
     offset = bd.getOffsetForLine(line);
-    if(offset < 0)
+    if (offset < 0)
     {
       return;
     }
@@ -360,23 +360,20 @@ public class ScrollSynchronizer
                 return;
               }
 
-              if (filePanelOriginal.getScrollPane().getHorizontalScrollBar() == e
+              if (filePanelLeft.getScrollPane().getHorizontalScrollBar() == e
                 .getSource())
               {
-                scFrom = filePanelOriginal.getScrollPane()
-                                          .getHorizontalScrollBar();
-                scTo = filePanelRevised.getScrollPane().getHorizontalScrollBar();
+                scFrom = filePanelLeft.getScrollPane().getHorizontalScrollBar();
+                scTo = filePanelRight.getScrollPane().getHorizontalScrollBar();
               }
               else
               {
-                scFrom = filePanelRevised.getScrollPane()
-                                         .getHorizontalScrollBar();
-                scTo = filePanelOriginal.getScrollPane()
-                                        .getHorizontalScrollBar();
+                scFrom = filePanelRight.getScrollPane().getHorizontalScrollBar();
+                scTo = filePanelLeft.getScrollPane().getHorizontalScrollBar();
               }
 
               // Stop possible recursion!
-              // An original scroll will have a revised scroll as
+              // An left scroll will have a right scroll as
               //   a result. That revised scroll could have a orginal 
               //   scroll as result. etc...
               insideScroll = true;
@@ -401,29 +398,29 @@ public class ScrollSynchronizer
 
             public void adjustmentValueChanged(AdjustmentEvent e)
             {
-              boolean originalScrolled;
+              boolean leftScrolled;
 
               if (insideScroll)
               {
                 return;
               }
 
-              if (filePanelOriginal.getScrollPane().getVerticalScrollBar() == e
+              if (filePanelLeft.getScrollPane().getVerticalScrollBar() == e
                 .getSource())
               {
-                originalScrolled = true;
+                leftScrolled = true;
               }
               else
               {
-                originalScrolled = false;
+                leftScrolled = false;
               }
 
               // Stop possible recursion!
-              // An original scroll will have a revised scroll as
+              // An left scroll will have a right scroll as
               //   a result. That revised scroll could have a orginal 
               //   scroll as result. etc...
               insideScroll = true;
-              scroll(originalScrolled);
+              scroll(leftScrolled);
               insideScroll = false;
             }
           };

@@ -50,8 +50,8 @@ public class FolderDiffPanel
 {
   private JMeldPanel             mainPanel;
   private FolderDiff             diff;
-  private JList                  originalList;
-  private JList                  mineList;
+  private JList                  leftList;
+  private JList                  rightList;
   private ListScrollSynchronizer synchronizer;
   private MouseListener          mouseListener;
   private FolderDiffTableModel   tableModel;
@@ -107,8 +107,8 @@ public class FolderDiffPanel
 
   public String getTitle()
   {
-    return diff.getOriginalFolderShortName() + " - "
-    + diff.getMineFolderShortName();
+    return diff.getLeftFolderShortName() + " - "
+    + diff.getRightFolderShortName();
   }
 
   private MouseListener getMouseListener()
@@ -120,8 +120,8 @@ public class FolderDiffPanel
             public void mouseClicked(MouseEvent me)
             {
               int       rowIndex;
-              JMeldNode originalNode;
-              JMeldNode mineNode;
+              JMeldNode leftNode;
+              JMeldNode rightNode;
               boolean   open;
               boolean   background;
 
@@ -133,16 +133,16 @@ public class FolderDiffPanel
               {
                 rowIndex = ((JTable) me.getSource()).rowAtPoint(me.getPoint());
 
-                originalNode = tableModel.getOriginalNode(rowIndex);
-                mineNode = tableModel.getMineNode(rowIndex);
+                leftNode = tableModel.getLeftNode(rowIndex);
+                rightNode = tableModel.getRightNode(rowIndex);
 
                 mainPanel.openFileComparison(
                   new File(
-                    diff.getMineFolderName(),
-                    originalNode.getName()),
+                    diff.getLeftFolderName(),
+                    leftNode.getName()),
                   new File(
-                    diff.getOriginalFolderName(),
-                    mineNode.getName()),
+                    diff.getRightFolderName(),
+                    rightNode.getName()),
                   background);
               }
             }

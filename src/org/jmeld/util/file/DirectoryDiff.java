@@ -28,27 +28,27 @@ import java.util.*;
 public class DirectoryDiff
        extends FolderDiff
 {
-  private File            mineDirectory;
-  private File            originalDirectory;
-  private List<JMeldNode> mine;
-  private List<JMeldNode> original;
+  private File            rightDirectory;
+  private File            leftDirectory;
+  private List<JMeldNode> right;
+  private List<JMeldNode> left;
   private Filter          filter;
 
   public DirectoryDiff(
-    File   originalDirectory,
-    File   mineDirectory,
+    File   leftDirectory,
+    File   rightDirectory,
     Filter filter)
   {
-    this.originalDirectory = originalDirectory;
-    this.mineDirectory = mineDirectory;
+    this.leftDirectory = leftDirectory;
+    this.rightDirectory = rightDirectory;
     this.filter = filter;
 
     try
     {
-      setOriginalFolderShortName(originalDirectory.getName());
-      setMineFolderShortName(mineDirectory.getName());
-      setOriginalFolderName(originalDirectory.getCanonicalPath());
-      setMineFolderName(mineDirectory.getCanonicalPath());
+      setLeftFolderShortName(leftDirectory.getName());
+      setRightFolderShortName(rightDirectory.getName());
+      setLeftFolderName(leftDirectory.getCanonicalPath());
+      setRightFolderName(rightDirectory.getCanonicalPath());
     }
     catch (Exception ex)
     {
@@ -56,55 +56,54 @@ public class DirectoryDiff
     }
   }
 
-  public String getMineNodeName(int index)
+  public String getRightNodeName(int index)
   {
-    if (index < 0 || index >= mine.size())
+    if (index < 0 || index >= right.size())
     {
       return null;
     }
 
-    return getMineFolderName() + File.separator + mine.get(index).getName();
+    return getRightFolderName() + File.separator + right.get(index).getName();
   }
 
-  public File getMineFolder()
+  public File getRightFolder()
   {
-    return mineDirectory;
+    return rightDirectory;
   }
 
-  public List<JMeldNode> getMineNodes()
+  public List<JMeldNode> getRightNodes()
   {
-    return mine;
+    return right;
   }
 
-  public String getOriginalNodeName(int index)
+  public String getLeftNodeName(int index)
   {
-    if (index < 0 || index >= mine.size())
+    if (index < 0 || index >= right.size())
     {
       return null;
     }
 
-    return getOriginalFolderName() + File.separator
-    + original.get(index).getName();
+    return getLeftFolderName() + File.separator + left.get(index).getName();
   }
 
-  public File getOriginalFolder()
+  public File getLeftFolder()
   {
-    return originalDirectory;
+    return leftDirectory;
   }
 
-  public List<JMeldNode> getOriginalNodes()
+  public List<JMeldNode> getLeftNodes()
   {
-    return original;
+    return left;
   }
 
   public void diff()
   {
     FileNode              newNode;
     String                name;
-    Map<String, FileNode> mineMap;
-    Map<String, FileNode> originalMap;
-    JMeldNode             mineNode;
-    JMeldNode             originalNode;
+    Map<String, FileNode> rightMap;
+    Map<String, FileNode> leftMap;
+    JMeldNode             rightNode;
+    JMeldNode             leftNode;
     DirectoryScanner      ds;
 
     StatusBar.start();
@@ -112,7 +111,7 @@ public class DirectoryDiff
 
     ds = new DirectoryScanner();
     ds.setShowStateOn(true);
-    ds.setBasedir(mineDirectory);
+    ds.setBasedir(rightDirectory);
     if (filter != null)
     {
       ds.setIncludes(filter.getIncludes());
@@ -120,13 +119,13 @@ public class DirectoryDiff
     }
     ds.setCaseSensitive(true);
     ds.scan();
-    
-    mineMap = ds.getIncludedFilesMap();
-    mineMap.putAll(ds.getIncludedDirectoriesMap());
+
+    rightMap = ds.getIncludedFilesMap();
+    rightMap.putAll(ds.getIncludedDirectoriesMap());
 
     ds = new DirectoryScanner();
     ds.setShowStateOn(true);
-    ds.setBasedir(originalDirectory);
+    ds.setBasedir(leftDirectory);
     if (filter != null)
     {
       ds.setIncludes(filter.getIncludes());
@@ -134,63 +133,65 @@ public class DirectoryDiff
     }
     ds.setCaseSensitive(true);
     ds.scan();
-    
-    originalMap = ds.getIncludedFilesMap();
-    originalMap.putAll(ds.getIncludedDirectoriesMap());
 
-    for (JMeldNode node : mineMap.values())
+    leftMap = ds.getIncludedFilesMap();
+    leftMap.putAll(ds.getIncludedDirectoriesMap());
+
+    for (JMeldNode node : rightMap.values())
     {
       name = node.getName();
-      if (!originalMap.containsKey(name))
+      if (!leftMap.containsKey(name))
       {
         newNode = new FileNode(
             name,
-            new File(originalDirectory, name));
+            new File(leftDirectory, name));
         newNode.setLeaf(node.isLeaf());
         newNode.setState(JMeldNode.DELETED);
 
         node.setState(JMeldNode.ADDED);
 
-        originalMap.put(name, newNode);
+        leftMap.put(name, newNode);
       }
     }
 
-    for (JMeldNode node : originalMap.values())
+    for (JMeldNode node : leftMap.values())
     {
       name = node.getName();
-      if (!mineMap.containsKey(name))
+      if (!rightMap.containsKey(name))
       {
         newNode = new FileNode(
             name,
-            new File(originalDirectory, name));
+            new File(leftDirectory, name));
         newNode.setLeaf(node.isLeaf());
         newNode.setState(JMeldNode.ADDED);
 
         node.setState(JMeldNode.DELETED);
 
-        mineMap.put(name, newNode);
+        rightMap.put(name, newNode);
       }
     }
 
-    mine = new ArrayList(mineMap.values());
-    Collections.sort(mine);
+    right = new ArrayList(rightMap.values());
+    Collections.sort(right);
 
-    original = new ArrayList(originalMap.values());
-    Collections.sort(original);
+    left = new ArrayList(leftMap.values());
+    Collections.sort(left);
 
-    for (int i = 0; i < mine.size(); i++)
+    for (int i = 0; i < right.size(); i++)
     {
-      mineNode = mine.get(i);
-      originalNode = original.get(i);
+      rightNode = right.get(i);
+      leftNode = left.get(i);
 
-      if (mineNode.getState() == JMeldNode.EQUAL
-        && originalNode.getState() == JMeldNode.EQUAL)
+      if (rightNode.getState() == JMeldNode.EQUAL
+        && leftNode.getState() == JMeldNode.EQUAL)
       {
-        StatusBar.setState("Comparing file : %s", mineNode.getName());
-        if (!mineNode.contentEquals(originalNode))
+        StatusBar.setState(
+          "Comparing file : %s",
+          rightNode.getName());
+        if (!rightNode.contentEquals(leftNode))
         {
-          mineNode.setState(JMeldNode.CHANGED);
-          originalNode.setState(JMeldNode.CHANGED);
+          rightNode.setState(JMeldNode.CHANGED);
+          leftNode.setState(JMeldNode.CHANGED);
         }
       }
     }
@@ -200,12 +201,12 @@ public class DirectoryDiff
 
   public void print()
   {
-    for (JMeldNode node : original)
+    for (JMeldNode node : left)
     {
       node.print();
     }
 
-    for (JMeldNode node : mine)
+    for (JMeldNode node : right)
     {
       node.print();
     }

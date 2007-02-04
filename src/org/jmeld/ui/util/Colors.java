@@ -28,8 +28,8 @@ public class Colors
   public static Color CHANGED_DARK = new Color(62, 122, 172);
   public static Color DELETED_DARK = new Color(193, 50, 0);
   public static Color TABLEROW_HIGHLIGHTER = new Color(255, 253, 240);
-  public static Color TABLEROW_ORG = null;
-  public static Color TABLEROW_MINE = null;
-  //public static Color TABLEROW_ORG = new Color(238, 221, 162);
-  //public static Color TABLEROW_MINE = new Color(238, 192, 146);
+  public static Color TABLEROW_LEFT = null;
+  public static Color TABLEROW_RIGHT = null;
+  //public static Color TABLEROW_LEFT = new Color(238, 221, 162);
+  //public static Color TABLEROW_RIGHT = new Color(238, 192, 146);
 }

@@ -29,27 +29,27 @@ import java.util.*;
 public class DirectoryDiff2
        extends FolderDiff2
 {
-  private File                  mineDirectory;
-  private File                  originalDirectory;
+  private File                  rightDirectory;
+  private File                  leftDirectory;
   private DiffNode              rootNode;
   private Map<String, DiffNode> nodes;
   private Filter                filter;
 
   public DirectoryDiff2(
-    File   originalDirectory,
-    File   mineDirectory,
+    File   leftDirectory,
+    File   rightDirectory,
     Filter filter)
   {
-    this.originalDirectory = originalDirectory;
-    this.mineDirectory = mineDirectory;
+    this.leftDirectory = leftDirectory;
+    this.rightDirectory = rightDirectory;
     this.filter = filter;
 
     try
     {
-      setOriginalFolderShortName(originalDirectory.getName());
-      setMineFolderShortName(mineDirectory.getName());
-      setOriginalFolderName(originalDirectory.getCanonicalPath());
-      setMineFolderName(mineDirectory.getCanonicalPath());
+      setLeftFolderShortName(leftDirectory.getName());
+      setRightFolderShortName(rightDirectory.getName());
+      setLeftFolderName(leftDirectory.getCanonicalPath());
+      setRightFolderName(rightDirectory.getCanonicalPath());
     }
     catch (Exception ex)
     {
@@ -75,7 +75,7 @@ public class DirectoryDiff2
 
     ds = new DirectoryScanner();
     ds.setShowStateOn(true);
-    ds.setBasedir(mineDirectory);
+    ds.setBasedir(rightDirectory);
     if (filter != null)
     {
       ds.setIncludes(filter.getIncludes());
@@ -92,7 +92,7 @@ public class DirectoryDiff2
 
    ds = new DirectoryScanner();
    ds.setShowStateOn(true);
-   ds.setBasedir(originalDirectory);
+   ds.setBasedir(leftDirectory);
    if (filter != null)
    {
      ds.setIncludes(filter.getIncludes());
