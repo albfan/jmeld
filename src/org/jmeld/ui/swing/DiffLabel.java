@@ -31,6 +31,7 @@ public class DiffLabel
 {
   public DiffLabel()
   {
+    init();
   }
 
   public void init()
