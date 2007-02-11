@@ -1,230 +1,102 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
+<?xml version="1.0" encoding="utf-8"?>
 <project basedir="." default="jmeld" name="JMeld">
-    <description>Builds, tests, and runs the project JMeld.</description>
-    <import file="nbproject/build-impl.xml"/>
 
-    <import file="nbproject/profiler-build-impl.xml"/>
-    <!--
-
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="JMeld-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
-    <!--target name="-pre-init">
-
-    </target-->
-
-  <!-- ============================================================= -->
-  <!-- Classpath waarin alle jar-files zijn om deze applicatie te    -->
-  <!--   compileren                                                  -->
-  <!-- ============================================================= -->
   <path id="compile.classpath">
     <fileset dir="./lib">
-      <include name="**/*.jar"/>
+      <include name="**/*.jar" />
     </fileset>
   </path>
 
+  <path id="development.classpath">
+    <pathElement path="build/classes" />
+    <fileset dir="./lib">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
 
-  <target name="jmeld-prepare">
-
-    <mkdir dir="build/classes"/>
-
+  <target name="prepare">
+    <mkdir dir="build/classes" />
     <copy todir="build/classes">
-      <fileset dir="." includes="images/**,ini/**"/>
+      <fileset dir="." includes="images/**,ini/**" />
     </copy>
+    <jar destfile="lib/help.jar">
+      <fileset dir="doc/help/jmeld" />
+    </jar>
   </target>
 
-  <target name="jmeld-clean">
-    <delete dir="build" quiet="true"/>
+  <target name="clean">
+    <delete dir="build" quiet="true" />
   </target>
 
-  <target name="jmeld" depends="jmeld-clean, jmeld-prepare">
-
-    <javac srcdir="src"
-           destdir="build/classes"
-           debug="on"
+  <target name="compile" depends="prepare">
+    <javac srcdir="src" 
+           destdir="build/classes" 
+           debug="on" 
            source="1.5"
-           target="1.5"
-           excludes="**/bak/**"
-           optimize="on" >
-      <classpath refid="compile.classpath"/>
+           target="1.5" 
+           excludes="**/bak/**" 
+           optimize="on">
+      <classpath refid="compile.classpath" />
     </javac>
-
-    <antcall target="createExecutable"/>
-
   </target>
 
-   <target name="createExecutable">
-     <jar destfile="JMeld.jar" 
-          manifest="etc/manifest.mf"
-          update="false">
-       <fileset dir="build/classes"/>
-       <fileset dir="doc/help/jmeld"/>
-       <zipfileset src="lib/forms-1.0.5.jar"/>
-       <zipfileset src="lib/looks-2.0.jar"/>
-       <zipfileset src="lib/swingx.jar"/>
-       <zipfileset src="lib/swing-worker.jar"/>
-       <zipfileset src="lib/jhall.jar"/>
-       <zipfileset src="lib/jaxb-api.jar"/>
-       <zipfileset src="lib/jsr173_1.0_api.jar"/>
-       <zipfileset src="lib/swing-layout-1.0.jar"/>
-       <zipfileset src="lib/jaxb-impl.jar"/>
-       <zipfileset src="lib/activation.jar">
-         <exclude name="META-INF/**"/>
-       </zipfileset>
-     </jar>
-   </target>
+  <target name="jmeld">
+    <antcall target="clean" />
+    <antcall target="compile" />
+    <antcall target="createExecutable" />
+  </target>
 
-    <target name="-pre-compile">
-       <antcall target="jmeld-prepare"/>
-    </target>
+  <target name="createExecutable">
+    <jar destfile="JMeld.jar" manifest="etc/manifest.mf" update="false">
+      <fileset dir="build/classes" />
+      <fileset dir="doc/help/jmeld" />
+      <zipfileset src="lib/forms-1.0.5.jar" />
+      <zipfileset src="lib/looks-2.0.jar" />
+      <zipfileset src="lib/swingx.jar" />
+      <zipfileset src="lib/swing-worker.jar" />
+      <zipfileset src="lib/jhall.jar" />
+      <zipfileset src="lib/jaxb-api.jar" />
+      <zipfileset src="lib/jsr173_1.0_api.jar" />
+      <zipfileset src="lib/swing-layout-1.0.jar" />
+      <zipfileset src="lib/jaxb-impl.jar" />
+      <zipfileset src="lib/activation.jar">
+        <exclude name="META-INF/**" />
+      </zipfileset>
+    </jar>
+  </target>
 
-   <target name="-pre-jar">
-     <jar destfile="lib/jmeld-help.jar">
-       <fileset dir="doc/help/jmeld"/>
-     </jar>
-   </target>
-
-   <target name="-post-jar">
-     <antcall target="createExecutable"/>
-   </target>
-
-
-   <path id="pmd.classpath">
-     <pathelement location="${build}"/>
-     <fileset dir="/usr/local/java/pmd/pmd-3.9/lib">
-       <include name="*.jar"/>
-     </fileset>
-   </path>
-
-   <target name="gzip">
-    <delete file="JMeld.tgz" quiet="true"/>
-    <tar destfile="JMeld.tgz"
-         compression="gzip">
-       <tarfileset dir="." prefix="jmeld" defaultexcludes="yes">
-         <include name="src/**"/>
-         <include name="lib/**"/>
-         <include name="build.xml"/>
-         <include name="images/**"/>
-         <include name="etc/**"/>
-         <include name="doc/**"/>
-         <include name="*.txt"/>
-         <include name="nbproject/**"/>
-       </tarfileset>
+  <target name="gzip">
+    <delete file="JMeld.tgz" quiet="true" />
+    <tar destfile="JMeld.tgz" compression="gzip">
+      <tarfileset dir="." prefix="jmeld" defaultexcludes="yes">
+        <include name="src/**" />
+        <include name="lib/**" />
+        <include name="build.xml" />
+        <include name="images/**" />
+        <include name="etc/**" />
+        <include name="doc/**" />
+        <include name="*.txt" />
+        <include name="nbproject/**" />
+      </tarfileset>
     </tar>
-   </target>
+  </target>
 
-   <target name="pmd">
-     <taskdef name="pmd" 
-              classname="net.sourceforge.pmd.ant.PMDTask"
-              classpathref="pmd.classpath"/>
+  <target name="scripts" depends="initMyPathSeparator">
+    <mkdir dir="${basedir}/bin" />
+    <delete file="${basedir}/bin/setDevelopment.sh" quiet="true" />
+    <pathconvert dirsep="/" pathsep="${myPathSeparator}"
+                 property="setEnvironment" refid="development.classpath" />
+    <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash export
+            CLASSPATH='${setEnvironment}'</echo>
+    <chmod file="${basedir}/bin/setDevelopment.sh" perm="ugo+x" />
+  </target>
 
-     <pmd shortFilenames="true"
-          targetjdk="1.5">
-       <ruleset>basic</ruleset>
-       <formatter type="summaryhtml" 
-                  toFile="pmd_report.html"
-                  toConsole="true"
-                  linkPrefix="file:///projecten/jmeld/trunk/src/"/>
-       <fileset dir="src">
-         <include name="**/*.java"/>
-       </fileset>
-     </pmd>
-   </target>
-
-    <!-- ============================================================= -->
-    <!-- Classpath waarin alle jar-files zijn om deze applicatie te    -->
-    <!--   compileren                                                  -->
-    <!-- ============================================================= -->
-    <path id="development.classpath">
-      <pathElement path="build/classes"/>
-      <fileset dir="./lib">
-        <include name="**/*.jar"/>
-      </fileset>
-    </path>
-
-    <!-- ============================================================= -->
-    <!-- Create batch-files to initialize the environment-variables    -->
-    <!-- ============================================================= -->
-    <target depends="initMyPathSeparator" name="scripts">
-      <mkdir dir="${basedir}/bin"/>
-      <delete file="${basedir}/bin/setDevelopment.sh" quiet="true"/>
-      <pathconvert dirsep="/"  
-                   pathsep="${myPathSeparator}"  
-                   property="setEnvironment"  
-                   refid="development.classpath"/>
-      <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash
-export CLASSPATH='${setEnvironment}'
-      </echo>
-      <chmod file="${basedir}/bin/setDevelopment.sh" perm="ugo+x"/>
-    </target>
-
-    <target name="initMyPathSeparator">
-      <condition property="myPathSeparator" value=";">
-        <os family="windows"/>
-      </condition>
-
-      <condition property="myPathSeparator" value=":">
-        <os family="unix"/>
-      </condition>
-    </target>
-
+  <target name="initMyPathSeparator">
+    <condition property="myPathSeparator" value=";">
+      <os family="windows" />
+    </condition>
+    <condition property="myPathSeparator" value=":">
+      <os family="unix" />
+    </condition>
+  </target>
 </project>
