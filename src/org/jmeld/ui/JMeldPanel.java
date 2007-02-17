@@ -708,10 +708,11 @@ public class JMeldPanel
   class NewFileComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private JMDiffNode diffNode;
-    private File       leftFile;
-    private File       rightFile;
-    private boolean    openInBackground;
+    private JMDiffNode      diffNode;
+    private File            leftFile;
+    private File            rightFile;
+    private boolean         openInBackground;
+    private BufferDiffPanel panel;
 
     NewFileComparisonPanel(
       JMDiffNode diffNode,
@@ -780,8 +781,7 @@ public class JMeldPanel
     {
       try
       {
-        String          result;
-        BufferDiffPanel panel;
+        String result;
 
         result = get();
 
@@ -809,16 +809,7 @@ public class JMeldPanel
 
           // Goto the first delta:
           // This should be invoked after the panel is displayed!
-          /*
-          SwingUtilities.invokeLater(
-            new Runnable()
-            {
-              public void run()
-              {
-                doGoToFirst(null);
-              }
-            });
-          */
+          SwingUtilities.invokeLater(getDoGoToFirst());
         }
       }
       catch (Exception ex)
@@ -829,6 +820,18 @@ public class JMeldPanel
       {
         WaitCursor.resume(JMeldPanel.this);
       }
+    }
+
+    private Runnable getDoGoToFirst()
+    {
+      return new Runnable()
+        {
+          public void run()
+          {
+            panel.doGoToFirst();
+            panel.repaint();
+          }
+        };
     }
   }
 
