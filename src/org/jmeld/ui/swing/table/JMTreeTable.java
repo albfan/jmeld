@@ -16,10 +16,9 @@
  */
 package org.jmeld.ui.swing.table;
 
-import com.jgoodies.forms.layout.*;
-
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
+import org.jdesktop.swingx.treetable.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.renderer.*;
@@ -66,6 +65,10 @@ public class JMTreeTable
     super.setTreeTableModel(tableModel);
 
     setColumnControlVisible(true);
+    /*
+    ((DefaultCellEditor) getDefaultEditor(AbstractTreeTableModel.hierarchicalColumnClass))
+      .setClickCountToStart(1);
+      */
 
     if (tableModel != null)
     {

@@ -13,24 +13,30 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jScrollPane1" alignment="0" pref="619" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" pref="402" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="folder1Label" pref="198" max="32767" attributes="0"/>
+                      <Component id="folder1Label" pref="307" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="folder2Label" pref="198" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="1"/>
+                      <Component id="folder2Label" pref="306" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="folderBar" pref="206" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="208" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="hierarchyComboBox" min="-2" pref="186" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="folderBar" pref="187" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="leftRightUnChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="onlyLeftButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="leftRightChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="onlyRightButton" linkSize="1" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -43,9 +49,16 @@
                   <Component id="folder2Label" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="258" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="248" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="folderBar" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="leftRightUnChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="onlyLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftRightChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="onlyRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="folderBar" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="hierarchyComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -86,5 +99,37 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JToggleButton" name="onlyRightButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="R"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="leftRightChangedButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="LR"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="onlyLeftButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="L"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JToggleButton" name="leftRightUnChangedButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Un"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="hierarchyComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Item 1"/>
+            <StringItem index="1" value="Item 2"/>
+            <StringItem index="2" value="Item 3"/>
+            <StringItem index="3" value="Item 4"/>
+          </StringArray>
+        </Property>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

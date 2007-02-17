@@ -228,4 +228,10 @@ public class FolderDiffPanel
         }
       };
   }
+
+  @Override
+  public boolean checkExit()
+  {
+    return false;
+  }
 }

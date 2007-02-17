@@ -108,4 +108,9 @@ public class AbstractContentPanel
   public void doMergeMode(boolean mergeMode)
   {
   }
+
+  public boolean checkExit()
+  {
+    return true;
+  }
 }

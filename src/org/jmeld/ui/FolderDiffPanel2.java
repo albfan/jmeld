@@ -16,9 +16,13 @@
  */
 package org.jmeld.ui;
 
+import org.jdesktop.swingx.decorator.*;
+import org.jdesktop.swingx.decorator.ComponentAdapter;
+import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.treetable.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.swing.*;
+import org.jmeld.ui.util.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
@@ -49,6 +53,12 @@ public class FolderDiffPanel2
 
   private void init()
   {
+    hierarchyComboBox.removeAllItems();
+    hierarchyComboBox.setFocusable(false);
+    hierarchyComboBox.addItem("File tree");
+    hierarchyComboBox.addItem("Directory tree");
+    hierarchyComboBox.addItem("Package tree");
+
     folder1Label.init();
     folder1Label.setText(
       diff.getLeftFolderName(),
@@ -64,11 +74,35 @@ public class FolderDiffPanel2
     folderTreeTable.setToggleClickCount(1);
     folderTreeTable.setTerminateEditOnFocusLost(false);
 
-    //folderTreeTable.setRowSelectionAllowed(true);
+    folderTreeTable.setRowSelectionAllowed(true);
     //folderTreeTable.setColumnSelectionAllowed(false);
     //folderTreeTable.setCellSelectionEnabled(false);
-    //folderTreeTable.setCellSelectionEnabled(false);
     //folderTreeTable.putClientProperty("JTree.lineStyle", "Angled");
+    folderTreeTable.setHighlighters(
+      new HighlighterPipeline(
+        new Highlighter[]
+        {
+          new AlternateRowHighlighter(Color.white,
+            Colors.TABLEROW_HIGHLIGHTER, Color.black),
+        }));
+
+    leftRightUnChangedButton.setText(null);
+    leftRightUnChangedButton.setIcon(
+      ImageUtil.getImageIcon("jmeld_left-right-unchanged"));
+    leftRightUnChangedButton.setFocusable(false);
+
+    onlyRightButton.setText(null);
+    onlyRightButton.setIcon(ImageUtil.getImageIcon("jmeld_only-right"));
+    onlyRightButton.setFocusable(false);
+
+    leftRightChangedButton.setText(null);
+    leftRightChangedButton.setIcon(
+      ImageUtil.getImageIcon("jmeld_left-right-changed"));
+    leftRightChangedButton.setFocusable(false);
+
+    onlyLeftButton.setText(null);
+    onlyLeftButton.setIcon(ImageUtil.getImageIcon("jmeld_only-left"));
+    onlyLeftButton.setFocusable(false);
 
     initActions();
   }
@@ -229,5 +263,11 @@ public class FolderDiffPanel2
     }
 
     mainPanel.openFileComparison(node, background);
+  }
+
+  @Override
+  public boolean checkExit()
+  {
+    return false;
   }
 }

@@ -651,6 +651,11 @@ public class JMeldPanel
       return;
     }
 
+    if (!getCurrentContentPanel().checkExit())
+    {
+      return;
+    }
+
     // Exit a tab!
     doExitTab((Component) getCurrentContentPanel());
   }
