@@ -17,14 +17,25 @@
 package org.jmeld.ui;
 
 import org.jdesktop.swingx.treetable.*;
+import org.jmeld.ui.action.*;
+import org.jmeld.ui.swing.*;
+import org.jmeld.ui.util.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.*;
+
+import java.awt.*;
+import java.awt.event.*;
 
 public class FolderDiffPanel2
        extends FolderDiffForm
 {
-  private JMeldPanel  mainPanel;
-  private FolderDiff2 diff;
+  private JMeldPanel    mainPanel;
+  private FolderDiff2   diff;
+  private ActionHandler actionHandler;
 
   FolderDiffPanel2(
     JMeldPanel  mainPanel,
@@ -49,6 +60,68 @@ public class FolderDiffPanel2
       diff.getLeftFolderName());
 
     folderTreeTable.setTreeTableModel(getModel());
+    folderTreeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+    //folderTreeTable.setToggleClickCount(1);
+    //folderTreeTable.setRowSelectionAllowed(true);
+    //folderTreeTable.setColumnSelectionAllowed(false);
+    //folderTreeTable.setCellSelectionEnabled(false);
+    initActions();
+
+    //folderTreeTable.setCellSelectionEnabled(false);
+    //folderTreeTable.putClientProperty("JTree.lineStyle", "Angled");
+  }
+
+  private void initActions()
+  {
+    MeldAction action;
+
+    actionHandler = new ActionHandler();
+
+    action = actionHandler.createAction(this, "SelectNextRow");
+    installKey("DOWN", action);
+
+    action = actionHandler.createAction(this, "SelectPreviousRow");
+    installKey("UP", action);
+
+    action = actionHandler.createAction(this, "NextNode");
+    installKey("RIGHT", action);
+
+    action = actionHandler.createAction(this, "PreviousNode");
+    installKey("LEFT", action);
+
+    action = actionHandler.createAction(this, "OpenFileComparison");
+    installKey("ENTER", action);
+
+    action = actionHandler.createAction(this, "OpenFileComparisonBackground");
+    installKey("alt ENTER", action);
+  }
+
+  private void installKey(
+    String     key,
+    MeldAction action)
+  {
+    InputMap  inputMap;
+    ActionMap actionMap;
+    KeyStroke stroke;
+
+    stroke = KeyStroke.getKeyStroke(key);
+
+    inputMap = folderTreeTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    if (inputMap.get(stroke) != action.getName())
+    {
+      inputMap.put(
+        stroke,
+        action.getName());
+    }
+
+    actionMap = folderTreeTable.getActionMap();
+    if (actionMap.get(action.getName()) != action)
+    {
+      actionMap.put(
+        action.getName(),
+        action);
+    }
   }
 
   public String getTitle()
@@ -57,60 +130,103 @@ public class FolderDiffPanel2
     + diff.getRightFolderShortName();
   }
 
-  public DefaultTreeTableModel getModel()
+  public FolderDiffTreeTableModel getModel()
   {
-    return new DirectoryDiffTreeTableModel(diff.getRootNode());
+    return new FolderDiffTreeTableModel(diff);
   }
 
-  class DirectoryDiffTreeTableModel
-         extends DefaultTreeTableModel
+  public void doSelectPreviousRow(ActionEvent ae)
   {
-    DirectoryDiffTreeTableModel(DiffNode rootNode)
+    int row;
+
+    row = folderTreeTable.getSelectedRow() - 1;
+    row = row < 0 ? (folderTreeTable.getRowCount() - 1) : row;
+    folderTreeTable.setRowSelectionInterval(row, row);
+    folderTreeTable.scrollRowToVisible(row);
+  }
+
+  public void doSelectNextRow(ActionEvent ae)
+  {
+    int row;
+
+    row = folderTreeTable.getSelectedRow() + 1;
+    row = row >= folderTreeTable.getRowCount() ? 0 : row;
+    folderTreeTable.setRowSelectionInterval(row, row);
+    folderTreeTable.scrollRowToVisible(row);
+  }
+
+  public void doNextNode(ActionEvent ae)
+  {
+    int row;
+
+    row = folderTreeTable.getSelectedRow();
+    if (row == -1)
     {
-      super(rootNode);
+      return;
     }
 
-    public Object getChild(
-      Object parent,
-      int    index)
+    if (folderTreeTable.isCollapsed(row))
     {
-      return ((DiffNode) parent).getChildAt(index);
+      folderTreeTable.expandRow(row);
     }
 
-    public int getChildCount(Object parent)
+    doSelectNextRow(ae);
+  }
+
+  public void doPreviousNode(ActionEvent ae)
+  {
+    int row;
+
+    row = folderTreeTable.getSelectedRow();
+    if (row == -1)
     {
-      return ((DiffNode) parent).getChildCount();
+      return;
     }
 
-    public int getColumnCount()
+    if (folderTreeTable.isExpanded(row))
     {
-      return 1;
+      folderTreeTable.collapseRow(row);
     }
 
-    public String getColumnName(int column)
+    doSelectPreviousRow(ae);
+  }
+
+  public void doOpenFileComparisonBackground(ActionEvent ae)
+  {
+    doOpenFileComparison(ae, true);
+  }
+
+  public void doOpenFileComparison(ActionEvent ae)
+  {
+    doOpenFileComparison(ae, false);
+  }
+
+  private void doOpenFileComparison(
+    ActionEvent ae,
+    boolean     background)
+  {
+    int        row;
+    TreePath   path;
+    JMDiffNode node;
+
+    row = folderTreeTable.getSelectedRow();
+    if (row == -1)
     {
-      switch (column)
-      {
-
-        case 0:
-          return "Name";
-      }
-
-      return "??";
+      return;
     }
 
-    public Object getValueAt(
-      Object node,
-      int    column)
+    path = folderTreeTable.getPathForRow(row);
+    if (path == null)
     {
-      switch (column)
-      {
-
-        case 0:
-          return ((DiffNode) node).getShortName();
-      }
-
-      return null;
+      return;
     }
+
+    node = (JMDiffNode) path.getLastPathComponent();
+    if (node == null)
+    {
+      return;
+    }
+
+    mainPanel.openFileComparison(node, background);
   }
 }

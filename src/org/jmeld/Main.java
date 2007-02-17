@@ -22,7 +22,10 @@ public class Main
   {
     //JMeld.main(new String[] { "files/added1.xml", "files/added2.xml"} );
     //JMeld.main(new String[] { "files/analyze.1.15.c", "files/analyze.1.25.c" });
-    //JMeld.main(new String[] { "files1", "files2" });
-    JMeld.main(new String[]{});
+    JMeld.main(new String[] { "/projecten/jmeld/svn", "/projecten/jmeld/svn/jmeld/trunk" });
+    //JMeld.main(new String[]{ "filesLeft", "filesRight"});
+    //JMeld.main(new String[]{ "/usr/local/kees/projecten/jmeld/svn/meld/trunk/TODO.txt",
+    //                         "/usr/local/kees/projecten/jmeld/trunk/TODO.txt"});
+    //DirectoryDiff2.main(new String[] { "/projecten/jmeld/trunk", "/projecten/jmeld/svn/jmeld/trunk" });
   }
 }

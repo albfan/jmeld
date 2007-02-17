@@ -24,6 +24,7 @@ import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
+import org.jmeld.util.node.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -39,6 +40,9 @@ import java.util.List;
 public class BufferDiffPanel
        extends AbstractContentPanel
 {
+  public static final int    LEFT = 0;
+  public static final int    MIDDLE = 1;
+  public static final int    RIGHT = 2;
   private static int         instanceCounter = 0;
   private int                instanceCount = ++instanceCounter;
   private JMeldPanel         mainPanel;
@@ -63,7 +67,16 @@ public class BufferDiffPanel
     setFocusable(true);
   }
 
-  public void setBufferDocuments(
+  public void setDiffNode(JMDiffNode diffNode)
+  {
+    setBufferDocuments(
+      diffNode.getBufferNodeLeft().getDocument(),
+      diffNode.getBufferNodeRight().getDocument(),
+      diffNode.getDiff(),
+      diffNode.getRevision());
+  }
+
+  private void setBufferDocuments(
     BufferDocumentIF bd1,
     BufferDocumentIF bd2,
     JMDiff           diff,
@@ -75,20 +88,20 @@ public class BufferDiffPanel
 
     if (bd1 != null)
     {
-      filePanels[0].setBufferDocument(bd1);
+      filePanels[LEFT].setBufferDocument(bd1);
     }
 
     if (bd2 != null)
     {
-      filePanels[1].setBufferDocument(bd2);
+      filePanels[RIGHT].setBufferDocument(bd2);
     }
 
     if (bd1 != null && bd2 != null)
     {
-      filePanels[0].updateFileLabel(
+      filePanels[LEFT].updateFileLabel(
         bd1.getName(),
         bd2.getName());
-      filePanels[1].updateFileLabel(
+      filePanels[RIGHT].updateFileLabel(
         bd2.getName(),
         bd1.getName());
     }
@@ -111,7 +124,7 @@ public class BufferDiffPanel
   {
     String           title;
     BufferDocumentIF bd;
-    List<String> titles;
+    List<String>     titles;
 
     title = "";
 
@@ -130,7 +143,7 @@ public class BufferDiffPanel
       }
 
       title = bd.getShortName();
-      if(StringUtil.isEmpty(title))
+      if (StringUtil.isEmpty(title))
       {
         continue;
       }
@@ -139,13 +152,13 @@ public class BufferDiffPanel
     }
 
     title = "";
-    if(titles.size() == 1)
+    if (titles.size() == 1)
     {
       title = titles.get(0);
     }
     else
     {
-      if(titles.get(0).equals(titles.get(1)))
+      if (titles.get(0).equals(titles.get(1)))
       {
         title = titles.get(0);
       }
@@ -163,8 +176,8 @@ public class BufferDiffPanel
     BufferDocumentIF bd1;
     BufferDocumentIF bd2;
 
-    bd1 = filePanels[0].getBufferDocument();
-    bd2 = filePanels[1].getBufferDocument();
+    bd1 = filePanels[LEFT].getBufferDocument();
+    bd2 = filePanels[RIGHT].getBufferDocument();
 
     if (bd1 != null && bd2 != null)
     {
@@ -205,51 +218,51 @@ public class BufferDiffPanel
 
     setLayout(layout);
 
-    filePanels[0] = new FilePanel(this, BufferDocumentIF.ORIGINAL);
-    filePanels[1] = new FilePanel(this, BufferDocumentIF.REVISED);
+    filePanels[LEFT] = new FilePanel(this, BufferDocumentIF.ORIGINAL);
+    filePanels[RIGHT] = new FilePanel(this, BufferDocumentIF.REVISED);
 
     // panel for file1
     add(
-      new RevisionBar(this, filePanels[0], true),
+      new RevisionBar(this, filePanels[LEFT], true),
       cc.xy(2, 4));
     add(
-      filePanels[0].getSaveButton(),
+      filePanels[LEFT].getSaveButton(),
       cc.xy(2, 2));
     add(
-      filePanels[0].getFileLabel(),
+      filePanels[LEFT].getFileLabel(),
       cc.xyw(4, 2, 3));
     add(
-      filePanels[0].getScrollPane(),
+      filePanels[LEFT].getScrollPane(),
       cc.xyw(4, 4, 3));
     add(
-      filePanels[0].getFilePanelBar(),
+      filePanels[LEFT].getFilePanelBar(),
       cc.xyw(4, 5, 3));
 
     add(
-      new DiffScrollComponent(this, 0, 1),
+      new DiffScrollComponent(this, LEFT, RIGHT),
       cc.xy(7, 4));
 
     // panel for file2
     add(
-      new RevisionBar(this, filePanels[1], false),
+      new RevisionBar(this, filePanels[RIGHT], false),
       cc.xy(12, 4));
     add(
-      filePanels[1].getFileLabel(),
+      filePanels[RIGHT].getFileLabel(),
       cc.xyw(8, 2, 3));
     add(
-      filePanels[1].getScrollPane(),
+      filePanels[RIGHT].getScrollPane(),
       cc.xyw(8, 4, 3));
     add(
-      filePanels[1].getSaveButton(),
+      filePanels[RIGHT].getSaveButton(),
       cc.xy(12, 2));
     add(
-      filePanels[1].getFilePanelBar(),
+      filePanels[RIGHT].getFilePanelBar(),
       cc.xyw(8, 5, 3));
 
-    scrollSynchronizer = new ScrollSynchronizer(this, filePanels[0],
-        filePanels[1]);
+    scrollSynchronizer = new ScrollSynchronizer(this, filePanels[LEFT],
+        filePanels[RIGHT]);
 
-    setSelectedPanel(filePanels[0]);
+    setSelectedPanel(filePanels[LEFT]);
   }
 
   void toNextDelta(boolean next)
@@ -566,12 +579,12 @@ public class BufferDiffPanel
 
   public void doLeft()
   {
-    runChange(1, 0);
+    runChange(RIGHT, LEFT);
   }
 
   public void doRight()
   {
-    runChange(0, 1);
+    runChange(LEFT, RIGHT);
   }
 
   void runChange(
@@ -639,13 +652,13 @@ public class BufferDiffPanel
       fromLine = fromChunk.getAnchor();
       size = fromChunk.getSize();
       fromOffset = fromBufferDocument.getOffsetForLine(fromLine);
-      if(fromOffset < 0)
+      if (fromOffset < 0)
       {
         return;
       }
 
       toOffset = fromBufferDocument.getOffsetForLine(fromLine + size);
-      if(toOffset < 0)
+      if (toOffset < 0)
       {
         return;
       }
@@ -655,13 +668,13 @@ public class BufferDiffPanel
       fromLine = toChunk.getAnchor();
       size = toChunk.getSize();
       fromOffset = toBufferDocument.getOffsetForLine(fromLine);
-      if(fromOffset < 0)
+      if (fromOffset < 0)
       {
         return;
       }
 
       toOffset = toBufferDocument.getOffsetForLine(fromLine + size);
-      if(toOffset < 0)
+      if (toOffset < 0)
       {
         return;
       }
@@ -735,13 +748,13 @@ public class BufferDiffPanel
       fromLine = chunk.getAnchor();
       size = chunk.getSize();
       fromOffset = bufferDocument.getOffsetForLine(fromLine);
-      if(fromOffset < 0)
+      if (fromOffset < 0)
       {
         return;
       }
 
       toOffset = bufferDocument.getOffsetForLine(fromLine + size);
-      if(toOffset < 0)
+      if (toOffset < 0)
       {
         return;
       }

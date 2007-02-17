@@ -22,6 +22,7 @@ import com.jgoodies.forms.layout.*;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.*;
 import org.jmeld.diff.*;
+import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.search.*;
@@ -30,10 +31,10 @@ import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.file.*;
+import org.jmeld.util.node.*;
 
 import javax.help.*;
 import javax.swing.*;
-import javax.swing.Timer;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.plaf.*;
@@ -90,7 +91,7 @@ public class JMeldPanel
 
     tabbedPane = new JTabbedPane();
     tabbedPane.setFocusable(false);
-
+    //tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
     initActions();
 
     setLayout(new BorderLayout());
@@ -120,7 +121,10 @@ public class JMeldPanel
       rightFile = new File(rightName);
       if (leftFile.isDirectory() && rightFile.isDirectory())
       {
-        openDirectoryComparison(leftFile, rightFile, null);
+        openDirectoryComparison(
+          leftFile,
+          rightFile,
+          JMeldSettings.getInstance().getFilter().getFilter("default"));
       }
       else
       {
@@ -136,8 +140,16 @@ public class JMeldPanel
   {
     WaitCursor.wait(this);
 
-    new NewFileComparisonPanel(leftFile, rightFile, openInBackground)
-    .execute();
+    new NewFileComparisonPanel(leftFile, rightFile, openInBackground).execute();
+  }
+
+  public void openFileComparison(
+    JMDiffNode diffNode,
+    boolean    openInBackground)
+  {
+    WaitCursor.wait(this);
+
+    new NewFileComparisonPanel(diffNode, openInBackground).execute();
   }
 
   public void openDirectoryComparison(
@@ -262,6 +274,7 @@ public class JMeldPanel
     action = actionHandler.createAction(this, SAVE_ACTION);
     action.setIcon("stock_save");
     action.setToolTip("Save the changed files");
+    installKey("ctrl S", action);
 
     action = actionHandler.createAction(this, UNDO_ACTION);
     action.setIcon("stock_undo");
@@ -695,13 +708,18 @@ public class JMeldPanel
   class NewFileComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private File             leftFile;
-    private File             rightFile;
-    private boolean          openInBackground;
-    private BufferDocumentIF bd1;
-    private BufferDocumentIF bd2;
-    private JMDiff           diff;
-    private JMRevision       revision;
+    private JMDiffNode diffNode;
+    private File       leftFile;
+    private File       rightFile;
+    private boolean    openInBackground;
+
+    NewFileComparisonPanel(
+      JMDiffNode diffNode,
+      boolean    openInBackground)
+    {
+      this.diffNode = diffNode;
+      this.openInBackground = openInBackground;
+    }
 
     NewFileComparisonPanel(
       File    leftFile,
@@ -715,49 +733,38 @@ public class JMeldPanel
 
     public String doInBackground()
     {
-      if (StringUtil.isEmpty(leftFile.getName()))
-      {
-        return "left filename is empty";
-      }
-
-      if (!leftFile.exists())
-      {
-        return "left filename(" + leftFile.getName()
-        + ") doesn't exist";
-      }
-
-      if (StringUtil.isEmpty(rightFile.getName()))
-      {
-        return "right filename is empty";
-      }
-
-      if (!rightFile.exists())
-      {
-        return "right filename(" + rightFile.getName() + ") doesn't exist";
-      }
-
       try
       {
-        StatusBar.start();
-        StatusBar.setState(
-          "Reading file %s",
-          leftFile.getName());
-        bd1 = new FileDocument(leftFile);
-        bd1.read();
+        if (diffNode == null)
+        {
+          if (StringUtil.isEmpty(leftFile.getName()))
+          {
+            return "left filename is empty";
+          }
 
-        StatusBar.setState(
-          "Reading file %s",
-          rightFile.getName());
-        bd2 = new FileDocument(rightFile);
-        bd2.read();
+          if (!leftFile.exists())
+          {
+            return "left filename(" + leftFile.getName() + ") doesn't exist";
+          }
 
-        StatusBar.setState("Calculating differences...");
-        diff = new JMDiff();
-        revision = diff.diff(
-            bd1.getLines(),
-            bd2.getLines());
-        StatusBar.setState("Ready calculating differences");
-        StatusBar.stop();
+          if (StringUtil.isEmpty(rightFile.getName()))
+          {
+            return "right filename is empty";
+          }
+
+          if (!rightFile.exists())
+          {
+            return "right filename(" + rightFile.getName() + ") doesn't exist";
+          }
+
+          diffNode = JMDiffNodeFactory.create(
+              leftFile.getName(),
+              leftFile,
+              rightFile.getName(),
+              rightFile);
+        }
+
+        diffNode.diff();
       }
       catch (Exception ex)
       {
@@ -786,8 +793,7 @@ public class JMeldPanel
         else
         {
           panel = new BufferDiffPanel(JMeldPanel.this);
-          panel.setBufferDocuments(bd1, bd2, diff, revision);
-
+          panel.setDiffNode(diffNode);
           tabbedPane.add(
             panel,
             getTabIcon(
@@ -796,18 +802,23 @@ public class JMeldPanel
           if (!openInBackground)
           {
             tabbedPane.setSelectedComponent(panel);
-
-            // Goto the first delta:
-            // This should be invoked after the panel is displayed!
-            SwingUtilities.invokeLater(
-              new Runnable()
-              {
-                public void run()
-                {
-                  doGoToFirst(null);
-                }
-              });
           }
+
+          panel.doGoToFirst();
+          panel.repaint();
+
+          // Goto the first delta:
+          // This should be invoked after the panel is displayed!
+          /*
+          SwingUtilities.invokeLater(
+            new Runnable()
+            {
+              public void run()
+              {
+                doGoToFirst(null);
+              }
+            });
+          */
         }
       }
       catch (Exception ex)
@@ -824,10 +835,10 @@ public class JMeldPanel
   class NewDirectoryComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private File          leftFile;
-    private File          rightFile;
-    private Filter        filter;
-    private DirectoryDiff diff;
+    private File           leftFile;
+    private File           rightFile;
+    private Filter         filter;
+    private DirectoryDiff2 diff;
 
     NewDirectoryComparisonPanel(
       File   leftFile,
@@ -848,8 +859,7 @@ public class JMeldPanel
 
       if (!leftFile.exists())
       {
-        return "left directoryName(" + leftFile.getName()
-        + ") doesn't exist";
+        return "left directoryName(" + leftFile.getName() + ") doesn't exist";
       }
 
       if (!leftFile.isDirectory())
@@ -865,7 +875,8 @@ public class JMeldPanel
 
       if (!rightFile.exists())
       {
-        return "right directoryName(" + rightFile.getName() + ") doesn't exist";
+        return "right directoryName(" + rightFile.getName()
+        + ") doesn't exist";
       }
 
       if (!rightFile.isDirectory())
@@ -874,8 +885,8 @@ public class JMeldPanel
         + ") is not a directory";
       }
 
-      diff = new DirectoryDiff(leftFile, rightFile, filter);
-      diff.diff();
+      diff = new DirectoryDiff2(leftFile, rightFile, filter);
+      diff.diff(DirectoryDiff2.Mode.TWO_WAY);
 
       return null;
     }
@@ -884,8 +895,8 @@ public class JMeldPanel
     {
       try
       {
-        String          result;
-        FolderDiffPanel panel;
+        String           result;
+        FolderDiffPanel2 panel;
 
         result = get();
 
@@ -895,7 +906,7 @@ public class JMeldPanel
             "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
 
-        panel = new FolderDiffPanel(JMeldPanel.this, diff);
+        panel = new FolderDiffPanel2(JMeldPanel.this, diff);
 
         tabbedPane.add(
           panel,

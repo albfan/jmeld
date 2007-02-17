@@ -29,11 +29,11 @@ import java.util.*;
 public class DirectoryDiff2
        extends FolderDiff2
 {
-  private File                  rightDirectory;
-  private File                  leftDirectory;
-  private DiffNode              rootNode;
-  private Map<String, DiffNode> nodes;
-  private Filter                filter;
+  private File                    rightDirectory;
+  private File                    leftDirectory;
+  private JMDiffNode              rootNode;
+  private Map<String, JMDiffNode> nodes;
+  private Filter                  filter;
 
   public DirectoryDiff2(
     File   leftDirectory,
@@ -57,21 +57,38 @@ public class DirectoryDiff2
     }
   }
 
-  public DiffNode getRootNode()
+  public JMDiffNode getRootNode()
   {
     return rootNode;
   }
 
-  public void diff()
+  public void diff(Mode mode)
   {
     DirectoryScanner ds;
-    DiffNode         node;
+    JMDiffNode       node;
 
     StatusBar.start();
     StatusBar.setState("Start scanning directories...");
 
-    rootNode = new DiffNode("<root>", false);
-    nodes = new HashMap<String, DiffNode>();
+    rootNode = new JMDiffNode("<root>", false);
+    nodes = new HashMap<String, JMDiffNode>();
+
+    ds = new DirectoryScanner();
+    ds.setShowStateOn(true);
+    ds.setBasedir(leftDirectory);
+    if (filter != null)
+    {
+      ds.setIncludes(filter.getIncludes());
+      ds.setExcludes(filter.getExcludes());
+    }
+    ds.setCaseSensitive(true);
+    ds.scan();
+
+    for (FileNode fileNode : ds.getIncludedFilesMap().values())
+    {
+      node = addNode(fileNode.getName());
+      node.setBufferNodeLeft(fileNode);
+    }
 
     ds = new DirectoryScanner();
     ds.setShowStateOn(true);
@@ -87,54 +104,35 @@ public class DirectoryDiff2
     for (FileNode fileNode : ds.getIncludedFilesMap().values())
     {
       node = addNode(fileNode.getName());
-      node.setBufferNode1(fileNode);
+      node.setBufferNodeRight(fileNode);
     }
 
-   ds = new DirectoryScanner();
-   ds.setShowStateOn(true);
-   ds.setBasedir(leftDirectory);
-   if (filter != null)
-   {
-     ds.setIncludes(filter.getIncludes());
-     ds.setExcludes(filter.getExcludes());
-   }
-   ds.setCaseSensitive(true);
-   ds.scan();
-
-    for (FileNode fileNode : ds.getIncludedFilesMap().values())
+    for(JMDiffNode n : nodes.values())
     {
-      node = addNode(fileNode.getName());
-      node.setBufferNode2(fileNode);
+      n.compareContents();
     }
-
-/*
-    for(DiffNode node : nodes)
-    {
-      node.compareContents();
-    }
-    */
 
     StatusBar.setState("Ready comparing directories");
     StatusBar.stop();
   }
 
-  private DiffNode addNode(String name)
+  private JMDiffNode addNode(String name)
   {
-    DiffNode node;
+    JMDiffNode node;
 
     node = nodes.get(name);
     if (node == null)
     {
-      node = addNode(new DiffNode(name, true));
+      node = addNode(new JMDiffNode(name, true));
     }
 
     return node;
   }
 
-  private DiffNode addNode(DiffNode node)
+  private JMDiffNode addNode(JMDiffNode node)
   {
-    String   parentName;
-    DiffNode parent;
+    String     parentName;
+    JMDiffNode parent;
 
     nodes.put(
       node.getName(),
@@ -150,7 +148,7 @@ public class DirectoryDiff2
       parent = nodes.get(parentName);
       if (parent == null)
       {
-        parent = addNode(new DiffNode(parentName, false));
+        parent = addNode(new JMDiffNode(parentName, false));
       }
     }
 
@@ -171,7 +169,7 @@ public class DirectoryDiff2
         new File(args[0]),
         new File(args[1]),
         JMeldSettings.getInstance().getFilter().getFilter("java"));
-    diff.diff();
+    diff.diff(DirectoryDiff2.Mode.TWO_WAY);
     diff.print();
   }
 }

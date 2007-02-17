@@ -14,87 +14,75 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
-package org.jmeld.util.node;
+package org.jmeld.util.file;
 
-import org.jmeld.ui.text.*;
+import org.jmeld.util.node.*;
 
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 
-public class FileNode
-       extends JMeldNode
-       implements BufferNode
+public class CompareUtil
 {
-  private File         file;
-  private FileDocument document;
-
-  public FileNode(
-    String name,
-    File   file)
+  private CompareUtil()
   {
-    super(name, !file.isDirectory());
-    this.file = file;
   }
 
-  public File getFile()
+  public static boolean contentEquals(
+    BufferNode nodeLeft,
+    BufferNode nodeRight)
   {
-    return file;
-  }
-
-  public FileDocument getDocument()
-  {
-    if (document == null)
+    if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
-      document = new FileDocument(file);
+      return contentEquals((FileNode) nodeLeft, (FileNode) nodeRight);
     }
 
-    return document;
+    return false;
   }
 
-  public long getSize()
+  private static boolean contentEquals(
+    FileNode nodeLeft,
+    FileNode nodeRight)
   {
-    return file.length();
-  }
-
-  public boolean contentEquals(JMeldNode node)
-  {
-    File             file2;
-    RandomAccessFile f1;
-    RandomAccessFile f2;
-    FileChannel      fc1;
-    FileChannel      fc2;
-    ByteBuffer       bb1;
-    ByteBuffer       bb2;
+    File             fileLeft;
+    File             fileRight;
+    RandomAccessFile fLeft;
+    RandomAccessFile fRight;
+    FileChannel      fcLeft;
+    FileChannel      fcRight;
+    ByteBuffer       bbLeft;
+    ByteBuffer       bbRight;
     boolean          equals;
 
-    f1 = null;
-    f2 = null;
+    fLeft = null;
+    fRight = null;
 
     try
     {
-      file2 = ((FileNode) node).getFile();
+      fileLeft = nodeLeft.getFile();
+      fileRight = nodeRight.getFile();
 
-      if (file.isDirectory() || file2.isDirectory())
+      if (fileLeft.isDirectory() || fileRight.isDirectory())
       {
         return true;
       }
 
-      if (file.length() != file2.length())
+      if (fileLeft.length() != fileRight.length())
       {
         return false;
       }
 
-      f1 = new RandomAccessFile(file, "r");
-      f2 = new RandomAccessFile(file2, "r");
-      fc1 = f1.getChannel();
-      fc2 = f2.getChannel();
+      fLeft = new RandomAccessFile(fileLeft, "r");
+      fRight = new RandomAccessFile(fileRight, "r");
+      fcLeft = fLeft.getChannel();
+      fcRight = fRight.getChannel();
 
-      bb1 = fc1.map(FileChannel.MapMode.READ_ONLY, 0, (int) fc1.size());
-      bb2 = fc2.map(FileChannel.MapMode.READ_ONLY, 0, (int) fc2.size());
+      bbLeft = fcLeft.map(FileChannel.MapMode.READ_ONLY, 0, (int) fcLeft.size());
+      bbRight = fcRight.map(FileChannel.MapMode.READ_ONLY, 0,
+          (int) fcRight.size());
 
-      equals = bb1.equals(bb2);
+      equals = bbLeft.equals(bbRight);
 
       return equals;
     }
@@ -107,9 +95,9 @@ public class FileNode
     {
       try
       {
-        if (f1 != null)
+        if (fLeft != null)
         {
-          f1.close();
+          fLeft.close();
         }
       }
       catch (Exception ex)
@@ -119,9 +107,9 @@ public class FileNode
 
       try
       {
-        if (f2 != null)
+        if (fRight != null)
         {
-          f2.close();
+          fRight.close();
         }
       }
       catch (Exception ex)

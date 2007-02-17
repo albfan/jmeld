@@ -114,25 +114,6 @@ public class DirectoryScanner
   /** Is OpenVMS the operating system we're running on? */
   private static final boolean ON_VMS = Os.isFamily("openvms");
 
-  /**
-   * Patterns which should be excluded by default.
-   *
-   * <p>Note that you can now add patterns to the list of default
-   * excludes.  Added patterns will not become part of this array
-   * that has only been kept around for backwards compatibility
-   * reasons.</p>
-   *
-   * @deprecated use the {@link #getDefaultExcludes
-   * getDefaultExcludes} method instead.
-   */
-  protected static final List<String> DEFAULTEXCLUDES = Arrays.asList("**/*~",
-      "**/#*#", "**/.#*", "**/%*%", "**/._*",  // Miscellaneous typical temporary files
-      "**/CVS", "**/CVS/**", "**/.cvsignore",  // CVS
-      "**/SCCS", "**/SCCS/**",  // SCCS
-      "**/vssver.scc",  // Visual SourceSafe
-      "**/.svn", "**/.svn/**",  // Subversion
-      "**/.DS_Store");  // Mac
-
   /** Helper. */
   private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
@@ -143,21 +124,9 @@ public class DirectoryScanner
   private static final boolean[] CS_THEN_NON_CS = new boolean[] { true, false };
 
   /**
-   * Patterns which should be excluded by default.
-   *
-   * @see #addDefaultExcludes()
-   */
-  private static List<String> defaultExcludes = new ArrayList<String>();
-
-  /**
    * Show state information in the statusbar.
    */
   private boolean showStateOn;
-
-  static
-  {
-    resetDefaultExcludes();
-  }
 
   /** The base directory to be scanned. */
   protected File basedir;
@@ -485,70 +454,6 @@ public class DirectoryScanner
   }
 
   /**
-   * Get the list of patterns that should be excluded by default.
-   *
-   * @return An array of <code>String</code> based on the current
-   *         contents of the <code>defaultExcludes</code>
-   *         <code>List</code>.
-   *
-   * @since Ant 1.6
-   */
-  public static List<String> getDefaultExcludes()
-  {
-    return defaultExcludes;
-  }
-
-  /**
-   * Add a pattern to the default excludes unless it is already a
-   * default exclude.
-   *
-   * @param s   A string to add as an exclude pattern.
-   * @return    <code>true</code> if the string was added;
-   *            <code>false</code> if it already existed.
-   *
-   * @since Ant 1.6
-   */
-  public static boolean addDefaultExclude(String s)
-  {
-    if (defaultExcludes.indexOf(s) == -1)
-    {
-      defaultExcludes.add(s);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Remove a string if it is a default exclude.
-   *
-   * @param s   The string to attempt to remove.
-   * @return    <code>true</code> if <code>s</code> was a default
-   *            exclude (and thus was removed);
-   *            <code>false</code> if <code>s</code> was not
-   *            in the default excludes list to begin with.
-   *
-   * @since Ant 1.6
-   */
-  public static boolean removeDefaultExclude(String s)
-  {
-    return defaultExcludes.remove(s);
-  }
-
-  /**
-   * Go back to the hardwired default exclude patterns.
-   *
-   * @since Ant 1.6
-   */
-  public static void resetDefaultExcludes()
-  {
-    defaultExcludes = new ArrayList<String>();
-    for (String defaultExclude : DEFAULTEXCLUDES)
-    {
-      defaultExcludes.add(defaultExclude);
-    }
-  }
-
-  /**
    * Set the base directory to be scanned. This is the directory which is
    * scanned recursively. All '/' and '\' characters are replaced by
    * <code>File.separatorChar</code>, so the separator used need not match
@@ -648,7 +553,7 @@ public class DirectoryScanner
    */
   public synchronized void setIncludes(List<String> includes)
   {
-    if (includes == null)
+    if (includes == null || includes.size() == 0)
     {
       this.includes = Arrays.asList("**");
     }
@@ -1621,14 +1526,6 @@ public class DirectoryScanner
   {
     slowScan();
     return dirsDeselected.toArray(new String[dirsDeselected.size()]);
-  }
-
-  /**
-   * Add default exclusions to the current exclusions set.
-   */
-  public synchronized void addDefaultExcludes()
-  {
-    excludes.addAll(getDefaultExcludes());
   }
 
   /**

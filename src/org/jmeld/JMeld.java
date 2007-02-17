@@ -54,36 +54,38 @@ public class JMeld
     JMeldPanel panel;
     String     version;
 
-/*
     KeyboardFocusManager.setCurrentKeyboardFocusManager(
       new DefaultKeyboardFocusManager()
       {
         public boolean dispatchKeyEvent(KeyEvent e)
         {
-          System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
+          //System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
           //System.out.println("   event: " + e);
           return super.dispatchKeyEvent(e);
         }
 
-        public void setGlobalFocusOwner(Component c)
+        public void processKeyEvent(
+          Component focusedComponent,
+          KeyEvent  e)
         {
-          super.setGlobalFocusOwner(c);
+          System.out.println("processKeyEvent[" + focusedComponent.getClass()
+            + "] : " + KeyStroke.getKeyStrokeForEvent(e));
+          super.processKeyEvent(focusedComponent, e);
         }
       });
-    */
 
     try
     {
       System.setProperty("swing.aatext", "true");
 
-/*
       version = System.getProperty("java.version");
-      if (version.startsWith("1.6"))
-      {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      }
-      else
-	*/
+      /*
+         if (version.startsWith("1.6"))
+         {
+           UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+         }
+         else
+       */
       {
         PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);

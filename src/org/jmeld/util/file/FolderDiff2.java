@@ -22,6 +22,11 @@ import java.util.*;
 
 public abstract class FolderDiff2
 {
+  public enum Mode
+  {
+    ONE_WAY,
+    TWO_WAY;
+  }
   private String rightFolderShortName;
   private String leftFolderShortName;
   private String rightFolderName;
@@ -71,7 +76,7 @@ public abstract class FolderDiff2
     return rightFolderName;
   }
 
-  public abstract DiffNode getRootNode();
+  public abstract JMDiffNode getRootNode();
 
-  public abstract void diff();
+  public abstract void diff(Mode mode);
 }

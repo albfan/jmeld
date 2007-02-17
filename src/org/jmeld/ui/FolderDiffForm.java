@@ -28,18 +28,18 @@ public class FolderDiffForm extends AbstractContentPanel
   private void initComponents()
   {
     folder1Label = new org.jmeld.ui.swing.DiffLabel();
-    jScrollPane1 = new javax.swing.JScrollPane();
-    folderTreeTable = new org.jdesktop.swingx.JXTreeTable();
     folderBar = new javax.swing.JLabel();
     folder2Label = new org.jmeld.ui.swing.DiffLabel();
+    jScrollPane1 = new javax.swing.JScrollPane();
+    folderTreeTable = new org.jmeld.ui.swing.table.JMTreeTable();
 
     folder1Label.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-    jScrollPane1.setViewportView(folderTreeTable);
 
     folderBar.setText("jLabel2");
 
     folder2Label.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+    jScrollPane1.setViewportView(folderTreeTable);
 
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
@@ -52,13 +52,13 @@ public class FolderDiffForm extends AbstractContentPanel
             .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
             .addContainerGap())
           .add(layout.createSequentialGroup()
-            .add(folderBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-            .add(208, 208, 208))
-          .add(layout.createSequentialGroup()
             .add(folder1Label, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
             .add(folder2Label, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-            .addContainerGap())))
+            .addContainerGap())
+          .add(layout.createSequentialGroup()
+            .add(folderBar, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+            .add(208, 208, 208))))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -68,8 +68,8 @@ public class FolderDiffForm extends AbstractContentPanel
           .add(folder1Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(folder2Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE)
-        .add(11, 11, 11)
+        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(folderBar)
         .addContainerGap())
     );
@@ -80,7 +80,7 @@ public class FolderDiffForm extends AbstractContentPanel
   protected org.jmeld.ui.swing.DiffLabel folder1Label;
   protected org.jmeld.ui.swing.DiffLabel folder2Label;
   protected javax.swing.JLabel folderBar;
-  protected org.jdesktop.swingx.JXTreeTable folderTreeTable;
+  protected org.jmeld.ui.swing.table.JMTreeTable folderTreeTable;
   protected javax.swing.JScrollPane jScrollPane1;
   // End of variables declaration//GEN-END:variables
   

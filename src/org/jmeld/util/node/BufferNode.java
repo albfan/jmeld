@@ -16,9 +16,13 @@
  */
 package org.jmeld.util.node;
 
-import java.io.*;
-import java.util.*;
+import org.jmeld.ui.text.*;
 
 public interface BufferNode
 {
+  public String getName();
+
+  public long getSize();
+
+  public BufferDocumentIF getDocument();
 }
