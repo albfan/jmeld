@@ -38,6 +38,8 @@ public class FolderDiffForm extends AbstractContentPanel
     onlyLeftButton = new javax.swing.JToggleButton();
     leftRightUnChangedButton = new javax.swing.JToggleButton();
     hierarchyComboBox = new javax.swing.JComboBox();
+    expandAllButton = new javax.swing.JButton();
+    collapseAllButton = new javax.swing.JButton();
 
     folder1Label.setText("Left name of directory");
 
@@ -57,6 +59,10 @@ public class FolderDiffForm extends AbstractContentPanel
 
     hierarchyComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+    expandAllButton.setText("Exp");
+
+    collapseAllButton.setText("Col");
+
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -68,17 +74,22 @@ public class FolderDiffForm extends AbstractContentPanel
           .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
               .add(folder1Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-              .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 211, Short.MAX_VALUE)
+              .add(layout.createSequentialGroup()
+                .add(expandAllButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(collapseAllButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 147, Short.MAX_VALUE)
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
               .add(layout.createSequentialGroup()
-                .add(leftRightUnChangedButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(onlyLeftButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(leftRightChangedButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(onlyRightButton))
+                .add(onlyRightButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(leftRightUnChangedButton))
               .add(folder2Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
           .add(folderBar))
         .addContainerGap())
@@ -100,7 +111,10 @@ public class FolderDiffForm extends AbstractContentPanel
             .add(leftRightChangedButton)
             .add(onlyLeftButton)
             .add(leftRightUnChangedButton))
-          .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+          .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+            .add(collapseAllButton)
+            .add(expandAllButton)
+            .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -111,6 +125,8 @@ public class FolderDiffForm extends AbstractContentPanel
   
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  protected javax.swing.JButton collapseAllButton;
+  protected javax.swing.JButton expandAllButton;
   protected org.jmeld.ui.swing.DiffLabel folder1Label;
   protected org.jmeld.ui.swing.DiffLabel folder2Label;
   protected javax.swing.JLabel folderBar;

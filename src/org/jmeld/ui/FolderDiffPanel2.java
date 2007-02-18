@@ -53,11 +53,15 @@ public class FolderDiffPanel2
 
   private void init()
   {
+    actionHandler = new ActionHandler();
+
+    initActions();
+
     hierarchyComboBox.removeAllItems();
     hierarchyComboBox.setFocusable(false);
-    hierarchyComboBox.addItem("File tree");
-    hierarchyComboBox.addItem("Directory tree");
-    hierarchyComboBox.addItem("Package tree");
+    hierarchyComboBox.addItem("File view");
+    hierarchyComboBox.addItem("Directory view");
+    hierarchyComboBox.addItem("Package view");
 
     folder1Label.init();
     folder1Label.setText(
@@ -79,8 +83,10 @@ public class FolderDiffPanel2
       new HighlighterPipeline(
         new Highlighter[]
         {
-          new AlternateRowHighlighter(Color.white,
-            Colors.getTableRowHighLighterColor(), Color.black),
+          new AlternateRowHighlighter(
+            Color.white,
+            Colors.getTableRowHighLighterColor(),
+            Color.black),
         }));
 
     leftRightUnChangedButton.setText(null);
@@ -101,14 +107,23 @@ public class FolderDiffPanel2
     onlyLeftButton.setIcon(ImageUtil.getImageIcon("jmeld_only-left"));
     onlyLeftButton.setFocusable(false);
 
-    initActions();
+    expandAllButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    expandAllButton.setContentAreaFilled(false);
+    expandAllButton.setText(null);
+    expandAllButton.setIcon(ImageUtil.getSmallImageIcon("stock_expand-all"));
+    expandAllButton.setFocusable(false);
+
+    collapseAllButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    collapseAllButton.setContentAreaFilled(false);
+    collapseAllButton.setText(null);
+    collapseAllButton.setIcon(
+      ImageUtil.getSmallImageIcon("stock_collapse-all"));
+    collapseAllButton.setFocusable(false);
   }
 
   private void initActions()
   {
     MeldAction action;
-
-    actionHandler = new ActionHandler();
 
     action = actionHandler.createAction(this, "SelectNextRow");
     installKey("DOWN", action);
@@ -127,6 +142,12 @@ public class FolderDiffPanel2
 
     action = actionHandler.createAction(this, "OpenFileComparisonBackground");
     installKey("alt ENTER", action);
+
+    action = actionHandler.createAction(this, "ExpandAll");
+    expandAllButton.setAction(action);
+
+    action = actionHandler.createAction(this, "CollapseAll");
+    collapseAllButton.setAction(action);
   }
 
   private void installKey(
@@ -266,5 +287,15 @@ public class FolderDiffPanel2
   public boolean checkExit()
   {
     return false;
+  }
+
+  public void doExpandAll(ActionEvent ae)
+  {
+    folderTreeTable.expandAll();
+  }
+
+  public void doCollapseAll(ActionEvent ae)
+  {
+    folderTreeTable.collapseAll();
   }
 }
