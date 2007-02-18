@@ -280,6 +280,7 @@ public class JMeldPanel
     action.setIcon("stock_undo");
     action.setToolTip("Undo the latest change");
     installKey("control Z", action);
+    installKey("control Y", action);
 
     action = actionHandler.createAction(this, REDO_ACTION);
     action.setIcon("stock_redo");
