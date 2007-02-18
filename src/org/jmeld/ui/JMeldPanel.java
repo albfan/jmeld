@@ -73,7 +73,7 @@ public class JMeldPanel
   private static final String MERGEMODE_ACTION = "MergeMode";
   private static final String HELP_ACTION = "Help";
   private static final String ABOUT_ACTION = "About";
-  private static final String CONFIGURATION_ACTION = "Configuration";
+  private static final String SETTINGS_ACTION = "Settings";
   private static final String EXIT_ACTION = "Exit";
 
   // instance variables:
@@ -222,7 +222,7 @@ public class JMeldPanel
     builder.addSpring();
 
     button = WidgetFactory.getToolBarButton(
-        actionHandler.get(CONFIGURATION_ACTION));
+        actionHandler.get(SETTINGS_ACTION));
     builder.addButton(button);
 
     button = WidgetFactory.getToolBarButton(actionHandler.get(HELP_ACTION));
@@ -351,7 +351,7 @@ public class JMeldPanel
     action = actionHandler.createAction(this, ABOUT_ACTION);
     action.setIcon("stock_about");
 
-    action = actionHandler.createAction(this, CONFIGURATION_ACTION);
+    action = actionHandler.createAction(this, SETTINGS_ACTION);
     action.setIcon("stock_preferences");
     action.setToolTip("Settings");
 
@@ -661,7 +661,7 @@ public class JMeldPanel
     doExitTab((Component) getCurrentContentPanel());
   }
 
-  public void doConfiguration(ActionEvent ae)
+  public void doSettings(ActionEvent ae)
   {
     AbstractContentPanel content;
 
@@ -669,7 +669,7 @@ public class JMeldPanel
 
     tabbedPane.add(
       content,
-      getTabIcon("stock_preferences", "Configuration"));
+      getTabIcon("stock_preferences", "Settings"));
     tabbedPane.setSelectedComponent(content);
   }
 
@@ -954,44 +954,14 @@ public class JMeldPanel
     String     key,
     MeldAction action)
   {
-    InputMap  inputMap;
-    ActionMap actionMap;
-    KeyStroke stroke;
-
-    stroke = KeyStroke.getKeyStroke(key);
-
-    inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    if (inputMap.get(stroke) != action.getName())
-    {
-      inputMap.put(
-        stroke,
-        action.getName());
-    }
-
-    actionMap = getActionMap();
-    if (actionMap.get(action.getName()) != action)
-    {
-      actionMap.put(
-        action.getName(),
-        action);
-    }
+    SwingUtil.installKey(this, key, action);
   }
 
   private void deInstallKey(
     String     key,
     MeldAction action)
   {
-    InputMap  inputMap;
-    ActionMap actionMap;
-    KeyStroke stroke;
-
-    stroke = KeyStroke.getKeyStroke(key);
-    inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    inputMap.get(stroke);
-    inputMap.remove(stroke);
-
-    // Do not deinstall the action because I don't know how many other
-    //   inputmap residents will call the action.
+    SwingUtil.deInstallKey(this, key, action);
   }
 
   private TabIcon getTabIcon(
