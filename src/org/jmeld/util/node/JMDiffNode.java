@@ -21,6 +21,7 @@ public class JMDiffNode
     LeftMissing,
     NotComparable;
   }
+  private String           text;
   private String           name;
   private String           shortName;
   private String           parentName;
@@ -89,6 +90,11 @@ public class JMDiffNode
   public BufferNode getBufferNodeRight()
   {
     return nodeRight;
+  }
+
+  public List<JMDiffNode> getChildren()
+  {
+    return children;
   }
 
   public Enumeration<JMDiffNode> children()
@@ -223,6 +229,21 @@ public class JMDiffNode
 
   public String toString()
   {
-    return shortName;
+    String pn;
+
+    if(text == null)
+    {
+      text = name;
+      if(parent != null)
+      {
+        pn = parent.getName();
+        if(name.startsWith(pn))
+        {
+          text = name.substring(pn.length() + 1);
+        }
+      }
+    }
+
+    return text;
   }
 }

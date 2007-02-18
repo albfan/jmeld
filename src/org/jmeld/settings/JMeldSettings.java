@@ -32,10 +32,11 @@ public class JMeldSettings
 
   // Instance variables:
   @XmlElement(name = "editor")
-  private EditorSettings editor = new EditorSettings();
+  private EditorSettings                                   editor = new EditorSettings();
   @XmlElement(name = "filter")
-  private FilterSettings filter = new FilterSettings();
-
+  private FilterSettings                                   filter = new FilterSettings();
+  @XmlElement(name = "directory")
+  private DirectorySettings                                directory = new DirectorySettings();
 
   public JMeldSettings()
   {
@@ -44,13 +45,14 @@ public class JMeldSettings
   public static synchronized JMeldSettings getInstance()
   {
     return (JMeldSettings) ConfigurationManager.getInstance()
-                                                    .get(JMeldSettings.class);
+                                               .get(JMeldSettings.class);
   }
 
   public void init()
   {
     editor.init(this);
     filter.init(this);
+    directory.init(this);
   }
 
   public EditorSettings getEditor()
@@ -61,5 +63,10 @@ public class JMeldSettings
   public FilterSettings getFilter()
   {
     return filter;
+  }
+
+  public DirectorySettings getDirectory()
+  {
+    return directory;
   }
 }

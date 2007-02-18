@@ -84,6 +84,7 @@ public class FolderDiffPanel
     table.setSortable(false);
     table.setShowHorizontalLines(false);
     //table.setShowVerticalLines(false);
+    /*
     table.setHighlighters(
       new HighlighterPipeline(
         new Highlighter[]
@@ -91,6 +92,7 @@ public class FolderDiffPanel
           new AlternateRowHighlighter(Color.white,
             Colors.TABLEROW_HIGHLIGHTER, Color.black), getHighlighter(),
         }));
+    */
 
     tableModel = new FolderDiffTableModel(diff);
     table.setModel(tableModel);

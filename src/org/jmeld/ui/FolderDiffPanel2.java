@@ -20,8 +20,10 @@ import org.jdesktop.swingx.decorator.*;
 import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.treetable.*;
+import org.jmeld.settings.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.swing.*;
+import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.file.*;
@@ -33,6 +35,8 @@ import javax.swing.tree.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 public class FolderDiffPanel2
        extends FolderDiffForm
@@ -55,57 +59,35 @@ public class FolderDiffPanel2
   {
     actionHandler = new ActionHandler();
 
-    initActions();
-
-    hierarchyComboBox.removeAllItems();
+    hierarchyComboBox.setModel(
+      new DefaultComboBoxModel(DirectorySettings.DirectoryView.values()));
+    hierarchyComboBox.setSelectedItem(getSettings().getView());
     hierarchyComboBox.setFocusable(false);
-    hierarchyComboBox.addItem("File view");
-    hierarchyComboBox.addItem("Directory view");
-    hierarchyComboBox.addItem("Package view");
 
-    folder1Label.init();
-    folder1Label.setText(
-      diff.getLeftFolderName(),
-      diff.getRightFolderName());
-
-    folder2Label.init();
-    folder2Label.setText(
-      diff.getRightFolderName(),
-      diff.getLeftFolderName());
-
-    folderTreeTable.setTreeTableModel(getModel());
-    folderTreeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    folderTreeTable.setToggleClickCount(1);
-    folderTreeTable.setTerminateEditOnFocusLost(false);
-    folderTreeTable.setRowSelectionAllowed(true);
-
-    folderTreeTable.setHighlighters(
-      new HighlighterPipeline(
-        new Highlighter[]
-        {
-          new AlternateRowHighlighter(
-            Color.white,
-            Colors.getTableRowHighLighterColor(),
-            Color.black),
-        }));
-
-    leftRightUnChangedButton.setText(null);
-    leftRightUnChangedButton.setIcon(
-      ImageUtil.getImageIcon("jmeld_left-right-unchanged"));
-    leftRightUnChangedButton.setFocusable(false);
+    initActions();
 
     onlyRightButton.setText(null);
     onlyRightButton.setIcon(ImageUtil.getImageIcon("jmeld_only-right"));
     onlyRightButton.setFocusable(false);
+    onlyRightButton.setSelected(getSettings().getOnlyRight());
 
     leftRightChangedButton.setText(null);
     leftRightChangedButton.setIcon(
       ImageUtil.getImageIcon("jmeld_left-right-changed"));
     leftRightChangedButton.setFocusable(false);
+    leftRightChangedButton.setSelected(getSettings().getLeftRightChanged());
 
     onlyLeftButton.setText(null);
     onlyLeftButton.setIcon(ImageUtil.getImageIcon("jmeld_only-left"));
     onlyLeftButton.setFocusable(false);
+    onlyLeftButton.setSelected(getSettings().getOnlyLeft());
+
+    leftRightUnChangedButton.setText(null);
+    leftRightUnChangedButton.setIcon(
+      ImageUtil.getImageIcon("jmeld_left-right-unchanged"));
+    leftRightUnChangedButton.setFocusable(false);
+    leftRightUnChangedButton.setSelected(
+      getSettings().getLeftRightUnChanged());
 
     expandAllButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     expandAllButton.setContentAreaFilled(false);
@@ -123,6 +105,33 @@ public class FolderDiffPanel2
     collapseAllButton.setPressedIcon(
       ImageUtil.createDarkerIcon((ImageIcon) collapseAllButton.getIcon()));
     collapseAllButton.setFocusable(false);
+
+    folder1Label.init();
+    folder1Label.setText(
+      diff.getLeftFolderName(),
+      diff.getRightFolderName());
+
+    folder2Label.init();
+    folder2Label.setText(
+      diff.getRightFolderName(),
+      diff.getLeftFolderName());
+
+    folderTreeTable.setTreeTableModel(
+      new FolderDiffTreeTableModel(getRootNode()));
+    folderTreeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    folderTreeTable.setToggleClickCount(1);
+    folderTreeTable.setTerminateEditOnFocusLost(false);
+    folderTreeTable.setRowSelectionAllowed(true);
+
+    folderTreeTable.setHighlighters(
+      new HighlighterPipeline(
+        new Highlighter[]
+        {
+          new AlternateRowHighlighter(
+            Color.white,
+            Colors.getTableRowHighLighterColor(),
+            Color.black),
+        }));
   }
 
   private void initActions()
@@ -152,33 +161,20 @@ public class FolderDiffPanel2
 
     action = actionHandler.createAction(this, "CollapseAll");
     collapseAllButton.setAction(action);
+
+    action = actionHandler.createAction(this, "Filter");
+    onlyRightButton.setAction(action);
+    leftRightChangedButton.setAction(action);
+    onlyLeftButton.setAction(action);
+    leftRightUnChangedButton.setAction(action);
+    hierarchyComboBox.setAction(action);
   }
 
   private void installKey(
     String     key,
     MeldAction action)
   {
-    InputMap  inputMap;
-    ActionMap actionMap;
-    KeyStroke stroke;
-
-    stroke = KeyStroke.getKeyStroke(key);
-
-    inputMap = folderTreeTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-    if (inputMap.get(stroke) != action.getName())
-    {
-      inputMap.put(
-        stroke,
-        action.getName());
-    }
-
-    actionMap = folderTreeTable.getActionMap();
-    if (actionMap.get(action.getName()) != action)
-    {
-      actionMap.put(
-        action.getName(),
-        action);
-    }
+    SwingUtil.installKey(folderTreeTable, key, action);
   }
 
   public String getTitle()
@@ -187,9 +183,153 @@ public class FolderDiffPanel2
     + diff.getRightFolderShortName();
   }
 
-  public FolderDiffTreeTableModel getModel()
+  private TreeNode getRootNode()
   {
-    return new FolderDiffTreeTableModel(diff);
+    return filter(diff.getRootNode());
+  }
+
+  private TreeNode filter(JMDiffNode diffNode)
+  {
+    List<JMDiffNode>    nodes;
+    Map<String, UINode> map;
+    UINode              uiParentNode;
+    UINode              uiNode;
+    String              parentName;
+    UINode              rootNode;
+    JMDiffNode          parent;
+
+    // Filter the nodes:
+    nodes = new ArrayList();
+    for (JMDiffNode node : diff.getNodes())
+    {
+      if (!node.isLeaf())
+      {
+        continue;
+      }
+
+      if (node.isCompareEqual(JMDiffNode.Compare.Equal))
+      {
+        if (leftRightUnChangedButton.isSelected())
+        {
+          nodes.add(node);
+        }
+      }
+      else if (node.isCompareEqual(JMDiffNode.Compare.NotEqual))
+      {
+        if (leftRightChangedButton.isSelected())
+        {
+          nodes.add(node);
+        }
+      }
+      else if (node.isCompareEqual(JMDiffNode.Compare.RightMissing))
+      {
+        if (onlyLeftButton.isSelected())
+        {
+          nodes.add(node);
+        }
+      }
+      else if (node.isCompareEqual(JMDiffNode.Compare.LeftMissing))
+      {
+        if (onlyRightButton.isSelected())
+        {
+          nodes.add(node);
+        }
+      }
+    }
+
+    rootNode = new UINode("<root>", false);
+
+    // Build the hierarchy:
+    if (hierarchyComboBox.getSelectedItem() == DirectorySettings.DirectoryView.packageView)
+    {
+      map = new HashMap<String, UINode>();
+
+      for (JMDiffNode node : nodes)
+      {
+        parent = node.getParent();
+        uiNode = new UINode(node);
+
+        if (parent != null)
+        {
+          parentName = parent.getName();
+          uiParentNode = map.get(parentName);
+          if (uiParentNode == null)
+          {
+            uiParentNode = new UINode(parentName, false);
+            rootNode.addChild(uiParentNode);
+            map.put(parentName, uiParentNode);
+          }
+          uiParentNode.addChild(uiNode);
+        }
+        else
+        {
+          rootNode.addChild(uiNode);
+        }
+      }
+    }
+    else if (hierarchyComboBox.getSelectedItem() == DirectorySettings.DirectoryView.fileView)
+    {
+      for (JMDiffNode node : nodes)
+      {
+        rootNode.addChild(new UINode(node));
+      }
+    }
+    else if (hierarchyComboBox.getSelectedItem() == DirectorySettings.DirectoryView.directoryView)
+    {
+      map = new HashMap<String, UINode>();
+
+      for (JMDiffNode node : nodes)
+      {
+        addDirectoryViewNode(rootNode, map, node);
+      }
+    }
+
+    return rootNode;
+  }
+
+  private void addDirectoryViewNode(
+    UINode              rootNode,
+    Map<String, UINode> map,
+    JMDiffNode          node)
+  {
+    /*
+    UINode     uiNode;
+    JMDiffNode parent;
+    UINode     uiParentNode;
+    String     parentName;
+
+    uiNode = new UINode(node);
+
+    parent = node.getParent();
+    if (parent != null)
+    {
+      parentName = parent.getName();
+      uiParentNode = map.get(parentName);
+      if (uiParentNode == null)
+      {
+        addDirectoryViewNode(rootNode, map, parent);
+
+        if(parent.getParent
+        uiParentNode = new UINode(parentName, false);
+
+        uiParentNode = map.get(parentName);
+        addChild(uiParentNode);
+        map.put(parentName, uiParentNode);
+
+        System.out.println("parentName = " + parentName);
+        uiParentNode = map.get(parentName);
+        System.out.println("node = " + uiParentNode);
+      }
+
+      uiParentNode.addChild(new UINode(node));
+    }
+    else
+    {
+      rootNode.addChild(uiNode);
+      map.put(uiNode.getName(), uiNode);
+      System.out.println("put(" + uiNode.getName() + ", " + uiNode);
+    }
+    */
   }
 
   public void doSelectPreviousRow(ActionEvent ae)
@@ -264,7 +404,8 @@ public class FolderDiffPanel2
   {
     int        row;
     TreePath   path;
-    JMDiffNode node;
+    UINode     node;
+    JMDiffNode diffNode;
 
     row = folderTreeTable.getSelectedRow();
     if (row == -1)
@@ -278,13 +419,19 @@ public class FolderDiffPanel2
       return;
     }
 
-    node = (JMDiffNode) path.getLastPathComponent();
+    node = (UINode) path.getLastPathComponent();
     if (node == null)
     {
       return;
     }
 
-    mainPanel.openFileComparison(node, background);
+    diffNode = node.getDiffNode();
+    if (diffNode == null)
+    {
+      return;
+    }
+
+    mainPanel.openFileComparison(diffNode, background);
   }
 
   @Override
@@ -301,5 +448,16 @@ public class FolderDiffPanel2
   public void doCollapseAll(ActionEvent ae)
   {
     folderTreeTable.collapseAll();
+  }
+
+  public void doFilter(ActionEvent ae)
+  {
+    ((JMTreeTableModel) folderTreeTable.getTreeTableModel()).setRoot(
+      getRootNode());
+  }
+
+  private DirectorySettings getSettings()
+  {
+    return JMeldSettings.getInstance().getDirectory();
   }
 }

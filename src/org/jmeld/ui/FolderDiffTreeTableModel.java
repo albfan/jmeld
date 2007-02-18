@@ -16,8 +16,8 @@
  */
 package org.jmeld.ui;
 
-import javax.swing.tree.*;
 import org.jmeld.diff.*;
+import org.jmeld.ui.*;
 import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
@@ -26,6 +26,7 @@ import org.jmeld.util.node.*;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.tree.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -35,25 +36,21 @@ import java.util.List;
 public class FolderDiffTreeTableModel
        extends JMTreeTableModel
 {
-  private FolderDiff2 diff;
-  private Column      fileNameColumn;
-  private Column      leftSizeColumn;
-  private Column      leftStateColumn;
-  private Column      rightStateColumn;
-  private Column      rightSizeColumn;
+  private Column fileNameColumn;
+  private Column leftSizeColumn;
+  private Column leftStateColumn;
+  private Column rightStateColumn;
+  private Column rightSizeColumn;
 
-  public FolderDiffTreeTableModel(FolderDiff2 diff)
+  public FolderDiffTreeTableModel(TreeNode rootNode)
   {
-    super(diff.getRootNode());
+    super(rootNode);
 
-    this.diff = diff;
-
-    fileNameColumn = addColumn("fileName", null, "File", null, -1,
-        false, null);
+    fileNameColumn = addColumn("fileName", null, "File", null, -1, false, null);
     leftSizeColumn = addColumn("leftSize", "Left", "Size", Integer.class, 8,
         false, Colors.TABLEROW_LEFT);
-    leftStateColumn = addColumn("leftState", "Left", "L", Icon.class, 3, false,
-        Colors.TABLEROW_LEFT);
+    leftStateColumn = addColumn("leftState", "Left", "L", Icon.class, 3,
+        false, Colors.TABLEROW_LEFT);
     rightStateColumn = addColumn("rightState", "Right", "R", Icon.class, 3,
         false, Colors.TABLEROW_RIGHT);
     rightSizeColumn = addColumn("rightSize", "Right", "Size", Integer.class,
@@ -64,14 +61,16 @@ public class FolderDiffTreeTableModel
     Object objectNode,
     Column column)
   {
+    UINode     uiNode;
     JMDiffNode diffNode;
     BufferNode bufferNode;
 
-    diffNode = (JMDiffNode) objectNode;
+    uiNode = (UINode) objectNode;
+    diffNode = uiNode.getDiffNode();
 
     if (column == fileNameColumn)
     {
-      return diffNode.getShortName();
+      return uiNode.getName();
     }
 
     if (column == leftStateColumn)
@@ -81,6 +80,11 @@ public class FolderDiffTreeTableModel
 
     if (column == leftSizeColumn)
     {
+      if(diffNode == null)
+      {
+        return "";
+      }
+
       bufferNode = diffNode.getBufferNodeLeft();
       if (bufferNode == null)
       {
@@ -97,6 +101,11 @@ public class FolderDiffTreeTableModel
 
     if (column == rightSizeColumn)
     {
+      if(diffNode == null)
+      {
+        return "";
+      }
+
       bufferNode = diffNode.getBufferNodeRight();
       if (bufferNode == null)
       {
@@ -118,14 +127,17 @@ public class FolderDiffTreeTableModel
 
   private String getLeftStateIconName(JMDiffNode diffNode)
   {
-    if (diffNode.isCompareEqual(JMDiffNode.Compare.NotEqual))
+    if (diffNode != null)
     {
-      return "stock_changed2";
-    }
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.NotEqual))
+      {
+        return "stock_changed2";
+      }
 
-    if (diffNode.isCompareEqual(JMDiffNode.Compare.LeftMissing))
-    {
-      return "stock_deleted3";
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.LeftMissing))
+      {
+        return "stock_deleted3";
+      }
     }
 
     return "stock_empty";
@@ -133,14 +145,17 @@ public class FolderDiffTreeTableModel
 
   private String getRightStateIconName(JMDiffNode diffNode)
   {
-    if (diffNode.isCompareEqual(JMDiffNode.Compare.NotEqual))
+    if (diffNode != null)
     {
-      return "stock_changed2";
-    }
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.NotEqual))
+      {
+        return "stock_changed2";
+      }
 
-    if (diffNode.isCompareEqual(JMDiffNode.Compare.RightMissing))
-    {
-      return "stock_deleted3";
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.RightMissing))
+      {
+        return "stock_deleted3";
+      }
     }
 
     return "stock_empty";

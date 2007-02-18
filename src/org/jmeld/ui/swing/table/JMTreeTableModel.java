@@ -17,6 +17,7 @@
 package org.jmeld.ui.swing.table;
 
 import org.jdesktop.swingx.treetable.*;
+import org.jmeld.ui.*;
 import org.jmeld.util.node.*;
 
 import javax.swing.*;
@@ -31,13 +32,11 @@ public abstract class JMTreeTableModel
        extends DefaultTreeTableModel
 {
   private List<Column> columns;
-  private JMDiffNode   root;
 
-  public JMTreeTableModel(JMDiffNode root)
+  public JMTreeTableModel(TreeNode root)
   {
     super(root);
 
-    this.root = root;
     columns = new ArrayList<Column>();
   }
 
@@ -45,12 +44,12 @@ public abstract class JMTreeTableModel
     Object parent,
     int    index)
   {
-    return ((JMDiffNode) parent).getChildAt(index);
+    return ((UINode) parent).getChildAt(index);
   }
 
   public int getChildCount(Object parent)
   {
-    return ((JMDiffNode) parent).getChildCount();
+    return ((UINode) parent).getChildCount();
   }
 
   public Column addColumn(
@@ -77,18 +76,17 @@ public abstract class JMTreeTableModel
 
     return column;
   }
-  
+
   public abstract Object getValueAt(
     Object objectNode,
     Column column);
 
   /*
-  public abstract void setValueAt(
-    Object value,
-    Object objectNode,
-    Column column);
-  */
-
+     public abstract void setValueAt(
+       Object value,
+       Object objectNode,
+       Column column);
+   */
   public int getColumnSize(int columnIndex)
   {
     return getColumn(columnIndex).columnSize;
@@ -104,7 +102,7 @@ public abstract class JMTreeTableModel
     Class clazz;
 
     clazz = getColumn(columnIndex).columnClass;
-    if(clazz != null)
+    if (clazz != null)
     {
       return clazz;
     }
@@ -113,33 +111,29 @@ public abstract class JMTreeTableModel
   }
 
 /*
-  public Class getColumnClass(
-    int    rowIndex,
-    Column column)
-  {
-    return null;
-  }
-
-  public Class getColumnClass(
-    int rowIndex,
-    int columnIndex)
-  {
-    return getColumnClass(
-      rowIndex,
-      getColumn(columnIndex));
-  }
-
-  public Color getColumnBackground(int columnIndex)
-  {
-    return getColumn(columnIndex).background;
-  }
-
-  public String getColumnGroupName(int columnIndex)
-  {
-    return getColumn(columnIndex).columnGroupName;
-  }
-  */
-
+   public Class getColumnClass(
+     int    rowIndex,
+     Column column)
+   {
+     return null;
+   }
+   public Class getColumnClass(
+     int rowIndex,
+     int columnIndex)
+   {
+     return getColumnClass(
+       rowIndex,
+       getColumn(columnIndex));
+   }
+   public Color getColumnBackground(int columnIndex)
+   {
+     return getColumn(columnIndex).background;
+   }
+   public String getColumnGroupName(int columnIndex)
+   {
+     return getColumn(columnIndex).columnGroupName;
+   }
+ */
   public int getColumnCount()
   {
     return columns.size();
@@ -191,18 +185,17 @@ public abstract class JMTreeTableModel
   }
 
 /*
-  public final void setValueAt(
-    Object value,
-    Object objectNode,
-    int    columnIndex)
-  {
-    setValueAt(
-      value,
-      objectNode,
-      getColumn(columnIndex));
-  }
-  */
-
+   public final void setValueAt(
+     Object value,
+     Object objectNode,
+     int    columnIndex)
+   {
+     setValueAt(
+       value,
+       objectNode,
+       getColumn(columnIndex));
+   }
+ */
   public class Column
   {
     private String            id;

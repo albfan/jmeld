@@ -78,5 +78,7 @@ public abstract class FolderDiff2
 
   public abstract JMDiffNode getRootNode();
 
+  public abstract Collection<JMDiffNode> getNodes();
+
   public abstract void diff(Mode mode);
 }

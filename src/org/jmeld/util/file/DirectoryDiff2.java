@@ -62,6 +62,11 @@ public class DirectoryDiff2
     return rootNode;
   }
 
+  public Collection<JMDiffNode> getNodes()
+  {
+    return nodes.values();
+  }
+
   public void diff(Mode mode)
   {
     DirectoryScanner ds;
@@ -107,7 +112,7 @@ public class DirectoryDiff2
       node.setBufferNodeRight(fileNode);
     }
 
-    for(JMDiffNode n : nodes.values())
+    for (JMDiffNode n : nodes.values())
     {
       n.compareContents();
     }
