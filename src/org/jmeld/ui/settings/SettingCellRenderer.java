@@ -13,6 +13,8 @@ class SettingCellRenderer
   public SettingCellRenderer()
   {
     setOpaque(true);
+    setBackground(Color.white);
+    setForeground(Color.black);
     setHorizontalAlignment(JLabel.CENTER);
     setVerticalAlignment(JLabel.CENTER);
     setVerticalTextPosition(JLabel.BOTTOM);
@@ -43,8 +45,8 @@ class SettingCellRenderer
     }
     else
     {
-      setBackground(list.getBackground());
-      setForeground(list.getForeground());
+      setBackground(Color.white);
+      setForeground(Color.black);
     }
 
     setEnabled(list.isEnabled());
