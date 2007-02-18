@@ -111,6 +111,8 @@ public class FolderDiffPanel2
     expandAllButton.setContentAreaFilled(false);
     expandAllButton.setText(null);
     expandAllButton.setIcon(ImageUtil.getSmallImageIcon("stock_expand-all"));
+    expandAllButton.setPressedIcon(
+      ImageUtil.createDarkerIcon((ImageIcon) expandAllButton.getIcon()));
     expandAllButton.setFocusable(false);
 
     collapseAllButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -118,6 +120,8 @@ public class FolderDiffPanel2
     collapseAllButton.setText(null);
     collapseAllButton.setIcon(
       ImageUtil.getSmallImageIcon("stock_collapse-all"));
+    collapseAllButton.setPressedIcon(
+      ImageUtil.createDarkerIcon((ImageIcon) collapseAllButton.getIcon()));
     collapseAllButton.setFocusable(false);
   }
 

@@ -52,6 +52,21 @@ public class ImageUtil
     return new ImageIcon(url);
   }
 
+  public static ImageIcon createDarkerIcon(ImageIcon icon)
+  {
+    return createDarkerIcon(icon, -0.10f);
+  }
+
+  /** Create a x% Transparent icon */
+  public static ImageIcon createDarkerIcon(
+    ImageIcon icon,
+    float       percentage)
+  {
+    return createIcon(
+      icon,
+      new BrightnessFilter(percentage));
+  }
+
   /** Create a 20% Transparent icon */
   public static ImageIcon createTransparentIcon(ImageIcon icon)
   {

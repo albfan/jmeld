@@ -83,6 +83,7 @@ public class SettingsPanel
     icon = ImageUtil.getSmallImageIcon(iconName);
     button.setIcon(icon);
     button.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+    button.setPressedIcon(ImageUtil.createDarkerIcon(icon));
     button.setFocusable(false);
   }
 
