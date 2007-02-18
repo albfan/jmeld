@@ -16,6 +16,8 @@
  */
 package org.jmeld.ui.util;
 
+import javax.swing.*;
+
 import java.awt.*;
 
 public class Colors
@@ -27,9 +29,19 @@ public class Colors
   public static Color ADDED_DARK = new Color(13, 143, 13);
   public static Color CHANGED_DARK = new Color(62, 122, 172);
   public static Color DELETED_DARK = new Color(193, 50, 0);
-  public static Color TABLEROW_HIGHLIGHTER = new Color(241, 248, 255);
   public static Color TABLEROW_LEFT = null;
   public static Color TABLEROW_RIGHT = null;
-  //public static Color TABLEROW_LEFT = new Color(238, 221, 162);
-  //public static Color TABLEROW_RIGHT = new Color(238, 192, 146);
+
+  /** Get a highlighter that will match the current l&f.
+   */
+  public static Color getTableRowHighLighterColor()
+  {
+    Color color;
+
+    color = UIManager.getColor("Table.selectionBackground");
+    color = ColorUtil.setSaturation(color, 0.05f);
+    color = ColorUtil.setBrightness(color, 1.00f);
+
+    return color;
+  }
 }

@@ -73,17 +73,14 @@ public class FolderDiffPanel2
     folderTreeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     folderTreeTable.setToggleClickCount(1);
     folderTreeTable.setTerminateEditOnFocusLost(false);
-
     folderTreeTable.setRowSelectionAllowed(true);
-    //folderTreeTable.setColumnSelectionAllowed(false);
-    //folderTreeTable.setCellSelectionEnabled(false);
-    //folderTreeTable.putClientProperty("JTree.lineStyle", "Angled");
+
     folderTreeTable.setHighlighters(
       new HighlighterPipeline(
         new Highlighter[]
         {
           new AlternateRowHighlighter(Color.white,
-            Colors.TABLEROW_HIGHLIGHTER, Color.black),
+            Colors.getTableRowHighLighterColor(), Color.black),
         }));
 
     leftRightUnChangedButton.setText(null);

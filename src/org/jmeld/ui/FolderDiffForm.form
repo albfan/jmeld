@@ -13,28 +13,30 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="619" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="folder1Label" pref="307" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="folder2Label" pref="306" max="32767" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane1" alignment="0" pref="560" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="hierarchyComboBox" min="-2" pref="186" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="folderBar" pref="187" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="leftRightUnChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="onlyLeftButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="leftRightChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="onlyRightButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="folder1Label" min="-2" max="-2" attributes="0"/>
+                          <Component id="hierarchyComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="211" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="leftRightUnChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="onlyLeftButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="leftRightChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="onlyRightButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="folder2Label" min="-2" max="-2" attributes="1"/>
+                      </Group>
                   </Group>
+                  <Component id="folderBar" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -49,16 +51,19 @@
                   <Component id="folder2Label" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="248" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="leftRightUnChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="onlyLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="leftRightChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="onlyRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="folderBar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="hierarchyComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="onlyRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="leftRightChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="onlyLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="leftRightUnChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="hierarchyComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="231" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="folderBar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -67,11 +72,7 @@
   <SubComponents>
     <Component class="org.jmeld.ui.swing.DiffLabel" name="folder1Label">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
+        <Property name="text" type="java.lang.String" value="Left name of directory"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="folderBar">
@@ -81,11 +82,7 @@
     </Component>
     <Component class="org.jmeld.ui.swing.DiffLabel" name="folder2Label">
       <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder/>
-          </Border>
-        </Property>
+        <Property name="text" type="java.lang.String" value="Right name of directory"/>
       </Properties>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
