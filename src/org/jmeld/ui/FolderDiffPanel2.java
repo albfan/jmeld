@@ -122,6 +122,7 @@ public class FolderDiffPanel2
     folderTreeTable.setToggleClickCount(1);
     folderTreeTable.setTerminateEditOnFocusLost(false);
     folderTreeTable.setRowSelectionAllowed(true);
+    folderTreeTable.addMouseListener(getMouseListener());
 
     folderTreeTable.setHighlighters(
       new HighlighterPipeline(
@@ -293,43 +294,37 @@ public class FolderDiffPanel2
     JMDiffNode          node)
   {
     /*
-    UINode     uiNode;
-    JMDiffNode parent;
-    UINode     uiParentNode;
-    String     parentName;
-
-    uiNode = new UINode(node);
-
-    parent = node.getParent();
-    if (parent != null)
-    {
-      parentName = parent.getName();
-      uiParentNode = map.get(parentName);
-      if (uiParentNode == null)
-      {
-        addDirectoryViewNode(rootNode, map, parent);
-
-        if(parent.getParent
-        uiParentNode = new UINode(parentName, false);
-
-        uiParentNode = map.get(parentName);
-        addChild(uiParentNode);
-        map.put(parentName, uiParentNode);
-
-        System.out.println("parentName = " + parentName);
-        uiParentNode = map.get(parentName);
-        System.out.println("node = " + uiParentNode);
-      }
-
-      uiParentNode.addChild(new UINode(node));
-    }
-    else
-    {
-      rootNode.addChild(uiNode);
-      map.put(uiNode.getName(), uiNode);
-      System.out.println("put(" + uiNode.getName() + ", " + uiNode);
-    }
-    */
+       UINode     uiNode;
+       JMDiffNode parent;
+       UINode     uiParentNode;
+       String     parentName;
+       uiNode = new UINode(node);
+       parent = node.getParent();
+       if (parent != null)
+       {
+         parentName = parent.getName();
+         uiParentNode = map.get(parentName);
+         if (uiParentNode == null)
+         {
+           addDirectoryViewNode(rootNode, map, parent);
+           if(parent.getParent
+           uiParentNode = new UINode(parentName, false);
+           uiParentNode = map.get(parentName);
+           addChild(uiParentNode);
+           map.put(parentName, uiParentNode);
+           System.out.println("parentName = " + parentName);
+           uiParentNode = map.get(parentName);
+           System.out.println("node = " + uiParentNode);
+         }
+         uiParentNode.addChild(new UINode(node));
+       }
+       else
+       {
+         rootNode.addChild(uiNode);
+         map.put(uiNode.getName(), uiNode);
+         System.out.println("put(" + uiNode.getName() + ", " + uiNode);
+       }
+     */
   }
 
   public void doSelectPreviousRow(ActionEvent ae)
@@ -404,7 +399,7 @@ public class FolderDiffPanel2
   {
     int        row;
     TreePath   path;
-    UINode     node;
+    UINode     uiNode;
     JMDiffNode diffNode;
 
     row = folderTreeTable.getSelectedRow();
@@ -419,13 +414,13 @@ public class FolderDiffPanel2
       return;
     }
 
-    node = (UINode) path.getLastPathComponent();
-    if (node == null)
+    uiNode = (UINode) path.getLastPathComponent();
+    if (uiNode == null)
     {
       return;
     }
 
-    diffNode = node.getDiffNode();
+    diffNode = uiNode.getDiffNode();
     if (diffNode == null)
     {
       return;
@@ -459,5 +454,50 @@ public class FolderDiffPanel2
   private DirectorySettings getSettings()
   {
     return JMeldSettings.getInstance().getDirectory();
+  }
+
+  private MouseListener getMouseListener()
+  {
+    return new MouseAdapter()
+      {
+        public void mouseClicked(MouseEvent me)
+        {
+          UINode     uiNode;
+          JMDiffNode diffNode;
+          TreePath   path;
+          int        row;
+          boolean    open;
+          boolean    background;
+
+          background = me.getClickCount() == 1
+            && me.getButton() == MouseEvent.BUTTON2;
+          open = me.getClickCount() == 2 || background;
+
+          if (open)
+          {
+            row = ((JTable) me.getSource()).rowAtPoint(me.getPoint());
+
+            path = folderTreeTable.getPathForRow(row);
+            if (path == null)
+            {
+              return;
+            }
+
+            uiNode = (UINode) path.getLastPathComponent();
+            if (uiNode == null)
+            {
+              return;
+            }
+
+            diffNode = uiNode.getDiffNode();
+            if (diffNode == null)
+            {
+              return;
+            }
+
+            mainPanel.openFileComparison(diffNode, background);
+          }
+        }
+      };
   }
 }
