@@ -22,7 +22,6 @@ import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
 import org.jmeld.*;
 import org.jmeld.diff.*;
-import org.jmeld.ui.renderer.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.ui.text.*;

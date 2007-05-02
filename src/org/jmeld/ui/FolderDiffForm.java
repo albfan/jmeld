@@ -29,7 +29,6 @@ public class FolderDiffForm extends AbstractContentPanel
   {
 
     folder1Label = new org.jmeld.ui.swing.DiffLabel();
-    folderBar = new javax.swing.JLabel();
     folder2Label = new org.jmeld.ui.swing.DiffLabel();
     jScrollPane1 = new javax.swing.JScrollPane();
     folderTreeTable = new org.jmeld.ui.swing.table.JMTreeTable();
@@ -42,8 +41,6 @@ public class FolderDiffForm extends AbstractContentPanel
     collapseAllButton = new javax.swing.JButton();
 
     folder1Label.setText("Left name of directory");
-
-    folderBar.setText("jLabel2");
 
     folder2Label.setText("Right name of directory");
 
@@ -67,11 +64,11 @@ public class FolderDiffForm extends AbstractContentPanel
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-      .add(layout.createSequentialGroup()
+      .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
-          .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+          .add(org.jdesktop.layout.GroupLayout.LEADING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+          .add(layout.createSequentialGroup()
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
               .add(folder1Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
               .add(layout.createSequentialGroup()
@@ -90,8 +87,7 @@ public class FolderDiffForm extends AbstractContentPanel
                 .add(onlyRightButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(leftRightUnChangedButton))
-              .add(folder2Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-          .add(folderBar))
+              .add(folder2Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
         .addContainerGap())
     );
 
@@ -116,9 +112,7 @@ public class FolderDiffForm extends AbstractContentPanel
             .add(expandAllButton)
             .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(folderBar)
+        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
         .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
@@ -129,7 +123,6 @@ public class FolderDiffForm extends AbstractContentPanel
   protected javax.swing.JButton expandAllButton;
   protected org.jmeld.ui.swing.DiffLabel folder1Label;
   protected org.jmeld.ui.swing.DiffLabel folder2Label;
-  protected javax.swing.JLabel folderBar;
   protected org.jmeld.ui.swing.table.JMTreeTable folderTreeTable;
   protected javax.swing.JComboBox hierarchyComboBox;
   protected javax.swing.JScrollPane jScrollPane1;

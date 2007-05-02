@@ -32,6 +32,8 @@ public class EditorSettings
   @XmlElement
   private int                  tabSize = 4;
   @XmlElement
+  private boolean              ignoreWhitespace;
+  @XmlElement
   private ColorSetting            addedColor;
   @XmlElement
   private ColorSetting            changedColor;
@@ -61,6 +63,17 @@ public class EditorSettings
   public void setTabSize(int tabSize)
   {
     this.tabSize = tabSize;
+    fireChanged();
+  }
+
+  public boolean getIgnoreWhitespace()
+  {
+    return ignoreWhitespace;
+  }
+
+  public void setIgnoreWhitespace(boolean ignoreWhitespace)
+  {
+    this.ignoreWhitespace = ignoreWhitespace;
     fireChanged();
   }
 

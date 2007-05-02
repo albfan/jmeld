@@ -20,7 +20,7 @@ import org.jmeld.util.node.*;
 
 import java.util.*;
 
-public abstract class FolderDiff2
+public abstract class FolderDiff
 {
   public enum Mode
   {
@@ -32,7 +32,7 @@ public abstract class FolderDiff2
   private String rightFolderName;
   private String leftFolderName;
 
-  public FolderDiff2()
+  public FolderDiff()
   {
   }
 

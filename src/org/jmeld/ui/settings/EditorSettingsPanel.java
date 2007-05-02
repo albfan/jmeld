@@ -38,6 +38,7 @@ public class EditorSettingsPanel
   {
     tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
+    ignoreWhitespaceCheckBox.addActionListener(getIgnoreWhitespaceAction());
     colorAddedButton.addActionListener(getColorAddedAction());
     colorDeletedButton.addActionListener(getColorDeletedAction());
     colorChangedButton.addActionListener(getColorChangedAction());
@@ -115,6 +116,18 @@ public class EditorSettingsPanel
         {
           getEditorSettings()
             .setShowLineNumbers(showLineNumbersCheckBox.isSelected());
+        }
+      };
+  }
+  
+  private ActionListener getIgnoreWhitespaceAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setIgnoreWhitespace(ignoreWhitespaceCheckBox.isSelected());
         }
       };
   }

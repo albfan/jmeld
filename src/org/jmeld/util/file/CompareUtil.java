@@ -16,6 +16,7 @@
  */
 package org.jmeld.util.file;
 
+import org.apache.commons.io.*;
 import org.jmeld.util.node.*;
 
 import java.io.*;
@@ -31,19 +32,40 @@ public class CompareUtil
 
   public static boolean contentEquals(
     BufferNode nodeLeft,
-    BufferNode nodeRight)
+    BufferNode nodeRight,
+    boolean    ignoreWhitespace)
   {
     if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
-      return contentEquals((FileNode) nodeLeft, (FileNode) nodeRight);
+      return contentEquals((FileNode) nodeLeft, (FileNode) nodeRight,
+        ignoreWhitespace);
     }
 
     return false;
   }
 
+  private static boolean contentEquals2(
+    FileNode nodeLeft,
+    FileNode nodeRight,
+    boolean  ignoreWhitespace)
+  {
+    try
+    {
+      return IOUtils.contentEquals(
+        new BufferedReader(new FileReader(nodeLeft.getFile())),
+        new BufferedReader(new FileReader(nodeRight.getFile())));
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+      return false;
+    }
+  }
+
   private static boolean contentEquals(
     FileNode nodeLeft,
-    FileNode nodeRight)
+    FileNode nodeRight,
+    boolean  ignoreWhitespace)
   {
     File             fileLeft;
     File             fileRight;
@@ -54,6 +76,10 @@ public class CompareUtil
     ByteBuffer       bbLeft;
     ByteBuffer       bbRight;
     boolean          equals;
+    boolean          leftFound;
+    boolean          rightFound;
+    byte             leftByte;
+    byte             rightByte;
 
     fLeft = null;
     fRight = null;
@@ -68,7 +94,7 @@ public class CompareUtil
         return true;
       }
 
-      if (fileLeft.length() != fileRight.length())
+      if (!ignoreWhitespace && fileLeft.length() != fileRight.length())
       {
         return false;
       }
@@ -82,7 +108,70 @@ public class CompareUtil
       bbRight = fcRight.map(FileChannel.MapMode.READ_ONLY, 0,
           (int) fcRight.size());
 
-      equals = bbLeft.equals(bbRight);
+      if (!ignoreWhitespace)
+      {
+        equals = bbLeft.equals(bbRight);
+      }
+      else
+      {
+        // I should do some charset decoding here!
+        equals = false;
+        leftByte = 0;
+        rightByte = 0;
+        for (;;)
+        {
+          leftFound = false;
+          while (bbLeft.hasRemaining())
+          {
+            leftByte = bbLeft.get();
+            if (leftByte == 0x0A || leftByte == 0x0C || leftByte == 0x0D
+              || leftByte == 0x20)
+            {
+              continue;
+            }
+
+            leftFound = true;
+            break;
+          }
+
+          rightFound = false;
+          while (bbRight.hasRemaining())
+          {
+            rightByte = bbRight.get();
+            if (rightByte == 0x0A || rightByte == 0x0C || rightByte == 0x0D
+              || rightByte == 0x20)
+            {
+              continue;
+            }
+
+            rightFound = true;
+            break;
+          }
+
+          if (leftFound && rightFound)
+          {
+            if (leftByte == rightByte)
+            {
+              continue;
+            }
+
+            equals = false;
+            break;
+          }
+
+          if ((leftFound && !rightFound) || (!leftFound && rightFound))
+          {
+            equals = false;
+            break;
+          }
+
+          if (!leftFound && !rightFound)
+          {
+            equals = true;
+            break;
+          }
+        }
+      }
 
       return equals;
     }

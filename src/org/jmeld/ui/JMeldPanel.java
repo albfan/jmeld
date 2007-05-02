@@ -844,10 +844,10 @@ public class JMeldPanel
   class NewDirectoryComparisonPanel
          extends SwingWorker<String, Object>
   {
-    private File           leftFile;
-    private File           rightFile;
-    private Filter         filter;
-    private DirectoryDiff2 diff;
+    private File          leftFile;
+    private File          rightFile;
+    private Filter        filter;
+    private DirectoryDiff diff;
 
     NewDirectoryComparisonPanel(
       File   leftFile,
@@ -894,8 +894,8 @@ public class JMeldPanel
         + ") is not a directory";
       }
 
-      diff = new DirectoryDiff2(leftFile, rightFile, filter);
-      diff.diff(DirectoryDiff2.Mode.TWO_WAY);
+      diff = new DirectoryDiff(leftFile, rightFile, filter);
+      diff.diff(DirectoryDiff.Mode.TWO_WAY);
 
       return null;
     }
@@ -904,8 +904,8 @@ public class JMeldPanel
     {
       try
       {
-        String           result;
-        FolderDiffPanel2 panel;
+        String          result;
+        FolderDiffPanel panel;
 
         result = get();
 
@@ -915,7 +915,7 @@ public class JMeldPanel
             "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
 
-        panel = new FolderDiffPanel2(JMeldPanel.this, diff);
+        panel = new FolderDiffPanel(JMeldPanel.this, diff);
 
         tabbedPane.add(
           panel,

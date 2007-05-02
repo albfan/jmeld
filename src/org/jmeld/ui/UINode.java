@@ -7,14 +7,16 @@ import javax.swing.tree.*;
 import java.util.*;
 
 public class UINode
-       implements TreeNode
+       implements TreeNode, Comparable<UINode>
 {
-  private String       text;
-  private String       name;
-  private boolean      leaf;
-  private JMDiffNode   diffNode;
-  private UINode       parent;
-  private List<UINode> children = new ArrayList<UINode>();
+  private String              text;
+  private String              name;
+  private boolean             leaf;
+  private JMDiffNode          diffNode;
+  private UINode              parent;
+  private List<UINode>        children = new ArrayList<UINode>();
+  private Map<String, UINode> childrenMap = new HashMap<String, UINode>();
+  private boolean             checkSort;
 
   public UINode(JMDiffNode diffNode)
   {
@@ -44,10 +46,24 @@ public class UINode
     return diffNode;
   }
 
-  public void addChild(UINode child)
+  public UINode addChild(UINode child)
   {
-    children.add(child);
-    child.setParent(this);
+    UINode c;
+
+    c = childrenMap.get(child.getName());
+    if (c == null)
+    {
+      childrenMap.put(
+        child.getName(),
+        child);
+      children.add(child);
+      child.setParent(this);
+      checkSort = true;
+
+      c = child;
+    }
+
+    return c;
   }
 
   private void setParent(UINode parent)
@@ -57,6 +73,7 @@ public class UINode
 
   public Enumeration<UINode> children()
   {
+    checkSort();
     return Collections.enumeration(children);
   }
 
@@ -67,16 +84,19 @@ public class UINode
 
   public UINode getChildAt(int childIndex)
   {
+    checkSort();
     return children.get(childIndex);
   }
 
   public int getChildCount()
   {
+    checkSort();
     return children.size();
   }
 
   public int getIndex(TreeNode node)
   {
+    checkSort();
     return children.indexOf(node);
   }
 
@@ -90,10 +110,20 @@ public class UINode
     return leaf;
   }
 
+  private void checkSort()
+  {
+    if (checkSort)
+    {
+      Collections.sort(children);
+      checkSort = false;
+    }
+  }
+
   public void print(String indent)
   {
     System.out.println(indent + name);
     indent += "  ";
+    checkSort();
     for (UINode node : children)
     {
       node.print(indent);
@@ -122,5 +152,10 @@ public class UINode
     }
 
     return text;
+  }
+
+  public int compareTo(UINode o)
+  {
+    return toString().compareTo(o.toString());
   }
 }

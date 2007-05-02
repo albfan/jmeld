@@ -17,7 +17,6 @@
 package org.jmeld.util.node;
 
 import org.jmeld.ui.text.*;
-
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;

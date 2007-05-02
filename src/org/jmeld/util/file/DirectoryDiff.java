@@ -20,14 +20,14 @@ import org.apache.jmeld.tools.ant.*;
 import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
 import org.jmeld.ui.*;
-import org.jmeld.util.StringUtil;
+import org.jmeld.util.*;
 import org.jmeld.util.node.*;
 
 import java.io.*;
 import java.util.*;
 
-public class DirectoryDiff2
-       extends FolderDiff2
+public class DirectoryDiff
+       extends FolderDiff
 {
   private File                    rightDirectory;
   private File                    leftDirectory;
@@ -35,7 +35,7 @@ public class DirectoryDiff2
   private Map<String, JMDiffNode> nodes;
   private Filter                  filter;
 
-  public DirectoryDiff2(
+  public DirectoryDiff(
     File   leftDirectory,
     File   rightDirectory,
     Filter filter)
@@ -112,10 +112,12 @@ public class DirectoryDiff2
       node.setBufferNodeRight(fileNode);
     }
 
+//System.out.println("start comparing " + nodes.size() + " nodes");
     for (JMDiffNode n : nodes.values())
     {
       n.compareContents();
     }
+System.out.println("end comparing " + nodes.size() + " nodes");
 
     StatusBar.setState("Ready comparing directories");
     StatusBar.stop();
@@ -168,13 +170,17 @@ public class DirectoryDiff2
 
   public static void main(String[] args)
   {
-    DirectoryDiff2 diff;
+    DirectoryDiff diff;
+    StopWatch     stopWatch;
 
-    diff = new DirectoryDiff2(
+    diff = new DirectoryDiff(
         new File(args[0]),
         new File(args[1]),
-        JMeldSettings.getInstance().getFilter().getFilter("java"));
-    diff.diff(DirectoryDiff2.Mode.TWO_WAY);
+        JMeldSettings.getInstance().getFilter().getFilter("default"));
+    stopWatch = new StopWatch();
+    stopWatch.start();
+    diff.diff(DirectoryDiff.Mode.TWO_WAY);
+    System.out.println("diff took " + stopWatch.getElapsedTime() + " msec.");
     diff.print();
   }
 }

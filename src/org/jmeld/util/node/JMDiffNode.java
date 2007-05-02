@@ -2,6 +2,7 @@ package org.jmeld.util.node;
 
 import org.jmeld.*;
 import org.jmeld.diff.*;
+import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.util.file.*;
@@ -147,9 +148,34 @@ public class JMDiffNode
     shortName = name.substring(index + 1);
   }
 
+  public void copyRightToLeft()
+  {
+    nodeLeft = null;
+    compareContents();
+  }
+
+  public void copyLeftToRight()
+  {
+    nodeLeft = null;
+    compareContents();
+  }
+
+  public void removeRight()
+  {
+    nodeLeft = null;
+    compareContents();
+  }
+
+  public void removeLeft()
+  {
+    nodeRight = null;
+    compareContents();
+  }
+
   public void compareContents()
   {
     boolean equals;
+    boolean ignoreWhitespace;
 
     if (!isLeaf() || (nodeLeft == null && nodeRight == null))
     {
@@ -169,7 +195,10 @@ public class JMDiffNode
       return;
     }
 
-    equals = CompareUtil.contentEquals(nodeLeft, nodeRight);
+    ignoreWhitespace = JMeldSettings.getInstance().getEditor()
+                                    .getIgnoreWhitespace();
+
+    equals = CompareUtil.contentEquals(nodeLeft, nodeRight, ignoreWhitespace);
     compareState = equals ? Compare.Equal : Compare.NotEqual;
   }
 
@@ -219,7 +248,7 @@ public class JMDiffNode
 
   public void print(String indent)
   {
-    System.out.println(indent + shortName);
+    System.out.println(indent + shortName + " (" + compareState + ")");
     indent += "  ";
     for (JMDiffNode node : children)
     {
@@ -231,13 +260,13 @@ public class JMDiffNode
   {
     String pn;
 
-    if(text == null)
+    if (text == null)
     {
       text = name;
-      if(parent != null)
+      if (parent != null)
       {
         pn = parent.getName();
-        if(name.startsWith(pn))
+        if (name.startsWith(pn))
         {
           text = name.substring(pn.length() + 1);
         }
