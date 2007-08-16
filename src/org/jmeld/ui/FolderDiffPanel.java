@@ -553,6 +553,13 @@ public class FolderDiffPanel
             }
 
             mainPanel.openFileComparison(diffNode, background);
+
+            // Hack to make it possible to select with the MIDDLE 
+            //   button of a mouse.
+            if(folderTreeTable.getSelectedRow() != row)
+            {
+              folderTreeTable.setRowSelectionInterval(row, row);
+            }
           }
         }
       };
