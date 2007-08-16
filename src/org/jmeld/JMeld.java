@@ -105,6 +105,7 @@ public class JMeld
       frame.getTitle(),
       frame);
     frame.addWindowListener(panel.getWindowListener());
+    frame.getRootPane().setTransferHandler(new FileDropHandler());
 
     frame.setVisible(true);
 
