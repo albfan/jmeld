@@ -86,8 +86,8 @@
     <delete file="${basedir}/bin/setDevelopment.sh" quiet="true" />
     <pathconvert dirsep="/" pathsep="${myPathSeparator}"
                  property="setEnvironment" refid="development.classpath" />
-    <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash export
-            CLASSPATH='${setEnvironment}'</echo>
+    <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash 
+export CLASSPATH='${setEnvironment}'</echo>
     <chmod file="${basedir}/bin/setDevelopment.sh" perm="ugo+x" />
   </target>
 
