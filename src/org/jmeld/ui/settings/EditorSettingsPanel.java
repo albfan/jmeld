@@ -185,6 +185,7 @@ public class EditorSettingsPanel
         20,
         20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
+    ignoreWhitespaceCheckBox.setSelected(settings.getIgnoreWhitespace());
     tabSizeSpinner.setValue(settings.getTabSize());
   }
 
