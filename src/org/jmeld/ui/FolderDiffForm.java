@@ -39,6 +39,10 @@ public class FolderDiffForm extends AbstractContentPanel
     hierarchyComboBox = new javax.swing.JComboBox();
     expandAllButton = new javax.swing.JButton();
     collapseAllButton = new javax.swing.JButton();
+    deleteLeftButton = new javax.swing.JButton();
+    copyToRightButton = new javax.swing.JButton();
+    copyToLeftButton = new javax.swing.JButton();
+    deleteRightButton = new javax.swing.JButton();
 
     folder1Label.setText("Left name of directory");
 
@@ -60,35 +64,56 @@ public class FolderDiffForm extends AbstractContentPanel
 
     collapseAllButton.setText("Col");
 
+    deleteLeftButton.setText("DL");
+    deleteLeftButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
+
+    copyToRightButton.setText("CR");
+    copyToRightButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
+
+    copyToLeftButton.setText("CL");
+    copyToLeftButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
+
+    deleteRightButton.setText("DR");
+    deleteRightButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
+
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
       .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
         .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-          .add(org.jdesktop.layout.GroupLayout.LEADING, jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(folder1Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(layout.createSequentialGroup()
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(folder1Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-              .add(layout.createSequentialGroup()
-                .add(expandAllButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(collapseAllButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 147, Short.MAX_VALUE)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-              .add(layout.createSequentialGroup()
-                .add(onlyLeftButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(leftRightChangedButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(onlyRightButton)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(leftRightUnChangedButton))
-              .add(folder2Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+            .add(expandAllButton)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(collapseAllButton)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        .add(18, 18, 18)
+        .add(deleteLeftButton)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(copyToRightButton)
+        .add(18, 18, 18)
+        .add(copyToLeftButton)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(deleteRightButton)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 279, Short.MAX_VALUE)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+          .add(layout.createSequentialGroup()
+            .add(onlyLeftButton)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(leftRightChangedButton)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(onlyRightButton)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(leftRightUnChangedButton))
+          .add(folder2Label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         .addContainerGap())
+      .add(layout.createSequentialGroup()
+        .add(12, 12, 12)
+        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 848, Short.MAX_VALUE)
+        .addContainerGap(12, Short.MAX_VALUE))
     );
 
     layout.linkSize(new java.awt.Component[] {leftRightChangedButton, leftRightUnChangedButton, onlyLeftButton, onlyRightButton}, org.jdesktop.layout.GroupLayout.HORIZONTAL);
@@ -108,11 +133,16 @@ public class FolderDiffForm extends AbstractContentPanel
             .add(onlyLeftButton)
             .add(leftRightUnChangedButton))
           .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-            .add(collapseAllButton)
+            .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(deleteLeftButton)
+            .add(copyToRightButton)
+            .add(deleteRightButton)
+            .add(copyToLeftButton))
+          .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
             .add(expandAllButton)
-            .add(hierarchyComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+            .add(collapseAllButton)))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+        .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
         .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
@@ -120,6 +150,10 @@ public class FolderDiffForm extends AbstractContentPanel
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
   protected javax.swing.JButton collapseAllButton;
+  protected javax.swing.JButton copyToLeftButton;
+  protected javax.swing.JButton copyToRightButton;
+  protected javax.swing.JButton deleteLeftButton;
+  protected javax.swing.JButton deleteRightButton;
   protected javax.swing.JButton expandAllButton;
   protected org.jmeld.ui.swing.DiffLabel folder1Label;
   protected org.jmeld.ui.swing.DiffLabel folder2Label;

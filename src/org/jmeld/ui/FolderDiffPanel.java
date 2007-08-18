@@ -17,7 +17,6 @@
 package org.jmeld.ui;
 
 import org.jdesktop.swingx.decorator.*;
-import org.jdesktop.swingx.decorator.ComponentAdapter;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.treetable.*;
 import org.jmeld.settings.*;
@@ -66,6 +65,30 @@ public class FolderDiffPanel
 
     initActions();
 
+    //deleteLeftButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    //deleteLeftButton.setContentAreaFilled(false);
+    deleteLeftButton.setText(null);
+    deleteLeftButton.setIcon(ImageUtil.getSmallImageIcon("stock_delete"));
+    deleteLeftButton.setFocusable(false);
+
+    //copyToRightButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    //copyToRightButton.setContentAreaFilled(false);
+    copyToRightButton.setText(null);
+    copyToRightButton.setIcon(ImageUtil.getSmallImageIcon("stock_right"));
+    copyToRightButton.setFocusable(false);
+
+    //copyToLeftButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    //copyToLeftButton.setContentAreaFilled(false);
+    copyToLeftButton.setText(null);
+    copyToLeftButton.setIcon(ImageUtil.getSmallImageIcon("stock_left"));
+    copyToLeftButton.setFocusable(false);
+
+    //deleteRightButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    //deleteRightButton.setContentAreaFilled(false);
+    deleteRightButton.setText(null);
+    deleteRightButton.setIcon(ImageUtil.getSmallImageIcon("stock_delete"));
+    deleteRightButton.setFocusable(false);
+		
     onlyRightButton.setText(null);
     onlyRightButton.setIcon(ImageUtil.getImageIcon("jmeld_only-right"));
     onlyRightButton.setFocusable(false);
@@ -164,18 +187,22 @@ public class FolderDiffPanel
     collapseAllButton.setAction(action);
 
     action = actionHandler.createAction(this, "RemoveRight");
+    deleteRightButton.setAction(action);
     installKey("ctrl alt RIGHT", action);
     installKey("ctrl alt KP_RIGHT", action);
 
     action = actionHandler.createAction(this, "RemoveLeft");
+    deleteLeftButton.setAction(action);
     installKey("ctrl alt LEFT", action);
     installKey("ctrl alt KP_LEFT", action);
 
     action = actionHandler.createAction(this, "CopyRightToLeft");
+    copyToLeftButton.setAction(action);
     installKey("alt LEFT", action);
     installKey("alt KP_LEFT", action);
 
     action = actionHandler.createAction(this, "CopyLeftToRight");
+    copyToRightButton.setAction(action);
     installKey("alt RIGHT", action);
     installKey("alt KP_RIGHT", action);
 

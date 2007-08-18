@@ -15,35 +15,43 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="560" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="folder1Label" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="expandAllButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="collapseAllButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="hierarchyComboBox" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace pref="147" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="onlyLeftButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="leftRightChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="onlyRightButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="leftRightUnChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="folder2Label" min="-2" max="-2" attributes="1"/>
-                      </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="folder1Label" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="expandAllButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="collapseAllButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="hierarchyComboBox" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="deleteLeftButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="copyToRightButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="copyToLeftButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="deleteRightButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="279" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="onlyLeftButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="leftRightChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="onlyRightButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="leftRightUnChangedButton" linkSize="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="folder2Label" min="-2" max="-2" attributes="1"/>
+              </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+              <Component id="jScrollPane1" pref="848" max="32767" attributes="0"/>
+              <EmptySpace pref="12" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -64,13 +72,19 @@
                       <Component id="leftRightUnChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                      <Component id="collapseAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="expandAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="hierarchyComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="copyToRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deleteRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="copyToLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="expandAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="collapseAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="252" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="362" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -138,6 +152,38 @@
     <Component class="javax.swing.JButton" name="collapseAllButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Col"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="deleteLeftButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="DL"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[2, 2, 2, 2]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="copyToRightButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="CR"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[2, 2, 2, 2]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="copyToLeftButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="CL"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[2, 2, 2, 2]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="deleteRightButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="DR"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[2, 2, 2, 2]"/>
+        </Property>
       </Properties>
     </Component>
   </SubComponents>
