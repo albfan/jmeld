@@ -10,7 +10,8 @@ import javax.swing.*;
 public enum Settings
 {
   Editor("Editor", "stock_edit", new EditorSettingsPanel()),
-  Filter("Filter", "stock_standard-filter", new FilterSettingsPanel());
+  Filter("Filter", "stock_standard-filter", new FilterSettingsPanel()),
+  Folder("Folder", "stock_folder", new FolderSettingsPanel());
 
   // Instance variables:
   private String name;

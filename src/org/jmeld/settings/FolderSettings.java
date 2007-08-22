@@ -24,19 +24,19 @@ import javax.xml.bind.annotation.*;
 import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
-public class DirectorySettings
+public class FolderSettings
        extends AbstractConfigurationElement
 {
-  public enum DirectoryView
+  public enum FolderView
   {
     fileView("File view"),
-    directoryView("Directory view"),
+    directoryView("Folder view"),
     packageView("Package view");
 
     // instance variables:
     private String text;
 
-    private DirectoryView(String text)
+    private FolderView(String text)
     {
       this.text = text;
     }
@@ -49,34 +49,41 @@ public class DirectorySettings
 
   // Instance variables:
   @XmlElement
-  private DirectoryView            view = DirectoryView.packageView;
+  private FolderView            view = FolderView.packageView;
   @XmlElement
-  private boolean                  onlyLeft = true;
+  private boolean               onlyLeft = true;
   @XmlElement
-  private boolean                  leftRightChanged = true;
+  private boolean               leftRightChanged = true;
   @XmlElement
-  private boolean                  onlyRight = false;
+  private boolean               onlyRight = false;
   @XmlElement
-  private boolean                  leftRightUnChanged = false;
+  private boolean               leftRightUnChanged = false;
 
-  public DirectorySettings()
+  public FolderSettings()
   {
   }
 
-  public DirectoryView getView()
+  public FolderView getView()
   {
     return view;
   }
 
-  public void setView(DirectoryView view)
+  public void setView(FolderView view)
   {
-    this.view = view;
-    fireChanged();
+    if (this.view != view)
+    {
+      this.view = view;
+      fireChanged();
+    }
   }
 
   public void setOnlyLeft(boolean onlyLeft)
   {
-    this.onlyLeft = onlyLeft;
+    if (this.onlyLeft = onlyLeft)
+    {
+      this.onlyLeft = onlyLeft;
+      fireChanged();
+    }
   }
 
   public boolean getOnlyLeft()
@@ -86,7 +93,11 @@ public class DirectorySettings
 
   public void setLeftRightChanged(boolean leftRightChanged)
   {
-    this.leftRightChanged = leftRightChanged;
+    if (this.leftRightChanged != leftRightChanged)
+    {
+      this.leftRightChanged = leftRightChanged;
+      fireChanged();
+    }
   }
 
   public boolean getLeftRightChanged()
@@ -96,7 +107,11 @@ public class DirectorySettings
 
   public void setOnlyRight(boolean onlyRight)
   {
-    this.onlyRight = onlyRight;
+    if (this.onlyRight != onlyRight)
+    {
+      this.onlyRight = onlyRight;
+      fireChanged();
+    }
   }
 
   public boolean getOnlyRight()
@@ -106,7 +121,11 @@ public class DirectorySettings
 
   public void setLeftRightUnChanged(boolean leftRightUnChanged)
   {
-    this.leftRightUnChanged = leftRightUnChanged;
+    if (this.leftRightUnChanged != leftRightUnChanged)
+    {
+      this.leftRightUnChanged = leftRightUnChanged;
+      fireChanged();
+    }
   }
 
   public boolean getLeftRightUnChanged()
