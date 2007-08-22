@@ -79,7 +79,7 @@ public class FolderSettings
 
   public void setOnlyLeft(boolean onlyLeft)
   {
-    if (this.onlyLeft = onlyLeft)
+    if (this.onlyLeft != onlyLeft)
     {
       this.onlyLeft = onlyLeft;
       fireChanged();
