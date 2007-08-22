@@ -33,7 +33,11 @@ Release 1.2:
 -        L&F preference
 
 Release 2.0:
--        Implement directory diff.
+- [done] Implement directory diff.
+-        Directory diff actions:
+         Copy to left, Copy to right, Delete right, Delete left.
+         Rescan.
+         Undo/Redo for all these actions. Keys/Buttons for actions/
 -        Statusbar should have a bar which tells how far the diff is.
 -        Cancel the current diff if it takes too long.
 - [done] Exclude filters. (Create preferences and store with jaxb)
