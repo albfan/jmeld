@@ -507,7 +507,6 @@ public class JXTreeTable
       }
       if (!mightBeExpansionTrigger(e))
       {
-        System.out.println("!mightbe expansion trigger");
         return false;
       }
       boolean    changedExpansion = false;
