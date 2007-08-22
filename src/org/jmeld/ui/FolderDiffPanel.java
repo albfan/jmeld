@@ -59,7 +59,7 @@ public class FolderDiffPanel
     actionHandler = new ActionHandler();
 
     hierarchyComboBox.setModel(
-      new DefaultComboBoxModel(DirectorySettings.DirectoryView.values()));
+      new DefaultComboBoxModel(FolderSettings.FolderView.values()));
     hierarchyComboBox.setSelectedItem(getSettings().getView());
     hierarchyComboBox.setFocusable(false);
 
@@ -146,6 +146,7 @@ public class FolderDiffPanel
     folderTreeTable.setTerminateEditOnFocusLost(false);
     folderTreeTable.setRowSelectionAllowed(true);
     folderTreeTable.addMouseListener(getMouseListener());
+    folderTreeTable.expandAll();
 
     folderTreeTable.setHighlighters(
       new HighlighterPipeline(
@@ -285,7 +286,7 @@ public class FolderDiffPanel
     hierarchy = hierarchyComboBox.getSelectedItem();
 
     // Build the hierarchy:
-    if (hierarchy == DirectorySettings.DirectoryView.packageView)
+    if (hierarchy == FolderSettings.FolderView.packageView)
     {
       for (JMDiffNode node : nodes)
       {
@@ -305,14 +306,14 @@ public class FolderDiffPanel
         }
       }
     }
-    else if (hierarchy == DirectorySettings.DirectoryView.fileView)
+    else if (hierarchy == FolderSettings.FolderView.fileView)
     {
       for (JMDiffNode node : nodes)
       {
         rootNode.addChild(new UINode(node));
       }
     }
-    else if (hierarchy == DirectorySettings.DirectoryView.directoryView)
+    else if (hierarchy == FolderSettings.FolderView.directoryView)
     {
       for (JMDiffNode node : nodes)
       {
@@ -506,11 +507,12 @@ public class FolderDiffPanel
   {
     ((JMTreeTableModel) folderTreeTable.getTreeTableModel()).setRoot(
       getRootNode());
+    folderTreeTable.expandAll();
   }
 
-  private DirectorySettings getSettings()
+  private FolderSettings getSettings()
   {
-    return JMeldSettings.getInstance().getDirectory();
+    return JMeldSettings.getInstance().getFolder();
   }
 
   private JMDiffNode getSelectedDiffNode()
