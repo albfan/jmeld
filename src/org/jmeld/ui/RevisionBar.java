@@ -17,6 +17,7 @@
 package org.jmeld.ui;
 
 import org.jmeld.diff.*;
+import org.jmeld.settings.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 
@@ -79,12 +80,12 @@ public class RevisionBar
 
           numberOfLines = getNumberOfLines(revision);
           line = (y * numberOfLines) / r.height;
-          if(line > numberOfLines)
+          if (line > numberOfLines)
           {
             line = numberOfLines;
           }
 
-          if(line < 0)
+          if (line < 0)
           {
             line = 0;
           }

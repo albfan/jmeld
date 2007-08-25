@@ -17,6 +17,7 @@
 package org.jmeld.ui;
 
 import org.jmeld.diff.*;
+import org.jmeld.settings.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 
@@ -247,14 +248,14 @@ public class DiffScrollComponent
         toLine = original.getAnchor() + original.getSize();
         viewportRect = viewportFrom.getViewRect();
         offset = bdFrom.getOffsetForLine(fromLine);
-        if(offset < 0)
+        if (offset < 0)
         {
           continue;
         }
 
         fromRect = editorFrom.modelToView(offset);
         offset = bdFrom.getOffsetForLine(toLine);
-        if(offset < 0)
+        if (offset < 0)
         {
           continue;
         }
@@ -324,14 +325,14 @@ public class DiffScrollComponent
         toLine = revised.getAnchor() + revised.getSize();
         viewportRect = viewportTo.getViewRect();
         offset = bdTo.getOffsetForLine(fromLine);
-        if(offset < 0)
+        if (offset < 0)
         {
           continue;
         }
 
         fromRect = editorTo.modelToView(offset);
         offset = bdTo.getOffsetForLine(toLine);
-        if(offset < 0)
+        if (offset < 0)
         {
           continue;
         }
