@@ -16,6 +16,8 @@
  */
 package org.jmeld.diff;
 
+import org.jmeld.settings.*;
+
 import java.util.*;
 
 public class JMRevision
@@ -23,7 +25,9 @@ public class JMRevision
   private Object[]            org;
   private Object[]            rev;
   private LinkedList<JMDelta> deltas;
+  private LinkedList<JMDelta> filteredDeltas;
   private List<String>        regexes;
+  private boolean             filterChanged;
 
   public JMRevision(
     Object[] org,
@@ -43,9 +47,21 @@ public class JMRevision
     delta.setRevision(this);
   }
 
+  public void setFilterChanged()
+  {
+    filterChanged = true;
+  }
+
   public List<JMDelta> getDeltas()
   {
-    return deltas;
+    if (filteredDeltas == null || filterChanged)
+    {
+      filteredDeltas = filter(deltas);
+
+      filterChanged = false;
+    }
+
+    return filteredDeltas;
   }
 
   public int getOrgSize()
@@ -101,6 +117,28 @@ public class JMRevision
     regexes.add(regex);
   }
 
+  private LinkedList<JMDelta> filter(LinkedList<JMDelta> deltaList)
+  {
+    LinkedList<JMDelta> filteredDeltas;
+    boolean             ignoreWhitespace;
+
+    ignoreWhitespace = JMeldSettings.getInstance().getEditor()
+                                    .getIgnoreWhitespace();
+
+    filteredDeltas = new LinkedList<JMDelta>();
+    for (JMDelta delta : deltaList)
+    {
+      if (ignoreWhitespace && delta.isWhitespace())
+      {
+        continue;
+      }
+
+      filteredDeltas.add(delta);
+    }
+
+    return filteredDeltas;
+  }
+
   public void filter()
   {
     JMChunk   original;
@@ -117,13 +155,10 @@ public class JMRevision
       for (ListIterator<JMDelta> it = deltas.listIterator(0); it.hasNext();)
       {
         delta = it.next();
-
         original = delta.getOriginal();
         revised = delta.getRevised();
-
         originalSkip = null;
         revisedSkip = null;
-
         end = original.getAnchor() + original.getSize();
         for (int index = original.getAnchor(); index < end; index++)
         {
@@ -132,7 +167,6 @@ public class JMRevision
           {
             continue;
           }
-
           for (String regex : regexes)
           {
             if (o.toString().contains(regex))
@@ -141,12 +175,10 @@ public class JMRevision
               {
                 originalSkip = new boolean[original.getSize()];
               }
-
               originalSkip[index - original.getAnchor()] = true;
             }
           }
         }
-
         end = revised.getAnchor() + revised.getSize();
         for (int index = revised.getAnchor(); index < end; index++)
         {
@@ -155,7 +187,6 @@ public class JMRevision
           {
             continue;
           }
-
           for (String regex : regexes)
           {
             if (o.toString().contains(regex))
@@ -164,13 +195,12 @@ public class JMRevision
               {
                 revisedSkip = new boolean[revised.getSize()];
               }
-
               revisedSkip[index - revised.getAnchor()] = true;
             }
           }
         }
 
-        // There are some matches in the delta's that should be 
+        // There are some matches in the delta's that should be
         //   skipped.
         if (originalSkip != null || revisedSkip != null)
         {
@@ -178,7 +208,6 @@ public class JMRevision
           //   can skip whole chunks. So only if ALL the lines in
           //   the original AND in the revised match a regular
           //   expression the chunk is skipped. (Is this useful?)
-
           // I was planning on creating new chunks here (hence the
           //   linkedlist). But I beter wait a bit.
         }

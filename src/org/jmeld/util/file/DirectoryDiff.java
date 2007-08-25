@@ -71,6 +71,10 @@ public class DirectoryDiff
   {
     DirectoryScanner ds;
     JMDiffNode       node;
+    StopWatch        stopWatch;
+
+    stopWatch = new StopWatch();
+    stopWatch.start();
 
     StatusBar.start();
     StatusBar.setState("Start scanning directories...");
@@ -112,14 +116,13 @@ public class DirectoryDiff
       node.setBufferNodeRight(fileNode);
     }
 
-//System.out.println("start comparing " + nodes.size() + " nodes");
     for (JMDiffNode n : nodes.values())
     {
       n.compareContents();
     }
-System.out.println("end comparing " + nodes.size() + " nodes");
 
-    StatusBar.setState("Ready comparing directories");
+    StatusBar.setState("Ready comparing directories (took "
+      + (stopWatch.getElapsedTime() / 1000) + " seconds)");
     StatusBar.stop();
   }
 

@@ -17,6 +17,7 @@
 package org.jmeld.diff;
 
 import org.jmeld.util.*;
+import org.jmeld.util.file.*;
 
 import java.util.*;
 
@@ -34,6 +35,7 @@ public class JMDelta
   private char       type;
   private JMRevision revision;
   private JMRevision changeRevision;
+  private Boolean    isWhitespace;
 
   public JMDelta(
     JMChunk original,
@@ -83,6 +85,19 @@ public class JMDelta
     }
 
     return changeRevision;
+  }
+
+  public boolean isWhitespace()
+  {
+    if (isWhitespace == null)
+    {
+      isWhitespace = CompareUtil.contentEquals(
+          revision.getOriginalString(original).toCharArray(),
+          revision.getRevisedString(revised).toCharArray(),
+          true);
+    }
+
+    return isWhitespace.booleanValue();
   }
 
   private JMRevision createChangeRevision()
