@@ -23,6 +23,7 @@ import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.settings.*;
+import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.search.*;
@@ -30,6 +31,7 @@ import org.jmeld.ui.settings.SettingsPanel;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
+import org.jmeld.util.conf.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
 
@@ -49,6 +51,7 @@ import java.util.*;
 
 public class JMeldPanel
        extends JPanel
+       implements ConfigurationListenerIF
 {
   // class variables:
   // All actions:
@@ -106,6 +109,8 @@ public class JMeldPanel
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
     openComparison(leftName, rightName);
+
+    JMeldSettings.getInstance().addConfigurationListener(this);
   }
 
   public void openComparison(
@@ -452,10 +457,20 @@ public class JMeldPanel
     return panel.isRedoEnabled();
   }
 
+  public boolean isLeftEnabled()
+  {
+    return !JMeldSettings.getInstance().getEditor().getLeftsideReadonly();
+  }
+
   public void doLeft(ActionEvent ae)
   {
     getCurrentContentPanel().doLeft();
     repaint();
+  }
+
+  public boolean isRightEnabled()
+  {
+    return !JMeldSettings.getInstance().getEditor().getRightsideReadonly();
   }
 
   public void doRight(ActionEvent ae)
@@ -1034,5 +1049,10 @@ public class JMeldPanel
     tabbedPane.remove(component);
 
     return true;
+  }
+
+  public void configurationChanged()
+  {
+    checkActions();
   }
 }
