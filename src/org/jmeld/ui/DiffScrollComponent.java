@@ -20,6 +20,7 @@ import org.jmeld.diff.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.util.conf.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -32,13 +33,15 @@ import java.util.List;
 
 public class DiffScrollComponent
        extends JComponent
-       implements ChangeListener
+       implements ChangeListener, ConfigurationListenerIF
 {
   private BufferDiffPanel diffPanel;
   private int             fromPanelIndex;
   private int             toPanelIndex;
   private List<Command>   commands;
   private Object          antiAlias;
+  private boolean         leftsideReadonly;
+  private boolean         rightsideReadonly;
 
   public DiffScrollComponent(
     BufferDiffPanel diffPanel,
@@ -54,10 +57,30 @@ public class DiffScrollComponent
 
     addMouseListener(getMouseListener());
     addMouseWheelListener(getMouseWheelListener());
+
+    JMeldSettings.getInstance().addConfigurationListener(this);
+
+    initSettings();
+  }
+
+  private void initSettings()
+  {
+    EditorSettings settings;
+
+    settings = JMeldSettings.getInstance().getEditor();
+
+    leftsideReadonly = settings.getLeftsideReadonly();
+    rightsideReadonly = settings.getRightsideReadonly();
   }
 
   public void stateChanged(ChangeEvent event)
   {
+    repaint();
+  }
+
+  public void configurationChanged()
+  {
+    initSettings();
     repaint();
   }
 
@@ -406,54 +429,60 @@ public class DiffScrollComponent
         resetAntiAlias(g2);
         g2.drawLine(x1 - 15, y1, x1, y1);
 
-        // Draw merge revised->original command.
-        shape = new Polygon();
-        shape.addPoint(x0, y0);
-        shape.addPoint(x0 + 11, y0 - 4);
-        shape.addPoint(x0 + 11, y0 + 4);
-        setAntiAlias(g2);
-        g2.setColor(color);
-        g2.fill(shape);
-        g2.setColor(darkerColor);
-        g2.draw(shape);
-        resetAntiAlias(g2);
-        commands.add(
-          new DiffChangeCommand(shape, delta, toPanelIndex, fromPanelIndex));
-
-        // Draw delete original command
-        if (original.getSize() > 0)
+        // Draw merge right->left command.
+        if (!leftsideReadonly)
         {
-          g2.setColor(Color.red);
-          g2.drawLine(x0 + 3 - width, y0 + 3, x0 + 7 - width, y0 + 7);
-          g2.drawLine(x0 + 7 - width, y0 + 3, x0 + 3 - width, y0 + 7);
-          rect = new Rectangle(x0 + 2 - width, y0 + 2, 6, 6);
+          shape = new Polygon();
+          shape.addPoint(x0, y0);
+          shape.addPoint(x0 + 11, y0 - 4);
+          shape.addPoint(x0 + 11, y0 + 4);
+          setAntiAlias(g2);
+          g2.setColor(color);
+          g2.fill(shape);
+          g2.setColor(darkerColor);
+          g2.draw(shape);
+          resetAntiAlias(g2);
           commands.add(
-            new DiffDeleteCommand(rect, delta, fromPanelIndex, toPanelIndex));
+            new DiffChangeCommand(shape, delta, toPanelIndex, fromPanelIndex));
+
+          // Draw delete right command
+          if (original.getSize() > 0)
+          {
+            g2.setColor(Color.red);
+            g2.drawLine(x0 + 3 - width, y0 + 3, x0 + 7 - width, y0 + 7);
+            g2.drawLine(x0 + 7 - width, y0 + 3, x0 + 3 - width, y0 + 7);
+            rect = new Rectangle(x0 + 2 - width, y0 + 2, 6, 6);
+            commands.add(
+              new DiffDeleteCommand(rect, delta, fromPanelIndex, toPanelIndex));
+          }
         }
 
-        // Draw merge original->revised command.
-        shape = new Polygon();
-        shape.addPoint(x1, y1);
-        shape.addPoint(x1 - 11, y1 - 4);
-        shape.addPoint(x1 - 11, y1 + 4);
-        setAntiAlias(g2);
-        g2.setColor(color);
-        g2.fillPolygon(shape);
-        g2.setColor(darkerColor);
-        g2.drawPolygon(shape);
-        resetAntiAlias(g2);
-        commands.add(
-          new DiffChangeCommand(shape, delta, fromPanelIndex, toPanelIndex));
-
-        // Draw delete revision command
-        if (revised.getSize() > 0)
+        // Draw merge left->right command.
+        if (!rightsideReadonly)
         {
-          g2.setColor(Color.red);
-          g2.drawLine(x1 + 3, y1 + 3, x1 + 7, y1 + 7);
-          g2.drawLine(x1 + 7, y1 + 3, x1 + 3, y1 + 7);
-          rect = new Rectangle(x1 + 2, y1 + 2, 6, 6);
+          shape = new Polygon();
+          shape.addPoint(x1, y1);
+          shape.addPoint(x1 - 11, y1 - 4);
+          shape.addPoint(x1 - 11, y1 + 4);
+          setAntiAlias(g2);
+          g2.setColor(color);
+          g2.fillPolygon(shape);
+          g2.setColor(darkerColor);
+          g2.drawPolygon(shape);
+          resetAntiAlias(g2);
           commands.add(
-            new DiffDeleteCommand(rect, delta, toPanelIndex, fromPanelIndex));
+            new DiffChangeCommand(shape, delta, fromPanelIndex, toPanelIndex));
+
+          // Draw delete right command
+          if (revised.getSize() > 0)
+          {
+            g2.setColor(Color.red);
+            g2.drawLine(x1 + 3, y1 + 3, x1 + 7, y1 + 7);
+            g2.drawLine(x1 + 7, y1 + 3, x1 + 3, y1 + 7);
+            rect = new Rectangle(x1 + 2, y1 + 2, 6, 6);
+            commands.add(
+              new DiffDeleteCommand(rect, delta, toPanelIndex, fromPanelIndex));
+          }
         }
       }
     }

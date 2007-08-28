@@ -39,6 +39,8 @@ public class EditorSettingsPanel
     tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
     ignoreWhitespaceCheckBox.addActionListener(getIgnoreWhitespaceAction());
+    leftsideReadonlyCheckBox.addActionListener(getLeftsideReadonlyAction());
+    rightsideReadonlyCheckBox.addActionListener(getRightsideReadonlyAction());
     colorAddedButton.addActionListener(getColorAddedAction());
     colorDeletedButton.addActionListener(getColorDeletedAction());
     colorChangedButton.addActionListener(getColorChangedAction());
@@ -119,7 +121,7 @@ public class EditorSettingsPanel
         }
       };
   }
-  
+
   private ActionListener getIgnoreWhitespaceAction()
   {
     return new java.awt.event.ActionListener()
@@ -128,6 +130,30 @@ public class EditorSettingsPanel
         {
           getEditorSettings()
             .setIgnoreWhitespace(ignoreWhitespaceCheckBox.isSelected());
+        }
+      };
+  }
+
+  private ActionListener getLeftsideReadonlyAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setLeftsideReadonly(leftsideReadonlyCheckBox.isSelected());
+        }
+      };
+  }
+
+  private ActionListener getRightsideReadonlyAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setRightsideReadonly(rightsideReadonlyCheckBox.isSelected());
         }
       };
   }
@@ -186,6 +212,8 @@ public class EditorSettingsPanel
         20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
     ignoreWhitespaceCheckBox.setSelected(settings.getIgnoreWhitespace());
+    leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
+    rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     tabSizeSpinner.setValue(settings.getTabSize());
   }
 

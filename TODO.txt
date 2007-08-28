@@ -34,10 +34,11 @@ Release 1.2:
 
 Release 2.0:
 - [done] Implement directory diff.
+- [done] Right/Left side readonly (preference)
 -        Directory diff actions:
          Copy to left, Copy to right, Delete right, Delete left.
-         Rescan.
-         Undo/Redo for all these actions. Keys/Buttons for actions/
+         Rescan.  Keys/Buttons for actions.
+-        Undo/Redo for all above actions actions.
 -        Statusbar should have a bar which tells how far the diff is.
 -        Cancel the current diff if it takes too long.
 - [done] Exclude filters. (Create preferences and store with jaxb)
@@ -45,7 +46,7 @@ Release 2.0:
 Release 2.1:
 -        Change Revision when editing instead of creating a New revision 
          every time. [PERFORMANCE]
--        Ignore whitespace in diff.
+- [done] Ignore whitespace in diff.
 -        Exclude patterns in diff.
 
 Release 3.0:

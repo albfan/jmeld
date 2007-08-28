@@ -28,11 +28,15 @@ public class EditorSettings
        extends AbstractConfigurationElement
 {
   @XmlElement
-  private boolean              showLineNumbers;
+  private boolean                 showLineNumbers;
   @XmlElement
-  private int                  tabSize = 4;
+  private int                     tabSize = 4;
   @XmlElement
-  private boolean              ignoreWhitespace;
+  private boolean                 ignoreWhitespace;
+  @XmlElement
+  private boolean                 leftsideReadonly;
+  @XmlElement
+  private boolean                 rightsideReadonly;
   @XmlElement
   private ColorSetting            addedColor;
   @XmlElement
@@ -74,6 +78,28 @@ public class EditorSettings
   public void setIgnoreWhitespace(boolean ignoreWhitespace)
   {
     this.ignoreWhitespace = ignoreWhitespace;
+    fireChanged();
+  }
+
+  public boolean getLeftsideReadonly()
+  {
+    return leftsideReadonly;
+  }
+
+  public void setLeftsideReadonly(boolean leftsideReadonly)
+  {
+    this.leftsideReadonly = leftsideReadonly;
+    fireChanged();
+  }
+
+  public boolean getRightsideReadonly()
+  {
+    return rightsideReadonly;
+  }
+
+  public void setRightsideReadonly(boolean rightsideReadonly)
+  {
+    this.rightsideReadonly = rightsideReadonly;
     fireChanged();
   }
 
@@ -120,7 +146,7 @@ public class EditorSettings
 
   private Color getColor(
     ColorSetting cc,
-    Color     defaultColor)
+    Color        defaultColor)
   {
     Color c;
 

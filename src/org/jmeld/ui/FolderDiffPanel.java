@@ -25,6 +25,7 @@ import org.jmeld.ui.swing.*;
 import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.util.conf.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
 
@@ -39,6 +40,7 @@ import java.util.List;
 
 public class FolderDiffPanel
        extends FolderDiffForm
+       implements ConfigurationListenerIF
 {
   private JMeldPanel    mainPanel;
   private FolderDiff    diff;
@@ -60,57 +62,34 @@ public class FolderDiffPanel
 
     hierarchyComboBox.setModel(
       new DefaultComboBoxModel(FolderSettings.FolderView.values()));
-    hierarchyComboBox.setSelectedItem(getSettings().getView());
+    hierarchyComboBox.setSelectedItem(getFolderSettings().getView());
     hierarchyComboBox.setFocusable(false);
 
     initActions();
 
-    //deleteLeftButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    //deleteLeftButton.setContentAreaFilled(false);
-    deleteLeftButton.setText(null);
-    deleteLeftButton.setIcon(ImageUtil.getSmallImageIcon("stock_delete"));
-    deleteLeftButton.setFocusable(false);
-
-    //copyToRightButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    //copyToRightButton.setContentAreaFilled(false);
-    copyToRightButton.setText(null);
-    copyToRightButton.setIcon(ImageUtil.getSmallImageIcon("stock_right"));
-    copyToRightButton.setFocusable(false);
-
-    //copyToLeftButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    //copyToLeftButton.setContentAreaFilled(false);
-    copyToLeftButton.setText(null);
-    copyToLeftButton.setIcon(ImageUtil.getSmallImageIcon("stock_left"));
-    copyToLeftButton.setFocusable(false);
-
-    //deleteRightButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-    //deleteRightButton.setContentAreaFilled(false);
-    deleteRightButton.setText(null);
-    deleteRightButton.setIcon(ImageUtil.getSmallImageIcon("stock_delete"));
-    deleteRightButton.setFocusable(false);
-		
     onlyRightButton.setText(null);
     onlyRightButton.setIcon(ImageUtil.getImageIcon("jmeld_only-right"));
     onlyRightButton.setFocusable(false);
-    onlyRightButton.setSelected(getSettings().getOnlyRight());
+    onlyRightButton.setSelected(getFolderSettings().getOnlyRight());
 
     leftRightChangedButton.setText(null);
     leftRightChangedButton.setIcon(
       ImageUtil.getImageIcon("jmeld_left-right-changed"));
     leftRightChangedButton.setFocusable(false);
-    leftRightChangedButton.setSelected(getSettings().getLeftRightChanged());
+    leftRightChangedButton.setSelected(
+      getFolderSettings().getLeftRightChanged());
 
     onlyLeftButton.setText(null);
     onlyLeftButton.setIcon(ImageUtil.getImageIcon("jmeld_only-left"));
     onlyLeftButton.setFocusable(false);
-    onlyLeftButton.setSelected(getSettings().getOnlyLeft());
+    onlyLeftButton.setSelected(getFolderSettings().getOnlyLeft());
 
     leftRightUnChangedButton.setText(null);
     leftRightUnChangedButton.setIcon(
       ImageUtil.getImageIcon("jmeld_left-right-unchanged"));
     leftRightUnChangedButton.setFocusable(false);
     leftRightUnChangedButton.setSelected(
-      getSettings().getLeftRightUnChanged());
+      getFolderSettings().getLeftRightUnChanged());
 
     expandAllButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
     expandAllButton.setContentAreaFilled(false);
@@ -141,7 +120,7 @@ public class FolderDiffPanel
 
     folderTreeTable.setTreeTableModel(
       new FolderDiffTreeTableModel(getRootNode()));
-    folderTreeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    folderTreeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     folderTreeTable.setToggleClickCount(1);
     folderTreeTable.setTerminateEditOnFocusLost(false);
     folderTreeTable.setRowSelectionAllowed(true);
@@ -157,6 +136,8 @@ public class FolderDiffPanel
             Colors.getTableRowHighLighterColor(),
             Color.black),
         }));
+
+    JMeldSettings.getInstance().addConfigurationListener(this);
   }
 
   private void initActions()
@@ -188,22 +169,38 @@ public class FolderDiffPanel
     collapseAllButton.setAction(action);
 
     action = actionHandler.createAction(this, "RemoveRight");
+    action.setIcon("stock_delete");
     deleteRightButton.setAction(action);
+    deleteRightButton.setText(null);
+    deleteRightButton.setFocusable(false);
+    deleteRightButton.setDisabledIcon(action.getTransparentSmallImageIcon());
     installKey("ctrl alt RIGHT", action);
     installKey("ctrl alt KP_RIGHT", action);
 
     action = actionHandler.createAction(this, "RemoveLeft");
+    action.setIcon("stock_delete");
     deleteLeftButton.setAction(action);
+    deleteLeftButton.setText(null);
+    deleteLeftButton.setFocusable(false);
+    deleteLeftButton.setDisabledIcon(action.getTransparentSmallImageIcon());
     installKey("ctrl alt LEFT", action);
     installKey("ctrl alt KP_LEFT", action);
 
     action = actionHandler.createAction(this, "CopyRightToLeft");
+    action.setIcon("stock_left");
     copyToLeftButton.setAction(action);
+    copyToLeftButton.setText(null);
+    copyToLeftButton.setFocusable(false);
+    copyToLeftButton.setDisabledIcon(action.getTransparentSmallImageIcon());
     installKey("alt LEFT", action);
     installKey("alt KP_LEFT", action);
 
     action = actionHandler.createAction(this, "CopyLeftToRight");
+    action.setIcon("stock_right");
     copyToRightButton.setAction(action);
+    copyToRightButton.setText(null);
+    copyToRightButton.setFocusable(false);
+    copyToRightButton.setDisabledIcon(action.getTransparentSmallImageIcon());
     installKey("alt RIGHT", action);
     installKey("alt KP_RIGHT", action);
 
@@ -446,6 +443,11 @@ public class FolderDiffPanel
     folderTreeTable.collapseAll();
   }
 
+  public boolean isCopyRightToLeftEnabled()
+  {
+    return !getEditorSettings().getLeftsideReadonly();
+  }
+
   public void doCopyRightToLeft(ActionEvent ae)
   {
     JMDiffNode diffNode;
@@ -458,6 +460,11 @@ public class FolderDiffPanel
 
     diffNode.copyRightToLeft();
     repaint();
+  }
+
+  public boolean isCopyLeftToRightEnabled()
+  {
+    return !getEditorSettings().getRightsideReadonly();
   }
 
   public void doCopyLeftToRight(ActionEvent ae)
@@ -474,6 +481,10 @@ public class FolderDiffPanel
     repaint();
   }
 
+  public boolean isRemoveRightEnabled()
+  {
+    return !getEditorSettings().getRightsideReadonly();
+  }
 
   public void doRemoveRight(ActionEvent ae)
   {
@@ -487,6 +498,11 @@ public class FolderDiffPanel
 
     diffNode.removeRight();
     repaint();
+  }
+
+  public boolean isRemoveLeftEnabled()
+  {
+    return !getEditorSettings().getLeftsideReadonly();
   }
 
   public void doRemoveLeft(ActionEvent ae)
@@ -510,7 +526,12 @@ public class FolderDiffPanel
     folderTreeTable.expandAll();
   }
 
-  private FolderSettings getSettings()
+  private EditorSettings getEditorSettings()
+  {
+    return JMeldSettings.getInstance().getEditor();
+  }
+
+  private FolderSettings getFolderSettings()
   {
     return JMeldSettings.getInstance().getFolder();
   }
@@ -585,7 +606,7 @@ public class FolderDiffPanel
 
             // Hack to make it possible to select with the MIDDLE 
             //   button of a mouse. 
-            if(folderTreeTable.getSelectedRow() != row)
+            if (folderTreeTable.getSelectedRow() != row)
             {
               folderTreeTable.setRowSelectionInterval(row, row);
             }
@@ -595,5 +616,10 @@ public class FolderDiffPanel
           }
         }
       };
+  }
+
+  public void configurationChanged()
+  {
+    actionHandler.checkActions();
   }
 }

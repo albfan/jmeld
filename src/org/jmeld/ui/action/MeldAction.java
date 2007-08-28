@@ -95,6 +95,11 @@ public class MeldAction
       ImageUtil.getImageIcon(iconName));
   }
 
+  public ImageIcon getTransparentSmallImageIcon()
+  {
+    return ImageUtil.createTransparentIcon((ImageIcon) getValue(SMALL_ICON));
+  }
+
   public void actionPerformed(ActionEvent ae)
   {
     if (object == null || actionMethod == null)

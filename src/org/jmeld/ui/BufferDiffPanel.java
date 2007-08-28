@@ -218,8 +218,8 @@ public class BufferDiffPanel
 
     setLayout(layout);
 
-    filePanels[LEFT] = new FilePanel(this, BufferDocumentIF.ORIGINAL);
-    filePanels[RIGHT] = new FilePanel(this, BufferDocumentIF.REVISED);
+    filePanels[LEFT] = new FilePanel(this, BufferDocumentIF.ORIGINAL, LEFT);
+    filePanels[RIGHT] = new FilePanel(this, BufferDocumentIF.REVISED, RIGHT);
 
     // panel for file1
     add(

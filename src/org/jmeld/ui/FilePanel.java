@@ -47,6 +47,7 @@ public class FilePanel
   // Instance variables:
   private BufferDiffPanel  diffPanel;
   private String           name;
+  private int              position;
   private DiffLabel        fileLabel;
   private JButton          browseButton;
   private JComboBox        fileBox;
@@ -61,10 +62,12 @@ public class FilePanel
 
   FilePanel(
     BufferDiffPanel diffPanel,
-    String          name)
+    String          name,
+    int             position)
   {
     this.diffPanel = diffPanel;
     this.name = name;
+    this.position = position;
 
     searchHits = new SearchHits();
 
@@ -718,11 +721,24 @@ public class FilePanel
   private void initConfiguration()
   {
     JMeldSettings c;
+    boolean readonly;
 
     c = getConfiguration();
 
     setShowLineNumbers(c.getEditor().getShowLineNumbers());
     getEditor().setTabSize(c.getEditor().getTabSize());
+
+    readonly = false;
+    if (position == BufferDiffPanel.LEFT)
+    {
+      readonly = c.getEditor().getLeftsideReadonly();
+    }
+    else if (position == BufferDiffPanel.RIGHT)
+    {
+      readonly = c.getEditor().getRightsideReadonly();
+    }
+
+    editor.setEditable(!readonly);
   }
 
   private JMeldSettings getConfiguration()
