@@ -205,6 +205,11 @@ public class DiffScrollComponent
     viewportFrom = fromPanel.getScrollPane().getViewport();
     editorFrom = fromPanel.getEditor();
     bdFrom = fromPanel.getBufferDocument();
+    if(bdFrom == null)
+    {
+      return;
+    }
+
     r = viewportFrom.getViewRect();
 
     // Calculate firstLine shown of the first document. 
@@ -223,6 +228,11 @@ public class DiffScrollComponent
     viewportTo = toPanel.getScrollPane().getViewport();
     editorTo = toPanel.getEditor();
     bdTo = toPanel.getBufferDocument();
+    if(bdTo == null)
+    {
+      return;
+    }
+
     r = viewportTo.getViewRect();
 
     // Calculate firstLine shown of the second document. 

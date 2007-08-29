@@ -70,6 +70,16 @@ public class RevisionBar
           JMChunk          original;
 
           r = getDrawableRectangle();
+          if(r == null)
+          {
+            return;
+          }
+
+          if(r.height <= 0)
+          {
+            return;
+          }
+
           y = me.getY() - r.y;
 
           revision = diffPanel.getCurrentRevision();

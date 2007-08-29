@@ -219,10 +219,13 @@ public class FilePanel
       bufferDocument = bd;
 
       document = bufferDocument.getDocument();
-      editor.setDocument(document);
-      editor.setTabSize(getConfiguration().getEditor().getTabSize());
-      bufferDocument.addChangeListener(this);
-      document.addUndoableEditListener(diffPanel.getUndoHandler());
+      if (document != null)
+      {
+        editor.setDocument(document);
+        editor.setTabSize(getConfiguration().getEditor().getTabSize());
+        bufferDocument.addChangeListener(this);
+        document.addUndoableEditListener(diffPanel.getUndoHandler());
+      }
 
       fileName = bufferDocument.getName();
       fileBox.addItem(fileName);
@@ -721,7 +724,7 @@ public class FilePanel
   private void initConfiguration()
   {
     JMeldSettings c;
-    boolean readonly;
+    boolean       readonly;
 
     c = getConfiguration();
 

@@ -222,6 +222,10 @@ public class ScrollSynchronizer
 
     offset = editor.viewToModel(p);
     bd = fp.getBufferDocument();
+    if(bd == null)
+    {
+      return -1;
+    }
     line = bd.getLineForOffset(offset);
 
     return line;
@@ -247,6 +251,11 @@ public class ScrollSynchronizer
     fp2 = fp == filePanelLeft ? filePanelRight : filePanelLeft;
 
     bd = fp.getBufferDocument();
+    if(bd == null)
+    {
+      return;
+    }
+
     offset = bd.getOffsetForLine(line);
     if (offset < 0)
     {

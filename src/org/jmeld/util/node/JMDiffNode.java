@@ -148,14 +148,19 @@ public class JMDiffNode
     shortName = name.substring(index + 1);
   }
 
-  public void copyRightToLeft()
+  public void copyToLeft()
   {
     nodeLeft = null;
     compareContents();
   }
 
-  public void copyLeftToRight()
+  public void copyToRight()
   {
+    if (nodeLeft == null)
+    {
+      return;
+    }
+
     nodeLeft = null;
     compareContents();
   }
@@ -208,25 +213,33 @@ public class JMDiffNode
     BufferDocumentIF documentLeft;
     BufferDocumentIF documentRight;
 
-    documentLeft = nodeLeft.getDocument();
-    documentRight = nodeRight.getDocument();
-
     StatusBar.start();
-    StatusBar.setState(
-      "Reading left : %s",
-      nodeLeft.getName());
-    documentLeft.read();
 
-    StatusBar.setState(
-      "Reading right: %s",
-      nodeRight.getName());
-    documentRight.read();
+    documentLeft = null;
+    documentRight = null;
+
+    if(nodeLeft != null)
+    {
+    documentLeft = nodeLeft.getDocument();
+      StatusBar.setState(
+        "Reading left : %s",
+        nodeLeft.getName());
+      documentLeft.read();
+    }
+
+    if(nodeRight != null)
+    {
+    documentRight = nodeRight.getDocument();
+      StatusBar.setState(
+        "Reading right: %s",
+        nodeRight.getName());
+      documentRight.read();
+    }
 
     StatusBar.setState("Calculating differences");
     diff = new JMDiff();
-    revision = diff.diff(
-        documentLeft.getLines(),
-        documentRight.getLines());
+    revision = diff.diff(documentLeft == null ? null : documentLeft.getLines(),
+        documentRight == null ? null : documentRight.getLines());
     StatusBar.setState("Ready calculating differences");
     StatusBar.stop();
   }

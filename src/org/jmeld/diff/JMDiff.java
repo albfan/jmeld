@@ -45,6 +45,14 @@ public class JMDiff
     List<String> b)
     throws JMeldException
   {
+    if (a == null)
+    {
+      a = Collections.emptyList();
+    }
+    if (b == null)
+    {
+      b = Collections.emptyList();
+    }
     return diff(
       a.toArray(),
       b.toArray());
@@ -56,6 +64,15 @@ public class JMDiff
     throws JMeldException
   {
     JMRevision revision;
+
+    if (a == null)
+    {
+      a = new Object[] {  };
+    }
+    if (b == null)
+    {
+      b = new Object[] {  };
+    }
 
     for (JMDiffAlgorithmIF algorithm : algorithms)
     {

@@ -69,9 +69,15 @@ public class BufferDiffPanel
 
   public void setDiffNode(JMDiffNode diffNode)
   {
+    BufferNode bnLeft;
+    BufferNode bnRight;
+
+    bnLeft = diffNode.getBufferNodeLeft();
+    bnRight = diffNode.getBufferNodeRight();
+
     setBufferDocuments(
-      diffNode.getBufferNodeLeft().getDocument(),
-      diffNode.getBufferNodeRight().getDocument(),
+      bnLeft == null ? null : bnLeft.getDocument(),
+      bnRight == null ? null : bnRight.getDocument(),
       diffNode.getDiff(),
       diffNode.getRevision());
   }
@@ -890,6 +896,11 @@ public class BufferDiffPanel
     fp = getFilePanel(0);
 
     bd = fp.getBufferDocument();
+    if(bd == null)
+    {
+      return;
+    }
+
     offset = bd.getOffsetForLine(line);
     viewport = fp.getScrollPane().getViewport();
     editor = fp.getEditor();
