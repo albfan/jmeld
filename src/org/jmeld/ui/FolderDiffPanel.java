@@ -186,7 +186,7 @@ public class FolderDiffPanel
     installKey("ctrl alt LEFT", action);
     installKey("ctrl alt KP_LEFT", action);
 
-    action = actionHandler.createAction(this, "CopyRightToLeft");
+    action = actionHandler.createAction(this, "CopyToLeft");
     action.setIcon("stock_left");
     copyToLeftButton.setAction(action);
     copyToLeftButton.setText(null);
@@ -195,7 +195,7 @@ public class FolderDiffPanel
     installKey("alt LEFT", action);
     installKey("alt KP_LEFT", action);
 
-    action = actionHandler.createAction(this, "CopyLeftToRight");
+    action = actionHandler.createAction(this, "CopyToRight");
     action.setIcon("stock_right");
     copyToRightButton.setAction(action);
     copyToRightButton.setText(null);
@@ -443,12 +443,12 @@ public class FolderDiffPanel
     folderTreeTable.collapseAll();
   }
 
-  public boolean isCopyRightToLeftEnabled()
+  public boolean isCopyToLeftEnabled()
   {
     return !getEditorSettings().getLeftsideReadonly();
   }
 
-  public void doCopyRightToLeft(ActionEvent ae)
+  public void doCopyToLeft(ActionEvent ae)
   {
     JMDiffNode diffNode;
 
@@ -458,16 +458,16 @@ public class FolderDiffPanel
       return;
     }
 
-    diffNode.copyRightToLeft();
+    diffNode.copyToLeft();
     repaint();
   }
 
-  public boolean isCopyLeftToRightEnabled()
+  public boolean isCopyToRightEnabled()
   {
     return !getEditorSettings().getRightsideReadonly();
   }
 
-  public void doCopyLeftToRight(ActionEvent ae)
+  public void doCopyToRight(ActionEvent ae)
   {
     JMDiffNode diffNode;
 
@@ -477,7 +477,7 @@ public class FolderDiffPanel
       return;
     }
 
-    diffNode.copyLeftToRight();
+    diffNode.copyToRight();
     repaint();
   }
 
