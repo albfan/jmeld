@@ -44,6 +44,9 @@ Release 2.0:
 
 Release 2.1:
 -        Use newest swingx library (JTableTree has changed significantly)
+-        Click in JTreeTable is forgotten if it is outside length of
+         node-label
+-        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
 -        Create manual
 -        L&F preference
 -        Support drag and drop.
