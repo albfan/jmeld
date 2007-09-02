@@ -168,6 +168,13 @@ public class FolderDiffPanel
     action = actionHandler.createAction(this, "CollapseAll");
     collapseAllButton.setAction(action);
 
+    action = actionHandler.createAction(this, "Refresh");
+    action.setIcon("stock_refresh");
+    refreshButton.setAction(action);
+    refreshButton.setText(null);
+    refreshButton.setFocusable(false);
+    refreshButton.setDisabledIcon(action.getTransparentSmallImageIcon());
+
     action = actionHandler.createAction(this, "RemoveRight");
     action.setIcon("stock_delete");
     deleteRightButton.setAction(action);
@@ -416,15 +423,12 @@ public class FolderDiffPanel
     ActionEvent ae,
     boolean     background)
   {
-    JMDiffNode diffNode;
-
-    diffNode = getSelectedDiffNode();
-    if (diffNode == null)
+    for (UINode uiNode : getSelectedUINodes())
     {
-      return;
+      mainPanel.openFileComparison(
+        uiNode.getDiffNode(),
+        background);
     }
-
-    mainPanel.openFileComparison(diffNode, background);
   }
 
   @Override
@@ -450,15 +454,10 @@ public class FolderDiffPanel
 
   public void doCopyToLeft(ActionEvent ae)
   {
-    JMDiffNode diffNode;
-
-    diffNode = getSelectedDiffNode();
-    if (diffNode == null)
+    for (UINode uiNode : getSelectedUINodes())
     {
-      return;
+      uiNode.getDiffNode().copyToLeft();
     }
-
-    diffNode.copyToLeft();
     repaint();
   }
 
@@ -469,16 +468,38 @@ public class FolderDiffPanel
 
   public void doCopyToRight(ActionEvent ae)
   {
-    JMDiffNode diffNode;
-
-    diffNode = getSelectedDiffNode();
-    if (diffNode == null)
+    for (UINode uiNode : getSelectedUINodes())
     {
-      return;
+      uiNode.getDiffNode().copyToRight();
+    }
+    repaint();
+  }
+
+  public void doRefresh(ActionEvent ae)
+  {
+    new RefreshAction().execute();
+  }
+
+  class RefreshAction
+         extends SwingWorker<String, Object>
+  {
+    RefreshAction()
+    {
     }
 
-    diffNode.copyToRight();
-    repaint();
+    public String doInBackground()
+    {
+      diff.refresh();
+
+      return null;
+    }
+
+    protected void done()
+    {
+      folderTreeTable.setTreeTableModel(
+        new FolderDiffTreeTableModel(getRootNode()));
+      folderTreeTable.expandAll();
+    }
   }
 
   public boolean isRemoveRightEnabled()
@@ -488,15 +509,10 @@ public class FolderDiffPanel
 
   public void doRemoveRight(ActionEvent ae)
   {
-    JMDiffNode diffNode;
-
-    diffNode = getSelectedDiffNode();
-    if (diffNode == null)
+    for (UINode uiNode : getSelectedUINodes())
     {
-      return;
+      uiNode.getDiffNode().removeRight();
     }
-
-    diffNode.removeRight();
     repaint();
   }
 
@@ -507,15 +523,10 @@ public class FolderDiffPanel
 
   public void doRemoveLeft(ActionEvent ae)
   {
-    JMDiffNode diffNode;
-
-    diffNode = getSelectedDiffNode();
-    if (diffNode == null)
+    for (UINode uiNode : getSelectedUINodes())
     {
-      return;
+      uiNode.getDiffNode().removeLeft();
     }
-
-    diffNode.removeLeft();
     repaint();
   }
 
@@ -561,6 +572,49 @@ public class FolderDiffPanel
     }
 
     return uiNode.getDiffNode();
+  }
+
+  private Set<UINode> getSelectedUINodes()
+  {
+    Set<UINode> result;
+    TreePath    path;
+    UINode      uiNode;
+
+    result = new HashSet<UINode>();
+    for (int row : folderTreeTable.getSelectedRows())
+    {
+      path = folderTreeTable.getPathForRow(row);
+      if (path == null)
+      {
+        continue;
+      }
+
+      uiNode = (UINode) path.getLastPathComponent();
+      if (uiNode == null)
+      {
+        continue;
+      }
+
+      buildResult(result, uiNode);
+    }
+
+    return result;
+  }
+
+  private void buildResult(
+    Set<UINode> result,
+    UINode      uiNode)
+  {
+    if (uiNode.isLeaf() && uiNode.getDiffNode() != null)
+    {
+      result.add(uiNode);
+      return;
+    }
+
+    for (UINode node : uiNode.getChildren())
+    {
+      buildResult(result, node);
+    }
   }
 
   private MouseListener getMouseListener()
