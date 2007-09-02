@@ -38,8 +38,11 @@ public class DirectoryDiff
   public DirectoryDiff(
     File   leftDirectory,
     File   rightDirectory,
-    Filter filter)
+    Filter filter,
+    Mode   mode)
   {
+    super(mode);
+
     this.leftDirectory = leftDirectory;
     this.rightDirectory = rightDirectory;
     this.filter = filter;
@@ -67,17 +70,19 @@ public class DirectoryDiff
     return nodes.values();
   }
 
-  public void diff(Mode mode)
+  public void diff()
   {
     DirectoryScanner ds;
     JMDiffNode       node;
     StopWatch        stopWatch;
+    int              numberOfNodes;
+    int              currentNumber;
 
     stopWatch = new StopWatch();
     stopWatch.start();
 
-    StatusBar.start();
-    StatusBar.setState("Start scanning directories...");
+    StatusBar.getInstance().start();
+    StatusBar.getInstance().setState("Start scanning directories...");
 
     rootNode = new JMDiffNode("<root>", false);
     nodes = new HashMap<String, JMDiffNode>();
@@ -116,14 +121,19 @@ public class DirectoryDiff
       node.setBufferNodeRight(fileNode);
     }
 
+    StatusBar.getInstance().setState("Comparing nodes...");
+    numberOfNodes = nodes.size();
+    currentNumber = 0;
     for (JMDiffNode n : nodes.values())
     {
       n.compareContents();
+
+      StatusBar.getInstance().setProgress(++currentNumber, numberOfNodes);
     }
 
-    StatusBar.setState("Ready comparing directories (took "
+    StatusBar.getInstance().setState("Ready comparing directories (took "
       + (stopWatch.getElapsedTime() / 1000) + " seconds)");
-    StatusBar.stop();
+    StatusBar.getInstance().stop();
   }
 
   private JMDiffNode addNode(String name)
@@ -179,10 +189,11 @@ public class DirectoryDiff
     diff = new DirectoryDiff(
         new File(args[0]),
         new File(args[1]),
-        JMeldSettings.getInstance().getFilter().getFilter("default"));
+        JMeldSettings.getInstance().getFilter().getFilter("default"),
+        DirectoryDiff.Mode.TWO_WAY);
     stopWatch = new StopWatch();
     stopWatch.start();
-    diff.diff(DirectoryDiff.Mode.TWO_WAY);
+    diff.diff();
     System.out.println("diff took " + stopWatch.getElapsedTime() + " msec.");
     diff.print();
   }

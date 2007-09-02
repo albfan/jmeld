@@ -588,13 +588,13 @@ public class JMeldPanel
 
     if (mergeMode)
     {
-      StatusBar.setNotification(
+      StatusBar.getInstance().setNotification(
         MERGEMODE_ACTION,
         ImageUtil.getSmallImageIcon("jmeld_mergemode-on"));
     }
     else
     {
-      StatusBar.removeNotification(MERGEMODE_ACTION);
+      StatusBar.getInstance().removeNotification(MERGEMODE_ACTION);
     }
   }
 
@@ -909,8 +909,9 @@ public class JMeldPanel
         + ") is not a directory";
       }
 
-      diff = new DirectoryDiff(leftFile, rightFile, filter);
-      diff.diff(DirectoryDiff.Mode.TWO_WAY);
+      diff = new DirectoryDiff(leftFile, rightFile, filter,
+          DirectoryDiff.Mode.TWO_WAY);
+      diff.diff();
 
       return null;
     }

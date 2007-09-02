@@ -31,9 +31,11 @@ public abstract class FolderDiff
   private String leftFolderShortName;
   private String rightFolderName;
   private String leftFolderName;
+  private Mode   mode;
 
-  public FolderDiff()
+  public FolderDiff(Mode mode)
   {
+    this.mode = mode;
   }
 
   protected void setLeftFolderShortName(String leftFolderShortName)
@@ -80,5 +82,10 @@ public abstract class FolderDiff
 
   public abstract Collection<JMDiffNode> getNodes();
 
-  public abstract void diff(Mode mode);
+  public void refresh()
+  {
+    diff();
+  }
+
+  public abstract void diff();
 }
