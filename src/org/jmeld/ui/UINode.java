@@ -71,6 +71,12 @@ public class UINode
     this.parent = parent;
   }
 
+  public List<UINode> getChildren()
+  {
+    checkSort();
+    return children;
+  }
+
   public Enumeration<UINode> children()
   {
     checkSort();
