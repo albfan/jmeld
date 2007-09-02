@@ -20,6 +20,7 @@ import org.apache.jmeld.tools.ant.taskdefs.condition.*;
 import org.apache.jmeld.tools.ant.types.*;
 import org.apache.jmeld.tools.ant.types.selectors.*;
 import org.apache.jmeld.tools.ant.util.*;
+import org.jmeld.ui.*;
 import org.jmeld.util.node.*;
 
 import java.io.*;
@@ -1190,16 +1191,16 @@ public class DirectoryScanner
       return true;
     }
 
-      for (String includePattern : includePatterns)
+    for (String includePattern : includePatterns)
+    {
+      if (matchPath(
+          includePattern,
+          name,
+          isCaseSensitive()))
       {
-        if (matchPath(
-            includePattern,
-            name,
-            isCaseSensitive()))
-        {
-          return true;
-        }
+        return true;
       }
+    }
     return false;
   }
 
@@ -1751,7 +1752,7 @@ public class DirectoryScanner
    * @since Ant 1.6.3
    */
   private List<String> fillNonPatternSet(
-    List<String>  set,
+    List<String> set,
     List<String> patterns)
   {
     List<String> al;
@@ -1778,7 +1779,7 @@ public class DirectoryScanner
   {
     if (showStateOn)
     {
-      org.jmeld.ui.StatusBar.setState(format, args);
+      StatusBar.getInstance().setState(format, args);
     }
   }
 
