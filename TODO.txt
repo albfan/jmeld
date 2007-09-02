@@ -36,14 +36,14 @@ Release 2.0:
 -        Copy to right action in FolderDiffPanel.
 -        Delete right action in FolderDiffPanel.
 -        Delete left action in FolderDiffPanel.
-- [done] Rescan action in FolderDiffPanel.
 -        Undo/Redo for all above actions actions.
+- [done] Rescan action in FolderDiffPanel.
 - [done] Statusbar should have a bar which tells how far the diff is.
 - [done] Exclude filters. (Create preferences and store with jaxb)
 - [done] Ignore whitespace in diff.
--        Use newest swingx library (JTableTree has changed significantly)
 
 Release 2.1:
+-        Use newest swingx library (JTableTree has changed significantly)
 -        Create manual
 -        L&F preference
 -        Support drag and drop.
@@ -57,6 +57,7 @@ Release 2.1:
 -        BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and
                   in the other it is a folder!
 -        Ability to use external gnu diff
+-        Calculate 'isChanged' in AbstractConfiguration.
 
 Release 3.0:
 -        Implement subversion diff.
