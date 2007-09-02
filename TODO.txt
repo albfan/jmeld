@@ -31,26 +31,31 @@ Release 2.0:
 - [done] Implement directory diff.
 - [done] Right/Left side readonly (preference)
 -        Ask save settings when closing settings-tab.
--        Allow multiple selections in FolderDiffPanel.
+- [done] Allow multiple selections in FolderDiffPanel.
 -        Copy to left action in FolderDiffPanel.
 -        Copy to right action in FolderDiffPanel.
 -        Delete right action in FolderDiffPanel.
 -        Delete left action in FolderDiffPanel.
--        Rescan action in FolderDiffPanel.
+- [done] Rescan action in FolderDiffPanel.
 -        Undo/Redo for all above actions actions.
--        Statusbar should have a bar which tells how far the diff is.
--        Cancel the current diff if it takes too long.
+- [done] Statusbar should have a bar which tells how far the diff is.
 - [done] Exclude filters. (Create preferences and store with jaxb)
 - [done] Ignore whitespace in diff.
+-        Use newest swingx library (JTableTree has changed significantly)
 
 Release 2.1:
 -        Create manual
 -        L&F preference
+-        Support drag and drop.
 -        Change Revision when editing instead of creating a New revision 
          every time. [PERFORMANCE]
 -        Remove jgoodies FormLayout in favour of Matisse groupLayout.
 -        BUG[STA] Adjust search in FolderDiffPanel
--        Exclude patterns in diff.
+-        Exclude patterns in diff (Text Filters in meld).
+-        Cancel the current diff if it takes too long.
+-        BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and
+                  in the other it is a folder!
+-        Ability to use external gnu diff
 
 Release 3.0:
 -        Implement subversion diff.
