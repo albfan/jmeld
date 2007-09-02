@@ -157,14 +157,15 @@ public class FolderDiffPanel
     installKey("LEFT", action);
 
     action = actionHandler.createAction(this, "OpenFileComparison");
-    installKey("ENTER", action);
-
-    action = actionHandler.createAction(this, "OpenFileComparisonBackground");
     action.setIcon("stock_compare");
     compareButton.setAction(action);
     compareButton.setText(null);
     compareButton.setFocusable(false);
     compareButton.setDisabledIcon(action.getTransparentSmallImageIcon());
+    installKey("ENTER", action);
+
+    action = actionHandler.createAction(this, "OpenFileComparisonBackground");
+    action.setIcon("stock_compare");
     installKey("alt ENTER", action);
 
     action = actionHandler.createAction(this, "ExpandAll");
