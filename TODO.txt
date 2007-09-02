@@ -30,7 +30,7 @@ Release 1.1.3:
 Release 2.0:
 - [done] Implement directory diff.
 - [done] Right/Left side readonly (preference)
--        Ask save settings when closing settings-tab.
+- [done] Ask save settings when closing settings-tab.
 - [done] Allow multiple selections in FolderDiffPanel.
 -        Copy to left action in FolderDiffPanel.
 -        Copy to right action in FolderDiffPanel.
@@ -51,6 +51,7 @@ Release 2.1:
          every time. [PERFORMANCE]
 -        Remove jgoodies FormLayout in favour of Matisse groupLayout.
 -        BUG[STA] Adjust search in FolderDiffPanel
+-        BUG[WEB] Search doesn't behave after editing.
 -        Exclude patterns in diff (Text Filters in meld).
 -        Cancel the current diff if it takes too long.
 -        BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and

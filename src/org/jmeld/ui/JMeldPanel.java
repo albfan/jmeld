@@ -680,7 +680,7 @@ public class JMeldPanel
   {
     AbstractContentPanel content;
 
-    content = new SettingsPanel();
+    content = new SettingsPanel(this);
 
     tabbedPane.add(
       content,

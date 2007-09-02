@@ -4,7 +4,8 @@
  */
 package org.jmeld.ui.settings;
 
-import org.jmeld.settings.JMeldSettings;
+import org.jmeld.settings.*;
+import org.jmeld.ui.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
@@ -26,9 +27,12 @@ public class SettingsPanel
        implements ConfigurationListenerIF
 {
   private DefaultListModel listModel;
+  private JMeldPanel       mainPanel;
 
-  public SettingsPanel()
+  public SettingsPanel(JMeldPanel mainPanel)
   {
+    this.mainPanel = mainPanel;
+
     init();
     initConfiguration();
 
@@ -191,6 +195,23 @@ public class SettingsPanel
 
     fileLabel.setText(c.getConfigurationFileName());
     saveButton.setEnabled(c.isChanged());
+  }
+
+  public boolean checkSave()
+  {
+    SaveSettingsDialog dialog;
+
+    if (getConfiguration().isChanged())
+    {
+      dialog = new SaveSettingsDialog(mainPanel);
+      dialog.show();
+      if (dialog.isOK())
+      {
+        dialog.doSave();
+      }
+    }
+
+    return true;
   }
 
   private JMeldSettings getConfiguration()
