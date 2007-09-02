@@ -28,9 +28,11 @@
                               <Component id="hierarchyComboBox" min="-2" pref="112" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="compareButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="refreshButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
                       <Component id="deleteLeftButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="copyToLeftButton" min="-2" max="-2" attributes="0"/>
@@ -38,7 +40,7 @@
                       <Component id="copyToRightButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="deleteRightButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="151" max="32767" attributes="0"/>
+                      <EmptySpace pref="114" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="onlyLeftButton" linkSize="1" min="-2" max="-2" attributes="0"/>
@@ -78,9 +80,10 @@
                       <Component id="copyToLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="copyToRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="deleteRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="refreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="deleteLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="hierarchyComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="compareButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="refreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="expandAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -193,6 +196,14 @@
     <Component class="javax.swing.JButton" name="refreshButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="RS"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[2, 2, 2, 2]"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="compareButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="CO"/>
         <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
           <Insets value="[2, 2, 2, 2]"/>
         </Property>
