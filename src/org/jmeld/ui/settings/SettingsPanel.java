@@ -94,7 +94,7 @@ public class SettingsPanel
         public void actionPerformed(ActionEvent ae)
         {
           getConfiguration().save();
-          StatusBar.setText("Configuration saved");
+          StatusBar.getInstance().setText("Configuration saved");
         }
       };
   }
@@ -122,7 +122,7 @@ public class SettingsPanel
             file = chooser.getSelectedFile();
             getConfiguration().setConfigurationFile(file);
             getConfiguration().save();
-            StatusBar.setText("Configuration saved to " + file);
+            StatusBar.getInstance().setText("Configuration saved to " + file);
           }
         }
       };
@@ -153,7 +153,7 @@ public class SettingsPanel
                 file,
                 getConfiguration().getClass()))
             {
-              StatusBar.setAlarm("Failed to reload from " + file);
+              StatusBar.getInstance().setAlarm("Failed to reload from " + file);
             }
           }
         }

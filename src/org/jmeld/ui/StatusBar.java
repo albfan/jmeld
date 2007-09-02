@@ -35,8 +35,9 @@ public class StatusBar
   private static StatusBar instance = new StatusBar();
 
   // Instance variables:
-  private JLabel       status;
-  private JProgressBar progress;
+  private JLabel       statusLabel;
+  private JPanel       progressArea;
+  private JProgressBar progressBar;
   private BusyLabel    busy;
   private Timer        timer;
   private JPanel       notificationArea;
@@ -48,20 +49,32 @@ public class StatusBar
     init();
   }
 
+  public static StatusBar getInstance()
+  {
+    return instance;
+  }
+
   private void init()
   {
     JPanel panel;
 
-    status = new JLabel(" ");
-    status.setBorder(new EmptyBorder(4, 2, 4, 2));
-    progress = new JProgressBar();
+    statusLabel = new JLabel(" ");
+    statusLabel.setBorder(new EmptyBorder(4, 2, 4, 2));
+    progressBar = new JProgressBar();
+    progressBar.setBorder(
+      new CompoundBorder(
+        BorderFactory.createEmptyBorder(2, 5, 2, 5),
+        progressBar.getBorder()));
+    progressBar.setStringPainted(true);
     busy = new BusyLabel();
 
     panel = new JPanel(new BorderLayout());
-    add(status, BorderLayout.CENTER);
+    add(statusLabel, BorderLayout.CENTER);
     add(panel, BorderLayout.EAST);
 
     notificationArea = new JPanel(new GridLayout(1, 0));
+    progressArea = new JPanel(new GridLayout(1, 0));
+    panel.add(progressArea, BorderLayout.WEST);
     panel.add(notificationArea, BorderLayout.CENTER);
     panel.add(busy, BorderLayout.EAST);
 
@@ -74,24 +87,19 @@ public class StatusBar
     setPreferredSize(new Dimension(25, 25));
   }
 
-  public static StatusBar getInstance()
+  public void start()
   {
-    return instance;
+    busy.start();
   }
 
-  public static void start()
-  {
-    instance.busy.start();
-  }
-
-  public static void setState(
+  public void setState(
     String format,
     Object...args)
   {
-    instance.status.setText(String.format(format, args));
+    statusLabel.setText(String.format(format, args));
   }
 
-  public static void setText(
+  public void setText(
     String format,
     Object...args)
   {
@@ -99,38 +107,50 @@ public class StatusBar
     stop();
   }
 
-  public static void setAlarm(
+  public void setAlarm(
     String format,
     Object...args)
   {
-    instance.status.setForeground(Color.red);
+    statusLabel.setForeground(Color.red);
     setState(format, args);
     stop();
   }
 
-  public static void setText(
-    int    progress,
-    String format,
-    Object...args)
+  public void setProgress(
+    int value,
+    int maximum)
   {
-    instance.status.setText(String.format(format, args));
-    instance.progress.setValue(progress);
+    if (progressArea.getComponentCount() == 0)
+    {
+      progressArea.add(progressBar);
+      revalidate();
+    }
+
+    if (progressBar.getMaximum() != maximum)
+    {
+      progressBar.setMaximum(maximum);
+    }
+
+    progressBar.setValue(value);
+    progressBar.setString(value + "/" + maximum);
   }
 
-  public static void stop()
+  public void stop()
   {
-    instance.timer.restart();
-    instance.busy.stop();
+    timer.restart();
+    busy.stop();
   }
 
   private void clear()
   {
-    status.setText("");
-    status.setForeground(Color.black);
-    progress.setValue(0);
+    statusLabel.setText("");
+    statusLabel.setForeground(Color.black);
+
+    progressArea.removeAll();
+    revalidate();
   }
 
-  public static void setNotification(
+  public void setNotification(
     String    id,
     ImageIcon icon)
   {
@@ -142,11 +162,11 @@ public class StatusBar
     setNotification(id, label);
   }
 
-  public static void setNotification(
+  public void setNotification(
     String     id,
     JComponent component)
   {
-    instance._setNotification(id, component);
+    _setNotification(id, component);
   }
 
   private void _setNotification(
@@ -167,9 +187,9 @@ public class StatusBar
     revalidate();
   }
 
-  public static void removeNotification(String id)
+  public void removeNotification(String id)
   {
-    instance._removeNotification(id);
+    _removeNotification(id);
   }
 
   public void _removeNotification(String id)

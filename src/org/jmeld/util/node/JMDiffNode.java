@@ -213,7 +213,7 @@ public class JMDiffNode
     BufferDocumentIF documentLeft;
     BufferDocumentIF documentRight;
 
-    StatusBar.start();
+    StatusBar.getInstance().start();
 
     documentLeft = null;
     documentRight = null;
@@ -221,7 +221,7 @@ public class JMDiffNode
     if(nodeLeft != null)
     {
     documentLeft = nodeLeft.getDocument();
-      StatusBar.setState(
+      StatusBar.getInstance().setState(
         "Reading left : %s",
         nodeLeft.getName());
       documentLeft.read();
@@ -230,18 +230,18 @@ public class JMDiffNode
     if(nodeRight != null)
     {
     documentRight = nodeRight.getDocument();
-      StatusBar.setState(
+      StatusBar.getInstance().setState(
         "Reading right: %s",
         nodeRight.getName());
       documentRight.read();
     }
 
-    StatusBar.setState("Calculating differences");
+    StatusBar.getInstance().setState("Calculating differences");
     diff = new JMDiff();
     revision = diff.diff(documentLeft == null ? null : documentLeft.getLines(),
         documentRight == null ? null : documentRight.getLines());
-    StatusBar.setState("Ready calculating differences");
-    StatusBar.stop();
+    StatusBar.getInstance().setState("Ready calculating differences");
+    StatusBar.getInstance().stop();
   }
 
   public JMDiff getDiff()
