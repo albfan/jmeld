@@ -6,9 +6,11 @@ import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.util.file.*;
+import org.jmeld.util.file.cmd.*;
 
 import javax.swing.tree.*;
 
+import java.io.*;
 import java.util.*;
 
 public class JMDiffNode
@@ -154,15 +156,20 @@ public class JMDiffNode
     compareContents();
   }
 
-  public void copyToRight()
+  public AbstractCmd getCopyToRightCmd()
+    throws IOException
   {
-    if (nodeLeft == null)
+    System.out.println("nodeLeft= " + nodeLeft);
+    System.out.println("nodeRight= " + nodeRight);
+    // TODO: This is NOT OO!
+    if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
-      return;
+      return new CopyFileCmd(
+        ((FileNode) nodeLeft).getFile(),
+        ((FileNode) nodeRight).getFile());
     }
 
-    nodeLeft = null;
-    compareContents();
+    return null;
   }
 
   public void removeRight()
@@ -218,18 +225,18 @@ public class JMDiffNode
     documentLeft = null;
     documentRight = null;
 
-    if(nodeLeft != null)
+    if (nodeLeft != null)
     {
-    documentLeft = nodeLeft.getDocument();
+      documentLeft = nodeLeft.getDocument();
       StatusBar.getInstance().setState(
         "Reading left : %s",
         nodeLeft.getName());
       documentLeft.read();
     }
 
-    if(nodeRight != null)
+    if (nodeRight != null)
     {
-    documentRight = nodeRight.getDocument();
+      documentRight = nodeRight.getDocument();
       StatusBar.getInstance().setState(
         "Reading right: %s",
         nodeRight.getName());

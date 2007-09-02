@@ -14,9 +14,10 @@ public class CopyFileCmd
   public CopyFileCmd(
     File fromFile,
     File toFile)
+    throws IOException
   {
-    this.fromFile = fromFile;
-    this.toFile = toFile;
+    this.fromFile = fromFile.getCanonicalFile();
+    this.toFile = toFile.getCanonicalFile();
   }
 
   public void createCommands()

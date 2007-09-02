@@ -27,6 +27,7 @@ import org.jmeld.ui.util.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 import org.jmeld.util.file.*;
+import org.jmeld.util.file.cmd.*;
 import org.jmeld.util.node.*;
 
 import javax.swing.*;
@@ -474,11 +475,71 @@ public class FolderDiffPanel
 
   public void doCopyToRight(ActionEvent ae)
   {
+    CompoundCommand cc;
+
+    cc = new CompoundCommand();
     for (UINode uiNode : getSelectedUINodes())
     {
-      uiNode.getDiffNode().copyToRight();
+      try
+      {
+        cc.add(
+          uiNode,
+          uiNode.getDiffNode().getCopyToRightCmd());
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
     }
+    cc.execute();
     repaint();
+  }
+
+  class CompoundCommand
+  {
+    List<AbstractCmd>        cmds;
+    Map<AbstractCmd, UINode> uiNodeMap;
+
+    CompoundCommand()
+    {
+      cmds = new ArrayList<AbstractCmd>();
+      uiNodeMap = new HashMap<AbstractCmd, UINode>();
+    }
+
+    void add(
+      UINode      uiNode,
+      AbstractCmd cmd)
+    {
+      if (cmd == null)
+      {
+        return;
+      }
+
+      cmds.add(cmd);
+      uiNodeMap.put(cmd, uiNode);
+    }
+
+    void execute()
+    {
+      try
+      {
+        for (AbstractCmd cmd : cmds)
+        {
+          if (cmd == null)
+          {
+            continue;
+          }
+
+          cmd.execute();
+
+          uiNodeMap.get(cmd).getDiffNode().compareContents();
+        }
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
+    }
   }
 
   public void doRefresh(ActionEvent ae)
@@ -551,33 +612,6 @@ public class FolderDiffPanel
   private FolderSettings getFolderSettings()
   {
     return JMeldSettings.getInstance().getFolder();
-  }
-
-  private JMDiffNode getSelectedDiffNode()
-  {
-    int      row;
-    TreePath path;
-    UINode   uiNode;
-
-    row = folderTreeTable.getSelectedRow();
-    if (row == -1)
-    {
-      return null;
-    }
-
-    path = folderTreeTable.getPathForRow(row);
-    if (path == null)
-    {
-      return null;
-    }
-
-    uiNode = (UINode) path.getLastPathComponent();
-    if (uiNode == null)
-    {
-      return null;
-    }
-
-    return uiNode.getDiffNode();
   }
 
   private Set<UINode> getSelectedUINodes()
