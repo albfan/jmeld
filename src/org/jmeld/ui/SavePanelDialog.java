@@ -161,11 +161,14 @@ public class SavePanelDialog
       document = documents.get(i);
 
       checkBox = new JCheckBox(document.getName());
-      checkBox.setSelected(true);
       checkBoxes[i] = checkBox;
       if (!document.isChanged())
       {
         checkBox.setEnabled(false);
+      }
+      else
+      {
+        checkBox.setSelected(true);
       }
 
       panel.add(
