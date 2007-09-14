@@ -16,8 +16,6 @@
  */
 package org.jmeld.ui.settings;
 
-import com.jgoodies.forms.layout.*;
-
 import org.jmeld.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.*;
@@ -82,36 +80,6 @@ public class SaveSettingsDialog
 
   private JComponent getSaveSettings()
   {
-    JPanel          panel;
-    String          columns;
-    String          rows;
-    FormLayout      layout;
-    CellConstraints cc;
-    JLabel          label;
-    Font            font;
-
-    columns = "10px, fill:pref, 10px";
-    rows = "10px, fill:pref, 5px, fill:pref, 10px,";
-    rows += " 10px";
-
-    layout = new FormLayout(columns, rows);
-    cc = new CellConstraints();
-
-    panel = new JPanel(layout);
-    label = new JLabel("Settings have changed");
-    font = label.getFont().deriveFont(Font.BOLD);
-    label.setFont(font);
-    label.setHorizontalAlignment(JLabel.LEFT);
-    panel.add(
-      label,
-      cc.xy(2, 2));
-    label = new JLabel("Would you like to save the settings?");
-    label.setFont(font);
-    label.setHorizontalAlignment(JLabel.LEFT);
-    panel.add(
-      label,
-      cc.xy(2, 4));
-
-    return panel;
+    return new SaveSettingsPanel();
   }
 }
