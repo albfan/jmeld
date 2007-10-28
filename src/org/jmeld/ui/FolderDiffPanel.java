@@ -24,7 +24,6 @@ import org.jmeld.ui.action.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.util.*;
-import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.file.cmd.*;
@@ -33,6 +32,7 @@ import org.jmeld.util.node.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+import javax.swing.undo.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -461,10 +461,23 @@ public class FolderDiffPanel
 
   public void doCopyToLeft(ActionEvent ae)
   {
+    CompoundCommand cc;
+
+    cc = new CompoundCommand();
     for (UINode uiNode : getSelectedUINodes())
     {
-      uiNode.getDiffNode().copyToLeft();
+      try
+      {
+        cc.add(
+          uiNode,
+          uiNode.getDiffNode().getCopyToLeftCmd());
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
     }
+    cc.execute();
     repaint();
   }
 
@@ -492,18 +505,20 @@ public class FolderDiffPanel
       }
     }
     cc.execute();
+    mainPanel.checkActions();
     repaint();
   }
 
   class CompoundCommand
+         extends CompoundEdit
   {
     List<AbstractCmd>        cmds;
     Map<AbstractCmd, UINode> uiNodeMap;
 
     CompoundCommand()
     {
-      cmds = new ArrayList<AbstractCmd>();
       uiNodeMap = new HashMap<AbstractCmd, UINode>();
+      cmds = new ArrayList<AbstractCmd>();
     }
 
     void add(
@@ -515,8 +530,8 @@ public class FolderDiffPanel
         return;
       }
 
-      cmds.add(cmd);
       uiNodeMap.put(cmd, uiNode);
+      cmds.add(cmd);
     }
 
     void execute()
@@ -525,19 +540,37 @@ public class FolderDiffPanel
       {
         for (AbstractCmd cmd : cmds)
         {
-          if (cmd == null)
-          {
-            continue;
-          }
-
           cmd.execute();
-
-          uiNodeMap.get(cmd).getDiffNode().compareContents();
+          addEdit(cmd);
         }
+
+        getUndoHandler().add(this);
+        System.out.println("can undo : " + getUndoHandler().canUndo());
+        compareContents();
       }
       catch (Exception ex)
       {
         ex.printStackTrace();
+      }
+    }
+
+    public void redo()
+    {
+      super.redo();
+      compareContents();
+    }
+
+    public void undo()
+    {
+      super.undo();
+      compareContents();
+    }
+
+    private void compareContents()
+    {
+      for (AbstractCmd cmd : cmds)
+      {
+        uiNodeMap.get(cmd).getDiffNode().compareContents();
       }
     }
   }
@@ -576,10 +609,23 @@ public class FolderDiffPanel
 
   public void doRemoveRight(ActionEvent ae)
   {
+    CompoundCommand cc;
+
+    cc = new CompoundCommand();
     for (UINode uiNode : getSelectedUINodes())
     {
-      uiNode.getDiffNode().removeRight();
+      try
+      {
+        cc.add(
+          uiNode,
+          uiNode.getDiffNode().getRemoveRightCmd());
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
     }
+    cc.execute();
     repaint();
   }
 
@@ -590,10 +636,23 @@ public class FolderDiffPanel
 
   public void doRemoveLeft(ActionEvent ae)
   {
+    CompoundCommand cc;
+
+    cc = new CompoundCommand();
     for (UINode uiNode : getSelectedUINodes())
     {
-      uiNode.getDiffNode().removeLeft();
+      try
+      {
+        cc.add(
+          uiNode,
+          uiNode.getDiffNode().getRemoveLeftCmd());
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
     }
+    cc.execute();
     repaint();
   }
 

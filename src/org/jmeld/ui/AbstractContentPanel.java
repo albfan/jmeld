@@ -19,11 +19,15 @@ package org.jmeld.ui;
 import org.jmeld.ui.search.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.undo.*;
 
 public class AbstractContentPanel
        extends JPanel
        implements JMeldContentPanelIF
 {
+  private MyUndoManager undoManager = new MyUndoManager();
+
   public boolean isSaveEnabled()
   {
     return false;
@@ -40,20 +44,44 @@ public class AbstractContentPanel
 
   public boolean isUndoEnabled()
   {
-    return false;
+    return getUndoHandler().canUndo();
   }
 
   public void doUndo()
   {
+    try
+    {
+      if (getUndoHandler().canUndo())
+      {
+        getUndoHandler().undo();
+      }
+    }
+    catch (CannotUndoException ex)
+    {
+      System.out.println("Unable to undo: " + ex);
+      ex.printStackTrace();
+    }
   }
 
   public boolean isRedoEnabled()
   {
-    return false;
+    return getUndoHandler().canRedo();
   }
 
   public void doRedo()
   {
+    try
+    {
+      if (getUndoHandler().canRedo())
+      {
+        getUndoHandler().redo();
+      }
+    }
+    catch (CannotUndoException ex)
+    {
+      System.out.println("Unable to undo: " + ex);
+      ex.printStackTrace();
+    }
   }
 
   public void doLeft()
@@ -112,5 +140,56 @@ public class AbstractContentPanel
   public boolean checkExit()
   {
     return true;
+  }
+
+  public class MyUndoManager
+         extends UndoManager
+         implements UndoableEditListener
+  {
+    CompoundEdit activeEdit;
+
+    private MyUndoManager()
+    {
+    }
+
+    public void start(String text)
+    {
+      activeEdit = new CompoundEdit();
+    }
+
+    public void add(UndoableEdit edit)
+    {
+      addEdit(edit);
+    }
+
+    public void end(String text)
+    {
+      activeEdit.end();
+      addEdit(activeEdit);
+      activeEdit = null;
+
+      checkActions();
+    }
+
+    public void undoableEditHappened(UndoableEditEvent e)
+    {
+      if (activeEdit != null)
+      {
+        activeEdit.addEdit(e.getEdit());
+        return;
+      }
+
+      addEdit(e.getEdit());
+      checkActions();
+    }
+  }
+
+  public MyUndoManager getUndoHandler()
+  {
+    return undoManager;
+  }
+
+  public void checkActions()
+  {
   }
 }

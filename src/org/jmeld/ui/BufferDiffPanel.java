@@ -29,7 +29,6 @@ import org.jmeld.util.node.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
-import javax.swing.undo.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -51,7 +50,6 @@ public class BufferDiffPanel
   private JMRevision         currentRevision;
   private JMDelta            selectedDelta;
   private int                selectedLine;
-  private MyUndoManager      undoManager = new MyUndoManager();
   private ScrollSynchronizer scrollSynchronizer;
   private JMDiff             diff;
 
@@ -288,11 +286,6 @@ public class BufferDiffPanel
     return currentRevision;
   }
 
-  public void resetUndoManager()
-  {
-    undoManager.discardAllEdits();
-  }
-
   public boolean checkSave()
   {
     SavePanelDialog dialog;
@@ -365,48 +358,6 @@ public class BufferDiffPanel
     }
 
     return false;
-  }
-
-  public boolean isUndoEnabled()
-  {
-    return undoManager.canUndo();
-  }
-
-  public void doUndo()
-  {
-    try
-    {
-      if (undoManager.canUndo())
-      {
-        undoManager.undo();
-      }
-    }
-    catch (CannotUndoException ex)
-    {
-      System.out.println("Unable to undo: " + ex);
-      ex.printStackTrace();
-    }
-  }
-
-  public boolean isRedoEnabled()
-  {
-    return undoManager.canRedo();
-  }
-
-  public void doRedo()
-  {
-    try
-    {
-      if (undoManager.canRedo())
-      {
-        undoManager.redo();
-      }
-    }
-    catch (CannotUndoException ex)
-    {
-      System.out.println("Unable to undo: " + ex);
-      ex.printStackTrace();
-    }
   }
 
   public SearchHits doSearch(SearchCommand command)
@@ -536,51 +487,9 @@ public class BufferDiffPanel
     }
   }
 
-  public MyUndoManager getUndoHandler()
-  {
-    return undoManager;
-  }
-
   public void checkActions()
   {
     mainPanel.checkActions();
-  }
-
-  public class MyUndoManager
-         extends UndoManager
-         implements UndoableEditListener
-  {
-    CompoundEdit activeEdit;
-
-    private MyUndoManager()
-    {
-    }
-
-    public void start(String text)
-    {
-      activeEdit = new CompoundEdit();
-    }
-
-    public void end(String text)
-    {
-      activeEdit.end();
-      addEdit(activeEdit);
-      activeEdit = null;
-
-      checkActions();
-    }
-
-    public void undoableEditHappened(UndoableEditEvent e)
-    {
-      if (activeEdit != null)
-      {
-        activeEdit.addEdit(e.getEdit());
-        return;
-      }
-
-      addEdit(e.getEdit());
-      checkActions();
-    }
   }
 
   public void doLeft()

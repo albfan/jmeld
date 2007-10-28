@@ -44,6 +44,8 @@ Release 2.0:
 -        Use newest swingx library (JTableTree has changed significantly)
 -        Click in JTreeTable is forgotten if it is outside length of
          node-label
+-        Save-as, Load buttons in settings panel disappear when frame is
+         made smaller.
 
 Release 2.1:
 -        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
@@ -61,6 +63,8 @@ Release 2.1:
                   in the other it is a folder!
 -        Ability to use external gnu diff
 -        Calculate 'isChanged' in AbstractConfiguration.
+-        Diff images
+-        Diff binaries
 
 Release 3.0:
 -        Implement subversion diff.
