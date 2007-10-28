@@ -17,12 +17,7 @@ public class JMDiffNode
        implements TreeNode
 {
   public enum Compare
-  {
-    Equal,
-    NotEqual,
-    RightMissing,
-    LeftMissing,
-    NotComparable;
+  {Equal, NotEqual, RightMissing, LeftMissing, NotComparable;
   }
   private String           text;
   private String           name;
@@ -150,17 +145,9 @@ public class JMDiffNode
     shortName = name.substring(index + 1);
   }
 
-  public void copyToLeft()
-  {
-    nodeLeft = null;
-    compareContents();
-  }
-
   public AbstractCmd getCopyToRightCmd()
-    throws IOException
+    throws Exception
   {
-    System.out.println("nodeLeft= " + nodeLeft);
-    System.out.println("nodeRight= " + nodeRight);
     // TODO: This is NOT OO!
     if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
@@ -172,16 +159,42 @@ public class JMDiffNode
     return null;
   }
 
-  public void removeRight()
+  public AbstractCmd getCopyToLeftCmd()
+    throws Exception
   {
-    nodeLeft = null;
-    compareContents();
+    // TODO: This is NOT OO!
+    if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
+    {
+      return new CopyFileCmd(
+        ((FileNode) nodeRight).getFile(),
+        ((FileNode) nodeLeft).getFile());
+    }
+
+    return null;
   }
 
-  public void removeLeft()
+  public AbstractCmd getRemoveLeftCmd()
+    throws Exception
   {
-    nodeRight = null;
-    compareContents();
+    // TODO: This is NOT OO!
+    if (nodeLeft instanceof FileNode)
+    {
+      return new RemoveFileCmd(((FileNode) nodeLeft).getFile());
+    }
+
+    return null;
+  }
+
+  public AbstractCmd getRemoveRightCmd()
+    throws Exception
+  {
+    // TODO: This is NOT OO!
+    if (nodeRight instanceof FileNode)
+    {
+      return new RemoveFileCmd(((FileNode) nodeRight).getFile());
+    }
+
+    return null;
   }
 
   public void compareContents()

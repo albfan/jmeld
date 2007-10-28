@@ -16,7 +16,6 @@
  */
 package org.jmeld.util.file;
 
-import org.apache.commons.io.*;
 import org.jmeld.util.node.*;
 
 import java.io.*;

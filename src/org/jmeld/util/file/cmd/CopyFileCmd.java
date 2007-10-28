@@ -14,14 +14,14 @@ public class CopyFileCmd
   public CopyFileCmd(
     File fromFile,
     File toFile)
-    throws IOException
+    throws Exception
   {
     this.fromFile = fromFile.getCanonicalFile();
     this.toFile = toFile.getCanonicalFile();
   }
 
   public void createCommands()
-    throws IOException
+    throws Exception
   {
     List<File> parentFiles;
 
@@ -32,6 +32,7 @@ public class CopyFileCmd
       if (!parentFile.exists())
       {
         addCommand(new MkDirCommand(parentFile));
+        System.out.println("mkdir " + parentFile);
       }
     }
     addCommand(new CopyCommand(fromFile, toFile));
@@ -43,28 +44,34 @@ public class CopyFileCmd
     private File dirFile;
 
     MkDirCommand(File dirFile)
+      throws Exception
     {
       this.dirFile = dirFile;
     }
 
     public void execute()
-      throws IOException
+      throws Exception
     {
       if (debug)
       {
         System.out.println("mkdir : " + dirFile);
       }
-      dirFile.mkdir();
+      if (!dryrun)
+      {
+        dirFile.mkdir();
+      }
     }
 
     public void undo()
-      throws IOException
     {
       if (debug)
       {
         System.out.println("rmdir : " + dirFile);
       }
-      dirFile.delete();
+      if (!dryrun)
+      {
+        dirFile.delete();
+      }
     }
   }
 
@@ -84,49 +91,69 @@ public class CopyFileCmd
     }
 
     public void execute()
-      throws IOException
+      throws Exception
     {
       if (toFile.exists())
       {
-        originalFile = FileUtil.createTempFile("jmeld", "backup");
+        if (!dryrun)
+        {
+          originalFile = FileUtil.createTempFile("jmeld", "backup");
+        }
 
         if (debug)
         {
           System.out.println("copy : " + toFile + " -> " + originalFile);
         }
-        FileUtil.copy(toFile, originalFile);
+        if (!dryrun)
+        {
+          FileUtil.copy(toFile, originalFile);
+        }
       }
 
       if (debug)
       {
         System.out.println("copy : " + fromFile + " -> " + toFile);
       }
-      FileUtil.copy(fromFile, toFile);
+      if (!dryrun)
+      {
+        FileUtil.copy(fromFile, toFile);
+      }
     }
 
     public void undo()
-      throws IOException
     {
-      if (originalFile != null)
+      try
       {
-        if (debug)
+        if (originalFile != null)
         {
-          System.out.println("copy : " + originalFile + " -> " + toFile);
+          if (debug)
+          {
+            System.out.println("copy : " + originalFile + " -> " + toFile);
+          }
+          if (!dryrun)
+          {
+            FileUtil.copy(originalFile, toFile);
+          }
         }
-        FileUtil.copy(originalFile, toFile);
+        else
+        {
+          if (debug)
+          {
+            System.out.println("delete : " + toFile);
+          }
+          if (!dryrun)
+          {
+            toFile.delete();
+          }
+        }
       }
-      else
+      catch (Exception ex)
       {
-        if (debug)
-        {
-          System.out.println("delete : " + toFile);
-        }
-        toFile.delete();
+        ex.printStackTrace();
       }
     }
 
     public void discard()
-      throws IOException
     {
       if (originalFile != null)
       {
@@ -134,7 +161,10 @@ public class CopyFileCmd
         {
           System.out.println("delete : " + originalFile);
         }
-        originalFile.delete();
+        if (!dryrun)
+        {
+          originalFile.delete();
+        }
       }
     }
   }

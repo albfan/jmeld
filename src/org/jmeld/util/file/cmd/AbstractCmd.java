@@ -1,12 +1,16 @@
 package org.jmeld.util.file.cmd;
 
+import javax.swing.undo.*;
+
 import java.io.*;
 import java.util.*;
 
 public abstract class AbstractCmd
+       extends AbstractUndoableEdit
 {
   private List<Command> commands = new ArrayList<Command>();
-  protected boolean     debug;
+  protected boolean     debug = true;
+  protected boolean     dryrun = true;
 
   public void setDebug(boolean debug)
   {
@@ -14,10 +18,9 @@ public abstract class AbstractCmd
   }
 
   public synchronized void execute()
-    throws IOException
+    throws Exception
   {
     commands.clear();
-
     createCommands();
 
     for (Command command : commands)
@@ -27,36 +30,41 @@ public abstract class AbstractCmd
   }
 
   protected abstract void createCommands()
-    throws IOException;
+    throws Exception;
 
   protected void addCommand(Command command)
   {
     commands.add(command);
   }
 
-  public void redo()
-    throws IOException
+  public synchronized void redo()
   {
-    execute();
+    for (Command command : commands)
+    {
+      command.redo();
+    }
   }
 
   public synchronized void undo()
-    throws IOException
   {
     // Undo should be executed in the reverse order!
     // Note: the commandList itself is reversed and that is OK because
     //       at the end of this method the commandList is cleared.
     Collections.reverse(commands);
-    for (Command command : commands)
+    try
     {
-      command.undo();
+      for (Command command : commands)
+      {
+        command.undo();
+      }
     }
-
-    commands.clear();
+    catch (Exception ex)
+    {
+      throw new CannotRedoException();
+    }
   }
 
   public synchronized void discard()
-    throws IOException
   {
     Collections.reverse(commands);
     for (Command command : commands)
@@ -70,19 +78,23 @@ public abstract class AbstractCmd
   abstract class Command
   {
     public abstract void execute()
-      throws IOException;
+      throws Exception;
 
     public void redo()
-      throws IOException
     {
-      execute();
+      try
+      {
+        execute();
+      }
+      catch (Exception ex)
+      {
+        throw new CannotRedoException();
+      }
     }
 
-    public abstract void undo()
-      throws IOException;
+    public abstract void undo();
 
     public void discard()
-      throws IOException
     {
     }
   }

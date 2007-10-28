@@ -2,38 +2,40 @@ package org.jmeld.util.file.cmd;
 
 import org.jmeld.util.file.*;
 
+import javax.swing.undo.*;
+
 import java.io.*;
 import java.util.*;
 
-public class DeleteFileCmd
+public class RemoveFileCmd
        extends AbstractCmd
 {
   private File file;
 
-  public DeleteFileCmd(File file)
+  public RemoveFileCmd(File file)
   {
     this.file = file;
   }
 
   public void createCommands()
-    throws IOException
+    throws Exception
   {
-    addCommand(new DeleteCommand(file));
+    addCommand(new RemoveCommand(file));
   }
 
-  class DeleteCommand
+  class RemoveCommand
          extends Command
   {
     private File file;
     private File originalFile;
 
-    DeleteCommand(File file)
+    RemoveCommand(File file)
     {
       this.file = file;
     }
 
     public void execute()
-      throws IOException
+      throws Exception
     {
       if (file.exists())
       {
@@ -43,31 +45,46 @@ public class DeleteFileCmd
         {
           System.out.println("copy : " + file + " -> " + originalFile);
         }
-        FileUtil.copy(file, originalFile);
+
+        if (!dryrun)
+        {
+          FileUtil.copy(file, originalFile);
+        }
       }
 
       if (debug)
       {
         System.out.println("delete : " + file);
       }
-      file.delete();
+      if (!dryrun)
+      {
+        file.delete();
+      }
     }
 
     public void undo()
-      throws IOException
     {
-      if (originalFile != null)
+      try
       {
-        if (debug)
+        if (originalFile != null)
         {
-          System.out.println("copy : " + originalFile + " -> " + file);
+          if (debug)
+          {
+            System.out.println("copy : " + originalFile + " -> " + file);
+          }
+          if (!dryrun)
+          {
+            FileUtil.copy(originalFile, file);
+          }
         }
-        FileUtil.copy(originalFile, file);
+      }
+      catch (Exception ex)
+      {
+        throw new CannotUndoException();
       }
     }
 
     public void discard()
-      throws IOException
     {
       if (originalFile != null)
       {
@@ -75,7 +92,10 @@ public class DeleteFileCmd
         {
           System.out.println("delete : " + originalFile);
         }
-        originalFile.delete();
+        if (!dryrun)
+        {
+          originalFile.delete();
+        }
       }
     }
   }
