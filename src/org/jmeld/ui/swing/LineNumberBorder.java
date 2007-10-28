@@ -48,6 +48,10 @@ public class LineNumberBorder
     FontMetrics fm;
 
     lineColor = UIManager.getColor("Panel.background");
+    if(lineColor == null)
+    {
+      lineColor = new Color(244, 242, 198);
+    }
     background = ColorUtil.brighter(lineColor);
     font = new Font("Monospaced", Font.PLAIN, 10);
 

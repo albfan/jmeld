@@ -39,6 +39,10 @@ public class Colors
     Color color;
 
     color = UIManager.getColor("Table.selectionBackground");
+    if(color == null)
+    {
+      color = new Color(244, 242, 198);
+    }
     color = ColorUtil.setSaturation(color, 0.05f);
     color = ColorUtil.setBrightness(color, 1.00f);
 
