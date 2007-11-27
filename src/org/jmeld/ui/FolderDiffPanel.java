@@ -543,6 +543,7 @@ public class FolderDiffPanel
           cmd.execute();
           addEdit(cmd);
         }
+        end();
 
         getUndoHandler().add(this);
         System.out.println("can undo : " + getUndoHandler().canUndo());
