@@ -411,7 +411,7 @@ public abstract class AbstractBufferDocument
     }
   }
 
-  public class Line
+  public class Line implements Comparable
   {
     Element element;
 
@@ -488,6 +488,11 @@ public abstract class AbstractBufferDocument
         ex.printStackTrace();
         return "";
       }
+    }
+
+    public int compareTo(Object line)
+    {
+      return toString().compareTo(((Line) line).toString());
     }
   }
 
