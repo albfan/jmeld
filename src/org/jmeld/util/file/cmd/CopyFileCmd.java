@@ -78,9 +78,10 @@ public class CopyFileCmd
   class CopyCommand
          extends Command
   {
-    private File fromFile;
-    private File toFile;
-    private File originalFile;
+    private File    fromFile;
+    private File    toFile;
+    private File    backupFile;
+    private boolean toFileExists;
 
     CopyCommand(
       File fromFile,
@@ -95,44 +96,42 @@ public class CopyFileCmd
     {
       if (toFile.exists())
       {
-        if (!dryrun)
-        {
-          originalFile = FileUtil.createTempFile("jmeld", "backup");
-        }
+        toFileExists = true;
+
+        backupFile = FileUtil.createTempFile("jmeld", "backup");
 
         if (debug)
         {
-          System.out.println("copy : " + toFile + " -> " + originalFile);
+          System.out.println("copy : " + toFile + " -> " + backupFile);
         }
-        if (!dryrun)
-        {
-          FileUtil.copy(toFile, originalFile);
-        }
+
+        FileUtil.copy(toFile, backupFile);
       }
 
       if (debug)
       {
         System.out.println("copy : " + fromFile + " -> " + toFile);
       }
-      if (!dryrun)
-      {
-        FileUtil.copy(fromFile, toFile);
-      }
+
+      FileUtil.copy(fromFile, toFile);
     }
 
     public void undo()
     {
       try
       {
-        if (originalFile != null)
+        if (toFileExists)
         {
-          if (debug)
+          if (backupFile != null)
           {
-            System.out.println("copy : " + originalFile + " -> " + toFile);
-          }
-          if (!dryrun)
-          {
-            FileUtil.copy(originalFile, toFile);
+            if (debug)
+            {
+              System.out.println("copy : " + backupFile + " -> " + toFile);
+            }
+
+            FileUtil.copy(backupFile, toFile);
+            backupFile.delete();
+            backupFile = null;
           }
         }
         else
@@ -141,10 +140,8 @@ public class CopyFileCmd
           {
             System.out.println("delete : " + toFile);
           }
-          if (!dryrun)
-          {
-            toFile.delete();
-          }
+
+          toFile.delete();
         }
       }
       catch (Exception ex)
@@ -155,16 +152,14 @@ public class CopyFileCmd
 
     public void discard()
     {
-      if (originalFile != null)
+      if (backupFile != null)
       {
         if (debug)
         {
-          System.out.println("delete : " + originalFile);
+          System.out.println("delete : " + backupFile);
         }
-        if (!dryrun)
-        {
-          originalFile.delete();
-        }
+
+        backupFile.delete();
       }
     }
   }
