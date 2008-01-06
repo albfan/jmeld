@@ -1,20 +1,42 @@
 /*
- * The contents of this file are subject to the terms of the Common Development
- * and Distribution License (the License). You may not use this file except in
- * compliance with the License.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * You can obtain a copy of the License at http://www.netbeans.org/cddl.html
- * or http://www.netbeans.org/cddl.txt.
+ * Copyright 1997-2007 Sun Microsystems, Inc. All rights reserved.
  *
- * When distributing Covered Code, include this CDDL Header Notice in each file
- * and include the License file at http://www.netbeans.org/cddl.txt.
- * If applicable, add the following below the CDDL Header, with the fields
- * enclosed by brackets [] replaced by your own identifying information:
+ * The contents of this file are subject to the terms of either the GNU
+ * General Public License Version 2 only ("GPL") or the Common
+ * Development and Distribution License("CDDL") (collectively, the
+ * "License"). You may not use this file except in compliance with the
+ * License. You can obtain a copy of the License at
+ * http://www.netbeans.org/cddl-gplv2.html
+ * or nbbuild/licenses/CDDL-GPL-2-CP. See the License for the
+ * specific language governing permissions and limitations under the
+ * License.  When distributing the software, include this License Header
+ * Notice in each file and include the License file at
+ * nbbuild/licenses/CDDL-GPL-2-CP.  Sun designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Sun in the GPL Version 2 section of the License file that
+ * accompanied this code. If applicable, add the following below the
+ * License Header, with the fields enclosed by brackets [] replaced by
+ * your own identifying information:
  * "Portions Copyrighted [year] [name of copyright owner]"
+ *
+ * Contributor(s):
  *
  * The Original Software is NetBeans. The Initial Developer of the Original
  * Software is Sun Microsystems, Inc. Portions Copyright 1997-2006 Sun
  * Microsystems, Inc. All Rights Reserved.
+ *
+ * If you wish your version of this file to be governed by only the CDDL
+ * or only the GPL Version 2, indicate your decision by adding
+ * "[Contributor] elects to include this software in this distribution
+ * under the [CDDL or GPL Version 2] license." If you do not indicate a
+ * single choice of license, a recipient has the option to distribute
+ * your version of this file under either the CDDL, the GPL Version 2 or
+ * to extend the choice of license to its licensees as provided above.
+ * However, if you add GPL Version 2 code and therefore, elected the GPL
+ * Version 2 license, then the option applies only if the new code is
+ * made subject to such option by the copyright holder.
  */
 package org.netbeans.modules.diff.builtin.provider;
 
@@ -31,13 +53,20 @@ public class HuntDiff
   {
   }
 
+  /**
+   * @param lines1 array of lines from the first source
+   * @param lines2 array of lines from the second source
+   * @return computed diff
+   */
   public static Difference[] diff(
     Object[] lines1,
     Object[] lines2)
   {
-    int    m = lines1.length;
-    int    n = lines2.length;
-    Line[] l2s = new Line[n + 1];
+    int      m = lines1.length;
+    int      n = lines2.length;
+    Object[] lines1_original = lines1;
+    Object[] lines2_original = lines2;
+    Line[]   l2s = new Line[n + 1];
 
     // In l2s we have sorted lines of the second file <1, n>
     for (int i = 1; i <= n; i++)
@@ -48,13 +77,13 @@ public class HuntDiff
       l2s,
       1,
       n + 1,
-      new Comparator()
+      new Comparator<Line>()
       {
         public int compare(
-          Object o1,
-          Object o2)
+          Line l1,
+          Line l2)
         {
-          return ((Comparable) ((Line) o1).line).compareTo((Comparable) ((Line) o2).line);
+          return l1.line.compareTo(l2.line);
         }
 
         public boolean equals(Object obj)
@@ -76,7 +105,7 @@ public class HuntDiff
     int[] equivalenceAssoc = new int[m + 1];
     for (int i = 1; i <= m; i++)
     {
-      equivalenceAssoc[i] = findAssoc(lines1[i - 1], l2s, equivalence);
+      equivalenceAssoc[i] = findAssoc((Comparable) lines1[i - 1], l2s, equivalence);
     }
 
     l2s = null;
@@ -100,25 +129,87 @@ public class HuntDiff
       c = c.c;
     }
 
-    List differences = getDifferences(J, lines1, lines2);
+    List<Difference> differences = getDifferences(J, lines1_original,
+        lines2_original);
     cleanup(differences);
-    return (Difference[]) differences.toArray(new Difference[0]);
+    return differences.toArray(new Difference[0]);
   }
 
   private static int findAssoc(
-    Object    line1,
-    Line[]    l2s,
-    boolean[] equivalence)
+    Comparable line1,
+    Line[]     l2s,
+    boolean[]  equivalence)
   {
-    // TODO use binary search
-    for (int j = 1; j < l2s.length; j++)
+    int idx = binarySearch(l2s, line1, 1, l2s.length - 1);
+    if (idx < 1)
     {
-      if (equivalence[j - 1] && line1.equals(l2s[j].line))
+      return 0;
+    }
+    else
+    {
+      int lastGoodIdx = 0;
+      for (; idx >= 1 && l2s[idx].line.equals(line1); idx--)
       {
-        return j;
+        if (equivalence[idx - 1])
+        {
+          lastGoodIdx = idx;
+        }
+      }
+      return lastGoodIdx;
+    }
+  }
+
+  private static int binarySearch(
+    Line[]     L,
+    Comparable key,
+    int        low,
+    int        high)
+  {
+    while (low <= high)
+    {
+      int        mid = (low + high) >> 1;
+      Comparable midVal = L[mid].line;
+      int        comparison = midVal.compareTo(key);
+      if (comparison < 0)
+      {
+        low = mid + 1;
+      }
+      else if (comparison > 0)
+      {
+        high = mid - 1;
+      }
+      else
+      {
+        return mid;
       }
     }
-    return 0;
+    return -(low + 1);
+  }
+
+  private static int binarySearch(
+    Candidate[] K,
+    int         key,
+    int         low,
+    int         high)
+  {
+    while (low <= high)
+    {
+      int mid = (low + high) >> 1;
+      int midVal = K[mid].b;
+      if (midVal < key)
+      {
+        low = mid + 1;
+      }
+      else if (midVal > key)
+      {
+        high = mid - 1;
+      }
+      else
+      {
+        return mid;
+      }
+    }
+    return -(low + 1);
   }
 
   private static int merge(
@@ -134,14 +225,18 @@ public class HuntDiff
     do
     {
       int j = equvalenceLines[p];
-      int s = r;
-
-      // TODO use binary search
-      for (; s <= k; s++)
+      int s = binarySearch(K, j, r, k);
+      if (s >= 0)
       {
-        if (K[s].b < j && K[s + 1].b > j)
+        // j was found in K[]
+        s = k + 1;
+      }
+      else
+      {
+        s = -s - 2;
+        if (s < r || s > k)
         {
-          break;
+          s = k + 1;
         }
       }
       if (s <= k)
@@ -174,16 +269,16 @@ public class HuntDiff
     return k;
   }
 
-  private static List getDifferences(
+  private static List<Difference> getDifferences(
     int[]    J,
     Object[] lines1,
     Object[] lines2)
   {
-    List differences = new ArrayList();
-    int  n = lines1.length;
-    int  m = lines2.length;
-    int  start1 = 1;
-    int  start2 = 1;
+    List<Difference> differences = new ArrayList<Difference>();
+    int              n = lines1.length;
+    int              m = lines2.length;
+    int              start1 = 1;
+    int              start2 = 1;
     do
     {
       while (start1 <= n && J[start1] == start2)
@@ -241,18 +336,34 @@ public class HuntDiff
     while (start1 <= n);
     if (start2 <= m)
     {  // There's something extra at the end of the second file
+      int           end2 = start2 + 1;
+      StringBuilder addedText = new StringBuilder();
+      addedText.append(lines2[start2 - 1]).append('\n');
+      while (end2 <= m)
+      {
+        Object line = lines2[end2 - 1];
+        addedText.append(line).append('\n');
+        end2++;
+      }
       differences.add(
-        new Difference(Difference.ADD, n, 0, start2, m, null, null));
+        new Difference(
+          Difference.ADD,
+          n,
+          0,
+          start2,
+          m,
+          null,
+          addedText.toString()));
     }
     return differences;
   }
 
-  private static void cleanup(List diffs)
+  private static void cleanup(List<Difference> diffs)
   {
     Difference last = null;
     for (int i = 0; i < diffs.size(); i++)
     {
-      Difference diff = (Difference) diffs.get(i);
+      Difference diff = diffs.get(i);
       if (last != null)
       {
         if (diff.getType() == Difference.ADD
@@ -277,10 +388,6 @@ public class HuntDiff
           int d2f1l1 = del.getFirstStart();
           if (d1f1l1 == d2f1l1)
           {
-            int        d1f2l1 = add.getSecondStart()
-              - (del.getFirstEnd() - del.getFirstStart());
-            int        d2f2l1 = del.getSecondStart() + 1;
-
             Difference newDiff = new Difference(Difference.CHANGE, d1f1l1,
                 del.getFirstEnd(),
                 add.getSecondStart(),
@@ -300,16 +407,16 @@ public class HuntDiff
 
   private static class Line
   {
-    public int    lineNo;
-    public Object line;
-    public int    hash;
+    public int        lineNo;
+    public Comparable line;
+    public int        hash;
 
     public Line(
       int    lineNo,
       Object line)
     {
       this.lineNo = lineNo;
-      this.line = line;
+      this.line = (Comparable) line;
       this.hash = line.hashCode();
     }
   }

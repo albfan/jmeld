@@ -36,9 +36,9 @@ public class JMDiff
     // MyersDiff is the fastest but can be very slow when 2 files
     //   are very different.
     algorithms = new ArrayList<JMDiffAlgorithmIF>();
-    algorithms.add(new HuntDiff());
     algorithms.add(new GNUDiff());
     algorithms.add(myersDiff);
+    algorithms.add(new HuntDiff());
   }
 
   public JMRevision diff(
