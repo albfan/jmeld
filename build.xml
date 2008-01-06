@@ -57,7 +57,7 @@
       <zipfileset src="lib/jhall.jar" />
       <zipfileset src="lib/jaxb-api.jar" />
       <zipfileset src="lib/jsr173_1.0_api.jar" />
-      <zipfileset src="lib/swing-layout-1.0.jar" />
+      <zipfileset src="lib/swing-layout-1.0.3.jar" />
       <zipfileset src="lib/jaxb-impl.jar" />
       <zipfileset src="lib/activation.jar">
         <exclude name="META-INF/**" />
