@@ -289,8 +289,6 @@ public class FilterSettingsPanel
           String.class, 15, true, null);
       ruleColumn = addColumn("rule", null, "Rule", FilterRule.Rule.class, 10,
           true, null);
-      //ruleColumn.setRenderer(new JMComboBoxRenderer(FilterRule.Rule.values()));
-      //ruleColumn.setEditor(new JMComboBoxEditor(FilterRule.Rule.values()));
       patternColumn = addColumn("pattern", null, "Pattern", String.class, -1,
           true, null);
     }
