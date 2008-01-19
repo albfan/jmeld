@@ -16,7 +16,7 @@
  */
 package org.jmeld.ui;
 
-import org.jdesktop.swingworker.*;
+import org.jdesktop.swingworker.SwingWorker;
 import org.jdesktop.swingx.decorator.*;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.treetable.*;
