@@ -18,7 +18,6 @@ package org.jmeld.ui;
 
 import org.jdesktop.swingworker.SwingWorker;
 import org.jdesktop.swingx.decorator.*;
-import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.treetable.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.action.*;
@@ -44,9 +43,10 @@ public class FolderDiffPanel
        extends FolderDiffForm
        implements ConfigurationListenerIF
 {
-  private JMeldPanel    mainPanel;
-  private FolderDiff    diff;
-  private ActionHandler actionHandler;
+  private JMeldPanel               mainPanel;
+  private FolderDiff               diff;
+  private ActionHandler            actionHandler;
+  private FolderDiffTreeTableModel treeTableModel;
 
   FolderDiffPanel(
     JMeldPanel mainPanel,
@@ -120,8 +120,10 @@ public class FolderDiffPanel
       diff.getRightFolderName(),
       diff.getLeftFolderName());
 
-    folderTreeTable.setTreeTableModel(
-      new FolderDiffTreeTableModel(getRootNode()));
+    treeTableModel = new FolderDiffTreeTableModel();
+    folderTreeTable.setTreeTableModel(treeTableModel);
+    treeTableModel.setRoot(getRootNode());
+
     folderTreeTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     folderTreeTable.setToggleClickCount(1);
     folderTreeTable.setTerminateEditOnFocusLost(false);
@@ -130,14 +132,10 @@ public class FolderDiffPanel
     folderTreeTable.expandAll();
 
     folderTreeTable.setHighlighters(
-      new HighlighterPipeline(
-        new Highlighter[]
-        {
-          new AlternateRowHighlighter(
-            Color.white,
-            Colors.getTableRowHighLighterColor(),
-            Color.black),
-        }));
+      new AlternateRowHighlighter(
+        Color.white,
+        Colors.getTableRowHighLighterColor(),
+        Color.black));
 
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
@@ -240,12 +238,12 @@ public class FolderDiffPanel
     + diff.getRightFolderShortName();
   }
 
-  private TreeNode getRootNode()
+  private TreeTableNode getRootNode()
   {
     return filter(diff.getRootNode());
   }
 
-  private TreeNode filter(JMDiffNode diffNode)
+  private TreeTableNode filter(JMDiffNode diffNode)
   {
     List<JMDiffNode> nodes;
     UINode           uiParentNode;
@@ -294,7 +292,7 @@ public class FolderDiffPanel
       }
     }
 
-    rootNode = new UINode("<root>", false);
+    rootNode = new UINode(treeTableModel, "<root>", false);
     hierarchy = hierarchyComboBox.getSelectedItem();
 
     // Build the hierarchy:
@@ -303,12 +301,12 @@ public class FolderDiffPanel
       for (JMDiffNode node : nodes)
       {
         parent = node.getParent();
-        uiNode = new UINode(node);
+        uiNode = new UINode(treeTableModel, node);
 
         if (parent != null)
         {
           parentName = parent.getName();
-          uiParentNode = new UINode(parentName, false);
+          uiParentNode = new UINode(treeTableModel, parentName, false);
           uiParentNode = rootNode.addChild(uiParentNode);
           uiParentNode.addChild(uiNode);
         }
@@ -322,7 +320,7 @@ public class FolderDiffPanel
     {
       for (JMDiffNode node : nodes)
       {
-        rootNode.addChild(new UINode(node));
+        rootNode.addChild(new UINode(treeTableModel, node));
       }
     }
     else if (hierarchy == FolderSettings.FolderView.directoryView)
@@ -357,7 +355,7 @@ public class FolderDiffPanel
     for (int i = 1; i < uiNodes.size(); i++)
     {
       uiNode = uiNodes.get(i);
-      parent = parent.addChild(new UINode(uiNode));
+      parent = parent.addChild(new UINode(treeTableModel, uiNode));
     }
   }
 
@@ -598,8 +596,10 @@ public class FolderDiffPanel
 
     protected void done()
     {
-      folderTreeTable.setTreeTableModel(
-        new FolderDiffTreeTableModel(getRootNode()));
+      treeTableModel = new FolderDiffTreeTableModel();
+
+      folderTreeTable.setTreeTableModel(treeTableModel);
+      treeTableModel.setRoot(getRootNode());
       folderTreeTable.expandAll();
     }
   }

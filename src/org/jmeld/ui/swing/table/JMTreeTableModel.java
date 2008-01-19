@@ -33,10 +33,8 @@ public abstract class JMTreeTableModel
 {
   private List<Column> columns;
 
-  public JMTreeTableModel(TreeNode root)
+  public JMTreeTableModel()
   {
-    super(root);
-
     columns = new ArrayList<Column>();
   }
 
@@ -81,12 +79,6 @@ public abstract class JMTreeTableModel
     Object objectNode,
     Column column);
 
-  /*
-     public abstract void setValueAt(
-       Object value,
-       Object objectNode,
-       Column column);
-   */
   public int getColumnSize(int columnIndex)
   {
     return getColumn(columnIndex).columnSize;
@@ -110,30 +102,6 @@ public abstract class JMTreeTableModel
     return super.getColumnClass(columnIndex);
   }
 
-/*
-   public Class getColumnClass(
-     int    rowIndex,
-     Column column)
-   {
-     return null;
-   }
-   public Class getColumnClass(
-     int rowIndex,
-     int columnIndex)
-   {
-     return getColumnClass(
-       rowIndex,
-       getColumn(columnIndex));
-   }
-   public Color getColumnBackground(int columnIndex)
-   {
-     return getColumn(columnIndex).background;
-   }
-   public String getColumnGroupName(int columnIndex)
-   {
-     return getColumn(columnIndex).columnGroupName;
-   }
- */
   public int getColumnCount()
   {
     return columns.size();
@@ -184,18 +152,6 @@ public abstract class JMTreeTableModel
       getColumn(columnIndex));
   }
 
-/*
-   public final void setValueAt(
-     Object value,
-     Object objectNode,
-     int    columnIndex)
-   {
-     setValueAt(
-       value,
-       objectNode,
-       getColumn(columnIndex));
-   }
- */
   public class Column
   {
     private String            id;

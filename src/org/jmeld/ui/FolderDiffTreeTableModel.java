@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui;
 
+import org.jdesktop.swingx.treetable.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.swing.table.*;
@@ -42,10 +43,8 @@ public class FolderDiffTreeTableModel
   private Column rightStateColumn;
   private Column rightSizeColumn;
 
-  public FolderDiffTreeTableModel(TreeNode rootNode)
+  public FolderDiffTreeTableModel()
   {
-    super(rootNode);
-
     fileNameColumn = addColumn("fileName", null, "File", null, -1, false, null);
     leftSizeColumn = addColumn("leftSize", "Left", "Size", Integer.class, 8,
         false, Colors.TABLEROW_LEFT);
@@ -80,7 +79,7 @@ public class FolderDiffTreeTableModel
 
     if (column == leftSizeColumn)
     {
-      if(diffNode == null)
+      if (diffNode == null)
       {
         return "";
       }
@@ -101,7 +100,7 @@ public class FolderDiffTreeTableModel
 
     if (column == rightSizeColumn)
     {
-      if(diffNode == null)
+      if (diffNode == null)
       {
         return "";
       }

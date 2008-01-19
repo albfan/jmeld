@@ -48,27 +48,25 @@ public class JMTreeTable
   public JMTreeTable()
   {
     charWidth = getFontMetrics(getFont()).charWidth('W');
+
+    setAutoResizeMode(AUTO_RESIZE_NEXT_COLUMN);
   }
 
   public void setTreeTableModel(JMTreeTableModel tableModel)
   {
-    TableColumnModel         columnModel;
-    TableColumn              column;
-    int                      preferredWidth;
-    Map<String, ColumnGroup> columnGroups;
-    String                   groupName;
-    ColumnGroup              group;
-    TableCellEditor          editor;
-    TableCellRenderer        renderer;
+    TableColumnModel  columnModel;
+    TableColumn       column;
+    int               preferredWidth;
+    TableCellEditor   editor;
+    TableCellRenderer renderer;
 
     super.setTreeTableModel(tableModel);
 
     setColumnControlVisible(true);
     /*
-    ((DefaultCellEditor) getDefaultEditor(AbstractTreeTableModel.hierarchicalColumnClass))
-      .setClickCountToStart(1);
-      */
-
+       ((DefaultCellEditor) getDefaultEditor(AbstractTreeTableModel.hierarchicalColumnClass))
+         .setClickCountToStart(1);
+     */
     if (tableModel != null)
     {
       // Make sure the icons fit well.
@@ -99,6 +97,10 @@ public class JMTreeTable
           column.setMinWidth(preferredWidth);
           column.setMaxWidth(preferredWidth);
           column.setPreferredWidth(preferredWidth);
+        }
+        else 
+        {
+          getTableHeader().setResizingColumn(column);
         }
       }
     }

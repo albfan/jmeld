@@ -1,5 +1,7 @@
 package org.jmeld.ui;
 
+import org.jdesktop.swingx.treetable.*;
+import org.jmeld.ui.swing.table.*;
 import org.jmeld.util.node.*;
 
 import javax.swing.tree.*;
@@ -7,8 +9,9 @@ import javax.swing.tree.*;
 import java.util.*;
 
 public class UINode
-       implements TreeNode, Comparable<UINode>
+       implements TreeTableNode, Comparable<UINode>
 {
+  private JMTreeTableModel    treeTableModel;
   private String              text;
   private String              name;
   private boolean             leaf;
@@ -18,8 +21,11 @@ public class UINode
   private Map<String, UINode> childrenMap = new HashMap<String, UINode>();
   private boolean             checkSort;
 
-  public UINode(JMDiffNode diffNode)
+  public UINode(
+    JMTreeTableModel treeTableModel,
+    JMDiffNode       diffNode)
   {
+    this.treeTableModel = treeTableModel;
     this.diffNode = diffNode;
 
     this.name = diffNode.getName();
@@ -27,11 +33,13 @@ public class UINode
   }
 
   public UINode(
-    String  name,
-    boolean leaf)
+    JMTreeTableModel treeTableModel,
+    String           name,
+    boolean          leaf)
   {
     assert name != null;
 
+    this.treeTableModel = treeTableModel;
     this.name = name;
     this.leaf = leaf;
   }
@@ -136,6 +144,7 @@ public class UINode
     }
   }
 
+  @Override
   public String toString()
   {
     String pn;
@@ -163,5 +172,37 @@ public class UINode
   public int compareTo(UINode o)
   {
     return toString().compareTo(o.toString());
+  }
+
+  public Object getValueAt(int column)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  public int getColumnCount()
+  {
+    return treeTableModel.getColumnCount();
+  }
+
+  public boolean isEditable(int column)
+  {
+    return false;
+  }
+
+  public void setValueAt(
+    Object aValue,
+    int    column)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  public Object getUserObject()
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  public void setUserObject(Object userObject)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 }
