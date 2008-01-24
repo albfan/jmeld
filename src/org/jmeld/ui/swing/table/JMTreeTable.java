@@ -43,7 +43,8 @@ import java.util.*;
 public class JMTreeTable
        extends JXTreeTable
 {
-  private int charWidth;
+  private int                charWidth;
+  private TreeTableHackerExt myTreeTableHacker;
 
   public JMTreeTable()
   {
@@ -98,11 +99,28 @@ public class JMTreeTable
           column.setMaxWidth(preferredWidth);
           column.setPreferredWidth(preferredWidth);
         }
-        else 
+        else
         {
           getTableHeader().setResizingColumn(column);
         }
       }
     }
+  }
+
+  protected TreeTableHacker getTreeTableHacker()
+  {
+    if (myTreeTableHacker == null)
+    {
+      myTreeTableHacker = new TreeTableHackerExt()
+          {
+            @Override
+            protected boolean isHitDetectionFromProcessMouse()
+            {
+              return false;
+            }
+          };
+    }
+
+    return myTreeTableHacker;
   }
 }
