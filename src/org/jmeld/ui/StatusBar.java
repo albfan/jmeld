@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui;
 
+import org.jmeld.ui.dnd.*;
 import org.jmeld.ui.swing.*;
 import org.jmeld.util.*;
 
@@ -35,12 +36,13 @@ public class StatusBar
   private static StatusBar instance = new StatusBar();
 
   // Instance variables:
-  private JLabel       statusLabel;
-  private JPanel       progressArea;
-  private JProgressBar progressBar;
-  private BusyLabel    busy;
-  private Timer        timer;
-  private JPanel       notificationArea;
+  private JLabel           statusLabel;
+  private JPanel           progressArea;
+  private JProgressBar     progressBar;
+  private BusyLabel        busy;
+  private DragAndDropPanel dragAndDrop;
+  private Timer            timer;
+  private JPanel           notificationArea;
 
   private StatusBar()
   {
@@ -67,8 +69,10 @@ public class StatusBar
         progressBar.getBorder()));
     progressBar.setStringPainted(true);
     busy = new BusyLabel();
+    dragAndDrop = new DragAndDropPanel();
 
     panel = new JPanel(new BorderLayout());
+    add(dragAndDrop, BorderLayout.WEST);
     add(statusLabel, BorderLayout.CENTER);
     add(panel, BorderLayout.EAST);
 
@@ -93,23 +97,23 @@ public class StatusBar
   }
 
   public void setState(
-    String format,
-    Object...args)
+    String    format,
+    Object... args)
   {
     statusLabel.setText(String.format(format, args));
   }
 
   public void setText(
-    String format,
-    Object...args)
+    String    format,
+    Object... args)
   {
     setState(format, args);
     stop();
   }
 
   public void setAlarm(
-    String format,
-    Object...args)
+    String    format,
+    Object... args)
   {
     statusLabel.setForeground(Color.red);
     setState(format, args);

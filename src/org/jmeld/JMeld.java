@@ -32,8 +32,9 @@ import java.awt.event.*;
 public class JMeld
        implements Runnable
 {
-  private String fileName1;
-  private String fileName2;
+  private String            fileName1;
+  private String            fileName2;
+  private static JMeldPanel jmeldPanel;
 
   public JMeld(String[] args)
   {
@@ -48,11 +49,15 @@ public class JMeld
     }
   }
 
+  public static JMeldPanel getJMeldPanel()
+  {
+    return jmeldPanel;
+  }
+
   public void run()
   {
-    JFrame     frame;
-    JMeldPanel panel;
-    String     version;
+    JFrame frame;
+    String version;
 
     KeyboardFocusManager.setCurrentKeyboardFocusManager(
       new DefaultKeyboardFocusManager()
@@ -96,17 +101,16 @@ public class JMeld
     }
 
     frame = new JFrame("JMeld");
-    panel = new JMeldPanel(fileName1, fileName2);
-    frame.add(panel);
+    jmeldPanel = new JMeldPanel(fileName1, fileName2);
+    frame.add(jmeldPanel);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    //frame.setJMenuBar(panel.getMenuBar());
+    //frame.setJMenuBar(jmeldPanel.getMenuBar());
     frame.setIconImage(ResourceLoader.getImageIcon("jmeld-small").getImage());
     new WindowPreference(
       frame.getTitle(),
       frame);
-    frame.addWindowListener(panel.getWindowListener());
-    frame.getRootPane().setTransferHandler(new FileDropHandler());
-
+    frame.addWindowListener(jmeldPanel.getWindowListener());
+    //frame.getRootPane().setTransferHandler(new FileDropHandler());
     frame.setVisible(true);
 
     // Just to keep the damned metacity happy
