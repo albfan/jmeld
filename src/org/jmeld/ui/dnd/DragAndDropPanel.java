@@ -173,17 +173,14 @@ public class DragAndDropPanel
             return;
           }
 
-          System.out.println("left = " + leftFileName);
-          System.out.println("right = " + rightFileName);
-
           leftDragAndDropArea.setBackground(Colors.DND_SELECTED_LIGHT);
           rightDragAndDropArea.setBackground(Colors.DND_SELECTED_LIGHT);
 
           try
           {
             JMeld.getJMeldPanel().openComparison(
-              new File(new URI(leftFileName)).getAbsolutePath(),
-              new File(new URI(rightFileName)).getAbsolutePath());
+              new File(new URL(leftFileName).toURI()).getAbsolutePath(),
+              new File(new URL(rightFileName).toURI()).getAbsolutePath());
           }
           catch (Exception ex)
           {
