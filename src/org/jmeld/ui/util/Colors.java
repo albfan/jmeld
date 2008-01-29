@@ -31,8 +31,8 @@ public class Colors
   public static Color DELETED_DARK = new Color(193, 50, 0);
   public static Color TABLEROW_LEFT = null;
   public static Color TABLEROW_RIGHT = null;
-  public static Color DND_SELECTED_LIGHT = new Color(238, 227, 187);
-  public static Color DND_SELECTED_DARK = new Color(238, 214, 128);
+  public static Color DND_SELECTED_NEW = ADDED_DARK;
+  public static Color DND_SELECTED_USED = new Color(238, 214, 128);
 
   /** Get a highlighter that will match the current l&f.
    */

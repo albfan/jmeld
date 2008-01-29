@@ -18,8 +18,8 @@ public class DragAndDropPanel
 {
   private JComponent leftDragAndDropArea;
   private JComponent rightDragAndDropArea;
-  private String     leftFileName;
-  private String     rightFileName;
+  private String     leftFileName = "";
+  private String     rightFileName = "";
 
   public DragAndDropPanel()
   {
@@ -69,6 +69,73 @@ public class DragAndDropPanel
   {
     return new DropTarget()
       {
+        Component orgGlassPane;
+        JPanel    glassPane;
+
+        public void dragEnter(DropTargetDragEvent dtde)
+        {
+          super.dragEnter(dtde);
+
+          if (orgGlassPane == null)
+          {
+            glassPane = new JPanel(new GridLayout(0, 2, 40, 40));
+            glassPane.setBorder(
+              BorderFactory.createEmptyBorder(60, 10, 40, 10));
+            glassPane.setOpaque(false);
+
+            glassPane.add(createDropPane(leftFileName));
+            glassPane.add(createDropPane(rightFileName));
+
+            orgGlassPane = getRootPane().getGlassPane();
+            getRootPane().setGlassPane(glassPane);
+            glassPane.setVisible(true);
+            getRootPane().repaint();
+          }
+        }
+
+        private JPanel createDropPane(String text)
+        {
+          JPanel p;
+          JLabel label;
+
+          label = new JLabel(text);
+          label.setOpaque(false);
+          label.setHorizontalAlignment(JLabel.LEFT);
+          label.setVerticalAlignment(JLabel.TOP);
+          label.setFont(label.getFont().deriveFont(16.0f));
+
+          p = new JPanel(new BorderLayout());
+          p.add(label, BorderLayout.CENTER);
+          p.setBackground(new Color(238, 227, 187, 200));
+          p.setBorder(
+            BorderFactory.createCompoundBorder(
+              BorderFactory.createLineBorder(Color.GRAY),
+              BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+
+          return p;
+        }
+
+        public void dragOver(DropTargetDragEvent dtde)
+        {
+          super.dragOver(dtde);
+        }
+
+        public void dragExit(DropTargetEvent dte)
+        {
+          super.dragExit(dte);
+          resetGlassPane();
+        }
+
+        private void resetGlassPane()
+        {
+          if (orgGlassPane != null)
+          {
+            getRootPane().setGlassPane(orgGlassPane);
+            orgGlassPane.setVisible(false);
+            orgGlassPane = null;
+          }
+        }
+
         public void drop(DropTargetDropEvent dtde)
         {
           Rectangle b;
@@ -88,14 +155,16 @@ public class DragAndDropPanel
           left = p.x < (b.width - b.x) / 2;
           if (left)
           {
-            leftDragAndDropArea.setBackground(Colors.DND_SELECTED_DARK);
+            leftDragAndDropArea.setBackground(Colors.DND_SELECTED_NEW);
             leftFileName = fileName;
           }
           else
           {
-            rightDragAndDropArea.setBackground(Colors.DND_SELECTED_DARK);
+            rightDragAndDropArea.setBackground(Colors.DND_SELECTED_NEW);
             rightFileName = fileName;
           }
+
+          resetGlassPane();
         }
 
         private String getFileName(DropTargetDropEvent dtde)
@@ -173,8 +242,8 @@ public class DragAndDropPanel
             return;
           }
 
-          leftDragAndDropArea.setBackground(Colors.DND_SELECTED_LIGHT);
-          rightDragAndDropArea.setBackground(Colors.DND_SELECTED_LIGHT);
+          leftDragAndDropArea.setBackground(Colors.DND_SELECTED_USED);
+          rightDragAndDropArea.setBackground(Colors.DND_SELECTED_USED);
 
           try
           {
