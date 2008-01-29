@@ -217,6 +217,11 @@ public class FolderDiffPanel
     installKey("alt RIGHT", action);
     installKey("alt KP_RIGHT", action);
 
+    deleteRightButton.setVisible(false);
+    copyToRightButton.setVisible(false);
+    copyToLeftButton.setVisible(false);
+    deleteLeftButton.setVisible(false);
+
     action = actionHandler.createAction(this, "Filter");
     onlyRightButton.setAction(action);
     leftRightChangedButton.setAction(action);
