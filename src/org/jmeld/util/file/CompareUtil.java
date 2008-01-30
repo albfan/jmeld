@@ -16,6 +16,7 @@
  */
 package org.jmeld.util.file;
 
+import org.jmeld.util.*;
 import org.jmeld.util.node.*;
 
 import java.io.*;
@@ -32,12 +33,11 @@ public class CompareUtil
   public static boolean contentEquals(
     BufferNode nodeLeft,
     BufferNode nodeRight,
-    boolean    ignoreWhitespace)
+    Ignore     ignore)
   {
     if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
-      return contentEquals((FileNode) nodeLeft, (FileNode) nodeRight,
-        ignoreWhitespace);
+      return contentEquals((FileNode) nodeLeft, (FileNode) nodeRight, ignore);
     }
 
     return false;
@@ -46,7 +46,7 @@ public class CompareUtil
   private static boolean contentEquals(
     FileNode nodeLeft,
     FileNode nodeRight,
-    boolean  ignoreWhitespace)
+    Ignore   ignore)
   {
     File             fileLeft;
     File             fileRight;
@@ -77,12 +77,12 @@ public class CompareUtil
         return true;
       }
 
-      if (!ignoreWhitespace && fileLeft.length() != fileRight.length())
+      if (!ignore.ignore && fileLeft.length() != fileRight.length())
       {
         return false;
       }
 
-      if (!ignoreWhitespace)
+      if (!ignore.ignore)
       {
         fLeft = new RandomAccessFile(fileLeft, "r");
         fRight = new RandomAccessFile(fileRight, "r");
@@ -109,7 +109,7 @@ public class CompareUtil
           leftFound = false;
           while ((leftChar = readerLeft.read()) != -1)
           {
-            if (Character.isWhitespace(leftChar))
+            if (ignore.ignoreWhitespace && Character.isWhitespace(leftChar))
             {
               continue;
             }
@@ -121,7 +121,7 @@ public class CompareUtil
           rightFound = false;
           while ((rightChar = readerRight.read()) != -1)
           {
-            if (Character.isWhitespace(rightChar))
+            if (ignore.ignoreWhitespace && Character.isWhitespace(rightChar))
             {
               continue;
             }
@@ -191,9 +191,9 @@ public class CompareUtil
   }
 
   public static boolean contentEquals(
-    char[]  left,
-    char[]  right,
-    boolean ignoreWhitespace)
+    char[] left,
+    char[] right,
+    Ignore ignore)
   {
     boolean equals;
     boolean leftFound;
@@ -206,7 +206,7 @@ public class CompareUtil
     leftIndex = 0;
     rightIndex = 0;
 
-    if (!ignoreWhitespace)
+    if (!ignore.ignore)
     {
       equals = Arrays.equals(left, right);
     }
@@ -223,7 +223,7 @@ public class CompareUtil
           leftChar = left[leftIndex];
           leftIndex++;
 
-          if (Character.isWhitespace(leftChar))
+          if (ignore.ignoreWhitespace && Character.isWhitespace(leftChar))
           {
             continue;
           }
@@ -238,7 +238,7 @@ public class CompareUtil
           rightChar = right[rightIndex];
           rightIndex++;
 
-          if (Character.isWhitespace(rightChar))
+          if (ignore.ignoreWhitespace && Character.isWhitespace(rightChar))
           {
             continue;
           }

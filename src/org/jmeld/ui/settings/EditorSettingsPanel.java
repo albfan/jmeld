@@ -39,6 +39,8 @@ public class EditorSettingsPanel
     tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
     ignoreWhitespaceCheckBox.addActionListener(getIgnoreWhitespaceAction());
+    ignoreEOLCheckBox.addActionListener(getIgnoreEOLAction());
+    ignoreBlankLinesCheckBox.addActionListener(getIgnoreBlankLinesAction());
     leftsideReadonlyCheckBox.addActionListener(getLeftsideReadonlyAction());
     rightsideReadonlyCheckBox.addActionListener(getRightsideReadonlyAction());
     colorAddedButton.addActionListener(getColorAddedAction());
@@ -134,6 +136,30 @@ public class EditorSettingsPanel
       };
   }
 
+  private ActionListener getIgnoreEOLAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setIgnoreEOL(ignoreEOLCheckBox.isSelected());
+        }
+      };
+  }
+
+  private ActionListener getIgnoreBlankLinesAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setIgnoreBlankLines(ignoreBlankLinesCheckBox.isSelected());
+        }
+      };
+  }
+
   private ActionListener getLeftsideReadonlyAction()
   {
     return new java.awt.event.ActionListener()
@@ -211,7 +237,9 @@ public class EditorSettingsPanel
         20,
         20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
-    ignoreWhitespaceCheckBox.setSelected(settings.getIgnoreWhitespace());
+    ignoreWhitespaceCheckBox.setSelected(settings.getIgnore().ignoreWhitespace);
+    ignoreEOLCheckBox.setSelected(settings.getIgnore().ignoreEOL);
+    ignoreBlankLinesCheckBox.setSelected(settings.getIgnore().ignoreBlankLines);
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     tabSizeSpinner.setValue(settings.getTabSize());

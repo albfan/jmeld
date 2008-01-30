@@ -5,6 +5,7 @@ import org.jmeld.diff.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.text.*;
+import org.jmeld.util.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.file.cmd.*;
 
@@ -200,7 +201,7 @@ public class JMDiffNode
   public void compareContents()
   {
     boolean equals;
-    boolean ignoreWhitespace;
+    Ignore  ignore;
 
     if (!isLeaf() || (nodeLeft == null && nodeRight == null))
     {
@@ -220,10 +221,9 @@ public class JMDiffNode
       return;
     }
 
-    ignoreWhitespace = JMeldSettings.getInstance().getEditor()
-                                    .getIgnoreWhitespace();
+    ignore = JMeldSettings.getInstance().getEditor().getIgnore();
 
-    equals = CompareUtil.contentEquals(nodeLeft, nodeRight, ignoreWhitespace);
+    equals = CompareUtil.contentEquals(nodeLeft, nodeRight, ignore);
     compareState = equals ? Compare.Equal : Compare.NotEqual;
   }
 

@@ -35,7 +35,7 @@ public class JMDelta
   private char       type;
   private JMRevision revision;
   private JMRevision changeRevision;
-  private Boolean    isWhitespace;
+  private Boolean    shouldIgnore;
 
   public JMDelta(
     JMChunk original,
@@ -87,17 +87,17 @@ public class JMDelta
     return changeRevision;
   }
 
-  public boolean isWhitespace()
+  public boolean shouldIgnore(Ignore ignore)
   {
-    if (isWhitespace == null)
+    if (shouldIgnore == null)
     {
-      isWhitespace = CompareUtil.contentEquals(
+      shouldIgnore = CompareUtil.contentEquals(
           revision.getOriginalString(original).toCharArray(),
           revision.getRevisedString(revised).toCharArray(),
-          true);
+          ignore);
     }
 
-    return isWhitespace.booleanValue();
+    return shouldIgnore.booleanValue();
   }
 
   private JMRevision createChangeRevision()

@@ -17,6 +17,7 @@
 package org.jmeld.settings;
 
 import org.jmeld.ui.util.*;
+import org.jmeld.util.*;
 import org.jmeld.util.conf.*;
 
 import javax.xml.bind.annotation.*;
@@ -28,21 +29,26 @@ public class EditorSettings
        extends AbstractConfigurationElement
 {
   @XmlElement
-  private boolean                 showLineNumbers;
+  private boolean          showLineNumbers;
   @XmlElement
-  private int                     tabSize = 4;
+  private int              tabSize = 4;
   @XmlElement
-  private boolean                 ignoreWhitespace;
+  private boolean          ignoreWhitespace;
   @XmlElement
-  private boolean                 leftsideReadonly;
+  private boolean          ignoreEOL;
   @XmlElement
-  private boolean                 rightsideReadonly;
+  private boolean          ignoreBlankLines;
   @XmlElement
-  private ColorSetting            addedColor;
+  private boolean          leftsideReadonly;
   @XmlElement
-  private ColorSetting            changedColor;
+  private boolean          rightsideReadonly;
   @XmlElement
-  private ColorSetting            deletedColor;
+  private ColorSetting     addedColor;
+  @XmlElement
+  private ColorSetting     changedColor;
+  @XmlElement
+  private ColorSetting     deletedColor;
+  private transient Ignore ignore;
 
   public EditorSettings()
   {
@@ -70,14 +76,34 @@ public class EditorSettings
     fireChanged();
   }
 
-  public boolean getIgnoreWhitespace()
+  public Ignore getIgnore()
   {
-    return ignoreWhitespace;
+    if (ignore == null)
+    {
+      ignore = new Ignore(ignoreWhitespace, ignoreEOL, ignoreBlankLines);
+    }
+
+    return ignore;
   }
 
   public void setIgnoreWhitespace(boolean ignoreWhitespace)
   {
     this.ignoreWhitespace = ignoreWhitespace;
+    ignore = null;
+    fireChanged();
+  }
+
+  public void setIgnoreEOL(boolean ignoreEOL)
+  {
+    this.ignoreEOL = ignoreEOL;
+    ignore = null;
+    fireChanged();
+  }
+
+  public void setIgnoreBlankLines(boolean ignoreBlankLines)
+  {
+    this.ignoreBlankLines = ignoreBlankLines;
+    ignore = null;
     fireChanged();
   }
 

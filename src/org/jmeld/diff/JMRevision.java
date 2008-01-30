@@ -17,6 +17,7 @@
 package org.jmeld.diff;
 
 import org.jmeld.settings.*;
+import org.jmeld.util.*;
 
 import java.util.*;
 
@@ -120,15 +121,14 @@ public class JMRevision
   private LinkedList<JMDelta> filter(LinkedList<JMDelta> deltaList)
   {
     LinkedList<JMDelta> filteredDeltas;
-    boolean             ignoreWhitespace;
+    Ignore              ignore;
 
-    ignoreWhitespace = JMeldSettings.getInstance().getEditor()
-                                    .getIgnoreWhitespace();
+    ignore = JMeldSettings.getInstance().getEditor().getIgnore();
 
     filteredDeltas = new LinkedList<JMDelta>();
     for (JMDelta delta : deltaList)
     {
-      if (ignoreWhitespace && delta.isWhitespace())
+      if (ignore.ignore && delta.shouldIgnore(ignore))
       {
         continue;
       }
