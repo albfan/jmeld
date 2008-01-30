@@ -69,7 +69,7 @@ public class FolderDiffTreeTableModel
 
     if (column == fileNameColumn)
     {
-      return uiNode.getName();
+      return uiNode.toString();
     }
 
     if (column == leftStateColumn)
