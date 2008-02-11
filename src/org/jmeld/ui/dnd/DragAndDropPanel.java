@@ -51,7 +51,7 @@ public class DragAndDropPanel
         {
           JRootPane rootPane;
 
-          if ((e.getChangeFlags() & e.PARENT_CHANGED) > 0)
+          if ((e.getChangeFlags() & e.PARENT_CHANGED) != 0)
           {
             rootPane = getRootPane();
             if (rootPane == null)
