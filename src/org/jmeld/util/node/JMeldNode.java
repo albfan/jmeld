@@ -91,6 +91,11 @@ public class JMeldNode
 
   public boolean equals(Object o)
   {
+    if(!(o instanceof JMeldNode))
+    {
+      return false;
+    }
+
     return name.equals(((JMeldNode) o).getName());
   }
 

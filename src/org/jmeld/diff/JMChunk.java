@@ -53,6 +53,11 @@ public class JMChunk
   {
     JMChunk c;
 
+    if(!(o instanceof JMChunk))
+    {
+      return false;
+    }
+
     c = (JMChunk) o;
 
     return c.size == size && c.anchor == anchor;

@@ -58,6 +58,11 @@ public class SearchHit
   {
     SearchHit sh;
 
+    if(!(o instanceof SearchHit))
+    {
+      return false;
+    }
+
     sh = (SearchHit) o;
 
     return (sh.getFromOffset() == getFromOffset()

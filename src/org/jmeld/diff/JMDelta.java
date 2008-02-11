@@ -224,6 +224,11 @@ public class JMDelta
   {
     JMDelta d;
 
+    if(!(o instanceof JMDelta))
+    {
+      return false;
+    }
+
     d = (JMDelta) o;
     if (revision != d.revision)
     {

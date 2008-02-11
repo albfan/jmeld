@@ -447,6 +447,11 @@ public abstract class AbstractBufferDocument
       int     end1;
       int     end2;
 
+      if(!(o instanceof Line))
+      {
+        return false;
+      }
+
       line2 = ((Line) o);
       element2 = line2.element;
 
