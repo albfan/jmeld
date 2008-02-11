@@ -143,8 +143,6 @@ public class JMeldPanel
     File    rightFile,
     boolean openInBackground)
   {
-    WaitCursor.wait(this);
-
     new NewFileComparisonPanel(leftFile, rightFile, openInBackground).execute();
   }
 
@@ -152,8 +150,6 @@ public class JMeldPanel
     JMDiffNode diffNode,
     boolean    openInBackground)
   {
-    WaitCursor.wait(this);
-
     new NewFileComparisonPanel(diffNode, openInBackground).execute();
   }
 
@@ -162,8 +158,6 @@ public class JMeldPanel
     File   rightFile,
     Filter filter)
   {
-    WaitCursor.wait(this);
-
     new NewDirectoryComparisonPanel(leftFile, rightFile, filter).execute();
   }
 
@@ -837,10 +831,6 @@ public class JMeldPanel
       {
         ex.printStackTrace();
       }
-      finally
-      {
-        WaitCursor.resume(JMeldPanel.this);
-      }
     }
 
     private Runnable getDoGoToFirst()
@@ -943,10 +933,6 @@ public class JMeldPanel
       catch (Exception ex)
       {
         ex.printStackTrace();
-      }
-      finally
-      {
-        WaitCursor.resume(JMeldPanel.this);
       }
     }
   }
