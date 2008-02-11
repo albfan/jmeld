@@ -105,7 +105,7 @@ public class JMeld
     frame.add(jmeldPanel);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     //frame.setJMenuBar(jmeldPanel.getMenuBar());
-    frame.setIconImage(ResourceLoader.getImageIcon("jmeld-small").getImage());
+    frame.setIconImage(ImageUtil.getImageIcon("jmeld-small").getImage());
     new WindowPreference(
       frame.getTitle(),
       frame);

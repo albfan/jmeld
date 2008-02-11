@@ -32,27 +32,6 @@ public class ResourceLoader
     return this.getClass().getClassLoader();
   }
 
-  public static synchronized ImageIcon getSmallImageIcon(String iconName)
-  {
-    return getImageIcon("16x16/" + iconName + "-16");
-  }
-
-  public static synchronized ImageIcon getImageIcon(String iconName)
-  {
-    ImageIcon icon;
-    URL       url;
-
-    iconName = "images/" + iconName + ".png";
-
-    url = getResource(iconName);
-    if (url == null)
-    {
-      return null;
-    }
-
-    return new ImageIcon(url);
-  }
-
   public static synchronized InputStream getResourceAsStream(
     String resourceName)
   {
