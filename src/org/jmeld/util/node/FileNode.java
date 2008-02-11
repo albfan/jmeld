@@ -73,6 +73,11 @@ public class FileNode
 
     try
     {
+      if(!(node instanceof FileNode))
+      {
+        return false;
+      }
+
       file2 = ((FileNode) node).getFile();
 
       if (file.isDirectory() || file2.isDirectory())
