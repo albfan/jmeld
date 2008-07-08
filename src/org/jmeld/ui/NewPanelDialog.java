@@ -44,6 +44,10 @@ public class NewPanelDialog
   private static String RIGHT_DIRECTORY = "RIGHT_DIRECTORY";
   private static String LEFT_DIRECTORY = "LEFT_DIRECTORY";
 
+// Version control :
+  public static String  VERSION_CONTROL = "VERSION_CONTROL";
+  private static String VERSION_CONTROL_DIRECTORY = "VERSION_CONTROL_DIRECTORY";
+
 // Instance variables:
   private JMeldPanel  meldPanel;
   private JTabbedPane tabbedPane;
@@ -56,6 +60,8 @@ public class NewPanelDialog
   private String      rightDirectoryName;
   private JComboBox   leftDirectoryComboBox;
   private JComboBox   rightDirectoryComboBox;
+  private String      versionControlDirectoryName;
+  private JComboBox   versionControlDirectoryComboBox;
   private JComboBox   filterComboBox;
   private JDialog     dialog;
 
@@ -90,6 +96,10 @@ public class NewPanelDialog
 
           case 1:
             setValue(DIRECTORY_COMPARISON);
+            break;
+
+          case 2:
+            setValue(VERSION_CONTROL);
             break;
         }
       }
@@ -131,9 +141,14 @@ public class NewPanelDialog
     return rightDirectoryName;
   }
 
+  public String getVersionControlDirectoryName()
+  {
+    return versionControlDirectoryName;
+  }
+
   public Filter getFilter()
   {
-    if(filterComboBox.getSelectedItem() instanceof Filter)
+    if (filterComboBox.getSelectedItem() instanceof Filter)
     {
       return (Filter) filterComboBox.getSelectedItem();
     }
@@ -152,6 +167,11 @@ public class NewPanelDialog
     tabbedPane.add(
       "Directory Comparison",
       getDirectoryComparisonPanel());
+    tabbedPane.add(
+      "Version control",
+      getVersionControlPanel());
+
+    new TabbedPanePreference("NewPanelTabbedPane", tabbedPane);
 
     panel = new JPanel(new BorderLayout());
     panel.add(tabbedPane, BorderLayout.CENTER);
@@ -431,13 +451,111 @@ public class NewPanelDialog
           source = ae.getSource();
           if (source == leftDirectoryComboBox)
           {
-            leftDirectoryName = (String) leftDirectoryComboBox
-              .getSelectedItem();
+            leftDirectoryName = (String) leftDirectoryComboBox.getSelectedItem();
           }
           else if (source == rightDirectoryComboBox)
           {
-            rightDirectoryName = (String) rightDirectoryComboBox.getSelectedItem();
+            rightDirectoryName = (String) rightDirectoryComboBox
+              .getSelectedItem();
           }
+        }
+      };
+  }
+
+  private JComponent getVersionControlPanel()
+  {
+    JPanel          panel;
+    String          columns;
+    String          rows;
+    FormLayout      layout;
+    CellConstraints cc;
+    JLabel          label;
+    JButton         button;
+
+    columns = "10px, right:pref, 10px, max(150dlu;pref):grow, 5px, pref, 10px";
+    rows = "10px, fill:pref, 5px, fill:pref, 5px, fill:pref, 5px, fill:pref, 10px";
+    layout = new FormLayout(columns, rows);
+    cc = new CellConstraints();
+
+    panel = new JPanel(layout);
+
+    label = new JLabel("Directory");
+    button = new JButton("Browse...");
+    versionControlDirectoryComboBox = new JComboBox();
+    versionControlDirectoryComboBox.setEditable(false);
+    versionControlDirectoryComboBox.addActionListener(
+      getVersionControlDirectorySelectAction());
+    new ComboBoxPreference("VersionControlDirectory", versionControlDirectoryComboBox);
+
+    button.setActionCommand(VERSION_CONTROL_DIRECTORY);
+    button.addActionListener(getVersionControlDirectoryBrowseAction());
+    panel.add(
+      label,
+      cc.xy(2, 2));
+    panel.add(
+      versionControlDirectoryComboBox,
+      cc.xy(4, 2));
+    panel.add(
+      button,
+      cc.xy(6, 2));
+
+    return panel;
+  }
+
+  public ActionListener getVersionControlDirectoryBrowseAction()
+  {
+    return new ActionListener()
+      {
+        public void actionPerformed(ActionEvent ae)
+        {
+          DirectoryChooserPreference pref;
+          JFileChooser               chooser;
+          int                        result;
+          File                       file;
+          String                     fileName;
+          JComboBox                  comboBox;
+
+          // Don't allow accidentaly creation or rename of files.
+          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+          chooser = new JFileChooser();
+          // Reset the readOnly property as it is systemwide.
+          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+          chooser.setApproveButtonText("Choose");
+          chooser.setDialogTitle("Choose directory");
+          chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+          pref = new DirectoryChooserPreference("VersionControlBrowse", chooser);
+          result = chooser.showOpenDialog(meldPanel);
+
+          if (result == JFileChooser.APPROVE_OPTION)
+          {
+            pref.save();
+
+            try
+            {
+              fileName = chooser.getSelectedFile().getCanonicalPath();
+
+              comboBox = versionControlDirectoryComboBox;
+              comboBox.insertItemAt(fileName, 0);
+              comboBox.setSelectedIndex(0);
+              dialog.pack();
+            }
+            catch (Exception ex)
+            {
+              ex.printStackTrace();
+            }
+          }
+        }
+      };
+  }
+
+  public ActionListener getVersionControlDirectorySelectAction()
+  {
+    return new ActionListener()
+      {
+        public void actionPerformed(ActionEvent ae)
+        {
+          versionControlDirectoryName = (String) versionControlDirectoryComboBox
+            .getSelectedItem();
         }
       };
   }
