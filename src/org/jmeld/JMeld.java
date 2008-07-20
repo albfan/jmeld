@@ -73,8 +73,8 @@ public class JMeld
           Component focusedComponent,
           KeyEvent  e)
         {
-          System.out.println("processKeyEvent[" + focusedComponent.getClass()
-            + "] : " + KeyStroke.getKeyStrokeForEvent(e));
+          //System.out.println("processKeyEvent[" + focusedComponent.getClass()
+            //+ "] : " + KeyStroke.getKeyStrokeForEvent(e));
           super.processKeyEvent(focusedComponent, e);
         }
       });
