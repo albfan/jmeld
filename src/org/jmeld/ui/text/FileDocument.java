@@ -43,7 +43,7 @@ public class FileDocument
     setShortName(file.getName());
   }
 
-  protected int getBufferSize()
+  public int getBufferSize()
   {
     return (int) file.length();
   }

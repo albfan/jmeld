@@ -276,7 +276,6 @@ public class Diff
       if (c > 200 && big_snake && speed_large_files)
       {
         int best = 0;
-        int bestpos = -1;
 
         for (d = fmax; d >= fmin; d -= 2)
         {

@@ -18,5 +18,5 @@ package org.jmeld.ui.text;
 
 public interface BufferDocumentChangeListenerIF
 {
-  public void documentChanged();
+  public void documentChanged(JMDocumentEvent de);
 }

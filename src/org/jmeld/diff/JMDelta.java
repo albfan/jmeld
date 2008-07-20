@@ -77,6 +77,11 @@ public class JMDelta
     return type == CHANGE;
   }
 
+  public void invalidateChangeRevision()
+  {
+    changeRevision = null;
+  }
+
   public JMRevision getChangeRevision()
   {
     if (changeRevision == null)
@@ -102,7 +107,6 @@ public class JMDelta
 
   private JMRevision createChangeRevision()
   {
-    JMDiff        diff;
     char[]        original1;
     Character[]   original2;
     char[]        revised1;
@@ -113,6 +117,7 @@ public class JMDelta
     JMRevision    rev2;
     JMChunk       o;
     JMChunk       r;
+    JMDelta       d2;
     int           anchor;
     int           size;
     WordTokenizer wt;
@@ -171,10 +176,6 @@ public class JMDelta
         o = d.getOriginal();
         r = d.getRevised();
 
-        int maxSize = Math.max(
-            o.getSize(),
-            r.getSize());
-
         anchor = o.getAnchor();
         size = o.getSize();
         oAnchor = anchor == 0 ? 0 : oIndex[anchor - 1];
@@ -185,7 +186,6 @@ public class JMDelta
         rAnchor = anchor == 0 ? 0 : rIndex[anchor - 1];
         rLength = size > 0 ? (rIndex[anchor + size - 1] - rAnchor) : 0;
 
-        JMDelta d2;
         d2 = new JMDelta(
             new JMChunk(oAnchor, oLength),
             new JMChunk(rAnchor, rLength));
@@ -220,11 +220,12 @@ public class JMDelta
     }
   }
 
+  @Override
   public boolean equals(Object o)
   {
     JMDelta d;
 
-    if(!(o instanceof JMDelta))
+    if (!(o instanceof JMDelta))
     {
       return false;
     }
@@ -251,6 +252,7 @@ public class JMDelta
     }
   }
 
+  @Override
   public String toString()
   {
     return type + ": org[" + original + "] rev[" + revised + "]";

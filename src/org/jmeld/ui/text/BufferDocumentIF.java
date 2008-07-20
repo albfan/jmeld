@@ -18,6 +18,7 @@ package org.jmeld.ui.text;
 
 import org.jmeld.*;
 import org.jmeld.diff.*;
+import org.jmeld.util.vc.*;
 
 import javax.swing.text.*;
 
@@ -39,6 +40,8 @@ public interface BufferDocumentIF
 
   public PlainDocument getDocument();
 
+  public BlameIF getVersionControlBlame();
+
   public AbstractBufferDocument.Line[] getLines();
 
   public String getLineText(int lineNumber);
@@ -51,8 +54,6 @@ public interface BufferDocumentIF
 
   public void read()
     throws JMeldException;
-
-  public void initLines();
 
   public void write()
     throws JMeldException;

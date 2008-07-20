@@ -60,6 +60,7 @@ public abstract class AbstractCmd
     }
     catch (Exception ex)
     {
+      ex.printStackTrace();
       throw new CannotRedoException();
     }
   }
@@ -88,6 +89,7 @@ public abstract class AbstractCmd
       }
       catch (Exception ex)
       {
+        ex.printStackTrace();
         throw new CannotRedoException();
       }
     }

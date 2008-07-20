@@ -320,7 +320,7 @@ public class FilePanel
       if (originalBorder == null)
       {
         originalBorder = editor.getBorder();
-        editor.setBorder(new LineNumberBorder(editor));
+        editor.setBorder(new LineNumberBorder(this));
         editor.putClientProperty(propertyName, originalBorder);
       }
     }
@@ -518,42 +518,6 @@ public class FilePanel
     jmhl.removeHighlights(JMHighlighter.LAYER2);
   }
 
-  private JMRevision getChangeRevision(
-    String original,
-    String revised)
-  {
-    JMDiff      diff;
-    char[]      original1;
-    Character[] original2;
-    char[]      revised1;
-    Character[] revised2;
-
-    original1 = original.toString().toCharArray();
-    original2 = new Character[original1.length];
-    for (int j = 0; j < original1.length; j++)
-    {
-      original2[j] = new Character(original1[j]);
-    }
-
-    revised1 = revised.toString().toCharArray();
-    revised2 = new Character[revised1.length];
-    for (int j = 0; j < revised1.length; j++)
-    {
-      revised2[j] = new Character(revised1[j]);
-    }
-
-    try
-    {
-      return new JMDiff().diff(original2, revised2);
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-
-    return null;
-  }
-
   private void setHighlight(
     int                          offset,
     int                          size,
@@ -642,9 +606,22 @@ public class FilePanel
       };
   }
 
-  public void documentChanged()
+  public void documentChanged(JMDocumentEvent de)
   {
-    timer.restart();
+    if(de.getStartLine() == -1 && de.getDocumentEvent() == null)
+    {
+      // Refresh the diff of whole document.
+      timer.restart();
+    }
+    else
+    {
+      // Try to update the revision instead of doing a full diff.
+      if(!diffPanel.revisionChanged(de))
+      {
+        timer.restart();
+      }
+    }
+
     checkActions();
   }
 
@@ -663,13 +640,12 @@ public class FilePanel
     return bufferDocument != null ? bufferDocument.isChanged() : false;
   }
 
-  public ActionListener refresh()
+  private ActionListener refresh()
   {
     return new ActionListener()
       {
         public void actionPerformed(ActionEvent ae)
         {
-          bufferDocument.initLines();
           diffPanel.diff();
         }
       };
@@ -679,6 +655,7 @@ public class FilePanel
   {
     return new FocusAdapter()
       {
+        @Override
         public void focusGained(FocusEvent fe)
         {
           diffPanel.setSelectedPanel(FilePanel.this);

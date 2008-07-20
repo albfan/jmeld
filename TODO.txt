@@ -42,20 +42,20 @@ Release 1.9:
          made smaller.
 
 Release 2.0:
--        Copy to left action in FolderDiffPanel.
--        Copy to right action in FolderDiffPanel.
--        Delete right action in FolderDiffPanel.
--        Delete left action in FolderDiffPanel.
--        Undo/Redo for all above actions actions.
+- [75%]  incremental diff (Adding to the end of the file doesn't work yet)
+- [done] Copy to left action in FolderDiffPanel.
+- [done] Copy to right action in FolderDiffPanel.
+- [done] Delete right action in FolderDiffPanel.
+- [done] Delete left action in FolderDiffPanel.
+- [done] Undo/Redo for all above actions actions.
 
 Release 2.1:
 -        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
+         (Change it to OutLine of the netbeans project!)
 -        Create manual
 -        L&F preference
 -        Support drag and drop.
--        Change Revision when editing instead of creating a New revision 
-         every time. [PERFORMANCE]
--        Remove jgoodies FormLayout in favour of Matisse groupLayout.
+- [done] Remove jgoodies FormLayout in favour of Matisse groupLayout.
 -        BUG[STA] Adjust search in FolderDiffPanel
 -        BUG[WEB] Search doesn't behave after editing.
 -        Exclude patterns in diff (Text Filters in meld).

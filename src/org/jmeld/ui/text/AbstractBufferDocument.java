@@ -17,15 +17,13 @@
 package org.jmeld.ui.text;
 
 import org.jmeld.*;
-import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
+import org.jmeld.util.vc.*;
 
 import javax.swing.event.*;
 import javax.swing.text.*;
 
 import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
 import java.util.*;
 import java.util.List;
 
@@ -35,7 +33,8 @@ public abstract class AbstractBufferDocument
   // instance variables:
   private String                               name;
   private String                               shortName;
-  private Line[]                               lines;
+  private Line[]                               lineArray;
+  private int[]                                lineOffsetArray;
   private PlainDocument                        document;
   private MyGapContent                         content;
   private List<BufferDocumentChangeListenerIF> listeners;
@@ -101,20 +100,27 @@ public abstract class AbstractBufferDocument
 
   public Line[] getLines()
   {
-    return lines;
+    initLines();
+
+    return lineArray;
   }
 
   public String getLineText(int lineNumber)
   {
-    Line[] lines;
+    Line[] la;
 
-    lines = getLines();
-    if (lineNumber >= lines.length || lineNumber < 0)
+    la = getLines();
+    if (la == null)
+    {
+      return null;
+    }
+
+    if (lineNumber >= la.length || lineNumber < 0)
     {
       return "<NO LINE>";
     }
 
-    return lines[lineNumber].toString();
+    return la[lineNumber].toString();
   }
 
   public int getNumberOfLines()
@@ -124,7 +130,7 @@ public abstract class AbstractBufferDocument
 
   public int getOffsetForLine(int lineNumber)
   {
-    int lineCounter;
+    Line[] la;
 
     if (lineNumber < 0)
     {
@@ -136,35 +142,48 @@ public abstract class AbstractBufferDocument
       return 0;
     }
 
-    if (lineNumber > lines.length)
+    la = getLines();
+    if (la == null)
     {
-      lineNumber = lines.length;
+      return -1;
     }
 
-    return lines[lineNumber - 1].getOffset();
+    if (lineNumber > la.length)
+    {
+      lineNumber = la.length;
+    }
+
+    return la[lineNumber - 1].getOffset();
   }
 
   public int getLineForOffset(int offset)
   {
-    int lineNumber;
+    int    searchIndex;
+    Line[] la;
 
     if (offset < 0)
     {
       return 0;
     }
 
-    lineNumber = 0;
-    for (Line line : lines)
+    la = getLines();
+    if (la == null)
     {
-      if (line.getOffset() > offset)
-      {
-        return lineNumber;
-      }
-
-      lineNumber++;
+      return 0;
     }
 
-    return lines.length - 1;
+    if (offset >= lineOffsetArray[lineOffsetArray.length - 1])
+    {
+      return lineOffsetArray.length - 1;
+    }
+
+    searchIndex = Arrays.binarySearch(lineOffsetArray, offset);
+    if (searchIndex >= 0)
+    {
+      return searchIndex + 1;
+    }
+
+    return (-searchIndex) - 1;
   }
 
   public void read()
@@ -208,26 +227,30 @@ public abstract class AbstractBufferDocument
     }
   }
 
-  public void initLines()
+  private void initLines()
   {
     Element   paragraph;
     Element   e;
     int       size;
-    StopWatch stopWatch;
+    Line      line;
 
-    stopWatch = new StopWatch().start();
+    if (lineArray != null)
+    {
+      return;
+    }
 
     paragraph = document.getDefaultRootElement();
     size = paragraph.getElementCount();
-    lines = new Line[size - 1];
-    for (int i = 0; i < lines.length; i++)
+    lineArray = new Line[size - 1];
+    lineOffsetArray = new int[lineArray.length];
+    for (int i = 0; i < lineArray.length; i++)
     {
       e = paragraph.getElement(i);
-      lines[i] = new Line(e);
-    }
+      line= new Line(e);
 
-    //System.out.println("initLines took " + stopWatch.getElapsedTime());
-    //print();
+      lineArray[i] = line;
+      lineOffsetArray[i] = line.getOffset();
+    }
   }
 
   public void write()
@@ -411,7 +434,8 @@ public abstract class AbstractBufferDocument
     }
   }
 
-  public class Line implements Comparable
+  public class Line
+         implements Comparable
   {
     Element element;
 
@@ -438,6 +462,7 @@ public abstract class AbstractBufferDocument
         StringUtil.replaceNewLines(toString()));
     }
 
+    @Override
     public boolean equals(Object o)
     {
       Element element2;
@@ -447,7 +472,7 @@ public abstract class AbstractBufferDocument
       int     end1;
       int     end2;
 
-      if(!(o instanceof Line))
+      if (!(o instanceof Line))
       {
         return false;
       }
@@ -473,6 +498,7 @@ public abstract class AbstractBufferDocument
         start2);
     }
 
+    @Override
     public int hashCode()
     {
       return content.hashCode(
@@ -480,6 +506,7 @@ public abstract class AbstractBufferDocument
         element.getEndOffset());
     }
 
+    @Override
     public String toString()
     {
       try
@@ -503,29 +530,32 @@ public abstract class AbstractBufferDocument
 
   public void print()
   {
-    if (lines != null)
+    Line[] la;
+
+    la = getLines();
+    if (la != null)
     {
-      for (int lineNumber = 0; lineNumber < lines.length; lineNumber++)
+      for (int lineNumber = 0; lineNumber < la.length; lineNumber++)
       {
         System.out.printf("[%05d]", lineNumber);
-        lines[lineNumber].print();
+        la[lineNumber].print();
       }
     }
   }
 
   public void changedUpdate(DocumentEvent de)
   {
-    documentChanged();
+    documentChanged(de);
   }
 
   public void insertUpdate(DocumentEvent de)
   {
-    documentChanged();
+    documentChanged(de);
   }
 
   public void removeUpdate(DocumentEvent de)
   {
-    documentChanged();
+    documentChanged(de);
   }
 
   private void initDigest()
@@ -534,7 +564,7 @@ public abstract class AbstractBufferDocument
     digest = createDigest();
     changed = false;
 
-    fireDocumentChanged();
+    fireDocumentChanged(new JMDocumentEvent(this));
   }
 
   public int createDigest()
@@ -542,10 +572,47 @@ public abstract class AbstractBufferDocument
     return content.getDigest();
   }
 
-  private void documentChanged()
+  private void documentChanged(DocumentEvent de)
   {
-    boolean newChanged;
-    int     newDigest;
+    boolean         newChanged;
+    int             newDigest;
+    int             startLine;
+    int             numberOfLinesChanged;
+    JMDocumentEvent jmde;
+    String          text;
+
+    jmde = new JMDocumentEvent(this, de);
+    numberOfLinesChanged = 0;
+
+    if (lineArray != null)
+    {
+      // Make large documents perform well!
+      if (de.getType() == DocumentEvent.EventType.INSERT)
+      {
+        try
+        {
+          text = document.getText(
+              de.getOffset(),
+              de.getLength());
+        }
+        catch (BadLocationException ex)
+        {
+        }
+      }
+
+      numberOfLinesChanged = getLines().length;
+      lineArray = null;
+      numberOfLinesChanged = getLines().length - numberOfLinesChanged;
+
+      startLine = getLineForOffset(de.getOffset() + 1);
+      if (startLine < 0)
+      {
+        System.out.println("haha");
+      }
+
+      jmde.setStartLine(startLine);
+      jmde.setNumberOfLines(numberOfLinesChanged);
+    }
 
     newChanged = false;
     if (document.getLength() != originalLength)
@@ -568,14 +635,19 @@ public abstract class AbstractBufferDocument
       changed = newChanged;
     }
 
-    fireDocumentChanged();
+    fireDocumentChanged(jmde);
   }
 
-  private void fireDocumentChanged()
+  private void fireDocumentChanged(JMDocumentEvent de)
   {
     for (BufferDocumentChangeListenerIF listener : listeners)
     {
-      listener.documentChanged();
+      listener.documentChanged(de);
     }
+  }
+
+  public BlameIF getVersionControlBlame()
+  {
+    return null;
   }
 }

@@ -112,16 +112,21 @@ public class BufferDiffPanel
 
     if (bd1 != null && bd2 != null)
     {
-      for (FilePanel fp : filePanels)
+      reDisplay();
+    }
+  }
+
+  private void reDisplay()
+  {
+    for (FilePanel fp : filePanels)
+    {
+      if (fp != null)
       {
-        if (fp != null)
-        {
-          fp.reDisplay();
-        }
+        fp.reDisplay();
       }
     }
 
-    repaint();
+    mainPanel.repaint();
   }
 
   public String getTitle()
@@ -175,6 +180,61 @@ public class BufferDiffPanel
     return title;
   }
 
+  public boolean revisionChanged(JMDocumentEvent de)
+  {
+    FilePanel        fp;
+    BufferDocumentIF bd1;
+    BufferDocumentIF bd2;
+
+    if (currentRevision == null)
+    {
+      diff();
+    }
+    else
+    {
+      fp = getFilePanel(de.getDocument());
+      if (fp == null)
+      {
+        return false;
+      }
+
+      bd1 = filePanels[LEFT].getBufferDocument();
+      bd2 = filePanels[RIGHT].getBufferDocument();
+
+      if(!currentRevision.update(
+          bd1.getLines(),
+          bd2.getLines(),
+          fp == filePanels[LEFT],
+          de.getStartLine(),
+          de.getNumberOfLines()))
+      {
+        return false;
+      }
+
+      reDisplay();
+    }
+
+    return true;
+  }
+
+  private FilePanel getFilePanel(AbstractBufferDocument document)
+  {
+    for (FilePanel fp : filePanels)
+    {
+      if (fp == null)
+      {
+        continue;
+      }
+
+      if (fp.getBufferDocument() == document)
+      {
+        return fp;
+      }
+    }
+
+    return null;
+  }
+
   public void diff()
   {
     BufferDocumentIF bd1;
@@ -191,21 +251,13 @@ public class BufferDiffPanel
             bd1.getLines(),
             bd2.getLines());
 
-        for (FilePanel fp : filePanels)
-        {
-          if (fp != null)
-          {
-            fp.reDisplay();
-          }
-        }
+        reDisplay();
       }
       catch (Exception ex)
       {
         ex.printStackTrace();
       }
     }
-
-    repaint();
   }
 
   private void init()
@@ -286,6 +338,7 @@ public class BufferDiffPanel
     return currentRevision;
   }
 
+  @Override
   public boolean checkSave()
   {
     SavePanelDialog dialog;
@@ -315,6 +368,7 @@ public class BufferDiffPanel
     return false;
   }
 
+  @Override
   public void doSave()
   {
     BufferDocumentIF document;
@@ -347,6 +401,7 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
   public boolean isSaveEnabled()
   {
     for (FilePanel filePanel : filePanels)
@@ -360,6 +415,7 @@ public class BufferDiffPanel
     return false;
   }
 
+  @Override
   public SearchHits doSearch(SearchCommand command)
   {
     FilePanel  fp;
@@ -378,6 +434,7 @@ public class BufferDiffPanel
     return searchHits;
   }
 
+  @Override
   public void doNextSearch()
   {
     FilePanel  fp;
@@ -396,6 +453,7 @@ public class BufferDiffPanel
     scrollToSearch(fp, searchHits);
   }
 
+  @Override
   public void doPreviousSearch()
   {
     FilePanel  fp;
@@ -414,11 +472,13 @@ public class BufferDiffPanel
     scrollToSearch(fp, searchHits);
   }
 
+  @Override
   public void doRefresh()
   {
     diff();
   }
 
+  @Override
   public void doMergeMode(boolean mergeMode)
   {
     for (FilePanel fp : filePanels)
@@ -487,16 +547,19 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
   public void checkActions()
   {
     mainPanel.checkActions();
   }
 
+  @Override
   public void doLeft()
   {
     runChange(RIGHT, LEFT);
   }
 
+  @Override
   public void doRight()
   {
     runChange(LEFT, RIGHT);
@@ -510,10 +573,8 @@ public class BufferDiffPanel
     BufferDocumentIF fromBufferDocument;
     BufferDocumentIF toBufferDocument;
     PlainDocument    from;
-    PlainDocument    to;
     String           s;
     int              fromLine;
-    int              toLine;
     int              fromOffset;
     int              toOffset;
     int              size;
@@ -561,9 +622,6 @@ public class BufferDiffPanel
         return;
       }
 
-      from = fromBufferDocument.getDocument();
-      to = toBufferDocument.getDocument();
-
       fromLine = fromChunk.getAnchor();
       size = fromChunk.getSize();
       fromOffset = fromBufferDocument.getOffsetForLine(fromLine);
@@ -578,6 +636,7 @@ public class BufferDiffPanel
         return;
       }
 
+      from = fromBufferDocument.getDocument();
       s = from.getText(fromOffset, toOffset - fromOffset);
 
       fromLine = toChunk.getAnchor();
@@ -689,6 +748,7 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
   public void doDown()
   {
     JMDelta       d;
@@ -732,6 +792,7 @@ public class BufferDiffPanel
     showSelectedDelta();
   }
 
+  @Override
   public void doUp()
   {
     JMDelta       d;
@@ -805,7 +866,7 @@ public class BufferDiffPanel
     fp = getFilePanel(0);
 
     bd = fp.getBufferDocument();
-    if(bd == null)
+    if (bd == null)
     {
       return;
     }
@@ -835,6 +896,7 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
   public void doZoom(boolean direction)
   {
     JTextComponent c;
@@ -869,11 +931,13 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
   public void doGoToSelected()
   {
     showSelectedDelta();
   }
 
+  @Override
   public void doGoToFirst()
   {
     JMDelta       d;
@@ -892,6 +956,7 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
   public void doGoToLast()
   {
     JMDelta       d;
