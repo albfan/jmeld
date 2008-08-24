@@ -16,19 +16,15 @@
  */
 package org.jmeld.ui;
 
-import com.jgoodies.forms.builder.*;
 import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.*;
-import org.jmeld.diff.*;
-import org.jmeld.settings.*;
 import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
 import org.jmeld.ui.action.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.settings.SettingsPanel;
-import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.conf.*;
@@ -37,17 +33,13 @@ import org.jmeld.util.node.*;
 
 import javax.help.*;
 import javax.swing.*;
-import javax.swing.border.*;
 import javax.swing.event.*;
-import javax.swing.plaf.*;
-import javax.swing.plaf.basic.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.util.List;
 
 public class JMeldPanel
        extends JPanel
@@ -86,9 +78,7 @@ public class JMeldPanel
   private SearchBar     searchBar;
   private boolean       mergeMode;
 
-  public JMeldPanel(
-    String leftName,
-    String rightName)
+  public JMeldPanel()
   {
     setFocusable(true);
 
@@ -108,9 +98,34 @@ public class JMeldPanel
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
-    openComparison(leftName, rightName);
-
     JMeldSettings.getInstance().addConfigurationListener(this);
+  }
+
+  public void openComparison(List<String> fileNameList)
+  {
+    if (fileNameList.size() < 2)
+    {
+      return;
+    }
+
+    // Possibilities;
+    // 1. <fileName>, <fileName>
+    // 2. <directory>, <directory>
+    // 3. <directory>, <fileName>, <fileName> ...
+    // ad 3:
+    //   The fileNames are relative and are also available in 
+    //   the <directory>. So this enables you to do:
+    // jmeld ../branches/branch1 src/lala.java src/haha.java
+    //   This results in 2 compares:
+    //   1. ../branches/branch1/src/lala.java with ./src/lala.java  
+    //   2. ../branches/branch1/src/haha.java with ./src/haha.java  
+
+    for (int i = 1; i < fileNameList.size(); i++)
+    {
+      openComparison(
+        fileNameList.get(0),
+        fileNameList.get(i));
+    }
   }
 
   public void openComparison(
@@ -124,12 +139,22 @@ public class JMeldPanel
     {
       leftFile = new File(leftName);
       rightFile = new File(rightName);
-      if (leftFile.isDirectory() && rightFile.isDirectory())
+      if (leftFile.isDirectory())
       {
-        openDirectoryComparison(
-          leftFile,
-          rightFile,
-          JMeldSettings.getInstance().getFilter().getFilter("default"));
+        if (rightFile.isDirectory())
+        {
+          openDirectoryComparison(
+            leftFile,
+            rightFile,
+            JMeldSettings.getInstance().getFilter().getFilter("default"));
+        }
+        else
+        {
+          openFileComparison(
+            new File(leftFile, rightName),
+            rightFile,
+            false);
+        }
       }
       else
       {
@@ -159,39 +184,6 @@ public class JMeldPanel
     Filter filter)
   {
     new NewDirectoryComparisonPanel(leftFile, rightFile, filter).execute();
-  }
-
-  public JMenuBar getMenuBar()
-  {
-    JMenuBar menuBar;
-    JMenu    menu;
-
-    menuBar = new JMenuBar();
-
-    menu = menuBar.add(new JMenu("File"));
-    menu.add(WidgetFactory.getMenuItem(actionHandler.get(NEW_ACTION)));
-    menu.add(WidgetFactory.getMenuItem(actionHandler.get(SAVE_ACTION)));
-    //menu.add(new JMenuItem("Save as"));
-    //menu.add(new JMenuItem("Close"));
-    //menu.add(new JMenuItem("Quit"));
-    menu = menuBar.add(new JMenu("Edit"));
-    menu.add(WidgetFactory.getMenuItem(actionHandler.get(UNDO_ACTION)));
-    menu.add(WidgetFactory.getMenuItem(actionHandler.get(REDO_ACTION)));
-
-    //menu.add(new JMenuItem("Find"));
-    //menu.add(new JMenuItem("Find next"));
-    //menu.add(new JMenuItem("Down"));
-    //menu.add(new JMenuItem("Up"));
-    //menu.add(new JMenuItem("Cut"));
-    //menu.add(new JMenuItem("Copy"));
-    //menu.add(new JMenuItem("Paste"));
-    //menu = menuBar.add(new JMenu("Settings"));
-    //menu.add(new JMenuItem("Preferences"));
-    //menu = menuBar.add(new JMenu("Help"));
-    //menu.add(new JMenuItem("Contents"));
-    //menu.add(new JMenuItem("Report bug"));
-    //menu.add(new JMenuItem("About"));
-    return menuBar;
   }
 
   private JComponent getToolBar()
@@ -374,21 +366,18 @@ public class JMeldPanel
   public void doNew(ActionEvent ae)
   {
     NewPanelDialog dialog;
-    File           file1;
-    File           file2;
-    String         fileName;
 
     dialog = new NewPanelDialog(this);
     dialog.show();
 
-    if (dialog.getValue() == NewPanelDialog.FILE_COMPARISON)
+    if (dialog.getValue().equals(NewPanelDialog.FILE_COMPARISON))
     {
       openFileComparison(
         new File(dialog.getLeftFileName()),
         new File(dialog.getRightFileName()),
         false);
     }
-    else if (dialog.getValue() == NewPanelDialog.DIRECTORY_COMPARISON)
+    else if (dialog.getValue().equals(NewPanelDialog.DIRECTORY_COMPARISON))
     {
       openDirectoryComparison(
         new File(dialog.getLeftDirectoryName()),
@@ -654,6 +643,8 @@ public class JMeldPanel
 
   public void doExit(ActionEvent ae)
   {
+    JMeldContentPanelIF cp;
+
     // Stop the searchBar if it is showing.
     if (getSearchBar().getParent() != null)
     {
@@ -661,7 +652,13 @@ public class JMeldPanel
       return;
     }
 
-    if (!getCurrentContentPanel().checkExit())
+    cp = getCurrentContentPanel();
+    if(cp == null)
+    {
+      return;
+    }
+
+    if (!cp.checkExit())
     {
       return;
     }
@@ -697,6 +694,7 @@ public class JMeldPanel
   {
     return new WindowAdapter()
       {
+        @Override
         public void windowClosing(WindowEvent we)
         {
           JMeldContentPanelIF contentPanel;
@@ -792,6 +790,7 @@ public class JMeldPanel
       return null;
     }
 
+    @Override
     protected void done()
     {
       try
@@ -906,6 +905,7 @@ public class JMeldPanel
       return null;
     }
 
+    @Override
     protected void done()
     {
       try

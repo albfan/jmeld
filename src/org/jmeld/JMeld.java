@@ -28,24 +28,21 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 public class JMeld
        implements Runnable
 {
-  private String            fileName1;
-  private String            fileName2;
+  private List<String>      fileNameList;
   private static JMeldPanel jmeldPanel;
 
   public JMeld(String[] args)
   {
-    if (args.length > 0)
+    fileNameList = new ArrayList<String>();
+    for (String arg : args)
     {
-      fileName1 = args[0];
-    }
-
-    if (args.length > 1)
-    {
-      fileName2 = args[1];
+      fileNameList.add(arg);
     }
   }
 
@@ -59,25 +56,7 @@ public class JMeld
     JFrame frame;
     String version;
 
-    KeyboardFocusManager.setCurrentKeyboardFocusManager(
-      new DefaultKeyboardFocusManager()
-      {
-        public boolean dispatchKeyEvent(KeyEvent e)
-        {
-          //System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
-          //System.out.println("   event: " + e);
-          return super.dispatchKeyEvent(e);
-        }
-
-        public void processKeyEvent(
-          Component focusedComponent,
-          KeyEvent  e)
-        {
-          //System.out.println("processKeyEvent[" + focusedComponent.getClass()
-            //+ "] : " + KeyStroke.getKeyStrokeForEvent(e));
-          super.processKeyEvent(focusedComponent, e);
-        }
-      });
+    debugKeyboard();
 
     try
     {
@@ -93,7 +72,6 @@ public class JMeld
         PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
         PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-        //UIManager.setLookAndFeel(new com.lipstikLF.LipstikLookAndFeel());
       }
     }
     catch (Exception e)
@@ -101,10 +79,9 @@ public class JMeld
     }
 
     frame = new JFrame("JMeld");
-    jmeldPanel = new JMeldPanel(fileName1, fileName2);
+    jmeldPanel = new JMeldPanel();
     frame.add(jmeldPanel);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    //frame.setJMenuBar(jmeldPanel.getMenuBar());
     frame.setIconImage(ImageUtil.getImageIcon("jmeld-small").getImage());
     new WindowPreference(
       frame.getTitle(),
@@ -115,6 +92,31 @@ public class JMeld
 
     // Just to keep the damned metacity happy
     frame.toFront();
+
+    jmeldPanel.openComparison(fileNameList);
+  }
+
+  private void debugKeyboard()
+  {
+    KeyboardFocusManager.setCurrentKeyboardFocusManager(
+      new DefaultKeyboardFocusManager()
+      {
+        public boolean dispatchKeyEvent(KeyEvent e)
+        {
+          //System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
+          //System.out.println("   event: " + e);
+          return super.dispatchKeyEvent(e);
+        }
+
+        public void processKeyEvent(
+          Component focusedComponent,
+          KeyEvent  e)
+        {
+          //System.out.println("processKeyEvent[" + focusedComponent.getClass()
+          //+ "] : " + KeyStroke.getKeyStrokeForEvent(e));
+          super.processKeyEvent(focusedComponent, e);
+        }
+      });
   }
 
   public static void main(String[] args)
