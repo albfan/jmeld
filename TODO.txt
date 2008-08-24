@@ -42,17 +42,17 @@ Release 1.9:
          made smaller.
 
 Release 2.0:
-- [75%]  incremental diff (Adding to the end of the file doesn't work yet)
 - [done] Copy to left action in FolderDiffPanel.
 - [done] Copy to right action in FolderDiffPanel.
 - [done] Delete right action in FolderDiffPanel.
 - [done] Delete left action in FolderDiffPanel.
 - [done] Undo/Redo for all above actions actions.
 -        Inner diff sometimes doesn't work
--        Diff colors don't change anymore in the settings.
+- [done] Diff colors don't change anymore in the settings.
 -        Bug when comparing filesRight/oneline.xml en filesLeft
 
 Release 2.1:
+- [75%]  incremental diff (Adding to the end of the file doesn't work yet)
 -        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
          (Change it to OutLine of the netbeans project!)
 -        Create manual
