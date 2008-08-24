@@ -100,6 +100,7 @@ public class DiffScrollComponent
   {
     return new MouseAdapter()
       {
+        @Override
         public void mouseClicked(MouseEvent me)
         {
           executeCommand((double) me.getX(), (double) me.getY());
@@ -128,6 +129,7 @@ public class DiffScrollComponent
     return false;
   }
 
+  @Override
   public void paintComponent(Graphics g)
   {
     Rectangle  r;
@@ -238,7 +240,7 @@ public class DiffScrollComponent
     // Calculate firstLine shown of the second document. 
     p = new Point(r.x, r.y);
     offset = editorTo.viewToModel(p);
-    firstLineTo = bdTo.getLineForOffset(offset);
+    firstLineTo = bdTo.getLineForOffset(offset) + 1;
 
     // Calculate lastLine shown of the second document. 
     p = new Point(r.x, r.y + r.height);
@@ -313,6 +315,7 @@ public class DiffScrollComponent
           && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - fromRect.y - 1;
+          //height = toRect.y - viewportRect.y - 1;
         }
         else if (fromRect.y <= viewportRect.y
           && toRect.y > viewportRect.y + viewportRect.height)
@@ -390,6 +393,7 @@ public class DiffScrollComponent
           && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - fromRect.y - 1;
+          //height = toRect.y - viewportRect.y - 1;
         }
         else if (fromRect.y <= viewportRect.y
           && toRect.y > viewportRect.y + viewportRect.height)

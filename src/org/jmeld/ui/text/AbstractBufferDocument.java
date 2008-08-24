@@ -241,7 +241,8 @@ public abstract class AbstractBufferDocument
 
     paragraph = document.getDefaultRootElement();
     size = paragraph.getElementCount();
-    lineArray = new Line[size - 1];
+    //lineArray = new Line[size - 1];
+    lineArray = new Line[size];
     lineOffsetArray = new int[lineArray.length];
     for (int i = 0; i < lineArray.length; i++)
     {

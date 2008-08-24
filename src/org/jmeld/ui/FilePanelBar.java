@@ -19,7 +19,6 @@ package org.jmeld.ui;
 import org.jmeld.ui.util.*;
 
 import javax.swing.*;
-import javax.swing.text.*;
 
 public class FilePanelBar
        extends JPanel
@@ -97,7 +96,7 @@ public class FilePanelBar
 
     text = String.format(
         "Line: %05d/%05d",
-        line,
+        line + 1,
         editor.getLineCount());
     lineNumber.setText(text);
 

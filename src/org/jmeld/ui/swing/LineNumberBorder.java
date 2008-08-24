@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui.swing;
 
+import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
 
 import javax.swing.*;
@@ -27,20 +28,26 @@ public class LineNumberBorder
        extends EmptyBorder
 {
   private static int MARGIN = 4;
-  private JTextArea  textArea;
+  private FilePanel  filePanel;
   private Color      background;
   private Color      lineColor;
   private Font       font;
   private int        fontWidth;
   private int        fontHeight;
+  private boolean    enableBlame = true;
 
-  public LineNumberBorder(JTextArea textArea)
+  public LineNumberBorder(FilePanel filePanel)
   {
     super(0, 40 + MARGIN, 0, 0);
 
-    this.textArea = textArea;
+    this.filePanel = filePanel;
 
     init();
+  }
+
+  public void enableBlame(boolean enableBlame)
+  {
+    this.enableBlame = enableBlame;
   }
 
   private void init()
@@ -48,14 +55,14 @@ public class LineNumberBorder
     FontMetrics fm;
 
     lineColor = UIManager.getColor("Panel.background");
-    if(lineColor == null)
+    if (lineColor == null)
     {
       lineColor = new Color(244, 242, 198);
     }
     background = ColorUtil.brighter(lineColor);
     font = new Font("Monospaced", Font.PLAIN, 10);
 
-    fm = textArea.getFontMetrics(font);
+    fm = filePanel.getEditor().getFontMetrics(font);
     fontWidth = fm.stringWidth("0");
     fontHeight = fm.getHeight();
   }
@@ -83,11 +90,13 @@ public class LineNumberBorder
     String    s;
     int       heightCorrection;
     Rectangle r1;
+    JTextArea textArea;
 
     clip = g.getClipRect();
 
     try
     {
+      textArea = filePanel.getEditor();
       startLine = textArea.getLineOfOffset(startOffset);
       endLine = textArea.getLineOfOffset(endOffset);
       r1 = textArea.modelToView(startOffset);
@@ -102,10 +111,10 @@ public class LineNumberBorder
       g.setColor(Color.black);
       for (int line = startLine; line <= endLine; line++)
       {
-        s = Integer.toString(line);
+        y += lineHeight;
+        s = Integer.toString(line + 1);
         g.drawString(s, left - (fontWidth * s.length()) - 1 - MARGIN,
           y - heightCorrection);
-        y += lineHeight;
       }
     }
     catch (Exception ex)
