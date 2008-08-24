@@ -16,6 +16,8 @@
  */
 package org.jmeld.util;
 
+import java.io.*;
+
 public class StringUtil
 {
   private StringUtil()
@@ -32,3 +34,4 @@ public class StringUtil
     return text.replaceAll("\n", "<LF>").replaceAll("\r", "<CR>");
   }
 }
+

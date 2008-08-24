@@ -171,6 +171,7 @@ public class AbstractContentPanel
       checkActions();
     }
 
+    @Override
     public void undoableEditHappened(UndoableEditEvent e)
     {
       if (activeEdit != null)

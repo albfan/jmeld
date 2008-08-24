@@ -54,7 +54,7 @@ public class JaxbPersister
     }
     catch (Exception ex)
     {
-      //ex.printStackTrace();
+      ex.printStackTrace();
     }
 
     return null;
