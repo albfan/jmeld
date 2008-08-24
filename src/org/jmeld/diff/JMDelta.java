@@ -134,6 +134,7 @@ public class JMDelta
     {
       original2[j] = new Character(original1[j]);
     }
+
     revised1 = revision.getRevisedString(revised).toCharArray();
     revised2 = new Character[revised1.length];
     for (int j = 0; j < revised1.length; j++)

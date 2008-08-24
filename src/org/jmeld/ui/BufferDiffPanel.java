@@ -22,17 +22,13 @@ import org.jmeld.*;
 import org.jmeld.diff.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.text.*;
-import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
 import org.jmeld.util.node.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.text.*;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -42,8 +38,6 @@ public class BufferDiffPanel
   public static final int    LEFT = 0;
   public static final int    MIDDLE = 1;
   public static final int    RIGHT = 2;
-  private static int         instanceCounter = 0;
-  private int                instanceCount = ++instanceCounter;
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
   int                        filePanelSelectedIndex = -1;
