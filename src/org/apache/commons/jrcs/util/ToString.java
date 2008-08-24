@@ -117,6 +117,7 @@ public class ToString
     }
     catch (java.io.IOException e)
     {
+      e.printStackTrace();
     }
 
     return (String[]) l.toArray(new String[l.size()]);
