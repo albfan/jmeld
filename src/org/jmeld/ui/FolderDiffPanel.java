@@ -21,7 +21,6 @@ import org.jdesktop.swingx.decorator.*;
 import org.jdesktop.swingx.treetable.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.action.*;
-import org.jmeld.ui.swing.*;
 import org.jmeld.ui.swing.table.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
@@ -30,7 +29,6 @@ import org.jmeld.util.file.cmd.*;
 import org.jmeld.util.node.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.tree.*;
 import javax.swing.undo.*;
 
@@ -217,10 +215,10 @@ public class FolderDiffPanel
     installKey("alt RIGHT", action);
     installKey("alt KP_RIGHT", action);
 
-    deleteRightButton.setVisible(false);
-    copyToRightButton.setVisible(false);
-    copyToLeftButton.setVisible(false);
-    deleteLeftButton.setVisible(false);
+    //deleteRightButton.setVisible(false);
+    //copyToRightButton.setVisible(false);
+    //copyToLeftButton.setVisible(false);
+    //deleteLeftButton.setVisible(false);
 
     action = actionHandler.createAction(this, "Filter");
     onlyRightButton.setAction(action);
@@ -311,7 +309,7 @@ public class FolderDiffPanel
         if (parent != null)
         {
           parentName = parent.getName();
-          uiParentNode = new UINode(treeTableModel, parentName, false);
+          uiParentNode = new UINode(treeTableModel, parent);
           uiParentNode = rootNode.addChild(uiParentNode);
           uiParentNode.addChild(uiNode);
         }
@@ -482,7 +480,6 @@ public class FolderDiffPanel
       }
     }
     cc.execute();
-    repaint();
   }
 
   public boolean isCopyToRightEnabled()
@@ -509,8 +506,6 @@ public class FolderDiffPanel
       }
     }
     cc.execute();
-    mainPanel.checkActions();
-    repaint();
   }
 
   class CompoundCommand
@@ -550,25 +545,36 @@ public class FolderDiffPanel
         end();
 
         getUndoHandler().add(this);
-        System.out.println("can undo : " + getUndoHandler().canUndo());
         compareContents();
       }
       catch (Exception ex)
       {
         ex.printStackTrace();
       }
+
+      check();
     }
 
+    @Override
     public void redo()
     {
       super.redo();
       compareContents();
+      check();
     }
 
+    @Override
     public void undo()
     {
       super.undo();
       compareContents();
+      check();
+    }
+
+    private void check()
+    {
+      mainPanel.checkActions();
+      repaint();
     }
 
     private void compareContents()
@@ -599,6 +605,7 @@ public class FolderDiffPanel
       return null;
     }
 
+    @Override
     protected void done()
     {
       treeTableModel = new FolderDiffTreeTableModel();
@@ -633,7 +640,6 @@ public class FolderDiffPanel
       }
     }
     cc.execute();
-    repaint();
   }
 
   public boolean isRemoveLeftEnabled()
@@ -660,7 +666,6 @@ public class FolderDiffPanel
       }
     }
     cc.execute();
-    repaint();
   }
 
   public void doFilter(ActionEvent ae)
@@ -727,6 +732,7 @@ public class FolderDiffPanel
   {
     return new MouseAdapter()
       {
+        @Override
         public void mouseClicked(MouseEvent me)
         {
           UINode     uiNode;

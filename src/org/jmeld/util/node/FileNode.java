@@ -17,10 +17,10 @@
 package org.jmeld.util.node;
 
 import org.jmeld.ui.text.*;
+
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
-import java.util.*;
 
 public class FileNode
        extends JMeldNode
@@ -28,6 +28,7 @@ public class FileNode
 {
   private File         file;
   private FileDocument document;
+  private boolean      exists;
 
   public FileNode(
     String name,
@@ -35,6 +36,8 @@ public class FileNode
   {
     super(name, !file.isDirectory());
     this.file = file;
+
+    initialize();
   }
 
   public File getFile()
@@ -42,21 +45,39 @@ public class FileNode
     return file;
   }
 
+  @Override
+  public void resetContent()
+  {
+    document = null;
+    initialize();
+  }
+
+  public boolean exists()
+  {
+    return exists;
+  }
+
   public FileDocument getDocument()
   {
     if (document == null)
     {
-      document = new FileDocument(file);
+      initialize();
+      if (exists())
+      {
+        document = new FileDocument(file);
+      }
     }
 
     return document;
   }
 
+  @Override
   public long getSize()
   {
     return file.length();
   }
 
+  @Override
   public boolean contentEquals(JMeldNode node)
   {
     File             file2;
@@ -73,7 +94,7 @@ public class FileNode
 
     try
     {
-      if(!(node instanceof FileNode))
+      if (!(node instanceof FileNode))
       {
         return false;
       }
@@ -133,5 +154,10 @@ public class FileNode
         ex.printStackTrace();
       }
     }
+  }
+
+  private void initialize()
+  {
+    exists = file.exists();
   }
 }

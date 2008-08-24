@@ -1,6 +1,7 @@
 package org.jmeld.util.file.cmd;
 
 import org.jmeld.util.file.*;
+import org.jmeld.util.node.*;
 
 import java.io.*;
 import java.util.*;
@@ -8,22 +9,30 @@ import java.util.*;
 public class CopyFileCmd
        extends AbstractCmd
 {
-  private File fromFile;
-  private File toFile;
+  private JMDiffNode diffNode;
+  private FileNode   fromFileNode;
+  private FileNode   toFileNode;
 
   public CopyFileCmd(
-    File fromFile,
-    File toFile)
+    JMDiffNode diffNode,
+    FileNode   fromFileNode,
+    FileNode   toFileNode)
     throws Exception
   {
-    this.fromFile = fromFile.getCanonicalFile();
-    this.toFile = toFile.getCanonicalFile();
+    this.diffNode = diffNode;
+    this.fromFileNode = fromFileNode;
+    this.toFileNode = toFileNode;
   }
 
   public void createCommands()
     throws Exception
   {
     List<File> parentFiles;
+    File       fromFile;
+    File       toFile;
+
+    fromFile = fromFileNode.getFile().getCanonicalFile();
+    toFile = toFileNode.getFile().getCanonicalFile();
 
     parentFiles = FileUtil.getParentFiles(toFile);
     Collections.reverse(parentFiles);
@@ -32,10 +41,10 @@ public class CopyFileCmd
       if (!parentFile.exists())
       {
         addCommand(new MkDirCommand(parentFile));
-        System.out.println("mkdir " + parentFile);
       }
     }
     addCommand(new CopyCommand(fromFile, toFile));
+    addFinallyCommand(new ResetCommand(toFileNode));
   }
 
   class MkDirCommand
@@ -56,10 +65,7 @@ public class CopyFileCmd
       {
         System.out.println("mkdir : " + dirFile);
       }
-      if (!dryrun)
-      {
-        dirFile.mkdir();
-      }
+      dirFile.mkdir();
     }
 
     public void undo()
@@ -68,10 +74,7 @@ public class CopyFileCmd
       {
         System.out.println("rmdir : " + dirFile);
       }
-      if (!dryrun)
-      {
-        dirFile.delete();
-      }
+      dirFile.delete();
     }
   }
 
@@ -150,6 +153,7 @@ public class CopyFileCmd
       }
     }
 
+    @Override
     public void discard()
     {
       if (backupFile != null)
@@ -161,6 +165,40 @@ public class CopyFileCmd
 
         backupFile.delete();
       }
+    }
+  }
+
+  class ResetCommand
+         extends Command
+  {
+    private FileNode fileNode;
+
+    ResetCommand(FileNode fileNode)
+    {
+      this.fileNode = fileNode;
+    }
+
+    public void execute()
+      throws Exception
+    {
+      reset();
+    }
+
+    public void undo()
+    {
+      reset();
+    }
+
+    @Override
+    public void discard()
+    {
+      reset();
+    }
+
+    private void reset()
+    {
+      fileNode.resetContent();
+      diffNode.compareContents();
     }
   }
 }

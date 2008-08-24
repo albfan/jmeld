@@ -25,4 +25,6 @@ public interface BufferNode
   public long getSize();
 
   public BufferDocumentIF getDocument();
+
+  public boolean exists();
 }

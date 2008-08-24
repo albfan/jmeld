@@ -77,6 +77,7 @@ public class DirectoryDiff
     StopWatch        stopWatch;
     int              numberOfNodes;
     int              currentNumber;
+    FileNode         fn;
 
     stopWatch = new StopWatch();
     stopWatch.start();
@@ -126,6 +127,26 @@ public class DirectoryDiff
     currentNumber = 0;
     for (JMDiffNode n : nodes.values())
     {
+      // Make sure that each node has it's opposite. 
+      // This makes the following copying actions possible :
+      // - copy 'left' to 'not existing'
+      // - copy 'right' to 'not existing'
+      if(n.getBufferNodeRight() == null || n.getBufferNodeLeft() == null)
+      {
+        if(n.getBufferNodeRight() == null)
+        {
+          fn = (FileNode) n.getBufferNodeLeft();
+          fn = new FileNode(fn.getName(), new File(rightDirectory, fn.getName()));
+          n.setBufferNodeRight(fn);
+        }
+        else
+        {
+          fn = (FileNode) n.getBufferNodeRight();
+          fn = new FileNode(fn.getName(), new File(leftDirectory, fn.getName()));
+          n.setBufferNodeLeft(fn);
+        }
+      }
+
       n.compareContents();
 
       StatusBar.getInstance().setProgress(++currentNumber, numberOfNodes);
@@ -153,6 +174,7 @@ public class DirectoryDiff
   {
     String     parentName;
     JMDiffNode parent;
+    File       file;
 
     nodes.put(
       node.getName(),
@@ -169,6 +191,8 @@ public class DirectoryDiff
       if (parent == null)
       {
         parent = addNode(new JMDiffNode(parentName, false));
+        parent.setBufferNodeRight(new FileNode(parentName, new File(rightDirectory, parentName)));
+        parent.setBufferNodeLeft(new FileNode(parentName, new File(leftDirectory, parentName)));
       }
     }
 

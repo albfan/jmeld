@@ -2,15 +2,14 @@ package org.jmeld.util.file.cmd;
 
 import javax.swing.undo.*;
 
-import java.io.*;
 import java.util.*;
 
 public abstract class AbstractCmd
        extends AbstractUndoableEdit
 {
-  private List<Command> commands = new ArrayList<Command>();
+  private List<Command> commandList = new ArrayList<Command>();
+  private List<Command> finallyCommandList = new ArrayList<Command>();
   protected boolean     debug = true;
-  protected boolean     dryrun = true;
 
   public void setDebug(boolean debug)
   {
@@ -20,10 +19,16 @@ public abstract class AbstractCmd
   public synchronized void execute()
     throws Exception
   {
-    commands.clear();
+    commandList.clear();
+    finallyCommandList.clear();
     createCommands();
 
-    for (Command command : commands)
+    for (Command command : commandList)
+    {
+      command.execute();
+    }
+
+    for (Command command : finallyCommandList)
     {
       command.execute();
     }
@@ -34,29 +39,52 @@ public abstract class AbstractCmd
 
   protected void addCommand(Command command)
   {
-    commands.add(command);
+    commandList.add(command);
   }
 
+  protected void addFinallyCommand(Command command)
+  {
+    finallyCommandList.add(command);
+  }
+
+  @Override
   public synchronized void redo()
   {
-    for (Command command : commands)
+    super.redo();
+    for (Command command : commandList)
+    {
+      command.redo();
+    }
+
+    for (Command command : finallyCommandList)
     {
       command.redo();
     }
   }
 
+  @Override
   public synchronized void undo()
   {
+    super.undo();
+
     // Undo should be executed in the reverse order!
     // Note: the commandList itself is reversed and that is OK because
     //       at the end of this method the commandList is cleared.
-    Collections.reverse(commands);
     try
     {
-      for (Command command : commands)
+      Collections.reverse(commandList);
+      for (Command command : commandList)
       {
         command.undo();
       }
+      Collections.reverse(commandList);
+
+      Collections.reverse(finallyCommandList);
+      for (Command command : finallyCommandList)
+      {
+        command.undo();
+      }
+      Collections.reverse(finallyCommandList);
     }
     catch (Exception ex)
     {
@@ -67,13 +95,21 @@ public abstract class AbstractCmd
 
   public synchronized void discard()
   {
-    Collections.reverse(commands);
-    for (Command command : commands)
+    Collections.reverse(commandList);
+    for (Command command : commandList)
     {
       command.discard();
     }
 
-    commands.clear();
+    commandList.clear();
+
+    Collections.reverse(finallyCommandList);
+    for (Command command : finallyCommandList)
+    {
+      command.discard();
+    }
+
+    finallyCommandList.clear();
   }
 
   abstract class Command

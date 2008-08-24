@@ -16,22 +16,12 @@
  */
 package org.jmeld.util.node;
 
-import java.io.*;
-import java.util.*;
-
 public class JMeldNode
        implements Comparable<JMeldNode>
 {
-  // class variables:
-  public static final char EQUAL = 'E';
-  public static final char ADDED = 'A';
-  public static final char CHANGED = 'C';
-  public static final char DELETED = 'D';
-
   // instance variables:
   private String  name;
   private boolean isLeaf;
-  private char    state;
   private boolean collapsed;
 
   public JMeldNode(
@@ -40,8 +30,6 @@ public class JMeldNode
   {
     this.name = name;
     this.isLeaf = isLeaf;
-
-    state = EQUAL;
   }
 
   public String getName()
@@ -69,16 +57,6 @@ public class JMeldNode
     this.collapsed = collapsed;
   }
 
-  public void setState(char state)
-  {
-    this.state = state;
-  }
-
-  public char getState()
-  {
-    return state;
-  }
-
   public long getSize()
   {
     return 0;
@@ -89,9 +67,10 @@ public class JMeldNode
     return name.compareTo(o.getName());
   }
 
+  @Override
   public boolean equals(Object o)
   {
-    if(!(o instanceof JMeldNode))
+    if (!(o instanceof JMeldNode))
     {
       return false;
     }
@@ -99,6 +78,7 @@ public class JMeldNode
     return name.equals(((JMeldNode) o).getName());
   }
 
+  @Override
   public int hashCode()
   {
     return name.hashCode();
@@ -106,7 +86,11 @@ public class JMeldNode
 
   public void print()
   {
-    System.out.println(name + (state != 0 ? (" [" + state + "]") : ""));
+    System.out.println(name);
+  }
+
+  public void resetContent()
+  {
   }
 
   public boolean contentEquals(JMeldNode node)
@@ -114,6 +98,7 @@ public class JMeldNode
     return true;
   }
 
+  @Override
   public String toString()
   {
     return getName();

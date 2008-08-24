@@ -11,33 +11,35 @@ import org.jmeld.util.file.cmd.*;
 
 import javax.swing.tree.*;
 
-import java.io.*;
 import java.util.*;
 
 public class JMDiffNode
-      implements TreeNode
+       implements TreeNode
 {
   public enum Compare
   {
-    Equal, NotEqual, RightMissing, LeftMissing, NotComparable;
+    Equal,
+    NotEqual,
+    RightMissing,
+    LeftMissing,
+    BothMissing;
   }
-
-  private String text;
-  private String name;
-  private String shortName;
-  private String parentName;
-  private JMDiffNode parent;
+  private String           text;
+  private String           name;
+  private String           shortName;
+  private String           parentName;
+  private JMDiffNode       parent;
   private List<JMDiffNode> children;
-  private BufferNode nodeLeft;
-  private BufferNode nodeRight;
-  private boolean leaf;
-  private Compare compareState;
-  private JMDiff diff;
-  private JMRevision revision;
+  private BufferNode       nodeLeft;
+  private BufferNode       nodeRight;
+  private boolean          leaf;
+  private Compare          compareState;
+  private JMDiff           diff;
+  private JMRevision       revision;
 
   public JMDiffNode(
-        String name,
-        boolean leaf)
+    String  name,
+    boolean leaf)
   {
     this.name = name;
     this.shortName = name;
@@ -149,50 +151,48 @@ public class JMDiffNode
   }
 
   public AbstractCmd getCopyToRightCmd()
-        throws Exception
+    throws Exception
   {
     // TODO: This is NOT OO!
-    if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
+    if (nodeLeft.exists() && nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
-      return new CopyFileCmd(((FileNode) nodeLeft).getFile(),
-                             ((FileNode) nodeRight).getFile());
+      return new CopyFileCmd(this, (FileNode) nodeLeft, (FileNode) nodeRight);
     }
 
     return null;
   }
 
   public AbstractCmd getCopyToLeftCmd()
-        throws Exception
+    throws Exception
   {
     // TODO: This is NOT OO!
-    if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
+    if (nodeRight.exists() && nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
-      return new CopyFileCmd(((FileNode) nodeRight).getFile(),
-                             ((FileNode) nodeLeft).getFile());
+      return new CopyFileCmd(this, (FileNode) nodeRight, (FileNode) nodeLeft);
     }
 
     return null;
   }
 
   public AbstractCmd getRemoveLeftCmd()
-        throws Exception
+    throws Exception
   {
     // TODO: This is NOT OO!
     if (nodeLeft instanceof FileNode)
     {
-      return new RemoveFileCmd(((FileNode) nodeLeft).getFile());
+      return new RemoveFileCmd(this, (FileNode) nodeLeft);
     }
 
     return null;
   }
 
   public AbstractCmd getRemoveRightCmd()
-        throws Exception
+    throws Exception
   {
     // TODO: This is NOT OO!
     if (nodeRight instanceof FileNode)
     {
-      return new RemoveFileCmd(((FileNode) nodeRight).getFile());
+      return new RemoveFileCmd(this, (FileNode) nodeRight);
     }
 
     return null;
@@ -201,21 +201,21 @@ public class JMDiffNode
   public void compareContents()
   {
     boolean equals;
-    Ignore ignore;
+    Ignore  ignore;
 
-    if (!isLeaf() || (nodeLeft == null && nodeRight == null))
+    if (!nodeLeft.exists() && !nodeRight.exists())
     {
-      compareState = Compare.NotComparable;
+      compareState = Compare.BothMissing;
       return;
     }
 
-    if (nodeLeft != null && nodeRight == null)
+    if (nodeLeft.exists() && !nodeRight.exists())
     {
       compareState = Compare.RightMissing;
       return;
     }
 
-    if (nodeLeft == null && nodeRight != null)
+    if (!nodeLeft.exists() && nodeRight.exists())
     {
       compareState = Compare.LeftMissing;
       return;
@@ -228,7 +228,7 @@ public class JMDiffNode
   }
 
   public void diff()
-        throws JMeldException
+    throws JMeldException
   {
     BufferDocumentIF documentLeft;
     BufferDocumentIF documentRight;
@@ -242,8 +242,8 @@ public class JMDiffNode
     {
       documentLeft = nodeLeft.getDocument();
       StatusBar.getInstance().setState(
-            "Reading left : %s",
-            nodeLeft.getName());
+        "Reading left : %s",
+        nodeLeft.getName());
       documentLeft.read();
     }
 
@@ -251,16 +251,15 @@ public class JMDiffNode
     {
       documentRight = nodeRight.getDocument();
       StatusBar.getInstance().setState(
-            "Reading right: %s",
-            nodeRight.getName());
+        "Reading right: %s",
+        nodeRight.getName());
       documentRight.read();
     }
 
     StatusBar.getInstance().setState("Calculating differences");
     diff = new JMDiff();
-    revision =
-          diff.diff(documentLeft == null ? null : documentLeft.getLines(),
-                    documentRight == null ? null : documentRight.getLines());
+    revision = diff.diff(documentLeft == null ? null : documentLeft.getLines(),
+        documentRight == null ? null : documentRight.getLines());
     StatusBar.getInstance().setState("Ready calculating differences");
     StatusBar.getInstance().stop();
   }
@@ -290,6 +289,7 @@ public class JMDiffNode
     }
   }
 
+  @Override
   public String toString()
   {
     String pn;

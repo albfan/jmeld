@@ -16,23 +16,12 @@
  */
 package org.jmeld.ui;
 
-import org.jdesktop.swingx.treetable.*;
-import org.jmeld.diff.*;
-import org.jmeld.ui.*;
 import org.jmeld.ui.swing.table.*;
-import org.jmeld.ui.text.*;
 import org.jmeld.ui.util.*;
-import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
 
 import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.tree.*;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
 
 public class FolderDiffTreeTableModel
        extends JMTreeTableModel
@@ -133,13 +122,14 @@ public class FolderDiffTreeTableModel
         return "stock_changed2";
       }
 
-      if (diffNode.isCompareEqual(JMDiffNode.Compare.LeftMissing))
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.LeftMissing) ||
+          diffNode.isCompareEqual(JMDiffNode.Compare.BothMissing))
       {
         return "stock_deleted3";
       }
     }
 
-    return "stock_empty";
+    return "stock_equal";
   }
 
   private String getRightStateIconName(JMDiffNode diffNode)
@@ -151,12 +141,13 @@ public class FolderDiffTreeTableModel
         return "stock_changed2";
       }
 
-      if (diffNode.isCompareEqual(JMDiffNode.Compare.RightMissing))
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.RightMissing) ||
+          diffNode.isCompareEqual(JMDiffNode.Compare.BothMissing))
       {
         return "stock_deleted3";
       }
     }
 
-    return "stock_empty";
+    return "stock_equal";
   }
 }
