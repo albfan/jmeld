@@ -78,7 +78,7 @@ import java.util.*;
 public class MyersDiff
        implements DiffAlgorithm
 {
-  private static int MAXTIME = 5000;
+  private static int MAXTIME = 3000;
   public boolean     checkMaxTime = false;
 
   /**
