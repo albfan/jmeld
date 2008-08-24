@@ -48,8 +48,17 @@ public class CompareUtil
     FileNode nodeRight,
     Ignore   ignore)
   {
-    File             fileLeft;
-    File             fileRight;
+    return contentEquals(
+      nodeLeft.getFile(),
+      nodeRight.getFile(),
+      ignore);
+  }
+
+  public static boolean contentEquals(
+    File   fileLeft,
+    File   fileRight,
+    Ignore ignore)
+  {
     RandomAccessFile fLeft;
     RandomAccessFile fRight;
     FileChannel      fcLeft;
@@ -69,9 +78,6 @@ public class CompareUtil
 
     try
     {
-      fileLeft = nodeLeft.getFile();
-      fileRight = nodeRight.getFile();
-
       if (fileLeft.isDirectory() || fileRight.isDirectory())
       {
         return true;
@@ -98,61 +104,10 @@ public class CompareUtil
       }
       else
       {
-        readerLeft = new BufferedReader(new FileReader(fileLeft));
-        readerRight = new BufferedReader(new FileReader(fileRight));
-
-        equals = false;
-        leftChar = 0;
-        rightChar = 0;
-        for (;;)
-        {
-          leftFound = false;
-          while ((leftChar = readerLeft.read()) != -1)
-          {
-            if (ignore.ignoreWhitespace && Character.isWhitespace(leftChar))
-            {
-              continue;
-            }
-
-            leftFound = true;
-            break;
-          }
-
-          rightFound = false;
-          while ((rightChar = readerRight.read()) != -1)
-          {
-            if (ignore.ignoreWhitespace && Character.isWhitespace(rightChar))
-            {
-              continue;
-            }
-
-            rightFound = true;
-            break;
-          }
-
-          if (leftFound && rightFound)
-          {
-            if (leftChar == rightChar)
-            {
-              continue;
-            }
-
-            equals = false;
-            break;
-          }
-
-          if ((leftFound && !rightFound) || (!leftFound && rightFound))
-          {
-            equals = false;
-            break;
-          }
-
-          if (!leftFound && !rightFound)
-          {
-            equals = true;
-            break;
-          }
-        }
+        equals = contentEquals(
+            new BufferedReader(new FileReader(fileLeft)),
+            new BufferedReader(new FileReader(fileRight)),
+            ignore);
       }
 
       return equals;
@@ -195,83 +150,160 @@ public class CompareUtil
     char[] right,
     Ignore ignore)
   {
+    try
+    {
+      return contentEquals(
+        new CharArrayReader(left),
+        new CharArrayReader(right),
+        ignore);
+    }
+    catch (IOException ex)
+    {
+      // IOException will never happen!
+      return false;
+    }
+  }
+
+  private static boolean contentEquals(
+    Reader readerLeft,
+    Reader readerRight,
+    Ignore ignore)
+    throws IOException
+  {
     boolean equals;
     boolean leftFound;
     boolean rightFound;
-    char    leftChar;
-    char    rightChar;
-    int     leftIndex;
-    int     rightIndex;
+    int     leftChar;
+    int     rightChar;
+    int     nextChar;
+    boolean eol;
+    boolean previousEolLeft;
+    boolean previousEolRight;
 
-    leftIndex = 0;
-    rightIndex = 0;
-
-    if (!ignore.ignore)
+    equals = false;
+    leftChar = 0;
+    rightChar = 0;
+    previousEolLeft = true;
+    previousEolRight = true;
+    for (;;)
     {
-      equals = Arrays.equals(left, right);
-    }
-    else
-    {
-      equals = false;
-      leftChar = 0;
-      rightChar = 0;
-      for (;;)
+      leftFound = false;
+      while ((leftChar = readerLeft.read()) != -1)
       {
-        leftFound = false;
-        while (leftIndex < left.length)
-        {
-          leftChar = left[leftIndex];
-          leftIndex++;
+        eol = isEOL(leftChar);
 
-          if (ignore.ignoreWhitespace && Character.isWhitespace(leftChar))
+        if ((ignore.ignoreEOL || ignore.ignoreBlankLines
+          || ignore.ignoreWhitespace) && eol)
+        {
+          readerLeft.mark(1);
+          nextChar = readerLeft.read();
+
+          // Try to read the following combinations as 1 newline:
+          // 1. '\n'
+          // 2. '\r'
+          // 3. '\r\n'
+          // 4. '\n\r'
+          if (!((leftChar == '\n' && nextChar == '\r')
+            || (leftChar == '\r' && nextChar == '\n')))
           {
-            continue;
+            // The next character doesn't belong to a newline -> unread it!
+            readerLeft.reset();
           }
 
-          leftFound = true;
-          break;
+          leftChar = '\n';
         }
 
-        rightFound = false;
-        while (rightIndex < right.length)
+        if ((ignore.ignoreBlankLines || ignore.ignoreWhitespace)
+          && previousEolLeft && eol)
         {
-          rightChar = right[rightIndex];
-          rightIndex++;
+          continue;
+        }
 
-          if (ignore.ignoreWhitespace && Character.isWhitespace(rightChar))
+        if (ignore.ignoreWhitespace && !eol
+          && Character.isWhitespace(leftChar))
+        {
+          continue;
+        }
+
+        previousEolLeft = eol;
+
+        leftFound = true;
+        break;
+      }
+
+      rightFound = false;
+      while ((rightChar = readerRight.read()) != -1)
+      {
+        eol = isEOL(rightChar);
+
+        if ((ignore.ignoreEOL || ignore.ignoreBlankLines
+          || ignore.ignoreWhitespace) && eol)
+        {
+          readerRight.mark(1);
+          nextChar = readerRight.read();
+
+          // Try to read the following combinations as 1 newline:
+          // 1. '\n'
+          // 2. '\r'
+          // 3. '\r\n'
+          // 4. '\n\r'
+          if (!((rightChar == '\n' && nextChar == '\r')
+            || (rightChar == '\r' && nextChar == '\n')))
           {
-            continue;
+            // The next character doesn't belong to a newline -> unread it!
+            readerRight.reset();
           }
 
-          rightFound = true;
-          break;
+          rightChar = '\n';
         }
 
-        if (leftFound && rightFound)
+        if ((ignore.ignoreBlankLines || ignore.ignoreWhitespace)
+          && previousEolRight && eol)
         {
-          if (leftChar == rightChar)
-          {
-            continue;
-          }
-
-          equals = false;
-          break;
+          continue;
         }
 
-        if ((leftFound && !rightFound) || (!leftFound && rightFound))
+        if (ignore.ignoreWhitespace && !eol
+          && Character.isWhitespace(rightChar))
         {
-          equals = false;
-          break;
+          continue;
         }
 
-        if (!leftFound && !rightFound)
+        previousEolRight = eol;
+
+        rightFound = true;
+        break;
+      }
+
+      if (leftFound && rightFound)
+      {
+        if (leftChar == rightChar)
         {
-          equals = true;
-          break;
+          continue;
         }
+
+        equals = false;
+        break;
+      }
+
+      if ((leftFound && !rightFound) || (!leftFound && rightFound))
+      {
+        equals = false;
+        break;
+      }
+
+      if (!leftFound && !rightFound)
+      {
+        equals = true;
+        break;
       }
     }
 
     return equals;
+  }
+
+  private static boolean isEOL(int character)
+  {
+    return character == '\n' || character == '\r';
   }
 }

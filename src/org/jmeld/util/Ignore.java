@@ -18,4 +18,11 @@ public class Ignore
 
     this.ignore = (ignoreWhitespace || ignoreEOL || ignoreBlankLines);
   }
+
+  public String toString()
+  {
+    return "ignore: " + (!ignore ? "nothing" : "")
+    + (ignoreWhitespace ? "whitespace " : "") + (ignoreEOL ? "eol " : "")
+    + (ignoreBlankLines ? "blanklines " : "");
+  }
 }
