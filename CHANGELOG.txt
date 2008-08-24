@@ -1,3 +1,23 @@
+Release 2.0:
+- Implement directory diff.
+- Right/Left side readonly (preference)
+- Ask save settings when closing settings-tab.
+- Allow multiple selections in FolderDiffPanel.
+- Rescan action in FolderDiffPanel.
+- tatusbar should have a bar which tells how far the diff is.
+- Exclude filters. (Create preferences and store with jaxb)
+- Ignore whitespace in diff.
+- se newest swingx library (JTableTree has changed significantly)
+- Click in JTreeTable is forgotten if it is outside length of
+        node-label
+- Save-as, Load buttons in settings panel disappear when frame is
+        made smaller.
+- Copy to left action in FolderDiffPanel.
+- Copy to right action in FolderDiffPanel.
+- Delete right action in FolderDiffPanel.
+- Delete left action in FolderDiffPanel.
+- Undo/Redo for all above actions actions.
+
 Release 1.1.3:
   - BUG: Innerdiff sometimes didn't paint correctly
   - While scanning directory : Text "Scanning directory xxx" in StatusBar.
