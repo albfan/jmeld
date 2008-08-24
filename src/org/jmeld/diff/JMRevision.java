@@ -23,6 +23,8 @@ import java.util.*;
 
 public class JMRevision
 {
+  static private boolean incrementalUpdateActivated = false;
+
   private Object[]            orgArray;
   private Object[]            revArray;
   private LinkedList<JMDelta> deltaList;
@@ -70,8 +72,19 @@ public class JMRevision
    * This solves a performance issue while editing one of the array's.
    */
   public boolean update(
-    Object[] orgArray,
-    Object[] revArray,
+    Object[] oArray,
+    Object[] rArray,
+    boolean  original,
+    int      startLine,
+    int      numberOfLines)
+  {
+    this.orgArray = oArray;
+    this.revArray = rArray;
+
+    return incrementalUpdate(original, startLine, numberOfLines);
+  }
+
+  private boolean incrementalUpdate(
     boolean  original,
     int      startLine,
     int      numberOfLines)
@@ -90,6 +103,12 @@ public class JMRevision
     Object[]      revArrayDelta;
     JMDelta       firstDelta;
     int           length;
+
+    // It is not yet prroduction ready !
+    if(!incrementalUpdateActivated)
+    {
+      return false;
+    }
 
     System.out.println((original ? "left" : "right")
       + " changed starting at line " + startLine + " #" + numberOfLines);
