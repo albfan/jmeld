@@ -20,7 +20,7 @@ import org.jmeld.*;
 import org.netbeans.api.diff.*;
 
 public class HuntDiff
-       implements JMDiffAlgorithmIF
+       extends AbstractJMDiffAlgorithm
 {
   public HuntDiff()
   {

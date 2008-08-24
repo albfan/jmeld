@@ -20,7 +20,7 @@ import org.gnu.diff.*;
 import org.jmeld.*;
 
 public class GNUDiff
-       implements JMDiffAlgorithmIF
+       extends AbstractJMDiffAlgorithm
 {
   public GNUDiff()
   {
@@ -41,7 +41,7 @@ public class GNUDiff
     }
     catch (Exception ex)
     {
-      throw new JMeldException("MyersDiff failed", ex);
+      throw new JMeldException("Diff failed [" + getClass() + "]", ex);
     }
 
     return buildRevision(change, orig, rev);

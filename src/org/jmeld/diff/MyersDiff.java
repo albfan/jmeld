@@ -21,7 +21,7 @@ import org.gnu.diff.*;
 import org.jmeld.*;
 
 public class MyersDiff
-       implements JMDiffAlgorithmIF
+       extends AbstractJMDiffAlgorithm
 {
   public MyersDiff()
   {
@@ -38,11 +38,12 @@ public class MyersDiff
     try
     {
       diff = new org.apache.commons.jrcs.diff.myers.MyersDiff();
+      diff.checkMaxTime(isMaxTimeChecked());
       revision = diff.diff(orig, rev);
     }
     catch (Exception ex)
     {
-      throw new JMeldException("MyersDiff failed", ex);
+      throw new JMeldException("Diff failed [" + getClass() + "]", ex);
     }
 
     return buildRevision(revision, orig, rev);

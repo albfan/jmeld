@@ -16,7 +16,6 @@
  */
 package org.jmeld.diff;
 
-import org.gnu.diff.*;
 import org.jmeld.*;
 import org.jmeld.util.*;
 
@@ -30,15 +29,34 @@ public class JMDiff
   {
     MyersDiff myersDiff;
 
+    // Timing/Memory (msec/Mb):
+    //                                             Myers  Eclipse GNU Hunt
+    //  ================================================================================
+    //  2 Totally different files  (116448 lines)  31317  1510    340 195
+    //  2 Totally different files  (232896 lines)  170673 212     788 354
+    //  2 Medium different files  (1778583 lines)  41     55      140 24679
+    //  2 Medium different files (10673406 lines)  216    922     632 >300000
+    //  2 Equal files             (1778583 lines)  32     55      133 24632
+    //  2 Equal files            (10673406 lines)  121    227     581 >60000
     myersDiff = new MyersDiff();
-    //myersDiff.checkMaxTime(true);
+    myersDiff.checkMaxTime(true);
 
     // MyersDiff is the fastest but can be very slow when 2 files
     //   are very different.
     algorithms = new ArrayList<JMDiffAlgorithmIF>();
     algorithms.add(myersDiff);
-    algorithms.add(new GNUDiff());
-    algorithms.add(new HuntDiff());
+
+    // GNUDiff is a little bit slower than Myersdiff but performs way
+    //   better if the files are very different.
+    // Don't use it for now because of GPL
+    //algorithms.add(new GNUDiff());
+
+    // EclipseDiff looks like Myersdiff but is slower.
+    // It performs much better if the files are totally different
+    algorithms.add(new EclipseDiff());
+
+    // HuntDiff (from netbeans) is very, very slow
+    //algorithms.add(new HuntDiff());
   }
 
   public JMRevision diff(
@@ -65,6 +83,7 @@ public class JMDiff
     throws JMeldException
   {
     JMRevision revision;
+    StopWatch  sp;
 
     if (a == null)
     {
@@ -75,6 +94,9 @@ public class JMDiff
       b = new Object[] {  };
     }
 
+    sp = new StopWatch();
+    sp.start();
+
     for (JMDiffAlgorithmIF algorithm : algorithms)
     {
       try
@@ -82,11 +104,25 @@ public class JMDiff
         revision = algorithm.diff(a, b);
         revision.filter();
 
+        if (a.length > 1000)
+        {
+          System.out.println("diff took " + sp.getElapsedTime() + " msec. ["
+            + algorithm.getClass() + "]");
+        }
+
         return revision;
       }
-      catch (MaxTimeExceededException ex)
+      catch (JMeldException ex)
       {
-        System.out.println("Time exceeded: try next algorithm");
+        if (ex.getCause() instanceof MaxTimeExceededException)
+        {
+          System.out.println("Time exceeded for " + algorithm.getClass()
+            + ": try next algorithm");
+        }
+        else
+        {
+          throw ex;
+        }
       }
     }
 
