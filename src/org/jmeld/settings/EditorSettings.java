@@ -32,6 +32,9 @@ public class EditorSettings
   private boolean          showLineNumbers;
   @XmlElement
   private int              tabSize = 4;
+  // Only here for downwards compatibility (Otherwise the xml doesn't parse)
+  @XmlElement
+  private boolean          ignoreWhitespace;
   @XmlElement
   private boolean          ignoreWhitespaceAtBegin;
   @XmlElement

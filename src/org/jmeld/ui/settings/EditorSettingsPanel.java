@@ -280,9 +280,12 @@ public class EditorSettingsPanel
         20,
         20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
-    ignoreWhitespaceAtBeginCheckBox.setSelected(settings.getIgnore().ignoreWhitespace);
+    ignoreWhitespaceAtBeginCheckBox.setSelected(settings.getIgnore().ignoreWhitespaceAtBegin);
+    ignoreWhitespaceInBetweenCheckBox.setSelected(settings.getIgnore().ignoreWhitespaceInBetween);
+    ignoreWhitespaceAtEndCheckBox.setSelected(settings.getIgnore().ignoreWhitespaceAtEnd);
     ignoreEOLCheckBox.setSelected(settings.getIgnore().ignoreEOL);
     ignoreBlankLinesCheckBox.setSelected(settings.getIgnore().ignoreBlankLines);
+    ignoreCaseCheckBox.setSelected(settings.getIgnore().ignoreCase);
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     tabSizeSpinner.setValue(settings.getTabSize());

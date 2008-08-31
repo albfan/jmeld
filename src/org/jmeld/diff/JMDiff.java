@@ -241,6 +241,7 @@ public class JMDiff
     char[]         charArray;
     StringBuilder  sb;
     boolean        whitespaceAtBegin;
+    int            whitespaceEndIndex;
     int            length;
 
     //System.out.println("> start");
@@ -262,24 +263,30 @@ public class JMDiff
         charArray = s.toCharArray();
 
         length = charArray.length;
-        if (ignore.ignoreWhitespaceAtEnd)
+        whitespaceEndIndex = length;
+        
+        if (ignore.ignoreWhitespace)
         {
-          for (int index = length - 1; index >= 0; index++)
+          for (int index = length - 1; index >= 0; index--)
           {
-            if (Character.isWhitespace(charArray[index]))
+            if (!Character.isWhitespace(charArray[index]))
             {
-              length--;
-              continue;
+              break;
             }
 
-            break;
+            whitespaceEndIndex--;
           }
+        }
+
+        if (ignore.ignoreWhitespaceAtEnd)
+        {
+          length = whitespaceEndIndex;
         }
 
         whitespaceAtBegin = true;
         for (int i = 0; i < length; i++)
         {
-          if (Character.isWhitespace(charArray[i]))
+          if (i < whitespaceEndIndex && Character.isWhitespace(charArray[i]))
           {
             if (whitespaceAtBegin)
             {
