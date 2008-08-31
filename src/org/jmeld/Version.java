@@ -16,14 +16,42 @@
  */
 package org.jmeld;
 
+import org.jmeld.util.*;
+
+import java.util.*;
+
 public class Version
 {
+  // Class variables:
+  // Singleton:
+  private static Version instance = new Version();
+
+  // Instance variables:
+  private String version;
+
   private Version()
   {
+    init();
   }
 
   public static String getVersion()
   {
-    return "2.0";
+    return instance.version;
+  }
+
+  private void init()
+  {
+    Properties p;
+
+    try
+    {
+      p = new Properties();
+      p.load(ResourceLoader.getResourceAsStream("ini/Version.txt"));
+      version = p.getProperty("version");
+    }
+    catch (Exception ex)
+    {
+      ex.printStackTrace();
+    }
   }
 }

@@ -49,7 +49,7 @@
 
   <target name="createExecutable">
     <jar destfile="JMeld.jar" manifest="etc/manifest.mf" update="false">
-      <fileset dir="etc" />
+      <fileset dir="resources" />
       <fileset dir="build/classes" />
       <fileset dir="doc/help/jmeld" />
       <zipfileset src="lib/forms-1.0.5.jar" />
