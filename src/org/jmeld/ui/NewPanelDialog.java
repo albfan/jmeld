@@ -257,7 +257,7 @@ public class NewPanelDialog
           chooser.setApproveButtonText("Choose");
           chooser.setDialogTitle("Choose file");
           chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-          pref = new FileChooserPreference("Browse", chooser);
+          pref = new FileChooserPreference("Browse-" + ae.getActionCommand(), chooser);
           result = chooser.showOpenDialog(meldPanel);
 
           if (result == JFileChooser.APPROVE_OPTION)
@@ -403,7 +403,7 @@ public class NewPanelDialog
           chooser.setApproveButtonText("Choose");
           chooser.setDialogTitle("Choose directory");
           chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-          pref = new DirectoryChooserPreference("Browse", chooser);
+          pref = new DirectoryChooserPreference("Browse-" + ae.getActionCommand(), chooser);
           result = chooser.showOpenDialog(meldPanel);
 
           if (result == JFileChooser.APPROVE_OPTION)
