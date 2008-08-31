@@ -244,7 +244,10 @@ public class JMDiffNode
       StatusBar.getInstance().setState(
         "Reading left : %s",
         nodeLeft.getName());
-      documentLeft.read();
+      if(documentLeft != null)
+      {
+        documentLeft.read();
+      }
     }
 
     if (nodeRight != null)
@@ -253,7 +256,10 @@ public class JMDiffNode
       StatusBar.getInstance().setState(
         "Reading right: %s",
         nodeRight.getName());
-      documentRight.read();
+      if(documentRight != null)
+      {
+        documentRight.read();
+      }
     }
 
     StatusBar.getInstance().setState("Calculating differences");
