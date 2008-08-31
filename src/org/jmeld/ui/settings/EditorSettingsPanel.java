@@ -38,7 +38,12 @@ public class EditorSettingsPanel
   {
     tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
-    ignoreWhitespaceCheckBox.addActionListener(getIgnoreWhitespaceAction());
+    ignoreWhitespaceAtBeginCheckBox.addActionListener(
+      getIgnoreWhitespaceAtBeginAction());
+    ignoreWhitespaceInBetweenCheckBox.addActionListener(
+      getIgnoreWhitespaceInBetweenAction());
+    ignoreWhitespaceAtEndCheckBox.addActionListener(
+      getIgnoreWhitespaceAtEndAction());
     ignoreEOLCheckBox.addActionListener(getIgnoreEOLAction());
     ignoreBlankLinesCheckBox.addActionListener(getIgnoreBlankLinesAction());
     ignoreCaseCheckBox.addActionListener(getIgnoreCaseAction());
@@ -125,14 +130,41 @@ public class EditorSettingsPanel
       };
   }
 
-  private ActionListener getIgnoreWhitespaceAction()
+  private ActionListener getIgnoreWhitespaceAtBeginAction()
   {
     return new java.awt.event.ActionListener()
       {
         public void actionPerformed(java.awt.event.ActionEvent evt)
         {
           getEditorSettings()
-            .setIgnoreWhitespace(ignoreWhitespaceCheckBox.isSelected());
+            .setIgnoreWhitespaceAtBegin(
+            ignoreWhitespaceAtBeginCheckBox.isSelected());
+        }
+      };
+  }
+
+  private ActionListener getIgnoreWhitespaceInBetweenAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setIgnoreWhitespaceInBetween(
+            ignoreWhitespaceInBetweenCheckBox.isSelected());
+        }
+      };
+  }
+
+  private ActionListener getIgnoreWhitespaceAtEndAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setIgnoreWhitespaceAtEnd(
+            ignoreWhitespaceAtEndCheckBox.isSelected());
         }
       };
   }
@@ -143,8 +175,7 @@ public class EditorSettingsPanel
       {
         public void actionPerformed(java.awt.event.ActionEvent evt)
         {
-          getEditorSettings()
-            .setIgnoreEOL(ignoreEOLCheckBox.isSelected());
+          getEditorSettings().setIgnoreEOL(ignoreEOLCheckBox.isSelected());
         }
       };
   }
@@ -167,8 +198,7 @@ public class EditorSettingsPanel
       {
         public void actionPerformed(java.awt.event.ActionEvent evt)
         {
-          getEditorSettings()
-            .setIgnoreCase(ignoreCaseCheckBox.isSelected());
+          getEditorSettings().setIgnoreCase(ignoreCaseCheckBox.isSelected());
         }
       };
   }
@@ -250,7 +280,7 @@ public class EditorSettingsPanel
         20,
         20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
-    ignoreWhitespaceCheckBox.setSelected(settings.getIgnore().ignoreWhitespace);
+    ignoreWhitespaceAtBeginCheckBox.setSelected(settings.getIgnore().ignoreWhitespace);
     ignoreEOLCheckBox.setSelected(settings.getIgnore().ignoreEOL);
     ignoreBlankLinesCheckBox.setSelected(settings.getIgnore().ignoreBlankLines);
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());

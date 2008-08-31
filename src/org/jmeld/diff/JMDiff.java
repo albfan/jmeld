@@ -201,14 +201,6 @@ public class JMDiff
         }
       }
 
-      if (anchor != chunk.getAnchor())
-      {
-        System.out.println("anchor uneven");
-      }
-      if (size != chunk.getSize())
-      {
-        System.out.println("size uneven");
-      }
       chunk.setAnchor(anchor);
       chunk.setSize(size);
       //System.out.println(" => " + chunk);
@@ -232,14 +224,6 @@ public class JMDiff
           size = revArrayFiltered[index].lineNumber - anchor;
         }
       }
-      if (anchor != chunk.getAnchor())
-      {
-        System.out.println("anchor uneven");
-      }
-      if (size != chunk.getSize())
-      {
-        System.out.println("size uneven");
-      }
       chunk.setAnchor(anchor);
       chunk.setSize(size);
       //System.out.println(" => " + chunk);
@@ -256,6 +240,8 @@ public class JMDiff
     String         s;
     char[]         charArray;
     StringBuilder  sb;
+    boolean        whitespaceAtBegin;
+    int            length;
 
     //System.out.println("> start");
     result = new ArrayList<JMString>(array.length);
@@ -274,17 +260,52 @@ public class JMDiff
       {
         sb = new StringBuilder(s.length());
         charArray = s.toCharArray();
-        for (int i = 0; i < charArray.length; i++)
+
+        length = charArray.length;
+        if (ignore.ignoreWhitespaceAtEnd)
+        {
+          for (int index = length - 1; index >= 0; index++)
+          {
+            if (Character.isWhitespace(charArray[index]))
+            {
+              length--;
+              continue;
+            }
+
+            break;
+          }
+        }
+
+        whitespaceAtBegin = true;
+        for (int i = 0; i < length; i++)
         {
           if (Character.isWhitespace(charArray[i]))
           {
-            continue;
+            if (whitespaceAtBegin)
+            {
+              if (ignore.ignoreWhitespaceAtBegin)
+              {
+                continue;
+              }
+            }
+            else
+            {
+              if (ignore.ignoreWhitespaceInBetween)
+              {
+                continue;
+              }
+            }
           }
+          else
+          {
+            whitespaceAtBegin = false;
+          }
+
           sb.append(charArray[i]);
         }
         s = sb.toString();
-        //s = whiteSpacePattern.matcher(s).replaceAll("");
       }
+
       if (ignore.ignoreBlankLines)
       {
         if (s.length() == 0)
@@ -292,6 +313,7 @@ public class JMDiff
           s = null;
         }
       }
+
       if (s == null)
       {
         continue;

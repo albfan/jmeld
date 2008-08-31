@@ -182,6 +182,8 @@ public class CompareUtil
     boolean previousEolRight;
     int     leftLineIndex;
     int     rightLineIndex;
+    boolean whitespaceAtBegin;
+    int     whitespaceIndex;
 
     leftLineIndex = 0;
     rightLineIndex = 0;
@@ -197,6 +199,8 @@ public class CompareUtil
       for (;;)
       {
         leftFound = false;
+        whitespaceAtBegin = true;
+        whitespaceIndex = -1;
         while ((leftChar = readerLeft.read()) != -1)
         {
           eol = isEOL(leftChar);
@@ -231,9 +235,37 @@ public class CompareUtil
 
           if (!eol)
           {
-            if (ignore.ignoreWhitespace && Character.isWhitespace(leftChar))
+            if (ignore.ignoreWhitespace)
             {
-              continue;
+              if (Character.isWhitespace(leftChar))
+              {
+                if (whitespaceIndex == -1)
+                {
+                  whitespaceIndex = leftLineIndex;
+                }
+              }
+              else
+              {
+                if (whitespaceIndex != -1)
+                {
+                  if (whitespaceAtBegin)
+                  {
+                    whitespaceAtBegin = false;
+                    if (ignore.ignoreWhitespaceAtBegin)
+                    {
+                      leftLineIndex = whitespaceIndex;
+                    }
+                  }
+                  else
+                  {
+                    if (ignore.ignoreWhitespaceInBetween)
+                    {
+                      leftLineIndex = whitespaceIndex;
+                    }
+                  }
+                  whitespaceIndex = -1;
+                }
+              }
             }
 
             if (ignore.ignoreCase)
@@ -249,11 +281,18 @@ public class CompareUtil
 
           if (eol || leftLineIndex >= MAX_LINE_NUMBER)
           {
+            if (whitespaceIndex != -1 && ignore.ignoreWhitespaceAtEnd)
+            {
+              leftLineIndex = whitespaceIndex;
+            }
+
             break;
           }
         }
 
         rightFound = false;
+        whitespaceAtBegin = true;
+        whitespaceIndex = -1;
         while ((rightChar = readerRight.read()) != -1)
         {
           eol = isEOL(rightChar);
@@ -287,11 +326,38 @@ public class CompareUtil
 
           if (!eol)
           {
-            if (ignore.ignoreWhitespace && Character.isWhitespace(rightChar))
+            if (ignore.ignoreWhitespace)
             {
-              continue;
+              if (Character.isWhitespace(rightChar))
+              {
+                if (whitespaceIndex == -1)
+                {
+                  whitespaceIndex = rightLineIndex;
+                }
+              }
+              else
+              {
+                if (whitespaceIndex != -1)
+                {
+                  if (whitespaceAtBegin)
+                  {
+                    whitespaceAtBegin = false;
+                    if (ignore.ignoreWhitespaceAtBegin)
+                    {
+                      rightLineIndex = whitespaceIndex;
+                    }
+                  }
+                  else
+                  {
+                    if (ignore.ignoreWhitespaceInBetween)
+                    {
+                      rightLineIndex = whitespaceIndex;
+                    }
+                  }
+                  whitespaceIndex = -1;
+                }
+              }
             }
-
             if (ignore.ignoreCase)
             {
               rightChar = Character.toLowerCase(rightChar);

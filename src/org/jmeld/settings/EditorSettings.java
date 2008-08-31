@@ -33,7 +33,11 @@ public class EditorSettings
   @XmlElement
   private int              tabSize = 4;
   @XmlElement
-  private boolean          ignoreWhitespace;
+  private boolean          ignoreWhitespaceAtBegin;
+  @XmlElement
+  private boolean          ignoreWhitespaceInBetween;
+  @XmlElement
+  private boolean          ignoreWhitespaceAtEnd;
   @XmlElement
   private boolean          ignoreEOL;
   @XmlElement
@@ -82,16 +86,30 @@ public class EditorSettings
   {
     if (ignore == null)
     {
-      ignore = new Ignore(ignoreWhitespace, ignoreWhitespace, ignoreWhitespace, 
-                          ignoreEOL, ignoreBlankLines, ignoreCase);
+      ignore = new Ignore(ignoreWhitespaceAtBegin, ignoreWhitespaceInBetween,
+          ignoreWhitespaceAtEnd, ignoreEOL, ignoreBlankLines, ignoreCase);
     }
 
     return ignore;
   }
 
-  public void setIgnoreWhitespace(boolean ignoreWhitespace)
+  public void setIgnoreWhitespaceAtBegin(boolean ignoreWhitespaceAtBegin)
   {
-    this.ignoreWhitespace = ignoreWhitespace;
+    this.ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
+    ignore = null;
+    fireChanged();
+  }
+
+  public void setIgnoreWhitespaceInBetween(boolean ignoreWhitespaceInBetween)
+  {
+    this.ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
+    ignore = null;
+    fireChanged();
+  }
+
+  public void setIgnoreWhitespaceAtEnd(boolean ignoreWhitespaceAtEnd)
+  {
+    this.ignoreWhitespaceAtEnd = ignoreWhitespaceAtEnd;
     ignore = null;
     fireChanged();
   }

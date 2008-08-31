@@ -50,12 +50,14 @@ public class EditorSettingsForm extends javax.swing.JPanel
     restoreOriginalColorsButton = new javax.swing.JButton();
     gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
     leftsideReadonlyCheckBox = new javax.swing.JCheckBox();
-    ignoreWhitespaceCheckBox = new javax.swing.JCheckBox();
+    ignoreWhitespaceAtBeginCheckBox = new javax.swing.JCheckBox();
     rightsideReadonlyCheckBox = new javax.swing.JCheckBox();
     detailHeader4 = new org.jmeld.ui.swing.DetailHeader();
     ignoreEOLCheckBox = new javax.swing.JCheckBox();
     ignoreBlankLinesCheckBox = new javax.swing.JCheckBox();
     ignoreCaseCheckBox = new javax.swing.JCheckBox();
+    ignoreWhitespaceInBetweenCheckBox = new javax.swing.JCheckBox();
+    ignoreWhitespaceAtEndCheckBox = new javax.swing.JCheckBox();
 
     buttonGroup1.add(jRadioButton1);
     jRadioButton1.setText("Use default font");
@@ -112,9 +114,9 @@ public class EditorSettingsForm extends javax.swing.JPanel
       }
     });
 
-    ignoreWhitespaceCheckBox.setText("Ignore whitespace");
-    ignoreWhitespaceCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    ignoreWhitespaceCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    ignoreWhitespaceAtBeginCheckBox.setText("Ignore whitespace at the begin of a line");
+    ignoreWhitespaceAtBeginCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreWhitespaceAtBeginCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
     rightsideReadonlyCheckBox.setText("Rightside readonly");
     rightsideReadonlyCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -137,6 +139,14 @@ public class EditorSettingsForm extends javax.swing.JPanel
 
     ignoreCaseCheckBox.setText("Ignore case");
     ignoreCaseCheckBox.setBorder(null);
+
+    ignoreWhitespaceInBetweenCheckBox.setText("Ignore whitespace between begin and end of a line");
+    ignoreWhitespaceInBetweenCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreWhitespaceInBetweenCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    ignoreWhitespaceAtEndCheckBox.setText("Ignore whitespace at the end of a line");
+    ignoreWhitespaceAtEndCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreWhitespaceAtEndCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
@@ -197,10 +207,12 @@ public class EditorSettingsForm extends javax.swing.JPanel
             .add(12, 12, 12)
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
               .add(ignoreEOLCheckBox)
-              .add(ignoreWhitespaceCheckBox)
+              .add(ignoreWhitespaceAtBeginCheckBox)
               .add(ignoreBlankLinesCheckBox)
-              .add(ignoreCaseCheckBox))))
-        .addContainerGap(241, Short.MAX_VALUE))
+              .add(ignoreCaseCheckBox)
+              .add(ignoreWhitespaceInBetweenCheckBox)
+              .add(ignoreWhitespaceAtEndCheckBox))))
+        .addContainerGap(146, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -243,14 +255,18 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(detailHeader4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(ignoreWhitespaceCheckBox)
+        .add(ignoreWhitespaceAtBeginCheckBox)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(ignoreWhitespaceInBetweenCheckBox)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(ignoreWhitespaceAtEndCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(ignoreEOLCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(ignoreBlankLinesCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(ignoreCaseCheckBox)
-        .add(28, 28, 28))
+        .add(94, 94, 94))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -276,7 +292,9 @@ public class EditorSettingsForm extends javax.swing.JPanel
   protected javax.swing.JCheckBox ignoreBlankLinesCheckBox;
   protected javax.swing.JCheckBox ignoreCaseCheckBox;
   protected javax.swing.JCheckBox ignoreEOLCheckBox;
-  protected javax.swing.JCheckBox ignoreWhitespaceCheckBox;
+  protected javax.swing.JCheckBox ignoreWhitespaceAtBeginCheckBox;
+  protected javax.swing.JCheckBox ignoreWhitespaceAtEndCheckBox;
+  protected javax.swing.JCheckBox ignoreWhitespaceInBetweenCheckBox;
   protected javax.swing.JLabel jLabel1;
   protected javax.swing.JLabel jLabel2;
   protected javax.swing.JLabel jLabel3;
