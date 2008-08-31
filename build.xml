@@ -9,6 +9,7 @@
 
   <path id="development.classpath">
     <pathElement path="build/classes" />
+    <pathElement path="resources" />
     <fileset dir="./lib">
       <include name="**/*.jar" />
     </fileset>
@@ -48,6 +49,7 @@
 
   <target name="createExecutable">
     <jar destfile="JMeld.jar" manifest="etc/manifest.mf" update="false">
+      <fileset dir="etc" />
       <fileset dir="build/classes" />
       <fileset dir="doc/help/jmeld" />
       <zipfileset src="lib/forms-1.0.5.jar" />
@@ -72,7 +74,7 @@
         <include name="src/**" />
         <include name="lib/**" />
         <include name="build.xml" />
-        <include name="images/**" />
+        <include name="resources/**" />
         <include name="etc/**" />
         <include name="doc/**" />
         <include name="*.txt" />
