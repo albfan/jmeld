@@ -196,8 +196,8 @@ public class BufferDiffPanel
       bd2 = filePanels[RIGHT].getBufferDocument();
 
       if(!currentRevision.update(
-          bd1.getLines(),
-          bd2.getLines(),
+          bd1 != null ? bd1.getLines() : null,
+          bd2 != null ? bd2.getLines() : null,
           fp == filePanels[LEFT],
           de.getStartLine(),
           de.getNumberOfLines()))
