@@ -35,7 +35,6 @@ public class JMDelta
   private char       type;
   private JMRevision revision;
   private JMRevision changeRevision;
-  private Boolean    shouldIgnore;
 
   public JMDelta(
     JMChunk original,
@@ -90,19 +89,6 @@ public class JMDelta
     }
 
     return changeRevision;
-  }
-
-  public boolean shouldIgnore(Ignore ignore)
-  {
-    if (shouldIgnore == null)
-    {
-      shouldIgnore = CompareUtil.contentEquals(
-          revision.getOriginalString(original).toCharArray(),
-          revision.getRevisedString(revised).toCharArray(),
-          ignore);
-    }
-
-    return shouldIgnore.booleanValue();
   }
 
   private JMRevision createChangeRevision()
