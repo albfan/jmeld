@@ -1,3 +1,7 @@
+Release 2.1:
+  - Ignore case is implemented.
+  - Ignore whitespace has been improved.
+
 Release 2.0:
 - Implement directory diff.
 - Right/Left side readonly (preference)
