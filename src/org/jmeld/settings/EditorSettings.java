@@ -39,6 +39,8 @@ public class EditorSettings
   @XmlElement
   private boolean          ignoreBlankLines;
   @XmlElement
+  private boolean          ignoreCase;
+  @XmlElement
   private boolean          leftsideReadonly;
   @XmlElement
   private boolean          rightsideReadonly;
@@ -80,7 +82,8 @@ public class EditorSettings
   {
     if (ignore == null)
     {
-      ignore = new Ignore(ignoreWhitespace, ignoreEOL, ignoreBlankLines);
+      ignore = new Ignore(ignoreWhitespace, ignoreWhitespace, ignoreWhitespace, 
+                          ignoreEOL, ignoreBlankLines, ignoreCase);
     }
 
     return ignore;
@@ -103,6 +106,13 @@ public class EditorSettings
   public void setIgnoreBlankLines(boolean ignoreBlankLines)
   {
     this.ignoreBlankLines = ignoreBlankLines;
+    ignore = null;
+    fireChanged();
+  }
+
+  public void setIgnoreCase(boolean ignoreCase)
+  {
+    this.ignoreCase = ignoreCase;
     ignore = null;
     fireChanged();
   }

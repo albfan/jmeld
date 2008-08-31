@@ -212,7 +212,6 @@ public class JMDiff
       chunk.setAnchor(anchor);
       chunk.setSize(size);
       //System.out.println(" => " + chunk);
-
       chunk = delta.getRevised();
       //System.out.print("  revised=" + chunk);
       index = chunk.getAnchor();
@@ -256,7 +255,7 @@ public class JMDiff
     int            lineNumber;
     String         s;
     char[]         charArray;
-    StringBuilder   sb;
+    StringBuilder  sb;
 
     //System.out.println("> start");
     result = new ArrayList<JMString>(array.length);
@@ -264,6 +263,11 @@ public class JMDiff
     for (Object o : array)
     {
       s = o.toString();
+
+      if (ignore.ignoreCase)
+      {
+        s = s.toLowerCase();
+      }
 
       lineNumber++;
       if (ignore.ignoreWhitespace)

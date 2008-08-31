@@ -229,10 +229,17 @@ public class CompareUtil
             continue;
           }
 
-          if (ignore.ignoreWhitespace && !eol
-            && Character.isWhitespace(leftChar))
+          if (!eol)
           {
-            continue;
+            if (ignore.ignoreWhitespace && Character.isWhitespace(leftChar))
+            {
+              continue;
+            }
+
+            if (ignore.ignoreCase)
+            {
+              leftChar = Character.toLowerCase(leftChar);
+            }
           }
 
           previousEolLeft = eol;
@@ -278,10 +285,17 @@ public class CompareUtil
             continue;
           }
 
-          if (ignore.ignoreWhitespace && !eol
-            && Character.isWhitespace(rightChar))
+          if (!eol)
           {
-            continue;
+            if (ignore.ignoreWhitespace && Character.isWhitespace(rightChar))
+            {
+              continue;
+            }
+
+            if (ignore.ignoreCase)
+            {
+              rightChar = Character.toLowerCase(rightChar);
+            }
           }
 
           previousEolRight = eol;

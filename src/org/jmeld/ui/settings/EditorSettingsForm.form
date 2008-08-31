@@ -90,6 +90,7 @@
                           <Component id="ignoreEOLCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="ignoreWhitespaceCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="ignoreBlankLinesCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ignoreCaseCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -147,7 +148,9 @@
               <Component id="ignoreEOLCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="ignoreBlankLinesCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="ignoreCaseCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -406,6 +409,14 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="ignoreCaseCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ignore case"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="null"/>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

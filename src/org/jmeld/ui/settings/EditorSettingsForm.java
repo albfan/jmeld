@@ -55,6 +55,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
     detailHeader4 = new org.jmeld.ui.swing.DetailHeader();
     ignoreEOLCheckBox = new javax.swing.JCheckBox();
     ignoreBlankLinesCheckBox = new javax.swing.JCheckBox();
+    ignoreCaseCheckBox = new javax.swing.JCheckBox();
 
     buttonGroup1.add(jRadioButton1);
     jRadioButton1.setText("Use default font");
@@ -134,6 +135,9 @@ public class EditorSettingsForm extends javax.swing.JPanel
     ignoreBlankLinesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     ignoreBlankLinesCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
+    ignoreCaseCheckBox.setText("Ignore case");
+    ignoreCaseCheckBox.setBorder(null);
+
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -194,7 +198,8 @@ public class EditorSettingsForm extends javax.swing.JPanel
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
               .add(ignoreEOLCheckBox)
               .add(ignoreWhitespaceCheckBox)
-              .add(ignoreBlankLinesCheckBox))))
+              .add(ignoreBlankLinesCheckBox)
+              .add(ignoreCaseCheckBox))))
         .addContainerGap(241, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
@@ -243,7 +248,9 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .add(ignoreEOLCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(ignoreBlankLinesCheckBox)
-        .add(48, 48, 48))
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(ignoreCaseCheckBox)
+        .add(28, 28, 28))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -267,6 +274,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
   protected org.jmeld.ui.swing.DetailHeader detailHeader4;
   protected org.jmeld.ui.swing.GradientLabel gradientLabel1;
   protected javax.swing.JCheckBox ignoreBlankLinesCheckBox;
+  protected javax.swing.JCheckBox ignoreCaseCheckBox;
   protected javax.swing.JCheckBox ignoreEOLCheckBox;
   protected javax.swing.JCheckBox ignoreWhitespaceCheckBox;
   protected javax.swing.JLabel jLabel1;

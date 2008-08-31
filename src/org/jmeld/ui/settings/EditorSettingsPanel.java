@@ -41,6 +41,7 @@ public class EditorSettingsPanel
     ignoreWhitespaceCheckBox.addActionListener(getIgnoreWhitespaceAction());
     ignoreEOLCheckBox.addActionListener(getIgnoreEOLAction());
     ignoreBlankLinesCheckBox.addActionListener(getIgnoreBlankLinesAction());
+    ignoreCaseCheckBox.addActionListener(getIgnoreCaseAction());
     leftsideReadonlyCheckBox.addActionListener(getLeftsideReadonlyAction());
     rightsideReadonlyCheckBox.addActionListener(getRightsideReadonlyAction());
     colorAddedButton.addActionListener(getColorAddedAction());
@@ -156,6 +157,18 @@ public class EditorSettingsPanel
         {
           getEditorSettings()
             .setIgnoreBlankLines(ignoreBlankLinesCheckBox.isSelected());
+        }
+      };
+  }
+
+  private ActionListener getIgnoreCaseAction()
+  {
+    return new java.awt.event.ActionListener()
+      {
+        public void actionPerformed(java.awt.event.ActionEvent evt)
+        {
+          getEditorSettings()
+            .setIgnoreCase(ignoreCaseCheckBox.isSelected());
         }
       };
   }
