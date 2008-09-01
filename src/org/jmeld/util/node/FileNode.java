@@ -27,6 +27,7 @@ public class FileNode
        implements BufferNode
 {
   private File         file;
+  private long         fileLastModified;
   private FileDocument document;
   private boolean      exists;
 
@@ -59,12 +60,13 @@ public class FileNode
 
   public FileDocument getDocument()
   {
-    if (document == null)
+    if (document == null || isDocumentOutOfDate())
     {
       initialize();
       if (exists())
       {
         document = new FileDocument(file);
+        fileLastModified = file.lastModified();
       }
     }
 
@@ -154,6 +156,25 @@ public class FileNode
         ex.printStackTrace();
       }
     }
+  }
+
+  private boolean isDocumentOutOfDate()
+  {
+    boolean outOfDate;
+
+    if (file == null || !exists())
+    {
+      return false;
+    }
+
+    outOfDate = file.lastModified() != fileLastModified;
+
+    if (outOfDate)
+    {
+      System.out.println("FileNode[" + this + "] is out of date ["
+        + file.lastModified() + " != " + fileLastModified + "]");
+    }
+    return outOfDate;
   }
 
   private void initialize()
