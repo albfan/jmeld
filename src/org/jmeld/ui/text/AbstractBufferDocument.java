@@ -201,7 +201,7 @@ public abstract class AbstractBufferDocument
 
       stopWatch = new StopWatch();
       stopWatch.start();
-      System.out.println("before read");
+      System.out.println("before read : " + this);
 
       content = new MyGapContent(getBufferSize() + 500);
       document = new PlainDocument(content);
@@ -650,5 +650,11 @@ public abstract class AbstractBufferDocument
   public BlameIF getVersionControlBlame()
   {
     return null;
+  }
+
+  @Override
+  public String toString()
+  {
+    return "Document[name=" + name + "]";
   }
 }
