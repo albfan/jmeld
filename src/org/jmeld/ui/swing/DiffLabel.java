@@ -43,7 +43,6 @@ public class DiffLabel
     setEditable(false);
     setOpaque(false);
     setBorder(null);
-    setFocusable(false);
 
     defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
 
