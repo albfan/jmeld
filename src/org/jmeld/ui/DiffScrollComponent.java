@@ -103,6 +103,7 @@ public class DiffScrollComponent
         @Override
         public void mouseClicked(MouseEvent me)
         {
+          requestFocus();
           executeCommand((double) me.getX(), (double) me.getY());
         }
       };
