@@ -180,7 +180,7 @@ public class JMDiff
     for (JMDelta delta : revision.getDeltas())
     {
       chunk = delta.getOriginal();
-      //System.out.print("  original=" + chunk);
+      System.out.print("  original=" + chunk);
       index = chunk.getAnchor();
       if (index < orgArrayFiltered.length)
       {
@@ -194,21 +194,30 @@ public class JMDiff
       size = chunk.getSize();
       if (size > 0)
       {
-        index += chunk.getSize();
+        index += chunk.getSize() - 1;
         if (index < orgArrayFiltered.length)
         {
-          size = orgArrayFiltered[index].lineNumber - anchor;
+          size = orgArrayFiltered[index].lineNumber - anchor + 1;
         }
+        /*
+           index += chunk.getSize();
+           if (index < orgArrayFiltered.length)
+           {
+             size = orgArrayFiltered[index].lineNumber - anchor;
+           }
+         */
       }
-
       chunk.setAnchor(anchor);
       chunk.setSize(size);
-      //System.out.println(" => " + chunk);
+      System.out.println(" => " + chunk);
+
       chunk = delta.getRevised();
-      //System.out.print("  revised=" + chunk);
+      System.out.print("  revised=" + chunk);
       index = chunk.getAnchor();
       if (index < revArrayFiltered.length)
       {
+        System.out.print(" [index=" + index + ", text="
+          + revArrayFiltered[index].s + "]");
         anchor = revArrayFiltered[index].lineNumber;
       }
       else
@@ -218,15 +227,22 @@ public class JMDiff
       size = chunk.getSize();
       if (size > 0)
       {
-        index += chunk.getSize();
+        index += chunk.getSize() - 1;
         if (index < revArrayFiltered.length)
         {
-          size = revArrayFiltered[index].lineNumber - anchor;
+          size = revArrayFiltered[index].lineNumber - anchor + 1;
         }
+        /*
+           index += chunk.getSize();
+           if (index < revArrayFiltered.length)
+           {
+             size = revArrayFiltered[index].lineNumber - anchor;
+           }
+         */
       }
       chunk.setAnchor(anchor);
       chunk.setSize(size);
-      //System.out.println(" => " + chunk);
+      System.out.println(" => " + chunk);
     }
   }
 
@@ -243,6 +259,9 @@ public class JMDiff
     boolean        whitespaceAtBegin;
     int            whitespaceEndIndex;
     int            length;
+    boolean        previousBlankLine;
+
+    previousBlankLine = true;
 
     //System.out.println("> start");
     result = new ArrayList<JMString>(array.length);
@@ -264,7 +283,7 @@ public class JMDiff
 
         length = charArray.length;
         whitespaceEndIndex = length;
-        
+
         if (ignore.ignoreWhitespace)
         {
           for (int index = length - 1; index >= 0; index--)
@@ -313,12 +332,21 @@ public class JMDiff
         s = sb.toString();
       }
 
-      if (ignore.ignoreBlankLines)
+      if (s.length() == 0)
       {
-        if (s.length() == 0)
+        if (ignore.ignoreBlankLines)
         {
-          s = null;
+          if (previousBlankLine)
+          {
+            s = null;
+          }
         }
+
+        previousBlankLine = true;
+      }
+      else
+      {
+        previousBlankLine = false;
       }
 
       if (s == null)
