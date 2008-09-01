@@ -371,6 +371,11 @@ public class CompareUtil
 
           if (eol || rightLineIndex >= MAX_LINE_NUMBER)
           {
+            if (whitespaceIndex != -1 && ignore.ignoreWhitespaceAtEnd)
+            {
+              rightLineIndex = whitespaceIndex;
+            }
+
             break;
           }
         }
