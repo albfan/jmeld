@@ -309,12 +309,12 @@ public class JMRevision
 
   public int getOrgSize()
   {
-    return orgArray.length;
+    return orgArray == null ? 0 : orgArray.length;
   }
 
   public int getRevSize()
   {
-    return revArray.length;
+    return revArray == null ? 0 : revArray.length;
   }
 
   public String getOriginalString(JMChunk chunk)
