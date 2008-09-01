@@ -47,11 +47,17 @@ Release 2.0:
 - [done] Delete right action in FolderDiffPanel.
 - [done] Delete left action in FolderDiffPanel.
 - [done] Undo/Redo for all above actions actions.
--        Inner diff sometimes doesn't work
 - [done] Diff colors don't change anymore in the settings.
--        Bug when comparing filesRight/oneline.xml en filesLeft
 
 Release 2.1:
+-        Inner diff sometimes doesn't work
+-        Bug when comparing filesRight/oneline.xml en filesLeft
+-        Make size of JMDelta 0 if it only contains empty lines 
+         (Only when ignoreblanklines is on!)
+-        Keyboardfocus on diffbar. (mergmode + editpanes at the same time)
+-        Make it possible to copy from the name of the file/directory.
+
+Release 2.2:
 - [75%]  incremental diff (Adding to the end of the file doesn't work yet)
 -        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
          (Change it to OutLine of the netbeans project!)
