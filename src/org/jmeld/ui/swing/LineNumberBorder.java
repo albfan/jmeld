@@ -91,6 +91,9 @@ public class LineNumberBorder
     int       heightCorrection;
     Rectangle r1;
     JTextArea textArea;
+    Graphics2D g2;
+
+    g2 = (Graphics2D) g;
 
     clip = g.getClipRect();
 
@@ -106,6 +109,9 @@ public class LineNumberBorder
 
       g.setColor(lineColor);
       g.drawLine(left - MARGIN, clip.y, left - MARGIN, clip.y + clip.height);
+
+      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                          RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 
       g.setFont(font);
       g.setColor(Color.black);

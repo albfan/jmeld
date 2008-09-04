@@ -33,8 +33,8 @@ public class EditorSettingsForm extends javax.swing.JPanel
   private void initComponents() {
 
     buttonGroup1 = new javax.swing.ButtonGroup();
-    jRadioButton1 = new javax.swing.JRadioButton();
-    jRadioButton2 = new javax.swing.JRadioButton();
+    defaultFontRadioButton = new javax.swing.JRadioButton();
+    customFontRadioButton = new javax.swing.JRadioButton();
     jLabel3 = new javax.swing.JLabel();
     tabSizeSpinner = new javax.swing.JSpinner();
     showLineNumbersCheckBox = new javax.swing.JCheckBox();
@@ -58,16 +58,17 @@ public class EditorSettingsForm extends javax.swing.JPanel
     ignoreCaseCheckBox = new javax.swing.JCheckBox();
     ignoreWhitespaceInBetweenCheckBox = new javax.swing.JCheckBox();
     ignoreWhitespaceAtEndCheckBox = new javax.swing.JCheckBox();
+    fontChooserButton = new javax.swing.JButton();
 
-    buttonGroup1.add(jRadioButton1);
-    jRadioButton1.setText("Use default font");
-    jRadioButton1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    jRadioButton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    buttonGroup1.add(defaultFontRadioButton);
+    defaultFontRadioButton.setText("Use default font");
+    defaultFontRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    defaultFontRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
-    buttonGroup1.add(jRadioButton2);
-    jRadioButton2.setText("Use custom font");
-    jRadioButton2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    jRadioButton2.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    buttonGroup1.add(customFontRadioButton);
+    customFontRadioButton.setText("Use custom font");
+    customFontRadioButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    customFontRadioButton.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
     jLabel3.setText("Tab size");
 
@@ -148,6 +149,8 @@ public class EditorSettingsForm extends javax.swing.JPanel
     ignoreWhitespaceAtEndCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     ignoreWhitespaceAtEndCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
+    fontChooserButton.setText("fontName");
+
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -160,9 +163,12 @@ public class EditorSettingsForm extends javax.swing.JPanel
           .add(layout.createSequentialGroup()
             .add(12, 12, 12)
             .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(jRadioButton2)
-              .add(jRadioButton1))))
-        .addContainerGap(326, Short.MAX_VALUE))
+              .add(layout.createSequentialGroup()
+                .add(customFontRadioButton)
+                .add(6, 6, 6)
+                .add(fontChooserButton))
+              .add(defaultFontRadioButton))))
+        .addContainerGap(234, Short.MAX_VALUE))
       .add(layout.createSequentialGroup()
         .addContainerGap()
         .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -191,7 +197,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
                 .add(jLabel2))
               .add(layout.createSequentialGroup()
                 .add(colorAddedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(12, 12, 12)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel1))
               .add(layout.createSequentialGroup()
                 .add(colorChangedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -221,9 +227,11 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(detailHeader1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .add(6, 6, 6)
-        .add(jRadioButton1)
+        .add(defaultFontRadioButton)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(jRadioButton2)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+          .add(customFontRadioButton)
+          .add(fontChooserButton))
         .add(15, 15, 15)
         .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -239,7 +247,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(detailHeader3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(colorAddedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(jLabel1))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -284,10 +292,13 @@ public class EditorSettingsForm extends javax.swing.JPanel
   protected javax.swing.JButton colorAddedButton;
   protected javax.swing.JButton colorChangedButton;
   protected javax.swing.JButton colorDeletedButton;
+  protected javax.swing.JRadioButton customFontRadioButton;
+  protected javax.swing.JRadioButton defaultFontRadioButton;
   protected org.jmeld.ui.swing.DetailHeader detailHeader1;
   protected org.jmeld.ui.swing.DetailHeader detailHeader2;
   protected org.jmeld.ui.swing.DetailHeader detailHeader3;
   protected org.jmeld.ui.swing.DetailHeader detailHeader4;
+  protected javax.swing.JButton fontChooserButton;
   protected org.jmeld.ui.swing.GradientLabel gradientLabel1;
   protected javax.swing.JCheckBox ignoreBlankLinesCheckBox;
   protected javax.swing.JCheckBox ignoreCaseCheckBox;
@@ -299,8 +310,6 @@ public class EditorSettingsForm extends javax.swing.JPanel
   protected javax.swing.JLabel jLabel2;
   protected javax.swing.JLabel jLabel3;
   protected javax.swing.JLabel jLabel4;
-  protected javax.swing.JRadioButton jRadioButton1;
-  protected javax.swing.JRadioButton jRadioButton2;
   protected javax.swing.JCheckBox leftsideReadonlyCheckBox;
   protected javax.swing.JButton restoreOriginalColorsButton;
   protected javax.swing.JCheckBox rightsideReadonlyCheckBox;

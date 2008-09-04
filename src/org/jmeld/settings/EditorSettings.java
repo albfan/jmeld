@@ -26,7 +26,7 @@ import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class EditorSettings
-       extends AbstractConfigurationElement
+    extends AbstractConfigurationElement
 {
   @XmlElement
   private boolean          showLineNumbers;
@@ -57,6 +57,12 @@ public class EditorSettings
   private ColorSetting     changedColor;
   @XmlElement
   private ColorSetting     deletedColor;
+  @XmlElement
+  private boolean          customFont;
+  @XmlElement
+  private FontSetting      font    = new FontSetting();
+
+  // Transient 
   private transient Ignore ignore;
 
   public EditorSettings()
@@ -201,9 +207,35 @@ public class EditorSettings
     return getColor(deletedColor, Colors.DELETED);
   }
 
-  private Color getColor(
-    ColorSetting cc,
-    Color        defaultColor)
+  public void enableCustomFont(boolean customFont)
+  {
+    this.customFont = customFont;
+    fireChanged();
+  }
+
+  public boolean isCustomFontEnabled()
+  {
+    return customFont;
+  }
+
+  public void setFont(Font f)
+  {
+    if (ObjectUtil.equals(f, font.getFont()))
+    {
+      return;
+    }
+
+    font = new FontSetting(f);
+    fireChanged();
+  }
+
+  public Font getFont()
+  {
+    return font.getFont();
+  }
+
+  private Color getColor(ColorSetting cc,
+                         Color defaultColor)
   {
     Color c;
 

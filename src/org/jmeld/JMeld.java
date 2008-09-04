@@ -60,7 +60,6 @@ public class JMeld
 
     try
     {
-      System.setProperty("swing.aatext", "true");
 
       version = System.getProperty("java.version");
       if (version.startsWith("1.7"))
@@ -122,6 +121,7 @@ public class JMeld
   public static void main(String[] args)
   {
     //e.debug.EventDispatchThreadHangMonitor.initMonitoring();
+    System.setProperty("swing.aatext", "true");
 
     // According to the latest news EVERYTHING regarding swing should
     //   be executed on the EventDispatchThread
