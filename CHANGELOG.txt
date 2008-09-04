@@ -1,6 +1,8 @@
 Release 2.1:
   - Ignore case is implemented.
   - Ignore whitespace has been improved.
+  - Activate option: fontchooser for editorpane.
+  - Introduce option: antialias on/off.
 
 Release 2.0:
 - Implement directory diff.

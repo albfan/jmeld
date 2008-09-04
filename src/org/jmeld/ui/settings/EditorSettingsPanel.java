@@ -26,6 +26,7 @@ public class EditorSettingsPanel
 {
   private static JDialog       colorDialog;
   private static JColorChooser colorChooser;
+  private boolean              originalAntialias;
 
   public EditorSettingsPanel()
   {
@@ -37,6 +38,8 @@ public class EditorSettingsPanel
 
   private void init()
   {
+    originalAntialias = getEditorSettings().isAntialiasEnabled();
+      
     tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
     ignoreWhitespaceAtBeginCheckBox
@@ -50,6 +53,7 @@ public class EditorSettingsPanel
     ignoreCaseCheckBox.addActionListener(getIgnoreCaseAction());
     leftsideReadonlyCheckBox.addActionListener(getLeftsideReadonlyAction());
     rightsideReadonlyCheckBox.addActionListener(getRightsideReadonlyAction());
+    antialiasCheckBox.addActionListener(getAntialiasAction());
     colorAddedButton.addActionListener(getColorAddedAction());
     colorDeletedButton.addActionListener(getColorDeletedAction());
     colorChangedButton.addActionListener(getColorChangedAction());
@@ -235,6 +239,17 @@ public class EditorSettingsPanel
     };
   }
 
+  private ActionListener getAntialiasAction()
+  {
+    return new java.awt.event.ActionListener()
+    {
+      public void actionPerformed(java.awt.event.ActionEvent evt)
+      {
+        getEditorSettings().enableAntialias(antialiasCheckBox.isSelected());
+      }
+    };
+  }
+
   private ActionListener getRestoreOriginalColorsAction()
   {
     return new ActionListener()
@@ -342,6 +357,15 @@ public class EditorSettingsPanel
     ignoreCaseCheckBox.setSelected(settings.getIgnore().ignoreCase);
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
+    antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
+    if(originalAntialias != settings.isAntialiasEnabled())
+    {
+      antialiasCheckBox.setText("antialias on (NEED A RESTART)");
+    }
+    else
+    {
+      antialiasCheckBox.setText("antialias on");
+    }
     tabSizeSpinner.setValue(settings.getTabSize());
     font = settings.getFont();
     if (font != null)

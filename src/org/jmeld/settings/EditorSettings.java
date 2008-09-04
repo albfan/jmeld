@@ -61,6 +61,8 @@ public class EditorSettings
   private boolean          customFont;
   @XmlElement
   private FontSetting      font    = new FontSetting();
+  @XmlElement
+  private boolean          antialias;
 
   // Transient 
   private transient Ignore ignore;
@@ -216,6 +218,17 @@ public class EditorSettings
   public boolean isCustomFontEnabled()
   {
     return customFont;
+  }
+
+  public void enableAntialias(boolean antialias)
+  {
+    this.antialias = antialias;
+    fireChanged();
+  }
+
+  public boolean isAntialiasEnabled()
+  {
+    return antialias;
   }
 
   public void setFont(Font f)

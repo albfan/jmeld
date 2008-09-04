@@ -49,7 +49,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
     jLabel4 = new javax.swing.JLabel();
     restoreOriginalColorsButton = new javax.swing.JButton();
     gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
-    leftsideReadonlyCheckBox = new javax.swing.JCheckBox();
+    antialiasCheckBox = new javax.swing.JCheckBox();
     ignoreWhitespaceAtBeginCheckBox = new javax.swing.JCheckBox();
     rightsideReadonlyCheckBox = new javax.swing.JCheckBox();
     detailHeader4 = new org.jmeld.ui.swing.DetailHeader();
@@ -59,6 +59,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
     ignoreWhitespaceInBetweenCheckBox = new javax.swing.JCheckBox();
     ignoreWhitespaceAtEndCheckBox = new javax.swing.JCheckBox();
     fontChooserButton = new javax.swing.JButton();
+    leftsideReadonlyCheckBox = new javax.swing.JCheckBox();
 
     buttonGroup1.add(defaultFontRadioButton);
     defaultFontRadioButton.setText("Use default font");
@@ -106,12 +107,12 @@ public class EditorSettingsForm extends javax.swing.JPanel
     gradientLabel1.setText("Editor settings");
     gradientLabel1.setFont(new java.awt.Font("Dialog", 1, 18));
 
-    leftsideReadonlyCheckBox.setText("Leftside readonly");
-    leftsideReadonlyCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    leftsideReadonlyCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-    leftsideReadonlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
+    antialiasCheckBox.setText("antialias on");
+    antialiasCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    antialiasCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    antialiasCheckBox.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
-        leftsideReadonlyCheckBoxActionPerformed(evt);
+        antialiasCheckBoxActionPerformed(evt);
       }
     });
 
@@ -151,6 +152,15 @@ public class EditorSettingsForm extends javax.swing.JPanel
 
     fontChooserButton.setText("fontName");
 
+    leftsideReadonlyCheckBox.setText("Leftside readonly");
+    leftsideReadonlyCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    leftsideReadonlyCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+    leftsideReadonlyCheckBox.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        leftsideReadonlyCheckBoxActionPerformed(evt);
+      }
+    });
+
     org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
     this.setLayout(layout);
     layout.setHorizontalGroup(
@@ -173,17 +183,6 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .addContainerGap()
         .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addContainerGap(364, Short.MAX_VALUE))
-      .add(layout.createSequentialGroup()
-        .add(24, 24, 24)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(leftsideReadonlyCheckBox)
-          .add(rightsideReadonlyCheckBox)
-          .add(showLineNumbersCheckBox)
-          .add(layout.createSequentialGroup()
-            .add(jLabel3)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-        .addContainerGap(313, Short.MAX_VALUE))
       .add(layout.createSequentialGroup()
         .addContainerGap()
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -219,6 +218,18 @@ public class EditorSettingsForm extends javax.swing.JPanel
               .add(ignoreWhitespaceInBetweenCheckBox)
               .add(ignoreWhitespaceAtEndCheckBox))))
         .addContainerGap(146, Short.MAX_VALUE))
+      .add(layout.createSequentialGroup()
+        .add(24, 24, 24)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(leftsideReadonlyCheckBox)
+          .add(antialiasCheckBox)
+          .add(rightsideReadonlyCheckBox)
+          .add(showLineNumbersCheckBox)
+          .add(layout.createSequentialGroup()
+            .add(jLabel3)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+        .addContainerGap(313, Short.MAX_VALUE))
     );
     layout.setVerticalGroup(
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -244,6 +255,8 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .add(rightsideReadonlyCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(leftsideReadonlyCheckBox)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(antialiasCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(detailHeader3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -278,16 +291,21 @@ public class EditorSettingsForm extends javax.swing.JPanel
     );
   }// </editor-fold>//GEN-END:initComponents
 
-    private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftsideReadonlyCheckBoxActionPerformed
+    private void antialiasCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_antialiasCheckBoxActionPerformed
   // TODO add your handling code here:
-}//GEN-LAST:event_leftsideReadonlyCheckBoxActionPerformed
+}//GEN-LAST:event_antialiasCheckBoxActionPerformed
 
     private void rightsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rightsideReadonlyCheckBoxActionPerformed
         // TODO add your handling code here:
 }//GEN-LAST:event_rightsideReadonlyCheckBoxActionPerformed
+
+private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leftsideReadonlyCheckBoxActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_leftsideReadonlyCheckBoxActionPerformed
   
   
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  protected javax.swing.JCheckBox antialiasCheckBox;
   protected javax.swing.ButtonGroup buttonGroup1;
   protected javax.swing.JButton colorAddedButton;
   protected javax.swing.JButton colorChangedButton;

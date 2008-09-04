@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui.util;
 
+import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.*;
 
@@ -31,12 +32,12 @@ import java.util.List;
  *    tabbedpane (use it for jdk's before 1.6).
  */
 public class TabIcon
-       implements Icon
+    implements Icon
 {
   // class variables:
-  private static int CLOSE_ICON_HEIGHT = 7;
-  private static int CLOSE_ICON_WIDTH = 7;
-  private static int SPACE_WIDTH = 5;
+  private static int                   CLOSE_ICON_HEIGHT = 7;
+  private static int                   CLOSE_ICON_WIDTH  = 7;
+  private static int                   SPACE_WIDTH       = 5;
 
   // instance variables:
   private Icon                         icon;
@@ -59,9 +60,7 @@ public class TabIcon
   private MouseMotionListener          mouseMotionListener;
   private ArrayList<TabExitListenerIF> tabExitListeners;
 
-  public TabIcon(
-    Icon   icon,
-    String text)
+  public TabIcon(Icon icon, String text)
   {
     this.icon = icon;
     this.text = text;
@@ -73,7 +72,7 @@ public class TabIcon
 
   private void init()
   {
-    Font        font;
+    Font font;
     FontMetrics fm;
 
     height = 0;
@@ -153,17 +152,19 @@ public class TabIcon
     return height;
   }
 
-  public void paintIcon(
-    Component c,
-    Graphics  g,
-    int       x,
-    int       y)
+  public void paintIcon(Component c,
+                        Graphics g,
+                        int x,
+                        int y)
   {
     FontMetrics fm;
-    int         x0;
-    int         y0;
-    Rectangle   b;
-    Icon        cIcon;
+    int x0;
+    int y0;
+    Rectangle b;
+    Icon cIcon;
+    Graphics2D g2;
+
+    g2 = (Graphics2D) g;
 
     x0 = x;
 
@@ -184,6 +185,12 @@ public class TabIcon
 
     if (text != null)
     {
+      if (JMeldSettings.getInstance().getEditor().isAntialiasEnabled())
+      {
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+      }
+
       fm = label.getFontMetrics(label.getFont());
       y0 = y + fm.getAscent() + ((height - fm.getHeight()) / 2);
 
@@ -226,66 +233,66 @@ public class TabIcon
     if (mouseListener == null)
     {
       mouseListener = new MouseAdapter()
+      {
+        public void mousePressed(MouseEvent me)
+        {
+          Icon icon;
+
+          if (ignoreNextMousePressed)
           {
-            public void mousePressed(MouseEvent me)
+            ignoreNextMousePressed = false;
+            return;
+          }
+
+          if (isCloseHit(me))
+          {
+            pressed = true;
+
+            icon = closeIcon_pressed;
+            if (currentIcon != icon)
             {
-              Icon icon;
+              currentIcon = icon;
+              tabbedPane.repaint();
+            }
+          }
+          else
+          {
+            pressed = false;
+          }
+        }
 
-              if (ignoreNextMousePressed)
-              {
-                ignoreNextMousePressed = false;
-                return;
-              }
+        public void mouseReleased(MouseEvent me)
+        {
+          int index;
 
-              if (isCloseHit(me))
-              {
-                pressed = true;
+          if (pressed && isCloseHit(me))
+          {
+            index = tabbedPane.indexOfTab(TabIcon.this);
 
-                icon = closeIcon_pressed;
-                if (currentIcon != icon)
-                {
-                  currentIcon = icon;
-                  tabbedPane.repaint();
-                }
-              }
-              else
-              {
-                pressed = false;
-              }
+            // Only allow selected tabs to be closed.
+            if (index != tabbedPane.getSelectedIndex())
+            {
+              return;
             }
 
-            public void mouseReleased(MouseEvent me)
+            if (index != -1)
             {
-              int index;
-
-              if (pressed && isCloseHit(me))
+              for (TabExitListenerIF listener : tabExitListeners)
               {
-                index = tabbedPane.indexOfTab(TabIcon.this);
-
-                // Only allow selected tabs to be closed.
-                if (index != tabbedPane.getSelectedIndex())
-                {
-                  return;
-                }
-
-                if (index != -1)
-                {
-                  for (TabExitListenerIF listener : tabExitListeners)
-                  {
-                    listener.doExit(new TabExitEvent(TabIcon.this, index));
-                  }
-
-                  me.consume();
-                }
+                listener.doExit(new TabExitEvent(TabIcon.this, index));
               }
 
-              if (currentIcon != closeIcon)
-              {
-                currentIcon = closeIcon;
-                tabbedPane.repaint();
-              }
+              me.consume();
             }
-          };
+          }
+
+          if (currentIcon != closeIcon)
+          {
+            currentIcon = closeIcon;
+            tabbedPane.repaint();
+          }
+        }
+      };
     }
 
     return mouseListener;
@@ -296,33 +303,33 @@ public class TabIcon
     if (mouseMotionListener == null)
     {
       mouseMotionListener = new MouseMotionAdapter()
+      {
+        public void mouseMoved(MouseEvent me)
+        {
+          Icon icon;
+
+          if (isSelected())
           {
-            public void mouseMoved(MouseEvent me)
-            {
-              Icon icon;
+            ignoreNextMousePressed = false;
+          }
 
-              if (isSelected())
-              {
-                ignoreNextMousePressed = false;
-              }
+          if (isCloseHit(me))
+          {
+            icon = closeIcon_rollover;
+          }
+          else
+          {
+            pressed = false;
+            icon = closeIcon;
+          }
 
-              if (isCloseHit(me))
-              {
-                icon = closeIcon_rollover;
-              }
-              else
-              {
-                pressed = false;
-                icon = closeIcon;
-              }
-
-              if (icon != currentIcon)
-              {
-                currentIcon = icon;
-                tabbedPane.repaint();
-              }
-            }
-          };
+          if (icon != currentIcon)
+          {
+            currentIcon = icon;
+            tabbedPane.repaint();
+          }
+        }
+      };
     }
 
     return mouseMotionListener;
@@ -333,12 +340,12 @@ public class TabIcon
     if (changeListener == null)
     {
       changeListener = new ChangeListener()
-          {
-            public void stateChanged(ChangeEvent ce)
-            {
-              ignoreNextMousePressed = true;
-            }
-          };
+      {
+        public void stateChanged(ChangeEvent ce)
+        {
+          ignoreNextMousePressed = true;
+        }
+      };
     }
 
     return changeListener;
@@ -347,9 +354,7 @@ public class TabIcon
   private boolean isCloseHit(MouseEvent me)
   {
     return (!me.isConsumed() && closeBounds != null
-    && closeBounds.contains(
-      me.getX(),
-      me.getY()) && isSelected());
+            && closeBounds.contains(me.getX(), me.getY()) && isSelected());
   }
 
   private boolean isSelected()

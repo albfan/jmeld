@@ -19,6 +19,7 @@ package org.jmeld;
 import com.jgoodies.looks.plastic.*;
 import com.jgoodies.looks.plastic.theme.*;
 
+import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -32,7 +33,7 @@ import java.util.*;
 import java.util.List;
 
 public class JMeld
-       implements Runnable
+    implements Runnable
 {
   private List<String>      fileNameList;
   private static JMeldPanel jmeldPanel;
@@ -69,7 +70,8 @@ public class JMeld
       else
       {
         PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
-        PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
+        PlasticLookAndFeel
+            .setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
         UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
       }
     }
@@ -82,9 +84,7 @@ public class JMeld
     frame.add(jmeldPanel);
     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     frame.setIconImage(ImageUtil.getImageIcon("jmeld-small").getImage());
-    new WindowPreference(
-      frame.getTitle(),
-      frame);
+    new WindowPreference(frame.getTitle(), frame);
     frame.addWindowListener(jmeldPanel.getWindowListener());
     //frame.getRootPane().setTransferHandler(new FileDropHandler());
     frame.setVisible(true);
@@ -97,31 +97,33 @@ public class JMeld
 
   private void debugKeyboard()
   {
-    KeyboardFocusManager.setCurrentKeyboardFocusManager(
-      new DefaultKeyboardFocusManager()
-      {
-        public boolean dispatchKeyEvent(KeyEvent e)
+    KeyboardFocusManager
+        .setCurrentKeyboardFocusManager(new DefaultKeyboardFocusManager()
         {
-          //System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
-          //System.out.println("   event: " + e);
-          return super.dispatchKeyEvent(e);
-        }
+          public boolean dispatchKeyEvent(KeyEvent e)
+          {
+            //System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
+            //System.out.println("   event: " + e);
+            return super.dispatchKeyEvent(e);
+          }
 
-        public void processKeyEvent(
-          Component focusedComponent,
-          KeyEvent  e)
-        {
-          //System.out.println("processKeyEvent[" + focusedComponent.getClass()
-          //+ "] : " + KeyStroke.getKeyStrokeForEvent(e));
-          super.processKeyEvent(focusedComponent, e);
-        }
-      });
+          public void processKeyEvent(Component focusedComponent,
+                                      KeyEvent e)
+          {
+            //System.out.println("processKeyEvent[" + focusedComponent.getClass()
+            //+ "] : " + KeyStroke.getKeyStrokeForEvent(e));
+            super.processKeyEvent(focusedComponent, e);
+          }
+        });
   }
 
   public static void main(String[] args)
   {
     //e.debug.EventDispatchThreadHangMonitor.initMonitoring();
-    System.setProperty("swing.aatext", "true");
+    if (JMeldSettings.getInstance().getEditor().isAntialiasEnabled())
+    {
+      System.setProperty("swing.aatext", "true");
+    }
 
     // According to the latest news EVERYTHING regarding swing should
     //   be executed on the EventDispatchThread

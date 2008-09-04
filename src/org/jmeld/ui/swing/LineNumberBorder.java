@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui.swing;
 
+import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
 
@@ -110,8 +111,11 @@ public class LineNumberBorder
       g.setColor(lineColor);
       g.drawLine(left - MARGIN, clip.y, left - MARGIN, clip.y + clip.height);
 
-      g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                          RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+      if(JMeldSettings.getInstance().getEditor().isAntialiasEnabled());
+      {
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+      }
 
       g.setFont(font);
       g.setColor(Color.black);
