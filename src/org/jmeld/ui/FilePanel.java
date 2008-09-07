@@ -44,7 +44,6 @@ public class FilePanel
 
   // Instance variables:
   private BufferDiffPanel  diffPanel;
-  private Font             defaultFont;
   private String           name;
   private int              position;
   private DiffLabel        fileLabel;
@@ -78,8 +77,6 @@ public class FilePanel
     editor = new JTextArea();
     editor.setDragEnabled(true);
     editor.setHighlighter(new JMHighlighter());
-
-    defaultFont = editor.getFont();
 
     editor.addFocusListener(getFocusListener());
     editor.addCaretListener(getCaretListener());
@@ -692,7 +689,8 @@ public class FilePanel
 
     setShowLineNumbers(c.getEditor().getShowLineNumbers());
 
-    font = c.getEditor().isCustomFontEnabled() ? c.getEditor().getFont() : defaultFont;
+    font = c.getEditor().isCustomFontEnabled() ? c.getEditor().getFont() : null;
+    font = font != null ? font : FontUtil.defaultTextAreaFont;
     editor.setFont(font);
     fm = editor.getFontMetrics(font);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());

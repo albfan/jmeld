@@ -30,8 +30,8 @@ public class EditorSettingsPanel
 
   public EditorSettingsPanel()
   {
-    initConfiguration();
     init();
+    initConfiguration();
 
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
@@ -293,7 +293,7 @@ public class EditorSettingsPanel
       {
         Font font;
 
-        font = chooseFont(getEditorSettings().getFont());
+        font = chooseFont(getEditorFont());
         if (font != null)
         {
           getEditorSettings().setFont(font);
@@ -358,6 +358,9 @@ public class EditorSettingsPanel
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
+    System.out.println("originalAntialias = " + originalAntialias);
+    System.out.println("currentAntialias = " + settings.isAntialiasEnabled());
+
     if(originalAntialias != settings.isAntialiasEnabled())
     {
       antialiasCheckBox.setText("antialias on (NEED A RESTART)");
@@ -367,12 +370,9 @@ public class EditorSettingsPanel
       antialiasCheckBox.setText("antialias on");
     }
     tabSizeSpinner.setValue(settings.getTabSize());
-    font = settings.getFont();
-    if (font != null)
-    {
-      fontChooserButton.setFont(font);
-      fontChooserButton.setText(font.getName() + " (" + font.getSize() + ")");
-    }
+    font = getEditorFont();
+    fontChooserButton.setFont(font);
+    fontChooserButton.setText(font.getName() + " (" + font.getSize() + ")");
     defaultFontRadioButton.setSelected(!settings.isCustomFontEnabled());
     customFontRadioButton.setSelected(settings.isCustomFontEnabled());
 
@@ -382,5 +382,15 @@ public class EditorSettingsPanel
   private EditorSettings getEditorSettings()
   {
     return JMeldSettings.getInstance().getEditor();
+  }
+
+  private Font getEditorFont()
+  {
+    Font font;
+
+    font = getEditorSettings().getFont();
+    font = font == null ? FontUtil.defaultTextAreaFont : font;
+
+    return font;
   }
 }

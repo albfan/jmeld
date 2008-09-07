@@ -60,7 +60,7 @@ public class EditorSettings
   @XmlElement
   private boolean          customFont;
   @XmlElement
-  private FontSetting      font    = new FontSetting();
+  private FontSetting      font;
   @XmlElement
   private boolean          antialias;
 
@@ -89,6 +89,9 @@ public class EditorSettings
 
   public void setTabSize(int tabSize)
   {
+    if (tabSize == this.tabSize)
+      return;
+
     this.tabSize = tabSize;
     fireChanged();
   }
@@ -233,18 +236,13 @@ public class EditorSettings
 
   public void setFont(Font f)
   {
-    if (ObjectUtil.equals(f, font.getFont()))
-    {
-      return;
-    }
-
     font = new FontSetting(f);
     fireChanged();
   }
 
   public Font getFont()
   {
-    return font.getFont();
+    return font == null ? null : font.getFont();
   }
 
   private Color getColor(ColorSetting cc,

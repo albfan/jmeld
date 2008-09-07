@@ -53,16 +53,9 @@ public class FontSetting
 
   public Font getFont()
   {
-    if (font == null)
+    if (font == null && !StringUtil.isEmpty(name))
     {
-      if(!StringUtil.isEmpty(name))
-      {
-        font = new Font(name, style, size);
-      }
-      else
-      {
-        font = FontUtil.defaultFont;
-      }
+      font = new Font(name, style, size);
     }
 
     return font;

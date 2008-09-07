@@ -5,5 +5,5 @@ import javax.swing.*;
 
 public class FontUtil
 {
-  public static Font defaultFont = new JLabel().getFont();
+  public static Font defaultTextAreaFont = new JTextArea().getFont();
 }
