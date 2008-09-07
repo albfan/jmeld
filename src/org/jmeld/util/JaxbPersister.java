@@ -93,26 +93,6 @@ public class JaxbPersister
     os.close();
   }
 
-  /** Print debug info if validation fails.
-   *    Sometimes jaxb will not print any useful information. So
-   *    always use this validation event handler.
-   */
-  private ValidationEventHandler getValidationEventHandler()
-  {
-    return new ValidationEventHandler()
-      {
-        public boolean handleEvent(ValidationEvent event)
-        {
-          ValidationEventLocator locator;
-
-          locator = event.getLocator();
-          System.out.println("Line " + locator.getLineNumber() + ": "
-            + event.getMessage());
-          return false;
-        }
-      };
-  }
-
   /** Each class has it's own context to marshal and unmarshal.
    *   The context contains a jaxbcontext.
    */
@@ -147,10 +127,10 @@ public class JaxbPersister
 
         marshaller = jaxbContext.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.setEventHandler(getValidationEventHandler());
+        marshaller.setSchema(null);
 
         unmarshaller = jaxbContext.createUnmarshaller();
-        unmarshaller.setEventHandler(getValidationEventHandler());
+        unmarshaller.setSchema(null);
       }
       catch (JAXBException e)
       {

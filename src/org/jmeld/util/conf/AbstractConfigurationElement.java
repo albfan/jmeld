@@ -1,6 +1,7 @@
 package org.jmeld.util.conf;
 
 import java.util.*;
+import javax.xml.bind.*;
 
 abstract public class AbstractConfigurationElement
 {
