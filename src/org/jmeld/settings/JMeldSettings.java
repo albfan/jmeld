@@ -25,18 +25,18 @@ import java.io.*;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "jmeld")
 public class JMeldSettings
-       extends AbstractConfiguration
+    extends AbstractConfiguration
 {
   // class variables:
   public static JMeldSettings instance;
 
   // Instance variables:
   @XmlElement(name = "editor")
-  private EditorSettings                             editor = new EditorSettings();
+  private EditorSettings      editor = new EditorSettings();
   @XmlElement(name = "filter")
-  private FilterSettings                             filter = new FilterSettings();
+  private FilterSettings      filter = new FilterSettings();
   @XmlElement(name = "folder")
-  private FolderSettings                             folder = new FolderSettings();
+  private FolderSettings      folder = new FolderSettings();
 
   public JMeldSettings()
   {
@@ -45,7 +45,7 @@ public class JMeldSettings
   public static synchronized JMeldSettings getInstance()
   {
     return (JMeldSettings) ConfigurationManager.getInstance()
-                                               .get(JMeldSettings.class);
+        .get(JMeldSettings.class);
   }
 
   public void init()

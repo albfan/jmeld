@@ -29,46 +29,31 @@ public class EditorSettings
     extends AbstractConfigurationElement
 {
   @XmlElement
-  private boolean          showLineNumbers;
+  private boolean      showLineNumbers;
   @XmlElement
-  private int              tabSize = 4;
-  // Only here for downwards compatibility (Otherwise the xml doesn't parse)
+  private int          tabSize = 4;
   @XmlElement
-  private boolean          ignoreWhitespace;
+  private Ignore       ignore;
   @XmlElement
-  private boolean          ignoreWhitespaceAtBegin;
+  private boolean      leftsideReadonly;
   @XmlElement
-  private boolean          ignoreWhitespaceInBetween;
+  private boolean      rightsideReadonly;
   @XmlElement
-  private boolean          ignoreWhitespaceAtEnd;
+  private ColorSetting addedColor;
   @XmlElement
-  private boolean          ignoreEOL;
+  private ColorSetting changedColor;
   @XmlElement
-  private boolean          ignoreBlankLines;
+  private ColorSetting deletedColor;
   @XmlElement
-  private boolean          ignoreCase;
+  private boolean      customFont;
   @XmlElement
-  private boolean          leftsideReadonly;
+  private FontSetting  font;
   @XmlElement
-  private boolean          rightsideReadonly;
-  @XmlElement
-  private ColorSetting     addedColor;
-  @XmlElement
-  private ColorSetting     changedColor;
-  @XmlElement
-  private ColorSetting     deletedColor;
-  @XmlElement
-  private boolean          customFont;
-  @XmlElement
-  private FontSetting      font;
-  @XmlElement
-  private boolean          antialias;
-
-  // Transient 
-  private transient Ignore ignore;
+  private boolean      antialias;
 
   public EditorSettings()
   {
+    ignore = new Ignore();
   }
 
   public boolean getShowLineNumbers()
@@ -79,6 +64,7 @@ public class EditorSettings
   public void setShowLineNumbers(boolean showLineNumbers)
   {
     this.showLineNumbers = showLineNumbers;
+    System.out.println("before firechanged");
     fireChanged();
   }
 
@@ -90,7 +76,9 @@ public class EditorSettings
   public void setTabSize(int tabSize)
   {
     if (tabSize == this.tabSize)
+    {
       return;
+    }
 
     this.tabSize = tabSize;
     fireChanged();
@@ -98,54 +86,42 @@ public class EditorSettings
 
   public Ignore getIgnore()
   {
-    if (ignore == null)
-    {
-      ignore = new Ignore(ignoreWhitespaceAtBegin, ignoreWhitespaceInBetween,
-          ignoreWhitespaceAtEnd, ignoreEOL, ignoreBlankLines, ignoreCase);
-    }
-
     return ignore;
   }
 
   public void setIgnoreWhitespaceAtBegin(boolean ignoreWhitespaceAtBegin)
   {
-    this.ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
-    ignore = null;
+    ignore.ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
     fireChanged();
   }
 
   public void setIgnoreWhitespaceInBetween(boolean ignoreWhitespaceInBetween)
   {
-    this.ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
-    ignore = null;
+    ignore.ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
     fireChanged();
   }
 
   public void setIgnoreWhitespaceAtEnd(boolean ignoreWhitespaceAtEnd)
   {
-    this.ignoreWhitespaceAtEnd = ignoreWhitespaceAtEnd;
-    ignore = null;
+    ignore.ignoreWhitespaceAtEnd = ignoreWhitespaceAtEnd;
     fireChanged();
   }
 
   public void setIgnoreEOL(boolean ignoreEOL)
   {
-    this.ignoreEOL = ignoreEOL;
-    ignore = null;
+    ignore.ignoreEOL = ignoreEOL;
     fireChanged();
   }
 
   public void setIgnoreBlankLines(boolean ignoreBlankLines)
   {
-    this.ignoreBlankLines = ignoreBlankLines;
-    ignore = null;
+    ignore.ignoreBlankLines = ignoreBlankLines;
     fireChanged();
   }
 
   public void setIgnoreCase(boolean ignoreCase)
   {
-    this.ignoreCase = ignoreCase;
-    ignore = null;
+    ignore.ignoreCase = ignoreCase;
     fireChanged();
   }
 

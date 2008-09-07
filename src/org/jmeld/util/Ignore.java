@@ -1,32 +1,44 @@
 package org.jmeld.util;
 
-public class Ignore
-{
-  public final boolean ignore;
-  public final boolean ignoreWhitespace;
-  public final boolean ignoreWhitespaceAtBegin;
-  public final boolean ignoreWhitespaceInBetween;
-  public final boolean ignoreWhitespaceAtEnd;
-  public final boolean ignoreEOL;
-  public final boolean ignoreBlankLines;
-  public final boolean ignoreCase;
+import javax.xml.bind.annotation.*;
+import org.jmeld.util.conf.*;
 
-  public Ignore(
-    boolean ignoreWhitespace,
-    boolean ignoreEOL,
-    boolean ignoreBlankLines)
+@XmlAccessorType(XmlAccessType.NONE)
+public class Ignore
+    extends AbstractConfigurationElement
+{
+  @XmlElement
+  public boolean ignoreWhitespaceAtBegin;
+  @XmlElement
+  public boolean ignoreWhitespaceInBetween;
+  @XmlElement
+  public boolean ignoreWhitespaceAtEnd;
+  @XmlElement
+  public boolean ignoreEOL;
+  @XmlElement
+  public boolean ignoreBlankLines;
+  @XmlElement
+  public boolean ignoreCase;
+
+  // Transient:
+  public boolean ignore;
+  public boolean ignoreWhitespace;
+
+  public Ignore()
   {
-    this(ignoreWhitespace, ignoreWhitespace, ignoreWhitespace, ignoreEOL,
-      ignoreBlankLines, false);
+    this(false, false, false);
   }
 
-  public Ignore(
-    boolean ignoreWhitespaceAtBegin,
-    boolean ignoreWhitespaceInBetween,
-    boolean ignoreWhitespaceAtEnd,
-    boolean ignoreEOL,
-    boolean ignoreBlankLines,
-    boolean ignoreCase)
+  public Ignore(boolean ignoreWhitespace, boolean ignoreEOL,
+      boolean ignoreBlankLines)
+  {
+    this(ignoreWhitespace, ignoreWhitespace, ignoreWhitespace, ignoreEOL,
+         ignoreBlankLines, false);
+  }
+
+  public Ignore(boolean ignoreWhitespaceAtBegin,
+      boolean ignoreWhitespaceInBetween, boolean ignoreWhitespaceAtEnd,
+      boolean ignoreEOL, boolean ignoreBlankLines, boolean ignoreCase)
   {
     this.ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
     this.ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
@@ -36,18 +48,20 @@ public class Ignore
     this.ignoreCase = ignoreCase;
 
     this.ignore = (ignoreWhitespaceAtBegin || ignoreWhitespaceInBetween
-      || ignoreWhitespaceAtEnd || ignoreEOL || ignoreBlankLines || ignoreCase);
+                   || ignoreWhitespaceAtEnd || ignoreEOL || ignoreBlankLines || ignoreCase);
     this.ignoreWhitespace = (ignoreWhitespaceAtBegin
-      || ignoreWhitespaceInBetween || ignoreWhitespaceAtEnd);
+                             || ignoreWhitespaceInBetween || ignoreWhitespaceAtEnd);
   }
+
 
   public String toString()
   {
     return "ignore: " + (!ignore ? "nothing" : "")
-    + (ignoreWhitespaceAtBegin ? "whitespace[begin] " : "")
-    + (ignoreWhitespaceInBetween ? "whitespace[in between] " : "")
-    + (ignoreWhitespaceAtEnd ? "whitespace[end] " : "")
-    + (ignoreEOL ? "eol " : "") + (ignoreBlankLines ? "blanklines " : "")
-    + (ignoreCase ? "case " : "");
+           + (ignoreWhitespaceAtBegin ? "whitespace[begin] " : "")
+           + (ignoreWhitespaceInBetween ? "whitespace[in between] " : "")
+           + (ignoreWhitespaceAtEnd ? "whitespace[end] " : "")
+           + (ignoreEOL ? "eol " : "")
+           + (ignoreBlankLines ? "blanklines " : "")
+           + (ignoreCase ? "case " : "");
   }
 }
