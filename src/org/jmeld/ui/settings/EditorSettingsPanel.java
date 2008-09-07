@@ -358,9 +358,6 @@ public class EditorSettingsPanel
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
-    System.out.println("originalAntialias = " + originalAntialias);
-    System.out.println("currentAntialias = " + settings.isAntialiasEnabled());
-
     if(originalAntialias != settings.isAntialiasEnabled())
     {
       antialiasCheckBox.setText("antialias on (NEED A RESTART)");

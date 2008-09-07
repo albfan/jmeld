@@ -180,7 +180,7 @@ public class JMDiff
     for (JMDelta delta : revision.getDeltas())
     {
       chunk = delta.getOriginal();
-      System.out.print("  original=" + chunk);
+      //System.out.print("  original=" + chunk);
       index = chunk.getAnchor();
       if (index < orgArrayFiltered.length)
       {
@@ -209,15 +209,15 @@ public class JMDiff
       }
       chunk.setAnchor(anchor);
       chunk.setSize(size);
-      System.out.println(" => " + chunk);
+      //System.out.println(" => " + chunk);
 
       chunk = delta.getRevised();
-      System.out.print("  revised=" + chunk);
+      //System.out.print("  revised=" + chunk);
       index = chunk.getAnchor();
       if (index < revArrayFiltered.length)
       {
-        System.out.print(" [index=" + index + ", text="
-          + revArrayFiltered[index].s + "]");
+        //System.out.print(" [index=" + index + ", text="
+          //+ revArrayFiltered[index].s + "]");
         anchor = revArrayFiltered[index].lineNumber;
       }
       else
@@ -242,7 +242,7 @@ public class JMDiff
       }
       chunk.setAnchor(anchor);
       chunk.setSize(size);
-      System.out.println(" => " + chunk);
+      //System.out.println(" => " + chunk);
     }
   }
 
