@@ -244,6 +244,8 @@ public class FilePanel
   {
     searchHits = null;
     currentSearchCommand = null;
+
+    reDisplay();
   }
 
   private void checkSearch()
@@ -737,5 +739,10 @@ public class FilePanel
   private JMeldSettings getConfiguration()
   {
     return JMeldSettings.getInstance();
+  }
+
+  public String getSelectedText()
+  {
+    return editor.getSelectedText();
   }
 }

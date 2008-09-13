@@ -197,4 +197,9 @@ public class AbstractContentPanel
   public void checkActions()
   {
   }
+
+  public String getSelectedText()
+  {
+    return null;
+  }
 }

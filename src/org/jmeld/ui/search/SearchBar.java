@@ -118,6 +118,25 @@ public class SearchBar
       false);
   }
 
+  public void setSearchText(String searchText)
+  {
+    if(StringUtil.isEmpty(searchText))
+    {
+      return;
+    }
+
+    // You can start a search by selecting some text and then
+    //   hit CTRL-F. But if you have selected more than x 
+    //   characters you probably don't want to search for that.
+    //   So I choose to ignore those texts.
+    if(searchText.length() > 50)
+    {
+      return;
+    }
+
+    searchField.setText(searchText);
+  }
+
   public void activate()
   {
     searchField.requestFocus();

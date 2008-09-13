@@ -410,6 +410,20 @@ public class BufferDiffPanel
   }
 
   @Override
+  public void doStopSearch()
+  {
+    FilePanel  fp;
+
+    fp = getSelectedPanel();
+    if (fp == null)
+    {
+      return;
+    }
+
+    fp.doStopSearch();
+  }
+
+  @Override
   public SearchHits doSearch(SearchCommand command)
   {
     FilePanel  fp;
@@ -1024,5 +1038,19 @@ public class BufferDiffPanel
     }
 
     return filePanels[index];
+  }
+
+  @Override
+  public String getSelectedText()
+  {
+    FilePanel fp;
+
+    fp = getSelectedPanel();
+    if (fp == null)
+    {
+      return null;
+    }
+
+    return fp.getSelectedText();
   }
 }

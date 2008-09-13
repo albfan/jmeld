@@ -508,6 +508,7 @@ public class JMeldPanel
   {
     CellConstraints cc;
     SearchBar       sb;
+    String          selectedText;
 
     sb = getSearchBar();
 
@@ -515,6 +516,7 @@ public class JMeldPanel
     bar.add(
       sb,
       cc.xy(1, 1));
+    sb.setSearchText(getSelectedSearchText());
     sb.activate();
     bar.revalidate();
   }
@@ -540,6 +542,11 @@ public class JMeldPanel
   public void doPreviousSearch(ActionEvent ae)
   {
     getCurrentContentPanel().doPreviousSearch();
+  }
+
+  private String getSelectedSearchText()
+  {
+    return getCurrentContentPanel().getSelectedText();
   }
 
   public void doRefresh(ActionEvent ae)
