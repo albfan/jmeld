@@ -52,10 +52,14 @@ Release 2.0:
 Release 2.1:
 -        Inner diff sometimes doesn't work
 -        Bug when comparing filesRight/oneline.xml en filesLeft
--        Make size of JMDelta 0 if it only contains empty lines 
+- [done] Make size of JMDelta 0 if it only contains empty lines 
          (Only when ignoreblanklines is on!)
--        Keyboardfocus on diffbar. (mergmode + editpanes at the same time)
--        Make it possible to copy from the name of the file/directory.
+- [done] Keyboardfocus on diffbar. (mergmode + editpanes at the same time)
+- [done] Make it possible to copy/paste from the name of the file/directory.
+-        BUG: Settingspanel can be instantiated twice.
+-        BUG: Helppanel can be instantiated twice.
+-        BUG: Abouttpanel can be instantiated twice.
+-        BUG: Search doesn't work OK.
 
 Release 2.2:
 - [75%]  incremental diff (Adding to the end of the file doesn't work yet)
