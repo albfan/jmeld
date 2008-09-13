@@ -17,12 +17,10 @@
 package org.jmeld;
 
 import com.jgoodies.looks.plastic.*;
-import com.jgoodies.looks.plastic.theme.*;
 
 import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
-import org.jmeld.util.*;
 import org.jmeld.util.prefs.*;
 
 import javax.swing.*;
@@ -52,6 +50,7 @@ public class JMeld
     return jmeldPanel;
   }
 
+  @Override
   public void run()
   {
     JFrame frame;
@@ -100,6 +99,7 @@ public class JMeld
     KeyboardFocusManager
         .setCurrentKeyboardFocusManager(new DefaultKeyboardFocusManager()
         {
+          @Override
           public boolean dispatchKeyEvent(KeyEvent e)
           {
             //System.out.println("dispatch: " + KeyStroke.getKeyStrokeForEvent(e));
@@ -107,6 +107,7 @@ public class JMeld
             return super.dispatchKeyEvent(e);
           }
 
+          @Override
           public void processKeyEvent(Component focusedComponent,
                                       KeyEvent e)
           {

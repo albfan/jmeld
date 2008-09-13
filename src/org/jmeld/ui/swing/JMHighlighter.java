@@ -16,8 +16,6 @@
  */
 package org.jmeld.ui.swing;
 
-import javax.swing.*;
-import javax.swing.plaf.*;
 import javax.swing.text.*;
 
 import java.awt.*;
@@ -66,6 +64,7 @@ public class JMHighlighter
    *
    * @param g the graphics context
    */
+  @Override
   public void paint(Graphics g)
   {
     int                         upperLayer;
@@ -145,17 +144,20 @@ public class JMHighlighter
     }
   }
 
+  @Override
   public void install(JTextComponent c)
   {
     component = c;
     removeAllHighlights();
   }
 
+  @Override
   public void deinstall(JTextComponent c)
   {
     component = null;
   }
 
+  @Override
   public Object addHighlight(
     int                          p0,
     int                          p1,
@@ -188,6 +190,7 @@ public class JMHighlighter
     return hli;
   }
 
+  @Override
   public void removeHighlight(Object object)
   {
     removeHighlight(UPPER_LAYER, object);
@@ -210,6 +213,7 @@ public class JMHighlighter
   /**
    * Removes all highlights.
    */
+  @Override
   public void removeAllHighlights()
   {
     for (Integer layer : layers)
@@ -219,6 +223,7 @@ public class JMHighlighter
     repaint();
   }
 
+  @Override
   public void changeHighlight(
     Object object,
     int    p0,
@@ -254,6 +259,7 @@ public class JMHighlighter
    * @return the copy
    * @see Highlighter#getHighlights
    */
+  @Override
   public Highlighter.Highlight[] getHighlights()
   {
     int                     size;
@@ -311,16 +317,19 @@ public class JMHighlighter
     Position                     p1;
     Highlighter.HighlightPainter painter;
 
+    @Override
     public int getStartOffset()
     {
       return p0.getOffset();
     }
 
+    @Override
     public int getEndOffset()
     {
       return p1.getOffset();
     }
 
+    @Override
     public Highlighter.HighlightPainter getPainter()
     {
       return painter;

@@ -17,7 +17,6 @@
 package org.jmeld.diff;
 
 import org.jmeld.util.*;
-import org.jmeld.util.file.*;
 
 import java.util.*;
 

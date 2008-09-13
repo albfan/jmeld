@@ -17,7 +17,6 @@
 package org.jmeld.ui.text;
 
 import org.jmeld.*;
-import org.jmeld.diff.*;
 import org.jmeld.util.vc.*;
 
 import javax.swing.text.*;

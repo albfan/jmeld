@@ -50,11 +50,13 @@ public abstract class AbstractBufferDocument
     listeners = new ArrayList<BufferDocumentChangeListenerIF>();
   }
 
+  @Override
   public void addChangeListener(BufferDocumentChangeListenerIF listener)
   {
     listeners.add(listener);
   }
 
+  @Override
   public void removeChangeListener(BufferDocumentChangeListenerIF listener)
   {
     listeners.remove(listener);
@@ -73,6 +75,7 @@ public abstract class AbstractBufferDocument
     this.name = name;
   }
 
+  @Override
   public String getName()
   {
     return name;
@@ -83,21 +86,25 @@ public abstract class AbstractBufferDocument
     this.shortName = shortName;
   }
 
+  @Override
   public String getShortName()
   {
     return shortName;
   }
 
+  @Override
   public PlainDocument getDocument()
   {
     return document;
   }
 
+  @Override
   public boolean isChanged()
   {
     return changed;
   }
 
+  @Override
   public Line[] getLines()
   {
     initLines();
@@ -105,6 +112,7 @@ public abstract class AbstractBufferDocument
     return lineArray;
   }
 
+  @Override
   public String getLineText(int lineNumber)
   {
     Line[] la;
@@ -123,11 +131,13 @@ public abstract class AbstractBufferDocument
     return la[lineNumber].toString();
   }
 
+  @Override
   public int getNumberOfLines()
   {
     return getLines().length;
   }
 
+  @Override
   public int getOffsetForLine(int lineNumber)
   {
     Line[] la;
@@ -156,6 +166,7 @@ public abstract class AbstractBufferDocument
     return la[lineNumber - 1].getOffset();
   }
 
+  @Override
   public int getLineForOffset(int offset)
   {
     int    searchIndex;
@@ -186,6 +197,7 @@ public abstract class AbstractBufferDocument
     return (-searchIndex) - 1;
   }
 
+  @Override
   public void read()
     throws JMeldException
   {
@@ -254,6 +266,7 @@ public abstract class AbstractBufferDocument
     }
   }
 
+  @Override
   public void write()
     throws JMeldException
   {
@@ -523,12 +536,14 @@ public abstract class AbstractBufferDocument
       }
     }
 
+    @Override
     public int compareTo(Object line)
     {
       return toString().compareTo(((Line) line).toString());
     }
   }
 
+  @Override
   public void print()
   {
     Line[] la;
@@ -544,16 +559,19 @@ public abstract class AbstractBufferDocument
     }
   }
 
+  @Override
   public void changedUpdate(DocumentEvent de)
   {
     documentChanged(de);
   }
 
+  @Override
   public void insertUpdate(DocumentEvent de)
   {
     documentChanged(de);
   }
 
+  @Override
   public void removeUpdate(DocumentEvent de)
   {
     documentChanged(de);
@@ -647,6 +665,7 @@ public abstract class AbstractBufferDocument
     }
   }
 
+  @Override
   public BlameIF getVersionControlBlame()
   {
     return null;

@@ -526,6 +526,7 @@ public class FilePanel
   {
     return new ActionListener()
     {
+      @Override
       public void actionPerformed(ActionEvent ae)
       {
         FileChooserPreference pref;
@@ -556,6 +557,7 @@ public class FilePanel
   {
     return new ActionListener()
     {
+      @Override
       public void actionPerformed(ActionEvent ae)
       {
         try
@@ -579,6 +581,7 @@ public class FilePanel
   {
     return new ActionListener()
     {
+      @Override
       public void actionPerformed(ActionEvent ae)
       {
         //System.out.println("fileBox: " + fileBox.getSelectedItem());
@@ -586,6 +589,7 @@ public class FilePanel
     };
   }
 
+  @Override
   public void documentChanged(JMDocumentEvent de)
   {
     if (de.getStartLine() == -1 && de.getDocumentEvent() == null)
@@ -624,6 +628,7 @@ public class FilePanel
   {
     return new ActionListener()
     {
+      @Override
       public void actionPerformed(ActionEvent ae)
       {
         diffPanel.diff();
@@ -647,6 +652,7 @@ public class FilePanel
   {
     return new CaretListener()
     {
+      @Override
       public void caretUpdate(CaretEvent fe)
       {
         updateFilePanelBar();
@@ -673,6 +679,7 @@ public class FilePanel
     return selected;
   }
 
+  @Override
   public void configurationChanged()
   {
     initConfiguration();
