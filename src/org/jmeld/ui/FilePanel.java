@@ -55,6 +55,7 @@ public class FilePanel
   private JButton          saveButton;
   private Timer            timer;
   private SearchHits       searchHits;
+  private SearchCommand    currentSearchCommand;
   private boolean          selected;
   private FilePanelBar     filePanelBar;
 
@@ -63,8 +64,6 @@ public class FilePanel
     this.diffPanel = diffPanel;
     this.name = name;
     this.position = position;
-
-    searchHits = new SearchHits();
 
     init();
   }
@@ -241,13 +240,26 @@ public class FilePanel
     fileLabel.setText(name1, name2);
   }
 
+  void doStopSearch()
+  {
+    searchHits = null;
+    currentSearchCommand = null;
+  }
+
+  private void checkSearch()
+  {
+    if(currentSearchCommand != null)
+    {
+      doSearch(currentSearchCommand);
+    }
+  }
+
   SearchHits doSearch(SearchCommand searchCommand)
   {
     int numberOfLines;
     BufferDocumentIF doc;
     String text;
-    int index;
-    int fromIndex;
+    int index, fromIndex;
     boolean regularExpression;
     String searchText;
     SearchHit searchHit;
@@ -260,6 +272,7 @@ public class FilePanel
     doc = getBufferDocument();
     numberOfLines = doc.getNumberOfLines();
 
+    currentSearchCommand = searchCommand;
     searchHits = new SearchHits();
 
     if (!StringUtil.isEmpty(searchText))
@@ -338,11 +351,14 @@ public class FilePanel
 
   private void paintSearchHighlights()
   {
-    for (SearchHit sh : searchHits.getSearchHits())
+    if(searchHits != null)
     {
-      setHighlight(JMHighlighter.LAYER2, sh.getFromOffset(), sh.getToOffset(),
-                   searchHits.isCurrent(sh) ? JMHighlightPainter.CURRENT_SEARCH
-                                           : JMHighlightPainter.SEARCH);
+      for (SearchHit sh : searchHits.getSearchHits())
+      {
+        setHighlight(JMHighlighter.LAYER2, sh.getFromOffset(), sh.getToOffset(),
+                     searchHits.isCurrent(sh) ? JMHighlightPainter.CURRENT_SEARCH
+                                             : JMHighlightPainter.SEARCH);
+      }
     }
   }
 
@@ -606,6 +622,7 @@ public class FilePanel
       }
     }
 
+    checkSearch();
     checkActions();
   }
 

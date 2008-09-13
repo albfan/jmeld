@@ -116,6 +116,10 @@ public class AbstractContentPanel
   {
   }
 
+  public void doStopSearch()
+  {
+  }
+
   public SearchHits doSearch(SearchCommand command)
   {
     return null;

@@ -50,6 +50,8 @@ public interface JMeldContentPanelIF
 
   public void doGoToLast();
 
+  public void doStopSearch();
+
   public SearchHits doSearch(SearchCommand command);
 
   public void doNextSearch();

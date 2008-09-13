@@ -521,11 +521,10 @@ public class JMeldPanel
 
   public void doStopSearch(ActionEvent ae)
   {
-    CellConstraints cc;
-
-    cc = new CellConstraints();
     bar.remove(getSearchBar());
     bar.revalidate();
+
+    getCurrentContentPanel().doStopSearch();
   }
 
   public SearchHits doSearch(ActionEvent ae)
