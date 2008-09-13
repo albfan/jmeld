@@ -120,7 +120,7 @@ public class AbstractContentPanel
   {
   }
 
-  public SearchHits doSearch(SearchCommand command)
+  public SearchHits doSearch()
   {
     return null;
   }

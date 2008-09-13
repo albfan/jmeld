@@ -412,19 +412,22 @@ public class BufferDiffPanel
   @Override
   public void doStopSearch()
   {
-    FilePanel  fp;
-
-    fp = getSelectedPanel();
-    if (fp == null)
+    for (FilePanel filePanel : filePanels)
     {
-      return;
+      if (filePanel != null)
+      {
+        filePanel.doStopSearch();
+      }
     }
+  }
 
-    fp.doStopSearch();
+  public SearchCommand getSearchCommand()
+  {
+    return mainPanel.getSearchCommand();
   }
 
   @Override
-  public SearchHits doSearch(SearchCommand command)
+  public SearchHits doSearch()
   {
     FilePanel  fp;
     SearchHits searchHits;
@@ -435,7 +438,7 @@ public class BufferDiffPanel
       return null;
     }
 
-    searchHits = fp.doSearch(command);
+    searchHits = fp.doSearch();
 
     scrollToSearch(fp, searchHits);
 
@@ -504,6 +507,11 @@ public class BufferDiffPanel
   {
     SearchHit currentHit;
     int       line;
+
+    if(searchHits == null)
+    {
+      return;
+    }
 
     currentHit = searchHits.getCurrent();
     if (currentHit != null)

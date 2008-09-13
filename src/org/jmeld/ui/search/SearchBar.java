@@ -141,6 +141,11 @@ public class SearchBar
   {
     searchField.requestFocus();
     searchField.selectAll();
+
+    if(!StringUtil.isEmpty(searchField.getText()))
+    {
+      timer.restart();
+    }
   }
 
   private DocumentListener getSearchAction()

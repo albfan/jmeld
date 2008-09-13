@@ -52,7 +52,7 @@ public interface JMeldContentPanelIF
 
   public void doStopSearch();
 
-  public SearchHits doSearch(SearchCommand command);
+  public SearchHits doSearch();
 
   public void doNextSearch();
 

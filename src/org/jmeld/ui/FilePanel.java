@@ -55,7 +55,6 @@ public class FilePanel
   private JButton          saveButton;
   private Timer            timer;
   private SearchHits       searchHits;
-  private SearchCommand    currentSearchCommand;
   private boolean          selected;
   private FilePanelBar     filePanelBar;
 
@@ -243,20 +242,15 @@ public class FilePanel
   void doStopSearch()
   {
     searchHits = null;
-    currentSearchCommand = null;
-
     reDisplay();
   }
 
   private void checkSearch()
   {
-    if(currentSearchCommand != null)
-    {
-      doSearch(currentSearchCommand);
-    }
+    doSearch();
   }
 
-  SearchHits doSearch(SearchCommand searchCommand)
+  SearchHits doSearch()
   {
     int numberOfLines;
     BufferDocumentIF doc;
@@ -267,6 +261,13 @@ public class FilePanel
     SearchHit searchHit;
     int offset;
     int length;
+    SearchCommand searchCommand;
+
+    searchCommand = diffPanel.getSearchCommand();
+    if(searchCommand == null)
+    {
+      return null;
+    }
 
     searchText = searchCommand.getSearchText();
     regularExpression = searchCommand.isRegularExpression();
@@ -274,7 +275,6 @@ public class FilePanel
     doc = getBufferDocument();
     numberOfLines = doc.getNumberOfLines();
 
-    currentSearchCommand = searchCommand;
     searchHits = new SearchHits();
 
     if (!StringUtil.isEmpty(searchText))
@@ -683,6 +683,7 @@ public class FilePanel
   {
     this.selected = selected;
     updateFilePanelBar();
+    checkSearch();
   }
 
   private void updateFilePanelBar()

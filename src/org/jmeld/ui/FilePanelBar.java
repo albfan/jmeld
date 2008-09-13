@@ -60,7 +60,6 @@ public class FilePanelBar
 
   public void update()
   {
-    String    iconName;
     Icon      icon;
     JTextArea editor;
     int       caretPosition;
