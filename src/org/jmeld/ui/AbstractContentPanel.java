@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui;
 
+import org.jmeld.util.*;
 import org.jmeld.ui.search.*;
 
 import javax.swing.*;
@@ -23,10 +24,21 @@ import javax.swing.event.*;
 import javax.swing.undo.*;
 
 public class AbstractContentPanel
-       extends JPanel
-       implements JMeldContentPanelIF
+    extends JPanel
+    implements JMeldContentPanelIF
 {
   private MyUndoManager undoManager = new MyUndoManager();
+  private String        id;
+
+  public void setId(String id)
+  {
+    this.id = id;
+  }
+
+  public String getId()
+  {
+    return id;
+  }
 
   public boolean isSaveEnabled()
   {
@@ -147,8 +159,8 @@ public class AbstractContentPanel
   }
 
   public class MyUndoManager
-         extends UndoManager
-         implements UndoableEditListener
+      extends UndoManager
+      implements UndoableEditListener
   {
     CompoundEdit activeEdit;
 
@@ -201,5 +213,15 @@ public class AbstractContentPanel
   public String getSelectedText()
   {
     return null;
+  }
+
+  public boolean equals(Object o)
+  {
+    if (!(o instanceof AbstractContentPanel))
+    {
+      return false;
+    }
+
+    return ObjectUtil.equals(((AbstractContentPanel) o).getId(), id);
   }
 }

@@ -20,6 +20,10 @@ import org.jmeld.ui.search.*;
 
 public interface JMeldContentPanelIF
 {
+  public String getId();
+
+  public void setId(String id);
+
   public boolean isSaveEnabled();
 
   public void doSave();
