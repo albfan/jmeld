@@ -12,28 +12,26 @@ public class BlameCmd
 
   public BlameCmd(File file)
   {
+    super(BlameData.class);
+
     this.file = file;
   }
 
   public Result execute()
   {
-    return super.execute(
-      BlameData.class,
+    super.execute(
       "svn",
       "blame",
       "--non-interactive",
       "--xml",
       file.getPath());
-  }
 
-  public BlameData getBlameData()
-  {
-    return getResultData();
+    return getResult();
   }
 
   public BlameIF getBlame()
   {
-    return getBlameData();
+    return getResultData();
   }
 
   public static void main(String[] args)
@@ -43,9 +41,9 @@ public class BlameCmd
     cmd = new BlameCmd(new File(args[0]));
     if (cmd.execute().isTrue())
     {
-      for (BlameData.Target target : cmd.getBlameData().getTargetList())
+      for (BlameIF.TargetIF target : cmd.getBlame().getTargetList())
       {
-        for (BlameData.Entry entry : target.getEntryList())
+        for (BlameIF.EntryIF entry : target.getEntryList())
         {
           System.out.println(entry.getLineNumber() + " : "
             + entry.getCommit().getRevision() + " -> "

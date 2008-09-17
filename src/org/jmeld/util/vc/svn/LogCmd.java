@@ -11,19 +11,22 @@ public class LogCmd
 
   public LogCmd(File file)
   {
+    super(LogData.class);
+
     this.file = file;
   }
 
   public Result execute()
   {
-    return super.execute(
-      LogData.class,
+    super.execute(
       "svn",
       "log",
       "--non-interactive",
       "-v",
       "--xml",
       file.getPath());
+
+    return getResult();
   }
 
   public LogData getLogData()

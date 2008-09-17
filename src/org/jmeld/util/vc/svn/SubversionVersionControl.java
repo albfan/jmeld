@@ -13,6 +13,15 @@ public class SubversionVersionControl
 
     cmd = new BlameCmd(file);
     cmd.execute();
-    return cmd.getBlame();
+    return cmd.getResultData();
+  }
+
+  public DiffIF getDiff(File file, boolean recursive)
+  {
+    DiffCmd cmd;
+
+    cmd = new DiffCmd(file);
+    cmd.execute();
+    return cmd.getResultData();
   }
 }

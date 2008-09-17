@@ -11,19 +11,22 @@ public class StatusCmd
 
   public StatusCmd(File file)
   {
+    super(StatusData.class);
+
     this.file = file;
   }
 
   public Result execute()
   {
-    return super.execute(
-      StatusData.class,
+    super.execute(
       "svn",
       "status",
       "--non-interactive",
       "-v",
       "--xml",
       file.getPath());
+
+    return getResult();
   }
 
   public StatusData getStatusData()

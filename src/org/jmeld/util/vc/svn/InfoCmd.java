@@ -11,19 +11,22 @@ public class InfoCmd
 
   public InfoCmd(File file)
   {
+    super(InfoData.class);
+
     this.file = file;
   }
 
   public Result execute()
   {
-    return super.execute(
-      InfoData.class,
+    super.execute(
       "svn",
       "info",
       "--non-interactive",
       "-R",
       "--xml",
       file.getPath());
+
+    return getResult();
   }
 
   public InfoData getInfoData()
