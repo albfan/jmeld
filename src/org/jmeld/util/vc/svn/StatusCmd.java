@@ -1,30 +1,29 @@
 package org.jmeld.util.vc.svn;
 
+import org.jmeld.util.vc.*;
+
 import org.jmeld.util.*;
 
 import java.io.*;
 
 public class StatusCmd
-       extends SvnXmlCmd<StatusData>
+    extends SvnXmlCmd<StatusData>
 {
-  private File file;
+  private File    file;
+  private boolean recursive;
 
-  public StatusCmd(File file)
+  public StatusCmd(File file, boolean recursive)
   {
     super(StatusData.class);
 
     this.file = file;
+    this.recursive = recursive;
   }
 
   public Result execute()
   {
-    super.execute(
-      "svn",
-      "status",
-      "--non-interactive",
-      "-v",
-      "--xml",
-      file.getPath());
+    super.execute("svn", "status", "--non-interactive", /* "-v",*/ "--xml",
+                  recursive ? "" : "-N", file.getPath());
 
     return getResult();
   }
@@ -36,30 +35,28 @@ public class StatusCmd
 
   public static void main(String[] args)
   {
-    StatusCmd           cmd;
-    StatusData.WcStatus wcStatus;
+    StatusCmd cmd;
+    StatusIF result;
+    StatusIF.WcStatusIF wcStatus;
 
-    cmd = new StatusCmd(new File(args[0]));
-    if (cmd.execute().isTrue())
+    result = new SubversionVersionControl().executeStatus(new File(args[0]),
+                                                          true);
+    if (result != null)
     {
-      for (StatusData.Target target : cmd.getStatusData().getTargetList())
+      for (StatusIF.TargetIF target : result.getTargetList())
       {
-        for (StatusData.Entry entry : target.getEntryList())
+        for (StatusIF.EntryIF entry : target.getEntryList())
         {
           wcStatus = entry.getWcStatus();
-          if(wcStatus.getItem() == StatusData.ItemStatus.normal)
+          if (wcStatus.getItem() == StatusData.ItemStatus.normal)
           {
             continue;
           }
 
           System.out.println(wcStatus.getItem().getShortText() + " "
-            + entry.getPath());
+                             + entry.getPath());
         }
       }
-    }
-    else
-    {
-      cmd.printError();
     }
   }
 }

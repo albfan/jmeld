@@ -16,6 +16,8 @@
  */
 package org.jmeld.util.vc.svn;
 
+import org.jmeld.util.vc.*;
+
 import javax.xml.bind.annotation.*;
 
 import java.util.*;
@@ -23,6 +25,7 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "status")
 public class StatusData
+  implements StatusIF
 {
   @XmlElement(name = "target")
   private List<Target> targetList;
@@ -38,6 +41,7 @@ public class StatusData
   }
 
   static class Target
+    implements StatusIF.TargetIF
   {
     @XmlAttribute
     private String      path;
@@ -62,6 +66,7 @@ public class StatusData
   }
 
   static class Entry
+    implements StatusIF.EntryIF
   {
     @XmlAttribute
     private String      path;
@@ -86,6 +91,7 @@ public class StatusData
   }
 
   static class WcStatus
+    implements StatusIF.WcStatusIF
   {
     @XmlAttribute
     private ItemStatus item;
@@ -201,9 +207,23 @@ public class StatusData
   }
 
   public static enum ItemStatus
-  {added('A'), conflicted('C'), deleted('D'), ignored('I'), modified('M'), 
-    replaced('R'), external('X'), unversioned('?'), incomplete('!'), 
-    obstructed('-'), normal(' '), none(' '), missing('!');private char shortText;
+    implements StatusIF.ItemStatusIF
+  {
+    added('A'),
+    conflicted('C'),
+    deleted('D'),
+    ignored('I'),
+    modified('M'),
+    replaced('R'),
+    external('X'),
+    unversioned('?'),
+    incomplete('!'),
+    obstructed('-'),
+    normal(' '),
+    none(' '),
+    missing('!');
+
+    private char shortText;
 
     ItemStatus(char shortText)
     {

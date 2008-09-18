@@ -7,7 +7,7 @@ import java.io.*;
 public class SubversionVersionControl
        implements VersionControlIF
 {
-  public BlameIF getBlame(File file)
+  public BlameIF executeBlame(File file)
   {
     BlameCmd cmd;
 
@@ -16,11 +16,29 @@ public class SubversionVersionControl
     return cmd.getResultData();
   }
 
-  public DiffIF getDiff(File file, boolean recursive)
+  public DiffIF executeDiff(File file, boolean recursive)
   {
     DiffCmd cmd;
 
-    cmd = new DiffCmd(file);
+    cmd = new DiffCmd(file, recursive);
+    cmd.execute();
+    return cmd.getResultData();
+  }
+
+  public StatusIF executeStatus(File file, boolean recursive)
+  {
+    StatusCmd cmd;
+
+    cmd = new StatusCmd(file, recursive);
+    cmd.execute();
+    return cmd.getResultData();
+  }
+
+  public BaseFile getBaseFile(File file)
+  {
+    CatCmd cmd;
+
+    cmd = new CatCmd(file);
     cmd.execute();
     return cmd.getResultData();
   }

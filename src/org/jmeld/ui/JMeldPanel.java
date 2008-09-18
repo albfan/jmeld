@@ -172,6 +172,11 @@ public class JMeldPanel
     new NewDirectoryComparisonPanel(leftFile, rightFile, filter).execute();
   }
 
+  public void openVersionControlComparison(File directory)
+  {
+    new NewVersionControlComparisonPanel(directory).execute();
+  }
+
   private JComponent getToolBar()
   {
     JButton button;
@@ -361,6 +366,10 @@ public class JMeldPanel
       openDirectoryComparison(new File(dialog.getLeftDirectoryName()),
                               new File(dialog.getRightDirectoryName()), dialog
                                   .getFilter());
+    }
+    else if (dialog.getValue().equals(NewPanelDialog.VERSION_CONTROL))
+    {
+      openVersionControlComparison(new File(dialog.getVersionControlDirectoryName()));
     }
   }
 
@@ -1004,6 +1013,89 @@ public class JMeldPanel
     }
   }
 
+  class NewVersionControlComparisonPanel
+      extends SwingWorker<String, Object>
+  {
+    private File                 directory;
+    private VersionControlDiff   diff;
+    private AbstractContentPanel contentPanel;
+    private String               contentId;
+
+    NewVersionControlComparisonPanel(File directory)
+    {
+      this.directory = directory;
+    }
+
+    @Override
+    public String doInBackground()
+    {
+      if (StringUtil.isEmpty(directory.getName()))
+      {
+        return "directory is empty";
+      }
+
+      if (!directory.exists())
+      {
+        return "directory(" + directory.getName() + ") doesn't exist";
+      }
+
+      if (!directory.isDirectory())
+      {
+        return "directoryName(" + directory.getName()
+               + ") is not a directory";
+      }
+
+      contentId = "VersionControlDiffPanel:" + directory.getName();
+      contentPanel = getAlreadyOpen(contentId);
+      if (contentPanel == null)
+      {
+        diff = new VersionControlDiff(directory, DirectoryDiff.Mode.TWO_WAY);
+        diff.diff();
+      }
+
+      return null;
+    }
+
+    @Override
+    protected void done()
+    {
+      try
+      {
+        String result;
+        FolderDiffPanel panel;
+
+        result = get();
+
+        if (result != null)
+        {
+          JOptionPane.showMessageDialog(JMeldPanel.this, result,
+                                        "Error opening file",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+          if (contentPanel != null)
+          {
+            // Already opened!
+            tabbedPane.setSelectedComponent(contentPanel);
+          }
+          else
+          {
+            panel = new FolderDiffPanel(JMeldPanel.this, diff);
+            panel.setId(contentId);
+
+            tabbedPane.add(panel, getTabIcon("stock_folder", panel.getTitle()));
+            tabbedPane.setSelectedComponent(panel);
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        ex.printStackTrace();
+      }
+    }
+  }
+
   private void installKey(boolean enabled,
                           String key,
                           MeldAction action)
@@ -1049,8 +1141,6 @@ public class JMeldPanel
       public boolean doExit(TabExitEvent te)
       {
         int tabIndex;
-        Component component;
-        AbstractContentPanel content;
 
         tabIndex = te.getTabIndex();
         if (tabIndex == -1)

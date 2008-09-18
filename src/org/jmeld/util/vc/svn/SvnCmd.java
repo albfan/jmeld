@@ -51,7 +51,7 @@ public abstract class SvnCmd<T>
           errorText.append(text);
         }
         br.close();
-        return Result.FALSE(errorText.toString());
+        return Result.FALSE(errorText.toString() + " (exitvalue=" + p.exitValue() + ")");
       }
 
       build(baos.toByteArray());

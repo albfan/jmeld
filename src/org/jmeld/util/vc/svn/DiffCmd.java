@@ -13,17 +13,20 @@ public class DiffCmd
 {
   // Instance variables:
   private File           file;
+  private boolean        recursive;
   private BufferedReader reader;
   private String         unreadLine;
 
-  public DiffCmd(File file)
+  public DiffCmd(File file, boolean recursive)
   {
     this.file = file;
+    this.recursive = recursive;
   }
 
   public Result execute()
   {
-    super.execute("svn", "diff", "--non-interactive", file.getPath());
+    super.execute("svn", "diff", "--non-interactive", recursive ? "" : "-N",
+                  file.getPath());
 
     return getResult();
   }
@@ -107,7 +110,7 @@ public class DiffCmd
 
     // @@ <LineNumberRevision>,<NumberOfLines> <lineNumberWorkingCopy>,<NumberOfLines> @@
     line = readLine();
-    if(line == null)
+    if (line == null)
     {
       return null;
     }
@@ -126,19 +129,19 @@ public class DiffCmd
 
     delta = new JMDelta(originalChunk, revisedChunk);
 
-    while((line = readLine()) != null)
+    while ((line = readLine()) != null)
     {
-      if(line.startsWith(" "))
+      if (line.startsWith(" "))
       {
         continue;
       }
 
-      if(line.startsWith("+"))
+      if (line.startsWith("+"))
       {
         continue;
       }
 
-      if(line.startsWith("-"))
+      if (line.startsWith("-"))
       {
         continue;
       }
@@ -175,18 +178,16 @@ public class DiffCmd
   public static void main(String[] args)
   {
     DiffCmd cmd;
+    DiffIF result;
 
-    cmd = new DiffCmd(new File(args[0]));
-    if (cmd.execute().isTrue())
+    result = new SubversionVersionControl()
+        .executeDiff(new File(args[0]), true);
+    if (result != null)
     {
-      for (DiffIF.TargetIF target : cmd.getResultData().getTargetList())
+      for (DiffIF.TargetIF target : result.getTargetList())
       {
         System.out.println(target.getPath() + " " + target.getRevision());
       }
-    }
-    else
-    {
-      cmd.printError();
     }
   }
 }

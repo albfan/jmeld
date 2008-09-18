@@ -4,7 +4,11 @@ import java.io.*;
 
 public interface VersionControlIF
 {
-  public BlameIF getBlame(File file);
+  public BlameIF executeBlame(File file);
 
-  public DiffIF getDiff(File dir, boolean recursive);
+  public DiffIF executeDiff(File dir, boolean recursive);
+
+  public StatusIF executeStatus(File dir, boolean recursive);
+
+  public BaseFile getBaseFile(File dir);
 }
