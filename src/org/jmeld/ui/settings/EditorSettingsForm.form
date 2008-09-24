@@ -7,6 +7,7 @@
   </NonVisualComponents>
   <AuxValues>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="2"/>
@@ -18,7 +19,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="gradientLabel1" alignment="0" pref="455" max="32767" attributes="0"/>
+          <Component id="gradientLabel1" alignment="0" pref="506" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -35,12 +36,12 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="234" max="32767" attributes="0"/>
+              <EmptySpace pref="261" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="detailHeader2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="364" max="32767" attributes="0"/>
+              <EmptySpace pref="406" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
@@ -68,7 +69,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="272" max="32767" attributes="0"/>
+              <EmptySpace pref="300" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
@@ -101,7 +102,26 @@
                       <Component id="tabSizeSpinner" min="-2" pref="46" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="313" max="32767" attributes="0"/>
+              <EmptySpace pref="345" max="32767" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="detailHeader5" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="12" pref="12" max="12" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="detectEncodingRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="specificEncodingRadioButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="specificEncodingComboBox" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="defaultEncodingRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace pref="242" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -166,7 +186,18 @@
               <Component id="ignoreBlankLinesCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="ignoreCaseCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="detailHeader5" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="defaultEncodingRadioButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="detectEncodingRadioButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="specificEncodingRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="specificEncodingComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -489,6 +520,38 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
       </AuxValues>
+    </Component>
+    <Component class="org.jmeld.ui.swing.DetailHeader" name="detailHeader5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="File encoding"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="defaultEncodingRadioButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Default encoding of this computer"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="detectEncodingRadioButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Try to detect encoding"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JRadioButton" name="specificEncodingRadioButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Use encoding"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="specificEncodingComboBox">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Item 1"/>
+            <StringItem index="1" value="Item 2"/>
+            <StringItem index="2" value="Item 3"/>
+            <StringItem index="3" value="Item 4"/>
+          </StringArray>
+        </Property>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

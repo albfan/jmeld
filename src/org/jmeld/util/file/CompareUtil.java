@@ -51,17 +51,8 @@ public class CompareUtil
     FileNode nodeRight,
     Ignore   ignore)
   {
-    return contentEquals(
-      nodeLeft.getFile(),
-      nodeRight.getFile(),
-      ignore);
-  }
-
-  public static boolean contentEquals(
-    File   fileLeft,
-    File   fileRight,
-    Ignore ignore)
-  {
+    File             fileLeft;
+    File             fileRight;
     RandomAccessFile fLeft;
     RandomAccessFile fRight;
     FileChannel      fcLeft;
@@ -69,6 +60,9 @@ public class CompareUtil
     ByteBuffer       bbLeft;
     ByteBuffer       bbRight;
     boolean          equals;
+
+    fileLeft = nodeLeft.getFile();
+    fileRight = nodeRight.getFile();
 
     fLeft = null;
     fRight = null;
@@ -102,9 +96,9 @@ public class CompareUtil
       else
       {
         equals = contentEquals(
-            new BufferedReader(new FileReader(fileLeft)),
-            new BufferedReader(new FileReader(fileRight)),
-            ignore);
+                nodeLeft.getDocument().getReader(),
+                nodeRight.getDocument().getReader(),
+                ignore);
       }
 
       return equals;

@@ -31,9 +31,9 @@ public class EditorSettings
   @XmlElement
   private boolean      showLineNumbers;
   @XmlElement
-  private int          tabSize = 4;
+  private int          tabSize                    = 4;
   @XmlElement
-  private Ignore       ignore;
+  private Ignore       ignore                     = new Ignore();
   @XmlElement
   private boolean      leftsideReadonly;
   @XmlElement
@@ -50,10 +50,25 @@ public class EditorSettings
   private FontSetting  font;
   @XmlElement
   private boolean      antialias;
+  @XmlElement
+  private boolean      defaultFileEncodingEnabled = true;
+  @XmlElement
+  private boolean      detectFileEncodingEnabled;
+  @XmlElement
+  private boolean      specificFileEncodingEnabled;
+  @XmlElement
+  private String       specificFileEncodingName;
 
   public EditorSettings()
   {
-    ignore = new Ignore();
+  }
+
+  @Override
+  public void init(AbstractConfiguration configuration)
+  {
+    super.init(configuration);
+
+    ignore.init(configuration);
   }
 
   public boolean getShowLineNumbers()
@@ -91,36 +106,66 @@ public class EditorSettings
 
   public void setIgnoreWhitespaceAtBegin(boolean ignoreWhitespaceAtBegin)
   {
+    if(ignore.ignoreWhitespaceAtBegin == ignoreWhitespaceAtBegin)
+    {
+      return;
+    }
+
     ignore.ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
     fireChanged();
   }
 
   public void setIgnoreWhitespaceInBetween(boolean ignoreWhitespaceInBetween)
   {
+    if(ignore.ignoreWhitespaceInBetween == ignoreWhitespaceInBetween)
+    {
+      return;
+    }
+
     ignore.ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
     fireChanged();
   }
 
   public void setIgnoreWhitespaceAtEnd(boolean ignoreWhitespaceAtEnd)
   {
+    if(ignore.ignoreWhitespaceAtEnd == ignoreWhitespaceAtEnd)
+    {
+      return;
+    }
+
     ignore.ignoreWhitespaceAtEnd = ignoreWhitespaceAtEnd;
     fireChanged();
   }
 
   public void setIgnoreEOL(boolean ignoreEOL)
   {
+    if(ignore.ignoreEOL == ignoreEOL)
+    {
+      return;
+    }
+
     ignore.ignoreEOL = ignoreEOL;
     fireChanged();
   }
 
   public void setIgnoreBlankLines(boolean ignoreBlankLines)
   {
+    if(ignore.ignoreBlankLines == ignoreBlankLines)
+    {
+      return;
+    }
+
     ignore.ignoreBlankLines = ignoreBlankLines;
     fireChanged();
   }
 
   public void setIgnoreCase(boolean ignoreCase)
   {
+    if(ignore.ignoreCase == ignoreCase)
+    {
+      return;
+    }
+
     ignore.ignoreCase = ignoreCase;
     fireChanged();
   }
@@ -132,6 +177,11 @@ public class EditorSettings
 
   public void setLeftsideReadonly(boolean leftsideReadonly)
   {
+    if(this.leftsideReadonly == leftsideReadonly)
+    {
+      return;
+    }
+
     this.leftsideReadonly = leftsideReadonly;
     fireChanged();
   }
@@ -143,7 +193,76 @@ public class EditorSettings
 
   public void setRightsideReadonly(boolean rightsideReadonly)
   {
+    if(this.rightsideReadonly == rightsideReadonly)
+    {
+      return;
+    }
+
     this.rightsideReadonly = rightsideReadonly;
+    fireChanged();
+  }
+
+  public boolean getDefaultFileEncodingEnabled()
+  {
+    return defaultFileEncodingEnabled;
+  }
+
+  public void setDefaultFileEncodingEnabled(boolean encoding)
+  {
+    if(this.defaultFileEncodingEnabled == encoding)
+    {
+      return;
+    }
+
+    this.defaultFileEncodingEnabled = encoding;
+    fireChanged();
+  }
+
+  public boolean getDetectFileEncodingEnabled()
+  {
+    return detectFileEncodingEnabled;
+  }
+
+  public void setDetectFileEncodingEnabled(boolean encoding)
+  {
+    if(this.detectFileEncodingEnabled == encoding)
+    {
+      return;
+    }
+
+    this.detectFileEncodingEnabled = encoding;
+    fireChanged();
+  }
+
+  public boolean getSpecificFileEncodingEnabled()
+  {
+    return specificFileEncodingEnabled;
+  }
+
+  public void setSpecificFileEncodingEnabled(boolean encoding)
+  {
+    if(this.specificFileEncodingEnabled == encoding)
+    {
+      return;
+    }
+
+    this.specificFileEncodingEnabled = encoding;
+    fireChanged();
+  }
+
+  public String getSpecificFileEncodingName()
+  {
+    return specificFileEncodingName;
+  }
+
+  public void setSpecificFileEncodingName(String encodingName)
+  {
+    if(ObjectUtil.equals(this.specificFileEncodingName, encodingName))
+    {
+      return;
+    }
+
+    this.specificFileEncodingName = encodingName;
     fireChanged();
   }
 

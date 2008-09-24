@@ -61,6 +61,7 @@ Release 2.1:
 - [done] BUG: Abouttpanel can be instantiated twice.
 - [done] BUG: Search doesn't work OK.
 -        Change ignore settings for 1 session.
+- [done] Support multiple charsets
 
 Release 2.2:
 - [75%]  incremental diff (Adding to the end of the file doesn't work yet)

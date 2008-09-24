@@ -20,8 +20,6 @@ import org.jmeld.util.conf.*;
 
 import javax.xml.bind.annotation.*;
 
-import java.io.*;
-
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "jmeld")
 public class JMeldSettings
@@ -48,6 +46,7 @@ public class JMeldSettings
         .get(JMeldSettings.class);
   }
 
+  @Override
   public void init()
   {
     editor.init(this);

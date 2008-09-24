@@ -8,6 +8,7 @@ package org.jmeld.ui.settings;
 import com.l2fprod.common.swing.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.util.*;
+import org.jmeld.util.*;
 import org.jmeld.util.conf.*;
 
 import javax.swing.*;
@@ -39,7 +40,7 @@ public class EditorSettingsPanel
   private void init()
   {
     originalAntialias = getEditorSettings().isAntialiasEnabled();
-      
+
     tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
     ignoreWhitespaceAtBeginCheckBox
@@ -62,6 +63,19 @@ public class EditorSettingsPanel
     defaultFontRadioButton.addActionListener(getDefaultFontAction());
     customFontRadioButton.addActionListener(getCustomFontAction());
     fontChooserButton.addActionListener(getFontChooserAction());
+
+    specificEncodingComboBox.setModel(new DefaultComboBoxModel(CharsetDetector
+        .getInstance().getCharsetNameList().toArray()));
+
+    defaultEncodingRadioButton.setText(defaultEncodingRadioButton.getText()
+                                       + " ("
+                                       + CharsetDetector.getInstance()
+                                           .getDefaultCharset() + ")");
+
+    defaultEncodingRadioButton.addActionListener(getDefaultEncodingAction());
+    detectEncodingRadioButton.addActionListener(getDetectEncodingAction());
+    specificEncodingRadioButton.addActionListener(getSpecificEncodingAction());
+    specificEncodingComboBox.addActionListener(getSpecificEncodingNameAction());
   }
 
   private ChangeListener getTabSizeChangeListener()
@@ -261,14 +275,68 @@ public class EditorSettingsPanel
     };
   }
 
-  private ActionListener getDefaultFontAction()
+  private ActionListener getDefaultEncodingAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setDefaultFileEncodingEnabled(true);
+        getEditorSettings().setDetectFileEncodingEnabled(false);
+        getEditorSettings().setSpecificFileEncodingEnabled(false);
+      }
+    };
+  }
+
+  private ActionListener getDetectEncodingAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setDefaultFileEncodingEnabled(false);
+        getEditorSettings().setDetectFileEncodingEnabled(true);
+        getEditorSettings().setSpecificFileEncodingEnabled(false);
+      }
+    };
+  }
+
+  private ActionListener getSpecificEncodingAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setDefaultFileEncodingEnabled(false);
+        getEditorSettings().setDetectFileEncodingEnabled(false);
+        getEditorSettings().setSpecificFileEncodingEnabled(true);
+      }
+    };
+  }
+
+  private ActionListener getSpecificEncodingNameAction()
   {
     return new ActionListener()
     {
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings()
-            .enableCustomFont(!defaultFontRadioButton.isSelected());
+            .setSpecificFileEncodingName(
+                                         (String) specificEncodingComboBox
+                                             .getSelectedItem());
+      }
+    };
+  }
+
+  private ActionListener getDefaultFontAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().enableCustomFont(
+                                             !defaultFontRadioButton
+                                                 .isSelected());
       }
     };
   }
@@ -358,7 +426,7 @@ public class EditorSettingsPanel
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
-    if(originalAntialias != settings.isAntialiasEnabled())
+    if (originalAntialias != settings.isAntialiasEnabled())
     {
       antialiasCheckBox.setText("antialias on (NEED A RESTART)");
     }
@@ -372,6 +440,15 @@ public class EditorSettingsPanel
     fontChooserButton.setText(font.getName() + " (" + font.getSize() + ")");
     defaultFontRadioButton.setSelected(!settings.isCustomFontEnabled());
     customFontRadioButton.setSelected(settings.isCustomFontEnabled());
+
+    defaultEncodingRadioButton.setSelected(settings
+        .getDefaultFileEncodingEnabled());
+    detectEncodingRadioButton.setSelected(settings
+        .getDetectFileEncodingEnabled());
+    specificEncodingRadioButton.setSelected(settings
+        .getSpecificFileEncodingEnabled());
+    specificEncodingComboBox.setSelectedItem(settings
+        .getSpecificFileEncodingName());
 
     revalidate();
   }

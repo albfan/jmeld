@@ -5,6 +5,7 @@ Release 2.1:
   - Introduce option: antialias on/off.
   - Doubleclick on folder -> Diff all nodes contained in that folder.
   - Don't open already opened panels.
+  - Support multiple charsets
 
 Release 2.0:
 - Implement directory diff.

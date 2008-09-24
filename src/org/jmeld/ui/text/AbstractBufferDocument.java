@@ -64,7 +64,7 @@ public abstract class AbstractBufferDocument
 
   abstract int getBufferSize();
 
-  abstract Reader getReader()
+  abstract public Reader getReader()
     throws JMeldException;
 
   abstract Writer getWriter()

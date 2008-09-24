@@ -17,14 +17,17 @@
 package org.jmeld.ui.text;
 
 import org.jmeld.*;
+import org.jmeld.util.*;
 
 import java.io.*;
+import java.nio.charset.*;
 
 public class FileDocument
        extends AbstractBufferDocument
 {
   // instance variables:
-  private File file;
+  private File    file;
+  private Charset charset;
 
   public FileDocument(File file)
   {
@@ -48,9 +51,11 @@ public class FileDocument
     return (int) file.length();
   }
 
-  protected Reader getReader()
+  public Reader getReader()
     throws JMeldException
   {
+    BufferedInputStream bis;
+
     if (!file.isFile() || !file.canRead())
     {
       throw new JMeldException("Could not open file: " + file);
@@ -58,7 +63,12 @@ public class FileDocument
 
     try
     {
-      return new FileReader(file);
+      // Try to create a reader that has the right charset.
+      // If you use new FileReader(file) you get a reader
+      //   with the default charset. 
+      bis = new BufferedInputStream(new FileInputStream(file));
+      charset = CharsetDetector.getInstance().getCharset(bis);
+      return new BufferedReader(new InputStreamReader(bis, charset));
     }
     catch (Exception ex)
     {

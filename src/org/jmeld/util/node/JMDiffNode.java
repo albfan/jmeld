@@ -57,7 +57,6 @@ public class JMDiffNode
   {
     id = (nodeLeft != null ? nodeLeft.getName() : "x")
          + (nodeRight != null ? nodeRight.getName() : "x");
-    System.out.println("id = " + id);
   }
 
   public String getName()
