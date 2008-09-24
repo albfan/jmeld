@@ -16,8 +16,6 @@
  */
 package org.jmeld;
 
-import com.jgoodies.looks.plastic.*;
-
 import org.jmeld.settings.*;
 import org.jmeld.ui.*;
 import org.jmeld.ui.util.*;
@@ -54,29 +52,10 @@ public class JMeld
   public void run()
   {
     JFrame frame;
-    String version;
 
     debugKeyboard();
 
-    try
-    {
-
-      version = System.getProperty("java.version");
-      if (version.startsWith("1.7"))
-      {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      }
-      else
-      {
-        PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
-        PlasticLookAndFeel
-            .setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
-        UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
-      }
-    }
-    catch (Exception e)
-    {
-    }
+    LookAndFeelManager.getInstance().install();
 
     frame = new JFrame("JMeld");
     jmeldPanel = new JMeldPanel();
