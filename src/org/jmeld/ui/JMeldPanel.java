@@ -30,6 +30,7 @@ import org.jmeld.util.*;
 import org.jmeld.util.conf.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
+import org.jmeld.util.vc.*;
 
 import javax.help.*;
 import javax.swing.*;
@@ -62,7 +63,6 @@ public class JMeldPanel
   private static final String GOTOFIRST_ACTION      = "GoToFirst";
   private static final String GOTOLAST_ACTION       = "GoToLast";
   private static final String STARTSEARCH_ACTION    = "StartSearch";
-  private static final String STOPSEARCH_ACTION     = "StopSearch";
   private static final String NEXTSEARCH_ACTION     = "NextSearch";
   private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
   private static final String REFRESH_ACTION        = "Refresh";
@@ -100,7 +100,7 @@ public class JMeldPanel
 
   public void openComparison(List<String> fileNameList)
   {
-    if (fileNameList.size() < 2)
+    if (fileNameList.size() <= 0)
     {
       return;
     }
@@ -109,6 +109,7 @@ public class JMeldPanel
     // 1. <fileName>, <fileName>
     // 2. <directory>, <directory>
     // 3. <directory>, <fileName>, <fileName> ...
+    // 4. <directory (version controlled)>
     // ad 3:
     //   The fileNames are relative and are also available in 
     //   the <directory>. So this enables you to do:
@@ -117,9 +118,16 @@ public class JMeldPanel
     //   1. ../branches/branch1/src/lala.java with ./src/lala.java  
     //   2. ../branches/branch1/src/haha.java with ./src/haha.java  
 
-    for (int i = 1; i < fileNameList.size(); i++)
+    if(fileNameList.size() > 1)
     {
-      openComparison(fileNameList.get(0), fileNameList.get(i));
+      for (int i = 1; i < fileNameList.size(); i++)
+      {
+        openComparison(fileNameList.get(0), fileNameList.get(i));
+      }
+    }
+    else
+    {
+      openComparison(fileNameList.get(0), null);
     }
   }
 
@@ -128,6 +136,7 @@ public class JMeldPanel
   {
     File leftFile;
     File rightFile;
+    File file;
 
     if (!StringUtil.isEmpty(leftName) && !StringUtil.isEmpty(rightName))
     {
@@ -148,6 +157,18 @@ public class JMeldPanel
       else
       {
         openFileComparison(leftFile, rightFile, false);
+      }
+    }
+    else
+    {
+      if(!StringUtil.isEmpty(leftName))
+      {
+        file = new File(leftName);
+        if(file.exists() &&
+           VersionControlUtil.isVersionControlled(file))
+        {
+          openVersionControlComparison(file);
+        }
       }
     }
   }
