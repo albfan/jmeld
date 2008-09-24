@@ -44,7 +44,7 @@ public class TokenizerFactory
   {
     if (instance.fileNameTokenizer == null)
     {
-      instance.fileNameTokenizer = new WordTokenizer("[/\\\\]+");
+      instance.fileNameTokenizer = new WordTokenizer("[ /\\\\]+");
     }
 
     return instance.fileNameTokenizer;

@@ -44,8 +44,8 @@ public class VersionControlDiff
     {
       setLeftFolderShortName(directory.getName() + " (revision XXXX)");
       setRightFolderShortName(directory.getName() + " (workingcopy)");
-      setLeftFolderName(directory.getCanonicalPath());
-      setRightFolderName(directory.getCanonicalPath());
+      setLeftFolderName(directory.getCanonicalPath() + " (revision XXXX)");
+      setRightFolderName(directory.getCanonicalPath() + " (workingcopy)");
     }
     catch (Exception ex)
     {
@@ -83,7 +83,7 @@ public class VersionControlDiff
     rootNode = new JMDiffNode("<root>", false);
     nodes = new HashMap<String, JMDiffNode>();
 
-    versionControl = VersionControlFactory.getInstance(directory);
+    versionControl = VersionControlUtil.getVersionControl(directory);
     if (versionControl == null)
     {
       return;

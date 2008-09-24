@@ -48,12 +48,14 @@ public class VersionControlBaseDocument
     setShortName(file.getName());
   }
 
+  @Override
   public int getBufferSize()
   {
     return (int) file.length();
   }
 
-  protected Reader getReader()
+  @Override
+  public Reader getReader()
       throws JMeldException
   {
     if (!file.isFile() || !file.canRead())
@@ -82,6 +84,7 @@ public class VersionControlBaseDocument
     }
   }
 
+    @Override
   protected Writer getWriter()
       throws JMeldException
   {
@@ -98,7 +101,7 @@ public class VersionControlBaseDocument
     {
       file = new File(args[0]);
 
-      versionControl = VersionControlFactory.getInstance(file);
+      versionControl = VersionControlUtil.getVersionControl(file);
       fd = new VersionControlBaseDocument(versionControl, file);
       fd.read();
       fd.print();
