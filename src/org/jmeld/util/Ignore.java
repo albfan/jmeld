@@ -24,6 +24,13 @@ public class Ignore
   public boolean ignore;
   public boolean ignoreWhitespace;
 
+  public Ignore(Ignore ignore)
+  {
+    this(ignore.ignoreWhitespaceAtBegin, ignore.ignoreWhitespaceInBetween,
+         ignore.ignoreWhitespaceAtEnd, ignore.ignoreEOL,
+         ignore.ignoreBlankLines, ignore.ignoreCase);
+  }
+
   public Ignore()
   {
     this(false, false, false);
@@ -47,13 +54,25 @@ public class Ignore
     this.ignoreBlankLines = ignoreBlankLines;
     this.ignoreCase = ignoreCase;
 
+    init();
+  }
+
+  @Override
+  public void init(AbstractConfiguration configuration)
+  {
+    super.init(configuration);
+    init();
+  }
+
+  private void init()
+  {
     this.ignore = (ignoreWhitespaceAtBegin || ignoreWhitespaceInBetween
                    || ignoreWhitespaceAtEnd || ignoreEOL || ignoreBlankLines || ignoreCase);
     this.ignoreWhitespace = (ignoreWhitespaceAtBegin
                              || ignoreWhitespaceInBetween || ignoreWhitespaceAtEnd);
   }
 
-
+  @Override
   public String toString()
   {
     return "ignore: " + (!ignore ? "nothing" : "")
