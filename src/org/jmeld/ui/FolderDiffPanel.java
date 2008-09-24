@@ -124,8 +124,12 @@ public class FolderDiffPanel
     folderTreeTable.addMouseListener(getMouseListener());
     folderTreeTable.expandAll();
 
-    folderTreeTable.setHighlighters(new AlternateRowHighlighter(Color.white,
+    folderTreeTable.addHighlighter(new ColorHighlighter(
+        HighlightPredicate.EVEN, Color.white, Color.black));
+    folderTreeTable.addHighlighter(new ColorHighlighter(HighlightPredicate.ODD,
         Colors.getTableRowHighLighterColor(), Color.black));
+    //folderTreeTable.setHighlighters(new AlternateRowHighlighter(Color.white,
+    //Colors.getTableRowHighLighterColor(), Color.black));
 
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
