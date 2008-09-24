@@ -108,7 +108,7 @@ public class IgnoreSettingsForm extends javax.swing.JPanel {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private org.jmeld.ui.swing.DetailHeader detailHeader4;
   protected javax.swing.JCheckBox ignoreBlankLinesCheckBox;
-  private javax.swing.JCheckBox ignoreCaseCheckBox;
+  protected javax.swing.JCheckBox ignoreCaseCheckBox;
   protected javax.swing.JCheckBox ignoreEOLCheckBox;
   protected javax.swing.JCheckBox ignoreWhitespaceAtBeginCheckBox;
   protected javax.swing.JCheckBox ignoreWhitespaceAtEndCheckBox;
