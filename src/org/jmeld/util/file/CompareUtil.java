@@ -79,7 +79,14 @@ public class CompareUtil
         return false;
       }
 
-      if (!ignore.ignore)
+      // In practice most files that have the same length will
+      //   be equal. So eventhough some ignore feature is activated
+      //   we will examine if the files are equal. If they are
+      //   equal we won't have to execute the expensive 
+      //   contentEquals method below. This should speed up directory
+      //   comparisons quite a bit.
+      if (!ignore.ignore ||
+          fileLeft.length() == fileRight.length())
       {
         fLeft = new RandomAccessFile(fileLeft, "r");
         fRight = new RandomAccessFile(fileRight, "r");
@@ -92,14 +99,16 @@ public class CompareUtil
             (int) fcRight.size());
 
         equals = bbLeft.equals(bbRight);
+        if(!ignore.ignore || equals)
+        {
+          return equals;
+        }
       }
-      else
-      {
-        equals = contentEquals(
+
+      equals = contentEquals(
                 nodeLeft.getDocument().getReader(),
                 nodeRight.getDocument().getReader(),
                 ignore);
-      }
 
       return equals;
     }
