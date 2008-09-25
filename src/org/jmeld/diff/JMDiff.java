@@ -20,6 +20,7 @@ import org.jmeld.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
+import org.jmeld.util.file.*;
 
 import java.util.*;
 
@@ -329,24 +330,19 @@ public class JMDiff
 
           sb.append(charArray[i]);
         }
+
         s = sb.toString();
       }
 
-      if (s.length() == 0)
+      if(s.length() == 0)
       {
-        if (ignore.ignoreBlankLines)
-        {
-          if (previousBlankLine)
-          {
-            s = null;
-          }
-        }
-
-        previousBlankLine = true;
+        s = "\n";
       }
-      else
+
+      if (ignore.ignoreBlankLines &&
+           s.length() == 1 && CompareUtil.isEOL(s.charAt(0)))
       {
-        previousBlankLine = false;
+        s = null;
       }
 
       if (s == null)

@@ -230,8 +230,7 @@ public class CompareUtil
             leftChar = '\n';
           }
 
-          if ((ignore.ignoreBlankLines || ignore.ignoreWhitespace)
-            && previousEolLeft && eol)
+          if (ignore.ignoreBlankLines && previousEolLeft && eol)
           {
             continue;
           }
@@ -321,8 +320,7 @@ public class CompareUtil
             rightChar = '\n';
           }
 
-          if ((ignore.ignoreBlankLines || ignore.ignoreWhitespace)
-            && previousEolRight && eol)
+          if (ignore.ignoreBlankLines && previousEolRight && eol)
           {
             continue;
           }
@@ -434,7 +432,7 @@ public class CompareUtil
     return true;
   }
 
-  private static boolean isEOL(int character)
+  public static boolean isEOL(int character)
   {
     return character == '\n' || character == '\r';
   }
