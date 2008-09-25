@@ -33,6 +33,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
   private void initComponents() {
 
     buttonGroup1 = new javax.swing.ButtonGroup();
+    jPanel1 = new javax.swing.JPanel();
     defaultFontRadioButton = new javax.swing.JRadioButton();
     customFontRadioButton = new javax.swing.JRadioButton();
     jLabel3 = new javax.swing.JLabel();
@@ -48,23 +49,24 @@ public class EditorSettingsForm extends javax.swing.JPanel
     jLabel2 = new javax.swing.JLabel();
     jLabel4 = new javax.swing.JLabel();
     restoreOriginalColorsButton = new javax.swing.JButton();
-    gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
     antialiasCheckBox = new javax.swing.JCheckBox();
-    ignoreWhitespaceAtBeginCheckBox = new javax.swing.JCheckBox();
     rightsideReadonlyCheckBox = new javax.swing.JCheckBox();
-    detailHeader4 = new org.jmeld.ui.swing.DetailHeader();
-    ignoreEOLCheckBox = new javax.swing.JCheckBox();
-    ignoreBlankLinesCheckBox = new javax.swing.JCheckBox();
-    ignoreCaseCheckBox = new javax.swing.JCheckBox();
-    ignoreWhitespaceInBetweenCheckBox = new javax.swing.JCheckBox();
-    ignoreWhitespaceAtEndCheckBox = new javax.swing.JCheckBox();
     fontChooserButton = new javax.swing.JButton();
     leftsideReadonlyCheckBox = new javax.swing.JCheckBox();
-    detailHeader5 = new org.jmeld.ui.swing.DetailHeader();
-    defaultEncodingRadioButton = new javax.swing.JRadioButton();
-    detectEncodingRadioButton = new javax.swing.JRadioButton();
-    specificEncodingRadioButton = new javax.swing.JRadioButton();
+    jPanel2 = new javax.swing.JPanel();
+    detailHeader4 = new org.jmeld.ui.swing.DetailHeader();
+    ignoreWhitespaceAtBeginCheckBox = new javax.swing.JCheckBox();
     specificEncodingComboBox = new javax.swing.JComboBox();
+    specificEncodingRadioButton = new javax.swing.JRadioButton();
+    detectEncodingRadioButton = new javax.swing.JRadioButton();
+    defaultEncodingRadioButton = new javax.swing.JRadioButton();
+    detailHeader5 = new org.jmeld.ui.swing.DetailHeader();
+    ignoreCaseCheckBox = new javax.swing.JCheckBox();
+    ignoreBlankLinesCheckBox = new javax.swing.JCheckBox();
+    ignoreEOLCheckBox = new javax.swing.JCheckBox();
+    ignoreWhitespaceAtEndCheckBox = new javax.swing.JCheckBox();
+    ignoreWhitespaceInBetweenCheckBox = new javax.swing.JCheckBox();
+    gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
 
     buttonGroup1.add(defaultFontRadioButton);
     defaultFontRadioButton.setText("Use default font");
@@ -88,17 +90,14 @@ public class EditorSettingsForm extends javax.swing.JPanel
 
     detailHeader3.setText("Colors");
 
-    colorAddedButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     colorAddedButton.setFocusable(false);
     colorAddedButton.setPreferredSize(new java.awt.Dimension(20, 20));
 
     jLabel1.setText("Lines have been added");
 
-    colorDeletedButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     colorDeletedButton.setFocusable(false);
     colorDeletedButton.setPreferredSize(new java.awt.Dimension(20, 20));
 
-    colorChangedButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
     colorChangedButton.setFocusable(false);
     colorChangedButton.setPreferredSize(new java.awt.Dimension(20, 20));
 
@@ -107,10 +106,6 @@ public class EditorSettingsForm extends javax.swing.JPanel
     jLabel4.setText("Lines are changed");
 
     restoreOriginalColorsButton.setText("Restore original colors");
-
-    gradientLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
-    gradientLabel1.setText("Editor settings");
-    gradientLabel1.setFont(new java.awt.Font("Dialog", 1, 18));
 
     antialiasCheckBox.setText("antialias on");
     antialiasCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -121,10 +116,6 @@ public class EditorSettingsForm extends javax.swing.JPanel
       }
     });
 
-    ignoreWhitespaceAtBeginCheckBox.setText("Ignore whitespace at the begin of a line");
-    ignoreWhitespaceAtBeginCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    ignoreWhitespaceAtBeginCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
     rightsideReadonlyCheckBox.setText("Rightside readonly");
     rightsideReadonlyCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     rightsideReadonlyCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
@@ -133,27 +124,6 @@ public class EditorSettingsForm extends javax.swing.JPanel
         rightsideReadonlyCheckBoxActionPerformed(evt);
       }
     });
-
-    detailHeader4.setText("Ignore");
-
-    ignoreEOLCheckBox.setText("Ignore EOL (End of line markers)");
-    ignoreEOLCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    ignoreEOLCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
-    ignoreBlankLinesCheckBox.setText("Ignore blank lines");
-    ignoreBlankLinesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    ignoreBlankLinesCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
-    ignoreCaseCheckBox.setText("Ignore case");
-    ignoreCaseCheckBox.setBorder(null);
-
-    ignoreWhitespaceInBetweenCheckBox.setText("Ignore whitespace between begin and end of a line");
-    ignoreWhitespaceInBetweenCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    ignoreWhitespaceInBetweenCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-
-    ignoreWhitespaceAtEndCheckBox.setText("Ignore whitespace at the end of a line");
-    ignoreWhitespaceAtEndCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    ignoreWhitespaceAtEndCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
     fontChooserButton.setText("fontName");
 
@@ -166,116 +136,68 @@ public class EditorSettingsForm extends javax.swing.JPanel
       }
     });
 
-    detailHeader5.setText("File encoding");
-
-    defaultEncodingRadioButton.setText("Default encoding of this computer");
-
-    detectEncodingRadioButton.setText("Try to detect encoding");
-
-    specificEncodingRadioButton.setText("Use encoding");
-
-    specificEncodingComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-    org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
-    this.setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-      .add(gradientLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
-      .add(layout.createSequentialGroup()
+    org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
+    jPanel1.setLayout(jPanel1Layout);
+    jPanel1Layout.setHorizontalGroup(
+      jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+      .add(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(detailHeader1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-          .add(layout.createSequentialGroup()
+          .add(jPanel1Layout.createSequentialGroup()
             .add(12, 12, 12)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(layout.createSequentialGroup()
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+              .add(jPanel1Layout.createSequentialGroup()
                 .add(customFontRadioButton)
                 .add(6, 6, 6)
                 .add(fontChooserButton))
-              .add(defaultFontRadioButton))))
-        .addContainerGap(261, Short.MAX_VALUE))
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(406, Short.MAX_VALUE))
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(detailHeader3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-          .add(layout.createSequentialGroup()
+              .add(defaultFontRadioButton)))
+          .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(jPanel1Layout.createSequentialGroup()
             .add(12, 12, 12)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(layout.createSequentialGroup()
-                .add(colorDeletedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jLabel2))
-              .add(layout.createSequentialGroup()
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+              .add(jPanel1Layout.createSequentialGroup()
                 .add(colorAddedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel1))
-              .add(layout.createSequentialGroup()
+              .add(restoreOriginalColorsButton)
+              .add(jPanel1Layout.createSequentialGroup()
                 .add(colorChangedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jLabel4))
-              .add(restoreOriginalColorsButton))))
-        .addContainerGap(300, Short.MAX_VALUE))
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(detailHeader4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-          .add(layout.createSequentialGroup()
-            .add(12, 12, 12)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(ignoreEOLCheckBox)
-              .add(ignoreWhitespaceAtBeginCheckBox)
-              .add(ignoreBlankLinesCheckBox)
-              .add(ignoreCaseCheckBox)
-              .add(ignoreWhitespaceInBetweenCheckBox)
-              .add(ignoreWhitespaceAtEndCheckBox))))
-        .addContainerGap(146, Short.MAX_VALUE))
-      .add(layout.createSequentialGroup()
-        .add(24, 24, 24)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(leftsideReadonlyCheckBox)
-          .add(antialiasCheckBox)
-          .add(rightsideReadonlyCheckBox)
-          .add(showLineNumbersCheckBox)
-          .add(layout.createSequentialGroup()
-            .add(jLabel3)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-        .addContainerGap(345, Short.MAX_VALUE))
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-          .add(layout.createSequentialGroup()
-            .add(12, 12, 12)
-            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-              .add(detectEncodingRadioButton)
-              .add(layout.createSequentialGroup()
-                .add(specificEncodingRadioButton)
+              .add(jPanel1Layout.createSequentialGroup()
+                .add(colorDeletedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(specificEncodingComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-              .add(defaultEncodingRadioButton))))
-        .addContainerGap(242, Short.MAX_VALUE))
+                .add(jLabel2))))
+          .add(jPanel1Layout.createSequentialGroup()
+            .add(24, 24, 24)
+            .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+              .add(leftsideReadonlyCheckBox)
+              .add(antialiasCheckBox)
+              .add(rightsideReadonlyCheckBox)
+              .add(showLineNumbersCheckBox)
+              .add(jPanel1Layout.createSequentialGroup()
+                .add(jLabel3)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+          .add(detailHeader3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-      .add(layout.createSequentialGroup()
-        .add(gradientLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+    jPanel1Layout.setVerticalGroup(
+      jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+      .add(jPanel1Layout.createSequentialGroup()
+        .addContainerGap()
         .add(detailHeader1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .add(6, 6, 6)
         .add(defaultFontRadioButton)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(customFontRadioButton)
           .add(fontChooserButton))
         .add(15, 15, 15)
         .add(detailHeader2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(jLabel3)
           .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -286,23 +208,93 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .add(leftsideReadonlyCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(antialiasCheckBox)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(18, 18, 18)
         .add(detailHeader3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(colorAddedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(jLabel1))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
           .add(colorDeletedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
           .add(jLabel2))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(colorChangedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-          .add(jLabel4))
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(jLabel4)
+          .add(colorChangedButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(restoreOriginalColorsButton)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    detailHeader4.setText("Ignore");
+
+    ignoreWhitespaceAtBeginCheckBox.setText("Ignore whitespace at the begin of a line");
+    ignoreWhitespaceAtBeginCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreWhitespaceAtBeginCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    specificEncodingComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+    specificEncodingRadioButton.setText("Use encoding");
+
+    detectEncodingRadioButton.setText("Try to detect encoding");
+
+    defaultEncodingRadioButton.setText("Default encoding of this computer");
+
+    detailHeader5.setText("File encoding");
+
+    ignoreCaseCheckBox.setText("Ignore case");
+    ignoreCaseCheckBox.setBorder(null);
+
+    ignoreBlankLinesCheckBox.setText("Ignore blank lines");
+    ignoreBlankLinesCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreBlankLinesCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    ignoreEOLCheckBox.setText("Ignore EOL (End of line markers)");
+    ignoreEOLCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreEOLCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    ignoreWhitespaceAtEndCheckBox.setText("Ignore whitespace at the end of a line");
+    ignoreWhitespaceAtEndCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreWhitespaceAtEndCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    ignoreWhitespaceInBetweenCheckBox.setText("Ignore whitespace between begin and end of a line");
+    ignoreWhitespaceInBetweenCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    ignoreWhitespaceInBetweenCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
+    jPanel2.setLayout(jPanel2Layout);
+    jPanel2Layout.setHorizontalGroup(
+      jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+      .add(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
+        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(jPanel2Layout.createSequentialGroup()
+            .add(12, 12, 12)
+            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+              .add(detectEncodingRadioButton)
+              .add(jPanel2Layout.createSequentialGroup()
+                .add(specificEncodingRadioButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(specificEncodingComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+              .add(defaultEncodingRadioButton)))
+          .add(detailHeader4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(jPanel2Layout.createSequentialGroup()
+            .add(12, 12, 12)
+            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+              .add(ignoreEOLCheckBox)
+              .add(ignoreWhitespaceAtBeginCheckBox)
+              .add(ignoreBlankLinesCheckBox)
+              .add(ignoreCaseCheckBox)
+              .add(ignoreWhitespaceAtEndCheckBox)
+              .add(ignoreWhitespaceInBetweenCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        .addContainerGap())
+    );
+    jPanel2Layout.setVerticalGroup(
+      jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+      .add(jPanel2Layout.createSequentialGroup()
+        .addContainerGap()
         .add(detailHeader4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(ignoreWhitespaceAtBeginCheckBox)
@@ -316,17 +308,44 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .add(ignoreBlankLinesCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(ignoreCaseCheckBox)
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(18, 18, 18)
         .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(defaultEncodingRadioButton)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(detectEncodingRadioButton)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(specificEncodingRadioButton)
           .add(specificEncodingComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        .add(29, 29, 29))
+        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+
+    gradientLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
+    gradientLabel1.setText("Editor settings");
+    gradientLabel1.setFont(new java.awt.Font("Dialog", 1, 18));
+
+    org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+    this.setLayout(layout);
+    layout.setHorizontalGroup(
+      layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+      .add(layout.createSequentialGroup()
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(layout.createSequentialGroup()
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+          .add(gradientLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 576, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+    layout.setVerticalGroup(
+      layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+      .add(layout.createSequentialGroup()
+        .add(gradientLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+          .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
     );
   }// </editor-fold>//GEN-END:initComponents
 
@@ -370,6 +389,8 @@ private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent 
   protected javax.swing.JLabel jLabel2;
   protected javax.swing.JLabel jLabel3;
   protected javax.swing.JLabel jLabel4;
+  protected javax.swing.JPanel jPanel1;
+  protected javax.swing.JPanel jPanel2;
   protected javax.swing.JCheckBox leftsideReadonlyCheckBox;
   protected javax.swing.JButton restoreOriginalColorsButton;
   protected javax.swing.JCheckBox rightsideReadonlyCheckBox;
