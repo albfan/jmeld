@@ -118,7 +118,7 @@ public class JMeldPanel
     //   1. ../branches/branch1/src/lala.java with ./src/lala.java  
     //   2. ../branches/branch1/src/haha.java with ./src/haha.java  
 
-    if(fileNameList.size() > 1)
+    if (fileNameList.size() > 1)
     {
       for (int i = 1; i < fileNameList.size(); i++)
       {
@@ -161,11 +161,10 @@ public class JMeldPanel
     }
     else
     {
-      if(!StringUtil.isEmpty(leftName))
+      if (!StringUtil.isEmpty(leftName))
       {
         file = new File(leftName);
-        if(file.exists() &&
-           VersionControlUtil.isVersionControlled(file))
+        if (file.exists() && VersionControlUtil.isVersionControlled(file))
         {
           openVersionControlComparison(file);
         }
@@ -377,20 +376,21 @@ public class JMeldPanel
     dialog = new NewPanelDialog(this);
     dialog.show();
 
-    if (ObjectUtil.equals(dialog.getValue(), NewPanelDialog.FILE_COMPARISON))
+    if (dialog.getFunction() == NewPanelDialog.Function.FILE_COMPARISON)
     {
       openFileComparison(new File(dialog.getLeftFileName()), new File(dialog
           .getRightFileName()), false);
     }
-    else if (ObjectUtil.equals(dialog.getValue(), NewPanelDialog.DIRECTORY_COMPARISON))
+    else if (dialog.getFunction() == NewPanelDialog.Function.DIRECTORY_COMPARISON)
     {
       openDirectoryComparison(new File(dialog.getLeftDirectoryName()),
                               new File(dialog.getRightDirectoryName()), dialog
                                   .getFilter());
     }
-    else if (ObjectUtil.equals(dialog.getValue(), NewPanelDialog.VERSION_CONTROL))
+    else if (dialog.getFunction() == NewPanelDialog.Function.VERSION_CONTROL)
     {
-      openVersionControlComparison(new File(dialog.getVersionControlDirectoryName()));
+      openVersionControlComparison(new File(dialog
+          .getVersionControlDirectoryName()));
     }
   }
 
@@ -1062,8 +1062,7 @@ public class JMeldPanel
 
       if (!directory.isDirectory())
       {
-        return "directoryName(" + directory.getName()
-               + ") is not a directory";
+        return "directoryName(" + directory.getName() + ") is not a directory";
       }
 
       contentId = "VersionControlDiffPanel:" + directory.getName();
