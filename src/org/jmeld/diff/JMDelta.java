@@ -23,15 +23,18 @@ import java.util.*;
 public class JMDelta
 {
   // Class variables:
-  private static char    ADD = 'A';
-  private static char    DELETE = 'D';
-  private static char    CHANGE = 'C';
+  enum Type
+  {
+    ADD,
+    DELETE,
+    CHANGE;
+  }
   private static boolean debug = false;
 
   // Instance variables:
   private JMChunk    original;
   private JMChunk    revised;
-  private char       type;
+  private Type       type;
   private JMRevision revision;
   private JMRevision changeRevision;
 
@@ -62,17 +65,17 @@ public class JMDelta
 
   public boolean isAdd()
   {
-    return type == ADD;
+    return type == Type.ADD;
   }
 
   public boolean isDelete()
   {
-    return type == DELETE;
+    return type == Type.DELETE;
   }
 
   public boolean isChange()
   {
-    return type == CHANGE;
+    return type == Type.CHANGE;
   }
 
   public void invalidateChangeRevision()
@@ -194,15 +197,15 @@ public class JMDelta
   {
     if (original.getSize() > 0 && revised.getSize() == 0)
     {
-      type = DELETE;
+      type = Type.DELETE;
     }
     else if (original.getSize() == 0 && revised.getSize() > 0)
     {
-      type = ADD;
+      type = Type.ADD;
     }
     else
     {
-      type = CHANGE;
+      type = Type.CHANGE;
     }
   }
 
