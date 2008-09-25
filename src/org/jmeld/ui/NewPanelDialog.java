@@ -33,37 +33,41 @@ import java.util.List;
 
 public class NewPanelDialog
 {
-// Class variables:
-// File comparison:
-  public static String  FILE_COMPARISON = "FILE_COMPARISON";
-  private static String RIGHT_FILENAME = "RIGHT_FILENAME";
-  private static String LEFT_FILENAME = "LEFT_FILENAME";
+  // Class variables:
+  // File comparison:
+  public enum Function
+  {
+    FILE_COMPARISON,
+    DIRECTORY_COMPARISON,
+    VERSION_CONTROL;
+  }
 
-// Directory comparison:
-  public static String  DIRECTORY_COMPARISON = "DIRECTORY_COMPARISON";
-  private static String RIGHT_DIRECTORY = "RIGHT_DIRECTORY";
-  private static String LEFT_DIRECTORY = "LEFT_DIRECTORY";
+  private static String RIGHT_FILENAME            = "RIGHT_FILENAME";
+  private static String LEFT_FILENAME             = "LEFT_FILENAME";
 
-// Version control :
-  public static String  VERSION_CONTROL = "VERSION_CONTROL";
+  // Directory comparison:
+  private static String RIGHT_DIRECTORY           = "RIGHT_DIRECTORY";
+  private static String LEFT_DIRECTORY            = "LEFT_DIRECTORY";
+
+  // Version control :
   private static String VERSION_CONTROL_DIRECTORY = "VERSION_CONTROL_DIRECTORY";
 
-// Instance variables:
-  private JMeldPanel  meldPanel;
-  private JTabbedPane tabbedPane;
-  private String      value;
-  private String      leftFileName;
-  private String      rightFileName;
-  private JComboBox   leftFileComboBox;
-  private JComboBox   rightFileComboBox;
-  private String      leftDirectoryName;
-  private String      rightDirectoryName;
-  private JComboBox   leftDirectoryComboBox;
-  private JComboBox   rightDirectoryComboBox;
-  private String      versionControlDirectoryName;
-  private JComboBox   versionControlDirectoryComboBox;
-  private JComboBox   filterComboBox;
-  private JDialog     dialog;
+  // Instance variables:
+  private JMeldPanel    meldPanel;
+  private JTabbedPane   tabbedPane;
+  private Function      function;
+  private String        leftFileName;
+  private String        rightFileName;
+  private JComboBox     leftFileComboBox;
+  private JComboBox     rightFileComboBox;
+  private String        leftDirectoryName;
+  private String        rightDirectoryName;
+  private JComboBox     leftDirectoryComboBox;
+  private JComboBox     rightDirectoryComboBox;
+  private String        versionControlDirectoryName;
+  private JComboBox     versionControlDirectoryComboBox;
+  private JComboBox     filterComboBox;
+  private JDialog       dialog;
 
   public NewPanelDialog(JMeldPanel meldPanel)
   {
@@ -83,23 +87,21 @@ public class NewPanelDialog
     {
       dialog.show();
 
-      if (ObjectUtil.equals(
-          pane.getValue(),
-          JOptionPane.OK_OPTION))
+      if (ObjectUtil.equals(pane.getValue(), JOptionPane.OK_OPTION))
       {
         switch (tabbedPane.getSelectedIndex())
         {
 
           case 0:
-            setValue(FILE_COMPARISON);
+            setFunction(Function.FILE_COMPARISON);
             break;
 
           case 1:
-            setValue(DIRECTORY_COMPARISON);
+            setFunction(Function.DIRECTORY_COMPARISON);
             break;
 
           case 2:
-            setValue(VERSION_CONTROL);
+            setFunction(Function.VERSION_CONTROL);
             break;
         }
       }
@@ -111,14 +113,14 @@ public class NewPanelDialog
     }
   }
 
-  private void setValue(String value)
+  private void setFunction(Function function)
   {
-    this.value = value;
+    this.function = function;
   }
 
-  public String getValue()
+  public Function getFunction()
   {
-    return value;
+    return function;
   }
 
   public String getLeftFileName()
@@ -161,15 +163,9 @@ public class NewPanelDialog
     JPanel panel;
 
     tabbedPane = new JTabbedPane();
-    tabbedPane.add(
-      "File Comparison",
-      getFileComparisonPanel());
-    tabbedPane.add(
-      "Directory Comparison",
-      getDirectoryComparisonPanel());
-    tabbedPane.add(
-      "Version control",
-      getVersionControlPanel());
+    tabbedPane.add("File Comparison", getFileComparisonPanel());
+    tabbedPane.add("Directory Comparison", getDirectoryComparisonPanel());
+    tabbedPane.add("Version control", getVersionControlPanel());
 
     new TabbedPanePreference("NewPanelTabbedPane", tabbedPane);
 
@@ -181,13 +177,13 @@ public class NewPanelDialog
 
   private JComponent getFileComparisonPanel()
   {
-    JPanel          panel;
-    String          columns;
-    String          rows;
-    FormLayout      layout;
+    JPanel panel;
+    String columns;
+    String rows;
+    FormLayout layout;
     CellConstraints cc;
-    JLabel          label;
-    JButton         button;
+    JLabel label;
+    JButton button;
 
     columns = "10px, right:pref, 10px, max(150dlu;pref):grow, 5px, pref, 10px";
     rows = "10px, fill:pref, 5px, fill:pref, 5px, fill:pref, 10px";
@@ -205,15 +201,9 @@ public class NewPanelDialog
 
     button.setActionCommand(LEFT_FILENAME);
     button.addActionListener(getFileBrowseAction());
-    panel.add(
-      label,
-      cc.xy(2, 2));
-    panel.add(
-      leftFileComboBox,
-      cc.xy(4, 2));
-    panel.add(
-      button,
-      cc.xy(6, 2));
+    panel.add(label, cc.xy(2, 2));
+    panel.add(leftFileComboBox, cc.xy(4, 2));
+    panel.add(button, cc.xy(6, 2));
 
     label = new JLabel("Right");
     button = new JButton("Browse...");
@@ -223,15 +213,9 @@ public class NewPanelDialog
     rightFileComboBox.setEditable(false);
     rightFileComboBox.addActionListener(getFileSelectAction());
     new ComboBoxPreference("RightFile", rightFileComboBox);
-    panel.add(
-      label,
-      cc.xy(2, 4));
-    panel.add(
-      rightFileComboBox,
-      cc.xy(4, 4));
-    panel.add(
-      button,
-      cc.xy(6, 4));
+    panel.add(label, cc.xy(2, 4));
+    panel.add(rightFileComboBox, cc.xy(4, 4));
+    panel.add(button, cc.xy(6, 4));
 
     return panel;
   }
@@ -239,91 +223,92 @@ public class NewPanelDialog
   public ActionListener getFileBrowseAction()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
+        FileChooserPreference pref;
+        JFileChooser chooser;
+        int result;
+        File file;
+        String fileName;
+        JComboBox comboBox;
+
+        // Don't allow accidentaly creation or rename of files.
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+        chooser = new JFileChooser();
+        // Reset the readOnly property as it is systemwide.
+        UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+        chooser.setApproveButtonText("Choose");
+        chooser.setDialogTitle("Choose file");
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        pref = new FileChooserPreference("Browse-" + ae.getActionCommand(),
+            chooser);
+        result = chooser.showOpenDialog(meldPanel);
+
+        if (result == JFileChooser.APPROVE_OPTION)
         {
-          FileChooserPreference pref;
-          JFileChooser          chooser;
-          int                   result;
-          File                  file;
-          String                fileName;
-          JComboBox             comboBox;
+          pref.save();
 
-          // Don't allow accidentaly creation or rename of files.
-          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-          chooser = new JFileChooser();
-          // Reset the readOnly property as it is systemwide.
-          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
-          chooser.setApproveButtonText("Choose");
-          chooser.setDialogTitle("Choose file");
-          chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-          pref = new FileChooserPreference("Browse-" + ae.getActionCommand(), chooser);
-          result = chooser.showOpenDialog(meldPanel);
-
-          if (result == JFileChooser.APPROVE_OPTION)
+          try
           {
-            pref.save();
+            fileName = chooser.getSelectedFile().getCanonicalPath();
 
-            try
+            comboBox = null;
+            if (ae.getActionCommand().equals(LEFT_FILENAME))
             {
-              fileName = chooser.getSelectedFile().getCanonicalPath();
-
-              comboBox = null;
-              if (ae.getActionCommand().equals(LEFT_FILENAME))
-              {
-                comboBox = leftFileComboBox;
-              }
-              else if (ae.getActionCommand().equals(RIGHT_FILENAME))
-              {
-                comboBox = rightFileComboBox;
-              }
-
-              if (comboBox != null)
-              {
-                comboBox.insertItemAt(fileName, 0);
-                comboBox.setSelectedIndex(0);
-                dialog.pack();
-              }
+              comboBox = leftFileComboBox;
             }
-            catch (Exception ex)
+            else if (ae.getActionCommand().equals(RIGHT_FILENAME))
             {
-              ex.printStackTrace();
+              comboBox = rightFileComboBox;
+            }
+
+            if (comboBox != null)
+            {
+              comboBox.insertItemAt(fileName, 0);
+              comboBox.setSelectedIndex(0);
+              dialog.pack();
             }
           }
+          catch (Exception ex)
+          {
+            ex.printStackTrace();
+          }
         }
-      };
+      }
+    };
   }
 
   public ActionListener getFileSelectAction()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
-        {
-          Object source;
+        Object source;
 
-          source = ae.getSource();
-          if (source == leftFileComboBox)
-          {
-            leftFileName = (String) leftFileComboBox.getSelectedItem();
-          }
-          else if (source == rightFileComboBox)
-          {
-            rightFileName = (String) rightFileComboBox.getSelectedItem();
-          }
+        source = ae.getSource();
+        if (source == leftFileComboBox)
+        {
+          leftFileName = (String) leftFileComboBox.getSelectedItem();
         }
-      };
+        else if (source == rightFileComboBox)
+        {
+          rightFileName = (String) rightFileComboBox.getSelectedItem();
+        }
+      }
+    };
   }
 
   private JComponent getDirectoryComparisonPanel()
   {
-    JPanel          panel;
-    String          columns;
-    String          rows;
-    FormLayout      layout;
+    JPanel panel;
+    String columns;
+    String rows;
+    FormLayout layout;
     CellConstraints cc;
-    JLabel          label;
-    JButton         button;
+    JLabel label;
+    JButton button;
 
     columns = "10px, right:pref, 10px, max(150dlu;pref):grow, 5px, pref, 10px";
     rows = "10px, fill:pref, 5px, fill:pref, 5px, fill:pref, 5px, fill:pref, 10px";
@@ -341,15 +326,9 @@ public class NewPanelDialog
 
     button.setActionCommand(LEFT_DIRECTORY);
     button.addActionListener(getDirectoryBrowseAction());
-    panel.add(
-      label,
-      cc.xy(2, 2));
-    panel.add(
-      leftDirectoryComboBox,
-      cc.xy(4, 2));
-    panel.add(
-      button,
-      cc.xy(6, 2));
+    panel.add(label, cc.xy(2, 2));
+    panel.add(leftDirectoryComboBox, cc.xy(4, 2));
+    panel.add(button, cc.xy(6, 2));
 
     label = new JLabel("Right");
     button = new JButton("Browse...");
@@ -359,24 +338,14 @@ public class NewPanelDialog
     rightDirectoryComboBox.setEditable(false);
     rightDirectoryComboBox.addActionListener(getDirectorySelectAction());
     new ComboBoxPreference("RightDirectory", rightDirectoryComboBox);
-    panel.add(
-      label,
-      cc.xy(2, 4));
-    panel.add(
-      rightDirectoryComboBox,
-      cc.xy(4, 4));
-    panel.add(
-      button,
-      cc.xy(6, 4));
+    panel.add(label, cc.xy(2, 4));
+    panel.add(rightDirectoryComboBox, cc.xy(4, 4));
+    panel.add(button, cc.xy(6, 4));
 
     label = new JLabel("Filter");
     filterComboBox = new JComboBox(getFilters());
-    panel.add(
-      label,
-      cc.xy(2, 6));
-    panel.add(
-      filterComboBox,
-      cc.xy(4, 6));
+    panel.add(label, cc.xy(2, 6));
+    panel.add(filterComboBox, cc.xy(4, 6));
     new ComboBoxSelectionPreference("Filter", filterComboBox);
 
     return panel;
@@ -385,92 +354,93 @@ public class NewPanelDialog
   public ActionListener getDirectoryBrowseAction()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
+        DirectoryChooserPreference pref;
+        JFileChooser chooser;
+        int result;
+        File file;
+        String fileName;
+        JComboBox comboBox;
+
+        // Don't allow accidentaly creation or rename of files.
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+        chooser = new JFileChooser();
+        // Reset the readOnly property as it is systemwide.
+        UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+        chooser.setApproveButtonText("Choose");
+        chooser.setDialogTitle("Choose directory");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        pref = new DirectoryChooserPreference(
+            "Browse-" + ae.getActionCommand(), chooser);
+        result = chooser.showOpenDialog(meldPanel);
+
+        if (result == JFileChooser.APPROVE_OPTION)
         {
-          DirectoryChooserPreference pref;
-          JFileChooser               chooser;
-          int                        result;
-          File                       file;
-          String                     fileName;
-          JComboBox                  comboBox;
+          pref.save();
 
-          // Don't allow accidentaly creation or rename of files.
-          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-          chooser = new JFileChooser();
-          // Reset the readOnly property as it is systemwide.
-          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
-          chooser.setApproveButtonText("Choose");
-          chooser.setDialogTitle("Choose directory");
-          chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-          pref = new DirectoryChooserPreference("Browse-" + ae.getActionCommand(), chooser);
-          result = chooser.showOpenDialog(meldPanel);
-
-          if (result == JFileChooser.APPROVE_OPTION)
+          try
           {
-            pref.save();
+            fileName = chooser.getSelectedFile().getCanonicalPath();
 
-            try
+            comboBox = null;
+            if (ae.getActionCommand().equals(LEFT_DIRECTORY))
             {
-              fileName = chooser.getSelectedFile().getCanonicalPath();
-
-              comboBox = null;
-              if (ae.getActionCommand().equals(LEFT_DIRECTORY))
-              {
-                comboBox = leftDirectoryComboBox;
-              }
-              else if (ae.getActionCommand().equals(RIGHT_DIRECTORY))
-              {
-                comboBox = rightDirectoryComboBox;
-              }
-
-              if (comboBox != null)
-              {
-                comboBox.insertItemAt(fileName, 0);
-                comboBox.setSelectedIndex(0);
-                dialog.pack();
-              }
+              comboBox = leftDirectoryComboBox;
             }
-            catch (Exception ex)
+            else if (ae.getActionCommand().equals(RIGHT_DIRECTORY))
             {
-              ex.printStackTrace();
+              comboBox = rightDirectoryComboBox;
+            }
+
+            if (comboBox != null)
+            {
+              comboBox.insertItemAt(fileName, 0);
+              comboBox.setSelectedIndex(0);
+              dialog.pack();
             }
           }
+          catch (Exception ex)
+          {
+            ex.printStackTrace();
+          }
         }
-      };
+      }
+    };
   }
 
   public ActionListener getDirectorySelectAction()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
-        {
-          Object source;
+        Object source;
 
-          source = ae.getSource();
-          if (source == leftDirectoryComboBox)
-          {
-            leftDirectoryName = (String) leftDirectoryComboBox.getSelectedItem();
-          }
-          else if (source == rightDirectoryComboBox)
-          {
-            rightDirectoryName = (String) rightDirectoryComboBox
-              .getSelectedItem();
-          }
+        source = ae.getSource();
+        if (source == leftDirectoryComboBox)
+        {
+          leftDirectoryName = (String) leftDirectoryComboBox.getSelectedItem();
         }
-      };
+        else if (source == rightDirectoryComboBox)
+        {
+          rightDirectoryName = (String) rightDirectoryComboBox
+              .getSelectedItem();
+        }
+      }
+    };
   }
 
   private JComponent getVersionControlPanel()
   {
-    JPanel          panel;
-    String          columns;
-    String          rows;
-    FormLayout      layout;
+    JPanel panel;
+    String columns;
+    String rows;
+    FormLayout layout;
     CellConstraints cc;
-    JLabel          label;
-    JButton         button;
+    JLabel label;
+    JButton button;
 
     columns = "10px, right:pref, 10px, max(150dlu;pref):grow, 5px, pref, 10px";
     rows = "10px, fill:pref, 5px, fill:pref, 5px, fill:pref, 5px, fill:pref, 10px";
@@ -483,21 +453,16 @@ public class NewPanelDialog
     button = new JButton("Browse...");
     versionControlDirectoryComboBox = new JComboBox();
     versionControlDirectoryComboBox.setEditable(false);
-    versionControlDirectoryComboBox.addActionListener(
-      getVersionControlDirectorySelectAction());
-    new ComboBoxPreference("VersionControlDirectory", versionControlDirectoryComboBox);
+    versionControlDirectoryComboBox
+        .addActionListener(getVersionControlDirectorySelectAction());
+    new ComboBoxPreference("VersionControlDirectory",
+        versionControlDirectoryComboBox);
 
     button.setActionCommand(VERSION_CONTROL_DIRECTORY);
     button.addActionListener(getVersionControlDirectoryBrowseAction());
-    panel.add(
-      label,
-      cc.xy(2, 2));
-    panel.add(
-      versionControlDirectoryComboBox,
-      cc.xy(4, 2));
-    panel.add(
-      button,
-      cc.xy(6, 2));
+    panel.add(label, cc.xy(2, 2));
+    panel.add(versionControlDirectoryComboBox, cc.xy(4, 2));
+    panel.add(button, cc.xy(6, 2));
 
     return panel;
   }
@@ -505,59 +470,59 @@ public class NewPanelDialog
   public ActionListener getVersionControlDirectoryBrowseAction()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
+        DirectoryChooserPreference pref;
+        JFileChooser chooser;
+        int result;
+        File file;
+        String fileName;
+        JComboBox comboBox;
+
+        // Don't allow accidentaly creation or rename of files.
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+        chooser = new JFileChooser();
+        // Reset the readOnly property as it is systemwide.
+        UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+        chooser.setApproveButtonText("Choose");
+        chooser.setDialogTitle("Choose directory");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        pref = new DirectoryChooserPreference("VersionControlBrowse", chooser);
+        result = chooser.showOpenDialog(meldPanel);
+
+        if (result == JFileChooser.APPROVE_OPTION)
         {
-          DirectoryChooserPreference pref;
-          JFileChooser               chooser;
-          int                        result;
-          File                       file;
-          String                     fileName;
-          JComboBox                  comboBox;
+          pref.save();
 
-          // Don't allow accidentaly creation or rename of files.
-          UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-          chooser = new JFileChooser();
-          // Reset the readOnly property as it is systemwide.
-          UIManager.put("FileChooser.readOnly", Boolean.FALSE);
-          chooser.setApproveButtonText("Choose");
-          chooser.setDialogTitle("Choose directory");
-          chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-          pref = new DirectoryChooserPreference("VersionControlBrowse", chooser);
-          result = chooser.showOpenDialog(meldPanel);
-
-          if (result == JFileChooser.APPROVE_OPTION)
+          try
           {
-            pref.save();
+            fileName = chooser.getSelectedFile().getCanonicalPath();
 
-            try
-            {
-              fileName = chooser.getSelectedFile().getCanonicalPath();
-
-              comboBox = versionControlDirectoryComboBox;
-              comboBox.insertItemAt(fileName, 0);
-              comboBox.setSelectedIndex(0);
-              dialog.pack();
-            }
-            catch (Exception ex)
-            {
-              ex.printStackTrace();
-            }
+            comboBox = versionControlDirectoryComboBox;
+            comboBox.insertItemAt(fileName, 0);
+            comboBox.setSelectedIndex(0);
+            dialog.pack();
+          }
+          catch (Exception ex)
+          {
+            ex.printStackTrace();
           }
         }
-      };
+      }
+    };
   }
 
   public ActionListener getVersionControlDirectorySelectAction()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
-        {
-          versionControlDirectoryName = (String) versionControlDirectoryComboBox
+        versionControlDirectoryName = (String) versionControlDirectoryComboBox
             .getSelectedItem();
-        }
-      };
+      }
+    };
   }
 
   private Object[] getFilters()
