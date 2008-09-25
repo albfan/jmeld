@@ -377,18 +377,18 @@ public class JMeldPanel
     dialog = new NewPanelDialog(this);
     dialog.show();
 
-    if (dialog.getValue().equals(NewPanelDialog.FILE_COMPARISON))
+    if (ObjectUtil.equals(dialog.getValue(), NewPanelDialog.FILE_COMPARISON))
     {
       openFileComparison(new File(dialog.getLeftFileName()), new File(dialog
           .getRightFileName()), false);
     }
-    else if (dialog.getValue().equals(NewPanelDialog.DIRECTORY_COMPARISON))
+    else if (ObjectUtil.equals(dialog.getValue(), NewPanelDialog.DIRECTORY_COMPARISON))
     {
       openDirectoryComparison(new File(dialog.getLeftDirectoryName()),
                               new File(dialog.getRightDirectoryName()), dialog
                                   .getFilter());
     }
-    else if (dialog.getValue().equals(NewPanelDialog.VERSION_CONTROL))
+    else if (ObjectUtil.equals(dialog.getValue(), NewPanelDialog.VERSION_CONTROL))
     {
       openVersionControlComparison(new File(dialog.getVersionControlDirectoryName()));
     }
