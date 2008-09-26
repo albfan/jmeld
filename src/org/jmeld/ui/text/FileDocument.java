@@ -80,9 +80,12 @@ public class FileDocument
   protected Writer getWriter()
     throws JMeldException
   {
+    BufferedOutputStream bos;
+
     try
     {
-      return new FileWriter(file);
+      bos = new BufferedOutputStream(new FileOutputStream(file));
+      return new BufferedWriter(new OutputStreamWriter(bos, charset));
     }
     catch (IOException ex)
     {
