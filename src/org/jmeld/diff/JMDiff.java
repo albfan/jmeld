@@ -23,9 +23,16 @@ import org.jmeld.util.*;
 import org.jmeld.util.file.*;
 
 import java.util.*;
+import java.nio.*;
 
 public class JMDiff
 {
+  // Class variables:
+  // Allocate a charBuffer once for performance. The charbuffer is used to
+  //   store a 'line' without it's ignored characters. 
+  static final private CharBuffer inputLine = CharBuffer.allocate(10000);
+  static final private CharBuffer outputLine = CharBuffer.allocate(10000);
+  // Instance variables:
   private List<JMDiffAlgorithmIF> algorithms;
 
   public JMDiff()
@@ -62,10 +69,9 @@ public class JMDiff
     //algorithms.add(new HuntDiff());
   }
 
-  public JMRevision diff(
-    List<String> a,
-    List<String> b)
-    throws JMeldException
+  public JMRevision diff(List<String> a,
+                         List<String> b)
+      throws JMeldException
   {
     if (a == null)
     {
@@ -75,44 +81,42 @@ public class JMDiff
     {
       b = Collections.emptyList();
     }
-    return diff(
-      a.toArray(),
-      b.toArray());
+    return diff(a.toArray(), b.toArray());
   }
 
-  public JMRevision diff(
-    Object[] a,
-    Object[] b)
-    throws JMeldException
+  public JMRevision diff(Object[] a,
+                         Object[] b)
+      throws JMeldException
   {
     JMRevision revision;
-    StopWatch  sp;
-    Ignore     ignore;
-    boolean    filtered;
-    Object[]   org;
-    Object[]   rev;
-    long       filteredTime;
+    StopWatch sp;
+    Ignore ignore;
+    boolean filtered;
+    Object[] org;
+    Object[] rev;
+    long filteredTime;
 
     org = a;
     rev = b;
 
     if (org == null)
     {
-      org = new Object[] {  };
+      org = new Object[] {};
     }
     if (rev == null)
     {
-      rev = new Object[] {  };
+      rev = new Object[] {};
     }
 
     if (org instanceof AbstractBufferDocument.Line[]
-      && rev instanceof AbstractBufferDocument.Line[])
+        && rev instanceof AbstractBufferDocument.Line[])
     {
       filtered = true;
     }
     else
     {
       filtered = false;
+      //filtered = true;
     }
 
     sp = new StopWatch();
@@ -143,8 +147,8 @@ public class JMDiff
         if (a.length > 1000)
         {
           System.out.println("diff took " + sp.getElapsedTime()
-            + " msec. [filter=" + filteredTime + " msec]["
-            + algorithm.getClass() + "]");
+                             + " msec. [filter=" + filteredTime + " msec]["
+                             + algorithm.getClass() + "]");
         }
 
         return revision;
@@ -154,7 +158,7 @@ public class JMDiff
         if (ex.getCause() instanceof MaxTimeExceededException)
         {
           System.out.println("Time exceeded for " + algorithm.getClass()
-            + ": try next algorithm");
+                             + ": try next algorithm");
         }
         else
         {
@@ -166,17 +170,16 @@ public class JMDiff
     return null;
   }
 
-  private void adjustRevision(
-    JMRevision revision,
-    Object[]   orgArray,
-    JMString[] orgArrayFiltered,
-    Object[]   revArray,
-    JMString[] revArrayFiltered)
+  private void adjustRevision(JMRevision revision,
+                              Object[] orgArray,
+                              JMString[] orgArrayFiltered,
+                              Object[] revArray,
+                              JMString[] revArrayFiltered)
   {
     JMChunk chunk;
-    int     anchor;
-    int     size;
-    int     index;
+    int anchor;
+    int size;
+    int index;
 
     for (JMDelta delta : revision.getDeltas())
     {
@@ -218,7 +221,7 @@ public class JMDiff
       if (index < revArrayFiltered.length)
       {
         //System.out.print(" [index=" + index + ", text="
-          //+ revArrayFiltered[index].s + "]");
+        //+ revArrayFiltered[index].s + "]");
         anchor = revArrayFiltered[index].lineNumber;
       }
       else
@@ -247,115 +250,37 @@ public class JMDiff
     }
   }
 
-  private JMString[] filter(
-    Ignore   ignore,
-    Object[] array)
+  private JMString[] filter(Ignore ignore,
+                            Object[] array)
   {
     List<JMString> result;
-    JMString       jms;
-    int            lineNumber;
-    String         s;
-    char[]         charArray;
-    StringBuilder  sb;
-    boolean        whitespaceAtBegin;
-    int            whitespaceEndIndex;
-    int            length;
-    boolean        previousBlankLine;
+    JMString jms;
+    int lineNumber;
 
-    previousBlankLine = true;
-
-    //System.out.println("> start");
-    result = new ArrayList<JMString>(array.length);
-    lineNumber = -1;
-    for (Object o : array)
+    synchronized (inputLine)
     {
-      s = o.toString();
-
-      if (ignore.ignoreCase)
+      //System.out.println("> start");
+      result = new ArrayList<JMString>(array.length);
+      lineNumber = -1;
+      for (Object o : array)
       {
-        s = s.toLowerCase();
-      }
+        lineNumber++;
 
-      lineNumber++;
-      if (ignore.ignoreWhitespace)
-      {
-        sb = new StringBuilder(s.length());
-        charArray = s.toCharArray();
-
-        length = charArray.length;
-        whitespaceEndIndex = length;
-
-        if (ignore.ignoreWhitespace)
+        inputLine.clear();
+        inputLine.put(o.toString());
+        CompareUtil.removeIgnoredChars(inputLine, ignore, outputLine);
+        if (outputLine.remaining() == 0)
         {
-          for (int index = length - 1; index >= 0; index--)
-          {
-            if (!Character.isWhitespace(charArray[index]))
-            {
-              break;
-            }
-
-            whitespaceEndIndex--;
-          }
+          continue;
         }
 
-        if (ignore.ignoreWhitespaceAtEnd)
-        {
-          length = whitespaceEndIndex;
-        }
+        jms = new JMString();
+        jms.s = outputLine.toString();
+        jms.lineNumber = lineNumber;
+        result.add(jms);
 
-        whitespaceAtBegin = true;
-        for (int i = 0; i < length; i++)
-        {
-          if (i < whitespaceEndIndex && Character.isWhitespace(charArray[i]))
-          {
-            if (whitespaceAtBegin)
-            {
-              if (ignore.ignoreWhitespaceAtBegin)
-              {
-                continue;
-              }
-            }
-            else
-            {
-              if (ignore.ignoreWhitespaceInBetween)
-              {
-                continue;
-              }
-            }
-          }
-          else
-          {
-            whitespaceAtBegin = false;
-          }
-
-          sb.append(charArray[i]);
-        }
-
-        s = sb.toString();
+        //System.out.println("  " + jms);
       }
-
-      if(s.length() == 0)
-      {
-        s = "\n";
-      }
-
-      if (ignore.ignoreBlankLines &&
-           s.length() == 1 && CompareUtil.isEOL(s.charAt(0)))
-      {
-        s = null;
-      }
-
-      if (s == null)
-      {
-        continue;
-      }
-
-      jms = new JMString();
-      jms.s = s;
-      jms.lineNumber = lineNumber;
-      result.add(jms);
-
-      //System.out.println("  " + jms);
     }
 
     return result.toArray(new JMString[result.size()]);

@@ -3,21 +3,18 @@ package org.jmeld.util;
 import org.jmeld.settings.*;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 import java.nio.charset.*;
 
 import com.ibm.icu.text.*;
 
 public class CharsetDetector
-    extends com.ibm.icu.text.CharsetDetector
 {
   // Class variables:
   // Singleton:
   private static CharsetDetector instance = new CharsetDetector();
 
   // Instance variables:
-  private Charset                defaultCharset;
   private Map<String, Charset>   charsetMap;
 
   private CharsetDetector()
@@ -63,12 +60,14 @@ public class CharsetDetector
   {
     try
     {
+      com.ibm.icu.text.CharsetDetector detector;
       CharsetMatch match;
       Charset foundCharset;
 
-      setText(bis);
+      detector = new com.ibm.icu.text.CharsetDetector();
+      detector.setText(bis);
 
-      match = detect();
+      match = detector.detect();
       if (match != null)
       {
         foundCharset = charsetMap.get(match.getName());
