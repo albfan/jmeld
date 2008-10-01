@@ -165,7 +165,7 @@ public class NewPanelDialog
     tabbedPane = new JTabbedPane();
     tabbedPane.add("File Comparison", getFileComparisonPanel());
     tabbedPane.add("Directory Comparison", getDirectoryComparisonPanel());
-    tabbedPane.add("Version control", getVersionControlPanel());
+    //tabbedPane.add("Version control", getVersionControlPanel());
 
     new TabbedPanePreference("NewPanelTabbedPane", tabbedPane);
 
