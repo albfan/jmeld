@@ -12,6 +12,7 @@ import org.jmeld.util.file.cmd.*;
 import javax.swing.tree.*;
 
 import java.util.*;
+import java.io.*;
 
 public class JMDiffNode
     implements TreeNode
@@ -151,7 +152,7 @@ public class JMDiffNode
   {
     int index;
 
-    index = name.lastIndexOf("/");
+    index = name.lastIndexOf(File.separator);
     if (index == -1)
     {
       parentName = null;
