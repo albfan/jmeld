@@ -1,4 +1,4 @@
-Release 2.1:
+Release 2.0-1:
   - Ignore case is implemented.
   - Ignore whitespace has been improved.
   - Activate option: fontchooser for editorpane.
@@ -6,6 +6,7 @@ Release 2.1:
   - Doubleclick on folder -> Diff all nodes contained in that folder.
   - Don't open already opened panels.
   - Support multiple charsets
+  - Fixed bug: package/folder view on windows doesn't work.
 
 Release 2.0:
 - Implement directory diff.
