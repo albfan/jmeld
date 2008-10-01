@@ -747,7 +747,6 @@ public class JMeldPanel
   {
     return new ChangeListener()
     {
-      @Override
       public void stateChanged(ChangeEvent e)
       {
         checkActions();
@@ -919,7 +918,6 @@ public class JMeldPanel
     {
       return new Runnable()
       {
-        @Override
         public void run()
         {
           panel.doGoToFirst();
@@ -1157,7 +1155,6 @@ public class JMeldPanel
   {
     return new TabExitListenerIF()
     {
-      @Override
       public boolean doExit(TabExitEvent te)
       {
         int tabIndex;
@@ -1210,7 +1207,6 @@ public class JMeldPanel
     return true;
   }
 
-  @Override
   public void configurationChanged()
   {
     checkActions();

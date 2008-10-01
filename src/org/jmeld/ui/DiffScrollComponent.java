@@ -73,13 +73,11 @@ public class DiffScrollComponent
     rightsideReadonly = settings.getRightsideReadonly();
   }
 
-  @Override
   public void stateChanged(ChangeEvent event)
   {
     repaint();
   }
 
-  @Override
   public void configurationChanged()
   {
     initSettings();
@@ -90,7 +88,6 @@ public class DiffScrollComponent
   {
     return new MouseWheelListener()
       {
-        @Override
         public void mouseWheelMoved(MouseWheelEvent me)
         {
           diffPanel.toNextDelta(me.getWheelRotation() > 0);

@@ -48,7 +48,6 @@ public class JMeld
     return jmeldPanel;
   }
 
-  @Override
   public void run()
   {
     JFrame frame;

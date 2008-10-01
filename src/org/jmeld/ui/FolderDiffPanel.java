@@ -819,7 +819,6 @@ public class FolderDiffPanel
     }
   }
 
-  @Override
   public void configurationChanged()
   {
     actionHandler.checkActions();
