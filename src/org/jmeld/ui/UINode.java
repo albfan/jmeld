@@ -7,6 +7,7 @@ import org.jmeld.util.node.*;
 import javax.swing.tree.*;
 
 import java.util.*;
+import java.io.*;
 
 public class UINode
        implements TreeTableNode, Comparable<UINode>
@@ -158,7 +159,7 @@ public class UINode
         if (name.startsWith(pn))
         {
           text = name.substring(pn.length());
-          if (text.startsWith("/"))
+          if (text.startsWith(File.separator))
           {
             text = text.substring(1);
           }
