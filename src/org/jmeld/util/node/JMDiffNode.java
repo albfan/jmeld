@@ -38,12 +38,15 @@ public class JMDiffNode
   private Compare          compareState;
   private JMDiff           diff;
   private JMRevision       revision;
+  private Ignore           ignore;
 
   public JMDiffNode(String name, boolean leaf)
   {
     this.name = name;
     this.shortName = name;
     this.leaf = leaf;
+
+    ignore = JMeldSettings.getInstance().getEditor().getIgnore();
 
     children = new ArrayList();
     calculateNames();
@@ -68,6 +71,11 @@ public class JMDiffNode
   public String getShortName()
   {
     return shortName;
+  }
+
+  public Ignore getIgnore()
+  {
+    return ignore;
   }
 
   public String getParentName()
@@ -216,7 +224,6 @@ public class JMDiffNode
   public void compareContents()
   {
     boolean equals;
-    Ignore ignore;
 
     if (!nodeLeft.exists() && !nodeRight.exists())
     {
@@ -236,8 +243,6 @@ public class JMDiffNode
       return;
     }
 
-    ignore = JMeldSettings.getInstance().getEditor().getIgnore();
-
     equals = CompareUtil.contentEquals(nodeLeft, nodeRight, ignore);
     compareState = equals ? Compare.Equal : Compare.NotEqual;
   }
@@ -247,6 +252,7 @@ public class JMDiffNode
   {
     BufferDocumentIF documentLeft;
     BufferDocumentIF documentRight;
+    Object[] left, right;
 
     StatusBar.getInstance().start();
 
@@ -276,9 +282,10 @@ public class JMDiffNode
 
     StatusBar.getInstance().setState("Calculating differences");
     diff = new JMDiff();
-    revision = diff.diff(documentLeft == null ? null : documentLeft.getLines(),
-                         documentRight == null ? null : documentRight
-                             .getLines());
+    left = documentLeft == null ? null : documentLeft.getLines();
+    right = documentRight == null ? null : documentRight .getLines();
+
+    revision = diff.diff(right, left, ignore);
     StatusBar.getInstance().setState("Ready calculating differences");
     StatusBar.getInstance().stop();
   }

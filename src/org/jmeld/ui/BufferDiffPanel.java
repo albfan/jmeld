@@ -40,6 +40,7 @@ public class BufferDiffPanel
   public static final int    RIGHT = 2;
   private JMeldPanel         mainPanel;
   private FilePanel[]        filePanels;
+  private JMDiffNode         diffNode;
   int                        filePanelSelectedIndex = -1;
   private JMRevision         currentRevision;
   private JMDelta            selectedDelta;
@@ -63,6 +64,8 @@ public class BufferDiffPanel
   {
     BufferNode bnLeft;
     BufferNode bnRight;
+
+    this.diffNode = diffNode;
 
     bnLeft = diffNode.getBufferNodeLeft();
     bnRight = diffNode.getBufferNodeRight();
@@ -243,7 +246,8 @@ public class BufferDiffPanel
       {
         currentRevision = diff.diff(
             bd1.getLines(),
-            bd2.getLines());
+            bd2.getLines(),
+            diffNode.getIgnore());
 
         reDisplay();
       }

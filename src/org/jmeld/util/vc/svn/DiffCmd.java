@@ -5,7 +5,6 @@ import org.jmeld.util.*;
 import org.jmeld.util.vc.*;
 
 import java.io.*;
-import java.util.*;
 import java.util.regex.*;
 
 public class DiffCmd

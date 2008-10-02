@@ -7,6 +7,10 @@ import org.jmeld.util.conf.*;
 public class Ignore
     extends AbstractConfigurationElement
 {
+  // Class variables:
+  static public final Ignore NULL_IGNORE = new Ignore();
+
+  // Instance variables:
   @XmlElement
   public boolean ignoreWhitespaceAtBegin;
   @XmlElement

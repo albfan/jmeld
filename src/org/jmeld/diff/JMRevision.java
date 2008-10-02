@@ -22,11 +22,14 @@ import java.util.*;
 
 public class JMRevision
 {
+  // Class variables:
   private static boolean      incrementalUpdateActivated = false;
+
+  // Instance variables:
   private Object[]            orgArray;
   private Object[]            revArray;
   private LinkedList<JMDelta> deltaList;
-  private List<String>        regexList;
+  private Ignore              ignore;
 
   public JMRevision(
     Object[] orgArray,
@@ -36,6 +39,13 @@ public class JMRevision
     this.revArray = revArray;
 
     deltaList = new LinkedList<JMDelta>();
+
+    ignore = Ignore.NULL_IGNORE;
+  }
+
+  public void setIgnore(Ignore ignore)
+  {
+    this.ignore = ignore;
   }
 
   public void add(JMDelta delta)
@@ -199,7 +209,7 @@ public class JMRevision
       {
         System.out.println("  rev[" + i + "]:" + revArrayDelta[i]);
       }
-      deltaRevision = new JMDiff().diff(orgArrayDelta, revArrayDelta);
+      deltaRevision = new JMDiff().diff(orgArrayDelta, revArrayDelta, ignore);
     }
     catch (Exception ex)
     {

@@ -100,7 +100,10 @@ public class StatusBar
     String    format,
     Object... args)
   {
-    statusLabel.setText(String.format(format, args));
+    String text;
+
+    text = String.format(format, args);
+    statusLabel.setText(text);
   }
 
   public void setText(

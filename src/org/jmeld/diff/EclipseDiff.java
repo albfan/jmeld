@@ -16,7 +16,6 @@
  */
 package org.jmeld.diff;
 
-import org.eclipse.compare.internal.*;
 import org.eclipse.compare.rangedifferencer.*;
 import org.jmeld.*;
 

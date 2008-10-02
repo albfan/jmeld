@@ -17,7 +17,6 @@
 package org.jmeld.diff;
 
 import org.jmeld.*;
-import org.jmeld.settings.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.util.*;
 import org.jmeld.util.file.*;
@@ -54,7 +53,7 @@ public class JMDiff
     // MyersDiff is the fastest but can be very slow when 2 files
     //   are very different.
     algorithms = new ArrayList<JMDiffAlgorithmIF>();
-    algorithms.add(myersDiff);
+    //algorithms.add(myersDiff);
 
     // GNUDiff is a little bit slower than Myersdiff but performs way
     //   better if the files are very different.
@@ -70,7 +69,8 @@ public class JMDiff
   }
 
   public JMRevision diff(List<String> a,
-                         List<String> b)
+                         List<String> b,
+                         Ignore ignore)
       throws JMeldException
   {
     if (a == null)
@@ -81,16 +81,16 @@ public class JMDiff
     {
       b = Collections.emptyList();
     }
-    return diff(a.toArray(), b.toArray());
+    return diff(a.toArray(), b.toArray(), ignore);
   }
 
   public JMRevision diff(Object[] a,
-                         Object[] b)
+                         Object[] b,
+                         Ignore ignore)
       throws JMeldException
   {
     JMRevision revision;
     StopWatch sp;
-    Ignore ignore;
     boolean filtered;
     Object[] org;
     Object[] rev;
@@ -122,8 +122,6 @@ public class JMDiff
     sp = new StopWatch();
     sp.start();
 
-    ignore = JMeldSettings.getInstance().getEditor().getIgnore();
-
     if (filtered)
     {
       org = filter(ignore, org);
@@ -137,6 +135,7 @@ public class JMDiff
       try
       {
         revision = algorithm.diff(org, rev);
+        revision.setIgnore(ignore);
         revision.update(a, b);
         //revision.filter();
         if (filtered)

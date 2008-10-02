@@ -22,9 +22,7 @@ import org.jmeld.util.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import java.util.*;
 import java.util.List;
-import java.awt.*;
 
 public class DiffLabel
        extends JTextPane
@@ -75,7 +73,7 @@ public class DiffLabel
       textList = wt.getTokens(text);
       otherTextList = wt.getTokens(otherText);
 
-      revision = new JMDiff().diff(textList, otherTextList);
+      revision = new JMDiff().diff(textList, otherTextList, Ignore.NULL_IGNORE);
 
       styles = new String[textList.size()];
       for (JMDelta delta : revision.getDeltas())

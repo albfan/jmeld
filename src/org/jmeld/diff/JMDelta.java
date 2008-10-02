@@ -135,7 +135,7 @@ public class JMDelta
       wt = TokenizerFactory.getInnerDiffTokenizer();
       o2 = wt.getTokens(revision.getOriginalString(original));
       r2 = wt.getTokens(revision.getRevisedString(revised));
-      rev = new JMDiff().diff(o2, r2);
+      rev = new JMDiff().diff(o2, r2, Ignore.NULL_IGNORE);
 
       oIndex = new int[o2.size()];
       for (int i = 0; i < o2.size(); i++)
@@ -160,6 +160,7 @@ public class JMDelta
       }
 
       rev2 = new JMRevision(original2, revised2);
+      rev2.setIgnore(Ignore.NULL_IGNORE);
       for (JMDelta d : rev.getDeltas())
       {
         o = d.getOriginal();

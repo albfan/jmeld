@@ -406,8 +406,10 @@ public class EditorSettingsPanel
   {
     EditorSettings settings;
     Font font;
+    Ignore ignore;
 
     settings = getEditorSettings();
+    ignore = settings.getIgnore();
     colorAddedButton.setIcon(new EmptyIcon(settings.getAddedColor(), 20, 20));
     colorDeletedButton
         .setIcon(new EmptyIcon(settings.getDeletedColor(), 20, 20));
@@ -415,14 +417,14 @@ public class EditorSettingsPanel
         .setIcon(new EmptyIcon(settings.getChangedColor(), 20, 20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
     ignoreWhitespaceAtBeginCheckBox
-        .setSelected(settings.getIgnore().ignoreWhitespaceAtBegin);
+        .setSelected(ignore.ignoreWhitespaceAtBegin);
     ignoreWhitespaceInBetweenCheckBox
-        .setSelected(settings.getIgnore().ignoreWhitespaceInBetween);
+        .setSelected(ignore.ignoreWhitespaceInBetween);
     ignoreWhitespaceAtEndCheckBox
-        .setSelected(settings.getIgnore().ignoreWhitespaceAtEnd);
-    ignoreEOLCheckBox.setSelected(settings.getIgnore().ignoreEOL);
-    ignoreBlankLinesCheckBox.setSelected(settings.getIgnore().ignoreBlankLines);
-    ignoreCaseCheckBox.setSelected(settings.getIgnore().ignoreCase);
+        .setSelected(ignore.ignoreWhitespaceAtEnd);
+    ignoreEOLCheckBox.setSelected(ignore.ignoreEOL);
+    ignoreBlankLinesCheckBox.setSelected(ignore.ignoreBlankLines);
+    ignoreCaseCheckBox.setSelected(ignore.ignoreCase);
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
