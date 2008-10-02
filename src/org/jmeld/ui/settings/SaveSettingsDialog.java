@@ -46,7 +46,7 @@ public class SaveSettingsDialog
     pane = new JOptionPane(
         getSaveSettings(),
         JOptionPane.WARNING_MESSAGE);
-    pane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
+    pane.setOptionType(JOptionPane.YES_NO_OPTION);
 
     dialog = pane.createDialog(meldPanel, "Save settings");
     dialog.setResizable(true);
@@ -56,7 +56,7 @@ public class SaveSettingsDialog
 
       if (ObjectUtil.equals(
           pane.getValue(),
-          JOptionPane.OK_OPTION))
+          JOptionPane.YES_OPTION))
       {
         ok = true;
       }
