@@ -116,7 +116,6 @@ public class JMDiff
     else
     {
       filtered = false;
-      //filtered = true;
     }
 
     sp = new StopWatch();
