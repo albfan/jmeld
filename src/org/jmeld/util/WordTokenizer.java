@@ -60,8 +60,11 @@ public class WordTokenizer
       s = text.substring(
           m.start(),
           m.end());
-      result.add(s);
-      index += s.length();
+      if (s.length() > 0)
+      {
+        result.add(s);
+        index += s.length();
+      }
     }
 
     // Here the text does not end with the pattern!
@@ -70,7 +73,10 @@ public class WordTokenizer
       s = text.substring(
           index,
           text.length());
-      result.add(s);
+      if (s.length() > 0)
+      {
+        result.add(s);
+      }
     }
 
     return result;
