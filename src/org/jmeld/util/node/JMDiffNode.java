@@ -285,7 +285,7 @@ public class JMDiffNode
     left = documentLeft == null ? null : documentLeft.getLines();
     right = documentRight == null ? null : documentRight .getLines();
 
-    revision = diff.diff(right, left, ignore);
+    revision = diff.diff(left, right, ignore);
     StatusBar.getInstance().setState("Ready calculating differences");
     StatusBar.getInstance().stop();
   }
