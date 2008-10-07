@@ -42,7 +42,7 @@ import java.io.*;
 import java.util.*;
 
 public class JMTable
-       extends JXTable
+       extends JTable
 {
   private int charWidth;
 

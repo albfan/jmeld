@@ -53,6 +53,8 @@ public class EditorSettingsForm extends javax.swing.JPanel
     rightsideReadonlyCheckBox = new javax.swing.JCheckBox();
     fontChooserButton = new javax.swing.JButton();
     leftsideReadonlyCheckBox = new javax.swing.JCheckBox();
+    jLabel5 = new javax.swing.JLabel();
+    lookAndFeelComboBox = new javax.swing.JComboBox();
     jPanel2 = new javax.swing.JPanel();
     detailHeader4 = new org.jmeld.ui.swing.DetailHeader();
     ignoreWhitespaceAtBeginCheckBox = new javax.swing.JCheckBox();
@@ -136,6 +138,10 @@ public class EditorSettingsForm extends javax.swing.JPanel
       }
     });
 
+    jLabel5.setText("Look and feel");
+
+    lookAndFeelComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
     org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -177,9 +183,13 @@ public class EditorSettingsForm extends javax.swing.JPanel
               .add(rightsideReadonlyCheckBox)
               .add(showLineNumbersCheckBox)
               .add(jPanel1Layout.createSequentialGroup()
-                .add(jLabel3)
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                  .add(jLabel5)
+                  .add(jLabel3))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                  .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 46, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                  .add(lookAndFeelComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
           .add(detailHeader3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
     );
@@ -200,6 +210,10 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(jLabel3)
           .add(tabSizeSpinner, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+          .add(jLabel5)
+          .add(lookAndFeelComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
         .add(showLineNumbersCheckBox)
         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -387,9 +401,11 @@ private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent 
   protected javax.swing.JLabel jLabel2;
   protected javax.swing.JLabel jLabel3;
   protected javax.swing.JLabel jLabel4;
+  protected javax.swing.JLabel jLabel5;
   protected javax.swing.JPanel jPanel1;
   protected javax.swing.JPanel jPanel2;
   protected javax.swing.JCheckBox leftsideReadonlyCheckBox;
+  protected javax.swing.JComboBox lookAndFeelComboBox;
   protected javax.swing.JButton restoreOriginalColorsButton;
   protected javax.swing.JCheckBox rightsideReadonlyCheckBox;
   protected javax.swing.JCheckBox showLineNumbersCheckBox;

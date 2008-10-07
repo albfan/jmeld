@@ -34,8 +34,8 @@ public class FilterSettingsPanel
 
   public FilterSettingsPanel()
   {
-    init();
     initConfiguration();
+    init();
 
     JMeldSettings.getInstance().addConfigurationListener(this);
   }

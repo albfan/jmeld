@@ -58,6 +58,8 @@ public class EditorSettings
   private boolean      specificFileEncodingEnabled;
   @XmlElement
   private String       specificFileEncodingName;
+  @XmlElement
+  private String       lookAndFeelName;
 
   public EditorSettings()
   {
@@ -106,7 +108,7 @@ public class EditorSettings
 
   public void setIgnoreWhitespaceAtBegin(boolean ignoreWhitespaceAtBegin)
   {
-    if(ignore.ignoreWhitespaceAtBegin == ignoreWhitespaceAtBegin)
+    if (ignore.ignoreWhitespaceAtBegin == ignoreWhitespaceAtBegin)
     {
       return;
     }
@@ -117,7 +119,7 @@ public class EditorSettings
 
   public void setIgnoreWhitespaceInBetween(boolean ignoreWhitespaceInBetween)
   {
-    if(ignore.ignoreWhitespaceInBetween == ignoreWhitespaceInBetween)
+    if (ignore.ignoreWhitespaceInBetween == ignoreWhitespaceInBetween)
     {
       return;
     }
@@ -128,7 +130,7 @@ public class EditorSettings
 
   public void setIgnoreWhitespaceAtEnd(boolean ignoreWhitespaceAtEnd)
   {
-    if(ignore.ignoreWhitespaceAtEnd == ignoreWhitespaceAtEnd)
+    if (ignore.ignoreWhitespaceAtEnd == ignoreWhitespaceAtEnd)
     {
       return;
     }
@@ -139,7 +141,7 @@ public class EditorSettings
 
   public void setIgnoreEOL(boolean ignoreEOL)
   {
-    if(ignore.ignoreEOL == ignoreEOL)
+    if (ignore.ignoreEOL == ignoreEOL)
     {
       return;
     }
@@ -150,7 +152,7 @@ public class EditorSettings
 
   public void setIgnoreBlankLines(boolean ignoreBlankLines)
   {
-    if(ignore.ignoreBlankLines == ignoreBlankLines)
+    if (ignore.ignoreBlankLines == ignoreBlankLines)
     {
       return;
     }
@@ -161,7 +163,7 @@ public class EditorSettings
 
   public void setIgnoreCase(boolean ignoreCase)
   {
-    if(ignore.ignoreCase == ignoreCase)
+    if (ignore.ignoreCase == ignoreCase)
     {
       return;
     }
@@ -177,7 +179,7 @@ public class EditorSettings
 
   public void setLeftsideReadonly(boolean leftsideReadonly)
   {
-    if(this.leftsideReadonly == leftsideReadonly)
+    if (this.leftsideReadonly == leftsideReadonly)
     {
       return;
     }
@@ -193,7 +195,7 @@ public class EditorSettings
 
   public void setRightsideReadonly(boolean rightsideReadonly)
   {
-    if(this.rightsideReadonly == rightsideReadonly)
+    if (this.rightsideReadonly == rightsideReadonly)
     {
       return;
     }
@@ -209,7 +211,7 @@ public class EditorSettings
 
   public void setDefaultFileEncodingEnabled(boolean encoding)
   {
-    if(this.defaultFileEncodingEnabled == encoding)
+    if (this.defaultFileEncodingEnabled == encoding)
     {
       return;
     }
@@ -225,7 +227,7 @@ public class EditorSettings
 
   public void setDetectFileEncodingEnabled(boolean encoding)
   {
-    if(this.detectFileEncodingEnabled == encoding)
+    if (this.detectFileEncodingEnabled == encoding)
     {
       return;
     }
@@ -241,7 +243,7 @@ public class EditorSettings
 
   public void setSpecificFileEncodingEnabled(boolean encoding)
   {
-    if(this.specificFileEncodingEnabled == encoding)
+    if (this.specificFileEncodingEnabled == encoding)
     {
       return;
     }
@@ -257,7 +259,7 @@ public class EditorSettings
 
   public void setSpecificFileEncodingName(String encodingName)
   {
-    if(ObjectUtil.equals(this.specificFileEncodingName, encodingName))
+    if (ObjectUtil.equals(this.specificFileEncodingName, encodingName))
     {
       return;
     }
@@ -305,6 +307,17 @@ public class EditorSettings
   public Color getDeletedColor()
   {
     return getColor(deletedColor, Colors.DELETED);
+  }
+
+  public void setLookAndFeelName(String lookAndFeelName)
+  {
+    this.lookAndFeelName = lookAndFeelName;
+    fireChanged();
+  }
+
+  public String getLookAndFeelName()
+  {
+    return lookAndFeelName;
   }
 
   public void enableCustomFont(boolean customFont)

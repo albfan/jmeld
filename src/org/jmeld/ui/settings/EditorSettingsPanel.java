@@ -31,8 +31,8 @@ public class EditorSettingsPanel
 
   public EditorSettingsPanel()
   {
-    init();
     initConfiguration();
+    init();
 
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
@@ -41,8 +41,7 @@ public class EditorSettingsPanel
   {
     originalAntialias = getEditorSettings().isAntialiasEnabled();
 
-    tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
-    showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
+    // ignore:
     ignoreWhitespaceAtBeginCheckBox
         .addActionListener(getIgnoreWhitespaceAtBeginAction());
     ignoreWhitespaceInBetweenCheckBox
@@ -52,21 +51,31 @@ public class EditorSettingsPanel
     ignoreEOLCheckBox.addActionListener(getIgnoreEOLAction());
     ignoreBlankLinesCheckBox.addActionListener(getIgnoreBlankLinesAction());
     ignoreCaseCheckBox.addActionListener(getIgnoreCaseAction());
+
+    // Miscellaneous:
     leftsideReadonlyCheckBox.addActionListener(getLeftsideReadonlyAction());
     rightsideReadonlyCheckBox.addActionListener(getRightsideReadonlyAction());
     antialiasCheckBox.addActionListener(getAntialiasAction());
+    tabSizeSpinner.addChangeListener(getTabSizeChangeListener());
+    showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
+    lookAndFeelComboBox.setModel(getLookAndFeelModel());
+    lookAndFeelComboBox.setSelectedItem(LookAndFeelManager.getInstance()
+        .getInstalledLookAndFeelName());
+    lookAndFeelComboBox.addActionListener(getLookAndFeelAction());
+
+    // Colors:
     colorAddedButton.addActionListener(getColorAddedAction());
     colorDeletedButton.addActionListener(getColorDeletedAction());
     colorChangedButton.addActionListener(getColorChangedAction());
     restoreOriginalColorsButton
         .addActionListener(getRestoreOriginalColorsAction());
+
+    // Font:
     defaultFontRadioButton.addActionListener(getDefaultFontAction());
     customFontRadioButton.addActionListener(getCustomFontAction());
     fontChooserButton.addActionListener(getFontChooserAction());
 
-    specificEncodingComboBox.setModel(new DefaultComboBoxModel(CharsetDetector
-        .getInstance().getCharsetNameList().toArray()));
-
+    // File encoding:
     defaultEncodingRadioButton.setText(defaultEncodingRadioButton.getText()
                                        + " ("
                                        + CharsetDetector.getInstance()
@@ -75,6 +84,10 @@ public class EditorSettingsPanel
     defaultEncodingRadioButton.addActionListener(getDefaultEncodingAction());
     detectEncodingRadioButton.addActionListener(getDetectEncodingAction());
     specificEncodingRadioButton.addActionListener(getSpecificEncodingAction());
+    specificEncodingComboBox.setModel(new DefaultComboBoxModel(CharsetDetector
+        .getInstance().getCharsetNameList().toArray()));
+    specificEncodingComboBox.setSelectedItem(getEditorSettings()
+        .getSpecificFileEncodingName());
     specificEncodingComboBox.addActionListener(getSpecificEncodingNameAction());
   }
 
@@ -328,6 +341,20 @@ public class EditorSettingsPanel
     };
   }
 
+  private ActionListener getLookAndFeelAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setLookAndFeelName(
+                                               (String) lookAndFeelComboBox
+                                                   .getSelectedItem());
+        LookAndFeelManager.getInstance().install();
+      }
+    };
+  }
+
   private ActionListener getDefaultFontAction()
   {
     return new ActionListener()
@@ -397,6 +424,12 @@ public class EditorSettingsPanel
     return fontChooser.showFontDialog(this, "");
   }
 
+  private ComboBoxModel getLookAndFeelModel()
+  {
+    return new DefaultComboBoxModel(LookAndFeelManager.getInstance()
+        .getInstalledLookAndFeels().toArray());
+  }
+
   public void configurationChanged()
   {
     initConfiguration();
@@ -416,12 +449,10 @@ public class EditorSettingsPanel
     colorChangedButton
         .setIcon(new EmptyIcon(settings.getChangedColor(), 20, 20));
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
-    ignoreWhitespaceAtBeginCheckBox
-        .setSelected(ignore.ignoreWhitespaceAtBegin);
+    ignoreWhitespaceAtBeginCheckBox.setSelected(ignore.ignoreWhitespaceAtBegin);
     ignoreWhitespaceInBetweenCheckBox
         .setSelected(ignore.ignoreWhitespaceInBetween);
-    ignoreWhitespaceAtEndCheckBox
-        .setSelected(ignore.ignoreWhitespaceAtEnd);
+    ignoreWhitespaceAtEndCheckBox.setSelected(ignore.ignoreWhitespaceAtEnd);
     ignoreEOLCheckBox.setSelected(ignore.ignoreEOL);
     ignoreBlankLinesCheckBox.setSelected(ignore.ignoreBlankLines);
     ignoreCaseCheckBox.setSelected(ignore.ignoreCase);
@@ -449,8 +480,6 @@ public class EditorSettingsPanel
         .getDetectFileEncodingEnabled());
     specificEncodingRadioButton.setSelected(settings
         .getSpecificFileEncodingEnabled());
-    specificEncodingComboBox.setSelectedItem(settings
-        .getSpecificFileEncodingName());
 
     revalidate();
   }
