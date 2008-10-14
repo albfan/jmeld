@@ -70,7 +70,7 @@ public class FolderSettingsForm extends javax.swing.JPanel
     jLabel6.setText("Show files that are equal");
 
     jLabel2.setFont(new java.awt.Font("Dialog", 0, 12));
-    jLabel2.setText("Default hierarcy");
+    jLabel2.setText("Default hierarchy");
 
     detailHeader2.setText("Miscellaneous");
 
