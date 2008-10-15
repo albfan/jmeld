@@ -6,7 +6,7 @@ import javax.swing.border.*;
 import java.awt.*;
 
 public class GradientLabel
-       extends JLabel
+    extends JLabel
 {
   private Color fromColor;
   private Color toColor;
@@ -34,14 +34,12 @@ public class GradientLabel
 
   public void setGradientColor(Color fromColor)
   {
-    setGradientColor(
-      fromColor,
-      getBackground());
+    setGradientColor(fromColor, new Color(fromColor.getRed(), fromColor
+        .getGreen(), fromColor.getBlue(), 0));
   }
 
-  public void setGradientColor(
-    Color fromColor,
-    Color toColor)
+  public void setGradientColor(Color fromColor,
+                               Color toColor)
   {
     this.fromColor = fromColor;
     this.toColor = toColor;
@@ -59,9 +57,9 @@ public class GradientLabel
 
   public void paint(Graphics g)
   {
-    Rectangle     r;
+    Rectangle r;
     GradientPaint paint;
-    Graphics2D    g2;
+    Graphics2D g2;
 
     g2 = (Graphics2D) g;
 

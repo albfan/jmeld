@@ -26,17 +26,14 @@ import java.util.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class Filter
-       extends AbstractConfigurationElement
+    extends AbstractConfigurationElement
 {
   @XmlAttribute
-  private Boolean                     includeDefault = Boolean.FALSE;
+  private Boolean          includeDefault;
   @XmlAttribute
-  private String                      name;
+  private String           name;
   @XmlElement
-  private List<FilterRule>            rules;
-  {
-    rules = new ArrayList<FilterRule>();
-  }
+  private List<FilterRule> rules = new ArrayList<FilterRule>();
 
   public Filter(String name)
   {
@@ -74,9 +71,8 @@ public class Filter
     return name;
   }
 
-  public void insertRule(
-    FilterRule ruleToInsertAfter,
-    FilterRule rule)
+  public void insertRule(FilterRule ruleToInsertAfter,
+                         FilterRule rule)
   {
     int index;
 
@@ -150,7 +146,7 @@ public class Filter
    */
   class GetRules
   {
-    HashSet<FilterRule> result = new HashSet<FilterRule>();
+    HashSet<FilterRule> result           = new HashSet<FilterRule>();
     HashSet<Filter>     evaluatedFilters = new HashSet<Filter>();
 
     List<FilterRule> getRules()
@@ -176,13 +172,12 @@ public class Filter
         // Rule 'importFilter' will add it's own rules to the result.
         if (rule.getRule() == FilterRule.Rule.importFilter)
         {
-          nextFilter = JMeldSettings.getInstance().getFilter().getFilter(
-              rule.getPattern());
-          
+          nextFilter = JMeldSettings.getInstance().getFilter()
+              .getFilter(rule.getPattern());
+
           // Don't evaluate a filter twice! (otherwise there will be a never
           //   ending recursive loop)
-          if (nextFilter != null
-            && !evaluatedFilters.contains(nextFilter))
+          if (nextFilter != null && !evaluatedFilters.contains(nextFilter))
           {
             collectRules(nextFilter);
           }

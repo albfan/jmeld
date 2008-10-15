@@ -25,9 +25,9 @@ public class EditorSettingsPanel
     extends EditorSettingsForm
     implements ConfigurationListenerIF
 {
-  private static JDialog       colorDialog;
+  private static JDialog colorDialog;
   private static JColorChooser colorChooser;
-  private boolean              originalAntialias;
+  private boolean originalAntialias;
 
   public EditorSettingsPanel()
   {
@@ -160,8 +160,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setShowLineNumbers(
-                                               showLineNumbersCheckBox
-                                                   .isSelected());
+          showLineNumbersCheckBox.isSelected());
       }
     };
   }
@@ -173,8 +172,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreWhitespaceAtBegin(
-                                                       ignoreWhitespaceAtBeginCheckBox
-                                                           .isSelected());
+          ignoreWhitespaceAtBeginCheckBox.isSelected());
       }
     };
   }
@@ -186,8 +184,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreWhitespaceInBetween(
-                                                         ignoreWhitespaceInBetweenCheckBox
-                                                             .isSelected());
+          ignoreWhitespaceInBetweenCheckBox.isSelected());
       }
     };
   }
@@ -199,8 +196,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreWhitespaceAtEnd(
-                                                     ignoreWhitespaceAtEndCheckBox
-                                                         .isSelected());
+          ignoreWhitespaceAtEndCheckBox.isSelected());
       }
     };
   }
@@ -223,8 +219,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreBlankLines(
-                                                ignoreBlankLinesCheckBox
-                                                    .isSelected());
+          ignoreBlankLinesCheckBox.isSelected());
       }
     };
   }
@@ -247,8 +242,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setLeftsideReadonly(
-                                                leftsideReadonlyCheckBox
-                                                    .isSelected());
+          leftsideReadonlyCheckBox.isSelected());
       }
     };
   }
@@ -260,8 +254,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setRightsideReadonly(
-                                                 rightsideReadonlyCheckBox
-                                                     .isSelected());
+          rightsideReadonlyCheckBox.isSelected());
       }
     };
   }
@@ -333,10 +326,8 @@ public class EditorSettingsPanel
     {
       public void actionPerformed(ActionEvent evt)
       {
-        getEditorSettings()
-            .setSpecificFileEncodingName(
-                                         (String) specificEncodingComboBox
-                                             .getSelectedItem());
+        getEditorSettings().setSpecificFileEncodingName(
+          (String) specificEncodingComboBox.getSelectedItem());
       }
     };
   }
@@ -348,8 +339,7 @@ public class EditorSettingsPanel
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings().setLookAndFeelName(
-                                               (String) lookAndFeelComboBox
-                                                   .getSelectedItem());
+          (String) lookAndFeelComboBox.getSelectedItem());
         LookAndFeelManager.getInstance().install();
       }
     };
@@ -362,8 +352,7 @@ public class EditorSettingsPanel
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings().enableCustomFont(
-                                             !defaultFontRadioButton
-                                                 .isSelected());
+          !defaultFontRadioButton.isSelected());
       }
     };
   }
@@ -405,7 +394,7 @@ public class EditorSettingsPanel
     {
       colorChooser = new JColorChooser(initialColor);
       colorDialog = JColorChooser.createDialog(null, "Choose color", true,
-                                               colorChooser, null, null);
+        colorChooser, null, null);
     }
 
     colorChooser.setColor(initialColor);

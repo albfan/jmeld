@@ -27,26 +27,25 @@ import javax.swing.event.*;
 import javax.swing.text.*;
 
 import java.awt.*;
+import java.awt.geom.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
 public class DiffScrollComponent
-       extends JComponent
-       implements ChangeListener, ConfigurationListenerIF
+    extends JComponent
+    implements ChangeListener, ConfigurationListenerIF
 {
   private BufferDiffPanel diffPanel;
-  private int             fromPanelIndex;
-  private int             toPanelIndex;
-  private List<Command>   commands;
-  private Object          antiAlias;
-  private boolean         leftsideReadonly;
-  private boolean         rightsideReadonly;
+  private int fromPanelIndex;
+  private int toPanelIndex;
+  private List<Command> commands;
+  private Object antiAlias;
+  private boolean leftsideReadonly;
+  private boolean rightsideReadonly;
 
-  public DiffScrollComponent(
-    BufferDiffPanel diffPanel,
-    int             fromPanelIndex,
-    int             toPanelIndex)
+  public DiffScrollComponent(BufferDiffPanel diffPanel, int fromPanelIndex,
+      int toPanelIndex)
   {
     this.diffPanel = diffPanel;
     this.fromPanelIndex = fromPanelIndex;
@@ -87,31 +86,29 @@ public class DiffScrollComponent
   private MouseWheelListener getMouseWheelListener()
   {
     return new MouseWheelListener()
+    {
+      public void mouseWheelMoved(MouseWheelEvent me)
       {
-        public void mouseWheelMoved(MouseWheelEvent me)
-        {
-          diffPanel.toNextDelta(me.getWheelRotation() > 0);
-          repaint();
-        }
-      };
+        diffPanel.toNextDelta(me.getWheelRotation() > 0);
+        repaint();
+      }
+    };
   }
 
   private MouseListener getMouseListener()
   {
     return new MouseAdapter()
+    {
+      @Override
+      public void mouseClicked(MouseEvent me)
       {
-        @Override
-        public void mouseClicked(MouseEvent me)
-        {
-          requestFocus();
-          executeCommand((double) me.getX(), (double) me.getY());
-        }
-      };
+        requestFocus();
+        executeCommand((double) me.getX(), (double) me.getY());
+      }
+    };
   }
 
-  public boolean executeCommand(
-    double x,
-    double y)
+  public boolean executeCommand(double x, double y)
   {
     if (commands == null)
     {
@@ -133,8 +130,8 @@ public class DiffScrollComponent
   @Override
   public void paintComponent(Graphics g)
   {
-    Rectangle  r;
-    int        middle;
+    Rectangle r;
+    int middle;
     Graphics2D g2;
 
     g2 = (Graphics2D) g;
@@ -152,44 +149,44 @@ public class DiffScrollComponent
 
   private void paintDiffs(Graphics2D g2)
   {
-    JViewport        viewportFrom;
-    JViewport        viewportTo;
-    JTextComponent   editorFrom;
-    JTextComponent   editorTo;
-    JMRevision       revision;
+    JViewport viewportFrom;
+    JViewport viewportTo;
+    JTextComponent editorFrom;
+    JTextComponent editorTo;
+    JMRevision revision;
     BufferDocumentIF bdFrom;
     BufferDocumentIF bdTo;
-    int              firstLineFrom;
-    int              lastLineFrom;
-    int              firstLineTo;
-    int              lastLineTo;
-    int              offset;
-    Rectangle        r;
-    Point            p;
-    JMChunk          original;
-    JMChunk          revised;
-    Rectangle        viewportRect;
-    Rectangle        fromRect;
-    Rectangle        toRect;
-    int              fromLine;
-    int              toLine;
-    int              x;
-    int              y;
-    int              width;
-    int              height;
-    Rectangle        bounds;
-    int              x0;
-    int              y0;
-    int              x1;
-    int              y1;
-    Color            color;
-    Color            darkerColor;
-    Polygon          shape;
-    Rectangle        rect;
-    boolean          selected;
-    int              selectionWidth;
-    FilePanel        fromPanel;
-    FilePanel        toPanel;
+    int firstLineFrom;
+    int lastLineFrom;
+    int firstLineTo;
+    int lastLineTo;
+    int offset;
+    Rectangle r;
+    Point p;
+    JMChunk original;
+    JMChunk revised;
+    Rectangle viewportRect;
+    Rectangle fromRect;
+    Rectangle toRect;
+    int fromLine;
+    int toLine;
+    int x;
+    int y;
+    int width;
+    int height;
+    Rectangle bounds;
+    int x0;
+    int y0;
+    int x1;
+    int y1;
+    Color color;
+    Color darkerColor;
+    Polygon shape;
+    Rectangle rect;
+    boolean selected;
+    int selectionWidth;
+    FilePanel fromPanel;
+    FilePanel toPanel;
 
     bounds = g2.getClipBounds();
 
@@ -208,7 +205,7 @@ public class DiffScrollComponent
     viewportFrom = fromPanel.getScrollPane().getViewport();
     editorFrom = fromPanel.getEditor();
     bdFrom = fromPanel.getBufferDocument();
-    if(bdFrom == null)
+    if (bdFrom == null)
     {
       return;
     }
@@ -231,7 +228,7 @@ public class DiffScrollComponent
     viewportTo = toPanel.getScrollPane().getViewport();
     editorTo = toPanel.getEditor();
     bdTo = toPanel.getBufferDocument();
-    if(bdTo == null)
+    if (bdTo == null)
     {
       return;
     }
@@ -260,14 +257,14 @@ public class DiffScrollComponent
 
         // This delta is before the firstLine of the screen: Keep on searching!
         if (original.getAnchor() + original.getSize() < firstLineFrom
-          && revised.getAnchor() + revised.getSize() < firstLineTo)
+            && revised.getAnchor() + revised.getSize() < firstLineTo)
         {
           continue;
         }
 
         // This delta is after the lastLine of the screen: stop! 
         if (original.getAnchor() > lastLineFrom
-          && revised.getAnchor() > lastLineTo)
+            && revised.getAnchor() > lastLineTo)
         {
           break;
         }
@@ -303,23 +300,23 @@ public class DiffScrollComponent
         width = 10;
         height = 0;
         if (fromRect.y <= viewportRect.y
-          && toRect.y <= viewportRect.y + viewportRect.height)
+            && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - viewportRect.y - 1;
         }
         else if (fromRect.y > viewportRect.y
-          && toRect.y > viewportRect.y + viewportRect.height)
+                 && toRect.y > viewportRect.y + viewportRect.height)
         {
           height = viewportRect.y + viewportRect.height - fromRect.y - 1;
         }
         else if (fromRect.y > viewportRect.y
-          && toRect.y <= viewportRect.y + viewportRect.height)
+                 && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - fromRect.y - 1;
           //height = toRect.y - viewportRect.y - 1;
         }
         else if (fromRect.y <= viewportRect.y
-          && toRect.y > viewportRect.y + viewportRect.height)
+                 && toRect.y > viewportRect.y + viewportRect.height)
         {
           height = viewportRect.height - 1;
         }
@@ -341,9 +338,9 @@ public class DiffScrollComponent
           g2.drawLine(x, y + height, x + width, y + height);
         }
 
+        x = x + width + 1;
         if (selected)
         {
-          x = x + width + 1;
           selectionWidth = 5;
 
           g2.setColor(Color.yellow);
@@ -355,7 +352,15 @@ public class DiffScrollComponent
             g2.drawLine(x + selectionWidth, y, x + selectionWidth, y + height);
             g2.drawLine(x, y + height, x + selectionWidth, y + height);
           }
+
+          x = x + selectionWidth;
         }
+
+        int curveX1 = x;
+        int curveY1 = y;
+        int curveX4 = x;
+        int curveY4 = y + (height > 0 ? height : 0);
+
 
         // Draw revised chunk:
         fromLine = revised.getAnchor();
@@ -381,23 +386,23 @@ public class DiffScrollComponent
         width = 10;
         height = 0;
         if (fromRect.y <= viewportRect.y
-          && toRect.y <= viewportRect.y + viewportRect.height)
+            && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - viewportRect.y - 1;
         }
         else if (fromRect.y > viewportRect.y
-          && toRect.y > viewportRect.y + viewportRect.height)
+                 && toRect.y > viewportRect.y + viewportRect.height)
         {
           height = viewportRect.y + viewportRect.height - fromRect.y - 1;
         }
         else if (fromRect.y > viewportRect.y
-          && toRect.y <= viewportRect.y + viewportRect.height)
+                 && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - fromRect.y - 1;
           //height = toRect.y - viewportRect.y - 1;
         }
         else if (fromRect.y <= viewportRect.y
-          && toRect.y > viewportRect.y + viewportRect.height)
+                 && toRect.y > viewportRect.y + viewportRect.height)
         {
           height = viewportRect.height - 1;
         }
@@ -419,6 +424,35 @@ public class DiffScrollComponent
           g2.drawLine(x, y + height, x + width, y + height);
         }
 
+        int curveX2 = x;
+        int curveY2 = y;
+        int curveX3 = x;
+        int curveY3 = y + (height > 0 ? height : 0);
+
+        GeneralPath curve = new GeneralPath();
+        curve.append(new Line2D.Float(curveX4, curveY4, curveX1, curveY1),
+          false);
+        curve.append(new CubicCurve2D.Float(curveX1, curveY1, 
+                        curveX1 + ((curveX2 - curveX1) / 2), curveY1,
+                        curveX1 + ((curveX2 - curveX1) / 2), curveY2,
+                        curveX2, curveY2), true);
+        //curve.append(new CubicCurve2D.Float(curveX1, curveY1, curveX2, curveY1,
+        //  curveX1, curveY2, curveX2, curveY2), true);
+        curve.append(new Line2D.Float(curveX2, curveY2, curveX3, curveY3),
+          false);
+        //curve.append(new CubicCurve2D.Float(curveX3, curveY3, curveX4, curveY3,
+        //    curveX3, curveY4, curveX4, curveY4), true);
+        curve.append(new CubicCurve2D.Float(curveX3, curveY3, 
+                        curveX3 + ((curveX4 - curveX3) / 2), curveY3,
+                        curveX3 + ((curveX4 - curveX3) / 2), curveY4,
+                        curveX4, curveY4), true);
+        g2.setColor(color);
+        g2.fill(curve);
+        g2.setColor(darkerColor);
+        setAntiAlias(g2);
+        g2.draw(curve);
+        resetAntiAlias(g2);
+
         if (selected)
         {
           selectionWidth = 5;
@@ -437,12 +471,14 @@ public class DiffScrollComponent
         }
 
         // Draw the chunk connection:
+        /*
         g2.setColor(darkerColor);
         g2.drawLine(x0, y0, x0 + 15, y0);
         setAntiAlias(g2);
         g2.drawLine(x0 + 15, y0, x1 - 15, y1);
         resetAntiAlias(g2);
         g2.drawLine(x1 - 15, y1, x1, y1);
+        */
 
         // Draw merge right->left command.
         if (!leftsideReadonly)
@@ -457,8 +493,8 @@ public class DiffScrollComponent
           g2.setColor(darkerColor);
           g2.draw(shape);
           resetAntiAlias(g2);
-          commands.add(
-            new DiffChangeCommand(shape, delta, toPanelIndex, fromPanelIndex));
+          commands.add(new DiffChangeCommand(shape, delta, toPanelIndex,
+              fromPanelIndex));
 
           // Draw delete right command
           if (original.getSize() > 0)
@@ -467,8 +503,8 @@ public class DiffScrollComponent
             g2.drawLine(x0 + 3 - width, y0 + 3, x0 + 7 - width, y0 + 7);
             g2.drawLine(x0 + 7 - width, y0 + 3, x0 + 3 - width, y0 + 7);
             rect = new Rectangle(x0 + 2 - width, y0 + 2, 6, 6);
-            commands.add(
-              new DiffDeleteCommand(rect, delta, fromPanelIndex, toPanelIndex));
+            commands.add(new DiffDeleteCommand(rect, delta, fromPanelIndex,
+                toPanelIndex));
           }
         }
 
@@ -485,8 +521,8 @@ public class DiffScrollComponent
           g2.setColor(darkerColor);
           g2.drawPolygon(shape);
           resetAntiAlias(g2);
-          commands.add(
-            new DiffChangeCommand(shape, delta, fromPanelIndex, toPanelIndex));
+          commands.add(new DiffChangeCommand(shape, delta, fromPanelIndex,
+              toPanelIndex));
 
           // Draw delete right command
           if (revised.getSize() > 0)
@@ -495,8 +531,8 @@ public class DiffScrollComponent
             g2.drawLine(x1 + 3, y1 + 3, x1 + 7, y1 + 7);
             g2.drawLine(x1 + 7, y1 + 3, x1 + 3, y1 + 7);
             rect = new Rectangle(x1 + 2, y1 + 2, 6, 6);
-            commands.add(
-              new DiffDeleteCommand(rect, delta, toPanelIndex, fromPanelIndex));
+            commands.add(new DiffDeleteCommand(rect, delta, toPanelIndex,
+                fromPanelIndex));
           }
         }
       }
@@ -510,13 +546,9 @@ public class DiffScrollComponent
   }
 
   class DiffChangeCommand
-         extends Command
+      extends Command
   {
-    DiffChangeCommand(
-      Shape   shape,
-      JMDelta delta,
-      int     fromIndex,
-      int     toIndex)
+    DiffChangeCommand(Shape shape, JMDelta delta, int fromIndex, int toIndex)
     {
       super(shape, delta, fromIndex, toIndex);
     }
@@ -530,13 +562,9 @@ public class DiffScrollComponent
   }
 
   class DiffDeleteCommand
-         extends Command
+      extends Command
   {
-    DiffDeleteCommand(
-      Shape   shape,
-      JMDelta delta,
-      int     fromIndex,
-      int     toIndex)
+    DiffDeleteCommand(Shape shape, JMDelta delta, int fromIndex, int toIndex)
     {
       super(shape, delta, fromIndex, toIndex);
     }
@@ -552,15 +580,11 @@ public class DiffScrollComponent
   abstract class Command
   {
     Rectangle bounds;
-    JMDelta   delta;
-    int       fromIndex;
-    int       toIndex;
+    JMDelta delta;
+    int fromIndex;
+    int toIndex;
 
-    Command(
-      Shape   shape,
-      JMDelta delta,
-      int     fromIndex,
-      int     toIndex)
+    Command(Shape shape, JMDelta delta, int fromIndex, int toIndex)
     {
       this.bounds = shape.getBounds();
       this.delta = delta;
@@ -568,9 +592,7 @@ public class DiffScrollComponent
       this.toIndex = toIndex;
     }
 
-    boolean contains(
-      double x,
-      double y)
+    boolean contains(double x, double y)
     {
       return bounds.contains(x, y);
     }
