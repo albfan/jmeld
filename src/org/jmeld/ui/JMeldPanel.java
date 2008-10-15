@@ -23,6 +23,7 @@ import org.jmeld.*;
 import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
 import org.jmeld.ui.action.*;
+import org.jmeld.ui.bar.*;
 import org.jmeld.ui.search.*;
 import org.jmeld.ui.settings.*;
 import org.jmeld.ui.util.*;
@@ -49,35 +50,37 @@ public class JMeldPanel
 {
   // class variables:
   // All actions:
-  private static final String NEW_ACTION            = "New";
-  private static final String SAVE_ACTION           = "Save";
-  private static final String UNDO_ACTION           = "Undo";
-  private static final String REDO_ACTION           = "Redo";
-  private static final String RIGHT_ACTION          = "Right";
-  private static final String LEFT_ACTION           = "Left";
-  private static final String UP_ACTION             = "Up";
-  private static final String DOWN_ACTION           = "Down";
-  private static final String ZOOMPLUS_ACTION       = "ZoomPlus";
-  private static final String ZOOMMIN_ACTION        = "ZoomMin";
-  private static final String GOTOSELECTED_ACTION   = "GoToSelected";
-  private static final String GOTOFIRST_ACTION      = "GoToFirst";
-  private static final String GOTOLAST_ACTION       = "GoToLast";
-  private static final String STARTSEARCH_ACTION    = "StartSearch";
-  private static final String NEXTSEARCH_ACTION     = "NextSearch";
+  private static final String NEW_ACTION = "New";
+  private static final String SAVE_ACTION = "Save";
+  private static final String UNDO_ACTION = "Undo";
+  private static final String REDO_ACTION = "Redo";
+  private static final String RIGHT_ACTION = "Right";
+  private static final String LEFT_ACTION = "Left";
+  private static final String UP_ACTION = "Up";
+  private static final String DOWN_ACTION = "Down";
+  private static final String ZOOMPLUS_ACTION = "ZoomPlus";
+  private static final String ZOOMMIN_ACTION = "ZoomMin";
+  private static final String GOTOSELECTED_ACTION = "GoToSelected";
+  private static final String GOTOFIRST_ACTION = "GoToFirst";
+  private static final String GOTOLAST_ACTION = "GoToLast";
+  private static final String GOTOLINE_ACTION = "GoToLine";
+  private static final String STARTSEARCH_ACTION = "StartSearch";
+  private static final String NEXTSEARCH_ACTION = "NextSearch";
   private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
-  private static final String REFRESH_ACTION        = "Refresh";
-  private static final String MERGEMODE_ACTION      = "MergeMode";
-  private static final String HELP_ACTION           = "Help";
-  private static final String ABOUT_ACTION          = "About";
-  private static final String SETTINGS_ACTION       = "Settings";
-  private static final String EXIT_ACTION           = "Exit";
+  private static final String REFRESH_ACTION = "Refresh";
+  private static final String MERGEMODE_ACTION = "MergeMode";
+  private static final String HELP_ACTION = "Help";
+  private static final String ABOUT_ACTION = "About";
+  private static final String SETTINGS_ACTION = "Settings";
+  private static final String EXIT_ACTION = "Exit";
 
   // instance variables:
-  private ActionHandler       actionHandler;
-  private JTabbedPane         tabbedPane;
-  private JPanel              bar;
-  private SearchBar           searchBar;
-  private boolean             mergeMode;
+  private ActionHandler actionHandler;
+  private JTabbedPane tabbedPane;
+  private JPanel barContainer;
+  private AbstractBarDialog currentBarDialog;
+  private SearchBarDialog searchBarDialog;
+  private boolean mergeMode;
 
   public JMeldPanel()
   {
@@ -96,6 +99,8 @@ public class JMeldPanel
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
     JMeldSettings.getInstance().addConfigurationListener(this);
+
+    setTransferHandler(getDragAndDropHandler());
   }
 
   public void openComparison(List<String> fileNameList)
@@ -131,8 +136,7 @@ public class JMeldPanel
     }
   }
 
-  public void openComparison(String leftName,
-                             String rightName)
+  public void openComparison(String leftName, String rightName)
   {
     File leftFile;
     File rightFile;
@@ -172,22 +176,19 @@ public class JMeldPanel
     }
   }
 
-  public void openFileComparison(File leftFile,
-                                 File rightFile,
-                                 boolean openInBackground)
+  public void openFileComparison(File leftFile, File rightFile,
+      boolean openInBackground)
   {
     new NewFileComparisonPanel(leftFile, rightFile, openInBackground).execute();
   }
 
-  public void openFileComparison(JMDiffNode diffNode,
-                                 boolean openInBackground)
+  public void openFileComparison(JMDiffNode diffNode, boolean openInBackground)
   {
     new NewFileComparisonPanel(diffNode, openInBackground).execute();
   }
 
-  public void openDirectoryComparison(File leftFile,
-                                      File rightFile,
-                                      Filter filter)
+  public void openDirectoryComparison(File leftFile, File rightFile,
+      Filter filter)
   {
     new NewDirectoryComparisonPanel(leftFile, rightFile, filter).execute();
   }
@@ -241,21 +242,21 @@ public class JMeldPanel
 
     cc = new CellConstraints();
 
-    bar = new JPanel(new FormLayout("0:grow", "pref, pref, pref"));
-    bar.add(new JSeparator(), cc.xy(1, 2));
-    bar.add(StatusBar.getInstance(), cc.xy(1, 3));
+    barContainer = new JPanel(new FormLayout("0:grow", "pref, pref, pref"));
+    barContainer.add(new JSeparator(), cc.xy(1, 2));
+    barContainer.add(StatusBar.getInstance(), cc.xy(1, 3));
 
-    return bar;
+    return barContainer;
   }
 
-  private SearchBar getSearchBar()
+  private SearchBarDialog getSearchBarDialog()
   {
-    if (searchBar == null)
+    if (searchBarDialog == null)
     {
-      searchBar = new SearchBar(this);
+      searchBarDialog = new SearchBarDialog(this);
     }
 
-    return searchBar;
+    return searchBarDialog;
   }
 
   public void initActions()
@@ -325,6 +326,9 @@ public class JMeldPanel
     action = actionHandler.createAction(this, GOTOLAST_ACTION);
     installKey("alt END", action);
 
+    action = actionHandler.createAction(this, GOTOLINE_ACTION);
+    installKey("ctrl L", action);
+
     action = actionHandler.createAction(this, STARTSEARCH_ACTION);
     installKey("ctrl F", action);
 
@@ -384,8 +388,7 @@ public class JMeldPanel
     else if (dialog.getFunction() == NewPanelDialog.Function.DIRECTORY_COMPARISON)
     {
       openDirectoryComparison(new File(dialog.getLeftDirectoryName()),
-                              new File(dialog.getRightDirectoryName()), dialog
-                                  .getFilter());
+        new File(dialog.getRightDirectoryName()), dialog.getFilter());
     }
     else if (dialog.getFunction() == NewPanelDialog.Function.VERSION_CONTROL)
     {
@@ -512,24 +515,31 @@ public class JMeldPanel
     repaint();
   }
 
+  public void doGoToLine(ActionEvent ae)
+  {
+    activateBarDialog(new LineNumberBarDialog(this));
+  }
+
+  public void doGoToLine(int line)
+  {
+    getCurrentContentPanel().doGoToLine(line);
+    repaint();
+    deactivateBarDialog();
+  }
+
   public void doStartSearch(ActionEvent ae)
   {
-    CellConstraints cc;
-    SearchBar sb;
+    SearchBarDialog sbd;
 
-    sb = getSearchBar();
+    sbd = getSearchBarDialog();
+    sbd.setSearchText(getSelectedSearchText());
 
-    cc = new CellConstraints();
-    bar.add(sb, cc.xy(1, 1));
-    sb.setSearchText(getSelectedSearchText());
-    sb.activate();
-    bar.revalidate();
+    activateBarDialog(sbd);
   }
 
   public void doStopSearch(ActionEvent ae)
   {
-    bar.remove(getSearchBar());
-    bar.revalidate();
+    deactivateBarDialog();
 
     for (JMeldContentPanelIF cp : getContentPanelList())
     {
@@ -544,21 +554,31 @@ public class JMeldPanel
 
   SearchCommand getSearchCommand()
   {
-    if (getSearchBar().getParent() == null)
+    if (currentBarDialog != getSearchBarDialog())
     {
       return null;
     }
 
-    return searchBar.getCommand();
+    return getSearchBarDialog().getCommand();
   }
 
   public void doNextSearch(ActionEvent ae)
   {
+    if (currentBarDialog != getSearchBarDialog())
+    {
+      return;
+    }
+
     getCurrentContentPanel().doNextSearch();
   }
 
   public void doPreviousSearch(ActionEvent ae)
   {
+    if (currentBarDialog != getSearchBarDialog())
+    {
+      return;
+    }
+
     getCurrentContentPanel().doPreviousSearch();
   }
 
@@ -595,9 +615,8 @@ public class JMeldPanel
 
     if (mergeMode)
     {
-      StatusBar.getInstance()
-          .setNotification(MERGEMODE_ACTION,
-                           ImageUtil.getSmallImageIcon("jmeld_mergemode-on"));
+      StatusBar.getInstance().setNotification(MERGEMODE_ACTION,
+        ImageUtil.getSmallImageIcon("jmeld_mergemode-on"));
     }
     else
     {
@@ -666,7 +685,7 @@ public class JMeldPanel
     content.setId(contentId);
     content.setLayout(new BorderLayout());
     content.add(new JButton("JMeld version: " + Version.getVersion()),
-                BorderLayout.CENTER);
+      BorderLayout.CENTER);
 
     tabbedPane.add(content, getTabIcon("stock_about", "About"));
     tabbedPane.setSelectedComponent(content);
@@ -676,10 +695,16 @@ public class JMeldPanel
   {
     JMeldContentPanelIF cp;
 
-    // Stop the searchBar if it is showing.
-    if (getSearchBar().getParent() != null)
+    // Stop the searchBarDialog if it is showing.
+    if (currentBarDialog == getSearchBarDialog())
     {
       doStopSearch(ae);
+      return;
+    }
+
+    if (currentBarDialog != null)
+    {
+      deactivateBarDialog();
       return;
     }
 
@@ -796,13 +821,13 @@ public class JMeldPanel
   class NewFileComparisonPanel
       extends SwingWorker<String, Object>
   {
-    private JMDiffNode           diffNode;
-    private File                 leftFile;
-    private File                 rightFile;
-    private boolean              openInBackground;
-    private BufferDiffPanel      panel;
+    private JMDiffNode diffNode;
+    private File leftFile;
+    private File rightFile;
+    private boolean openInBackground;
+    private BufferDiffPanel panel;
     private AbstractContentPanel contentPanel;
-    private String               contentId;
+    private String contentId;
 
     NewFileComparisonPanel(JMDiffNode diffNode, boolean openInBackground)
     {
@@ -846,7 +871,7 @@ public class JMeldPanel
           }
 
           diffNode = JMDiffNodeFactory.create(leftFile.getName(), leftFile,
-                                              rightFile.getName(), rightFile);
+            rightFile.getName(), rightFile);
         }
 
         contentId = "BufferDiffPanel:" + diffNode.getId();
@@ -878,8 +903,7 @@ public class JMeldPanel
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
-                                        "Error opening file",
-                                        JOptionPane.ERROR_MESSAGE);
+            "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -930,12 +954,12 @@ public class JMeldPanel
   class NewDirectoryComparisonPanel
       extends SwingWorker<String, Object>
   {
-    private File                 leftFile;
-    private File                 rightFile;
-    private Filter               filter;
-    private DirectoryDiff        diff;
+    private File leftFile;
+    private File rightFile;
+    private Filter filter;
+    private DirectoryDiff diff;
     private AbstractContentPanel contentPanel;
-    private String               contentId;
+    private String contentId;
 
     NewDirectoryComparisonPanel(File leftFile, File rightFile, Filter filter)
     {
@@ -1005,8 +1029,7 @@ public class JMeldPanel
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
-                                        "Error opening file",
-                                        JOptionPane.ERROR_MESSAGE);
+            "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -1035,10 +1058,10 @@ public class JMeldPanel
   class NewVersionControlComparisonPanel
       extends SwingWorker<String, Object>
   {
-    private File                 directory;
-    private VersionControlDiff   diff;
+    private File directory;
+    private VersionControlDiff diff;
     private AbstractContentPanel contentPanel;
-    private String               contentId;
+    private String contentId;
 
     NewVersionControlComparisonPanel(File directory)
     {
@@ -1087,8 +1110,7 @@ public class JMeldPanel
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
-                                        "Error opening file",
-                                        JOptionPane.ERROR_MESSAGE);
+            "Error opening file", JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -1114,9 +1136,7 @@ public class JMeldPanel
     }
   }
 
-  private void installKey(boolean enabled,
-                          String key,
-                          MeldAction action)
+  private void installKey(boolean enabled, String key, MeldAction action)
   {
     if (!enabled)
     {
@@ -1128,20 +1148,17 @@ public class JMeldPanel
     }
   }
 
-  private void installKey(String key,
-                          MeldAction action)
+  private void installKey(String key, MeldAction action)
   {
     SwingUtil.installKey(this, key, action);
   }
 
-  private void deInstallKey(String key,
-                            MeldAction action)
+  private void deInstallKey(String key, MeldAction action)
   {
     SwingUtil.deInstallKey(this, key, action);
   }
 
-  private TabIcon getTabIcon(String iconName,
-                             String text)
+  private TabIcon getTabIcon(String iconName, String text)
   {
     TabIcon icon;
 
@@ -1207,8 +1224,48 @@ public class JMeldPanel
     return true;
   }
 
+  public void activateBarDialog(AbstractBarDialog bar)
+  {
+    CellConstraints cc;
+
+    deactivateBarDialog();
+
+    cc = new CellConstraints();
+    barContainer.add(bar, cc.xy(1, 1));
+    bar.activate();
+    currentBarDialog = bar;
+    barContainer.revalidate();
+  }
+
+  public void deactivateBarDialog()
+  {
+    if (currentBarDialog != null)
+    {
+      barContainer.remove(currentBarDialog);
+      barContainer.revalidate();
+      currentBarDialog.deactivate();
+    }
+  }
+
   public void configurationChanged()
   {
     checkActions();
+  }
+
+  private TransferHandler getDragAndDropHandler()
+  {
+    return new TransferHandler()
+    {
+      public boolean canImport(TransferHandler.TransferSupport support)
+      {
+        System.out.println(support);
+        return false;
+      }
+
+      public boolean importData(TransferHandler.TransferSupport support)
+      {
+        return true;
+      }
+    };
   }
 }

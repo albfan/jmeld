@@ -54,6 +54,8 @@ public interface JMeldContentPanelIF
 
   public void doGoToLast();
 
+  public void doGoToLine(int line);
+
   public void doStopSearch();
 
   public SearchHits doSearch();

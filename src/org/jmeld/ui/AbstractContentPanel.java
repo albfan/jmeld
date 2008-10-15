@@ -28,7 +28,7 @@ public class AbstractContentPanel
     implements JMeldContentPanelIF
 {
   private MyUndoManager undoManager = new MyUndoManager();
-  private String        id;
+  private String id;
 
   public void setId(String id)
   {
@@ -125,6 +125,10 @@ public class AbstractContentPanel
   }
 
   public void doGoToLast()
+  {
+  }
+
+  public void doGoToLine(int line)
   {
   }
 

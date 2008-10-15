@@ -254,6 +254,12 @@ public abstract class AbstractBufferDocument
     }
   }
 
+  public void reset()
+  {
+    lineArray = null;
+    lineOffsetArray = null;
+  }
+
   public void write()
     throws JMeldException
   {
@@ -602,7 +608,7 @@ public abstract class AbstractBufferDocument
       }
 
       numberOfLinesChanged = getLines().length;
-      lineArray = null;
+      reset();
       numberOfLinesChanged = getLines().length - numberOfLinesChanged;
 
       startLine = getLineForOffset(de.getOffset() + 1);

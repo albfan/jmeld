@@ -995,6 +995,21 @@ public class BufferDiffPanel
     }
   }
 
+  @Override
+  public void doGoToLine(int line)
+  {
+    FilePanel fp;
+
+    fp = getSelectedPanel();
+    if (fp == null)
+    {
+      return;
+    }
+
+    scrollSynchronizer.scrollToLine(fp, line);
+    setSelectedLine(line);
+  }
+
   class Zoom
   {
     Font font;
