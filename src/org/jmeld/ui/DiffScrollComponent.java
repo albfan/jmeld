@@ -429,6 +429,7 @@ public class DiffScrollComponent
         int curveX3 = x;
         int curveY3 = y + (height > 0 ? height : 0);
 
+/*
         GeneralPath curve = new GeneralPath();
         curve.append(new Line2D.Float(curveX4, curveY4, curveX1, curveY1),
           false);
@@ -452,6 +453,7 @@ public class DiffScrollComponent
         setAntiAlias(g2);
         g2.draw(curve);
         resetAntiAlias(g2);
+        */
 
         if (selected)
         {
@@ -471,14 +473,12 @@ public class DiffScrollComponent
         }
 
         // Draw the chunk connection:
-        /*
         g2.setColor(darkerColor);
         g2.drawLine(x0, y0, x0 + 15, y0);
         setAntiAlias(g2);
         g2.drawLine(x0 + 15, y0, x1 - 15, y1);
         resetAntiAlias(g2);
         g2.drawLine(x1 - 15, y1, x1, y1);
-        */
 
         // Draw merge right->left command.
         if (!leftsideReadonly)
