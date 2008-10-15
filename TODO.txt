@@ -60,22 +60,24 @@ Release 2.1:
 - [done] BUG: Helppanel can be instantiated twice.
 - [done] BUG: Abouttpanel can be instantiated twice.
 - [done] BUG: Search doesn't work OK.
--        Change ignore settings for 1 session.
 - [done] Support multiple charsets
+- [    ] Bug: diff file -> edit file -> exit tab [don't save] -> 
+              diff file -> Exception!
+- [    ] CubicCurve in DiffScrollComponent.java
 
 Release 2.2:
 - [75%]  incremental diff (Adding to the end of the file doesn't work yet)
 -        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
          (Change it to OutLine of the netbeans project!)
 -        Create manual
--        L&F preference
+- [done] L&F preference
 -        Support drag and drop.
 - [done] Remove jgoodies FormLayout in favour of Matisse groupLayout.
--        BUG[STA] Adjust search in FolderDiffPanel
--        BUG[WEB] Search doesn't behave after editing.
--        Exclude patterns in diff (Text Filters in meld).
+- [done] BUG[STA] Adjust search in FolderDiffPanel
+- [done] BUG[WEB] Search doesn't behave after editing.
+- [NO  ] Exclude patterns in diff (Text Filters in meld). [WONT IMPLEMENT!]
 -        Cancel the current diff if it takes too long.
--        BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and
+- [done] BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and
                   in the other it is a folder!
 -        Ability to use external gnu diff
 -        Calculate 'isChanged' in AbstractConfiguration.
