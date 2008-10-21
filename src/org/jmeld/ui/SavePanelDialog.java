@@ -101,6 +101,10 @@ public class SavePanelDialog
       }
 
       document = documents.get(i);
+      if(document == null)
+      {
+        continue;
+      }
 
       try
       {
@@ -159,6 +163,10 @@ public class SavePanelDialog
     for (int i = 0; i < documents.size(); i++)
     {
       document = documents.get(i);
+      if(document == null)
+      {
+        continue;
+      }
 
       checkBox = new JCheckBox(document.getName());
       checkBoxes[i] = checkBox;
