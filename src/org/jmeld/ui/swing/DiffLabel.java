@@ -19,6 +19,8 @@ package org.jmeld.ui.swing;
 import org.jmeld.diff.*;
 import org.jmeld.util.*;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -40,6 +42,9 @@ public class DiffLabel
 
     setEditable(false);
     setOpaque(false);
+    // Bug in Nimbus L&F doesn't honour the opaqueness of a JLabel.
+    // Setting a fully transparent color is a workaround:
+    setBackground(new Color(0, 0, 0, 0));
     setBorder(null);
 
     defaultStyle = getStyle(StyleContext.DEFAULT_STYLE);
