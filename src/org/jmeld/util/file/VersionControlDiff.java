@@ -30,8 +30,8 @@ import java.util.*;
 public class VersionControlDiff
     extends FolderDiff
 {
-  private File                    directory;
-  private JMDiffNode              rootNode;
+  private File directory;
+  private JMDiffNode rootNode;
   private Map<String, JMDiffNode> nodes;
 
   public VersionControlDiff(File directory, Mode mode)
@@ -99,7 +99,8 @@ public class VersionControlDiff
 
         node = addNode(entry.getPath(), !file.isDirectory());
 
-        node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry.getPath(), file));
+        node.setBufferNodeLeft(new VersionControlBaseNode(versionControl,
+            entry.getPath(), file));
         node.setBufferNodeRight(new FileNode(entry.getPath(), file));
       }
     }
@@ -114,9 +115,8 @@ public class VersionControlDiff
     }
 
     StatusBar.getInstance().setState(
-                                     "Ready comparing directories (took "
-                                         + (stopWatch.getElapsedTime() / 1000)
-                                         + " seconds)");
+      "Ready comparing directories (took "
+          + (stopWatch.getElapsedTime() / 1000) + " seconds)");
     StatusBar.getInstance().stop();
   }
 
@@ -173,7 +173,7 @@ public class VersionControlDiff
     VersionControlDiff diff;
     StopWatch stopWatch;
 
-    diff = new VersionControlDiff(new File(args[0]), 
+    diff = new VersionControlDiff(new File(args[0]),
         VersionControlDiff.Mode.TWO_WAY);
     stopWatch = new StopWatch();
     stopWatch.start();

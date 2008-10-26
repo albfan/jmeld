@@ -465,20 +465,10 @@ public class JMeldPanel
     return panel.isRedoEnabled();
   }
 
-  public boolean isLeftEnabled()
-  {
-    return !JMeldSettings.getInstance().getEditor().getLeftsideReadonly();
-  }
-
   public void doLeft(ActionEvent ae)
   {
     getCurrentContentPanel().doLeft();
     repaint();
-  }
-
-  public boolean isRightEnabled()
-  {
-    return !JMeldSettings.getInstance().getEditor().getRightsideReadonly();
   }
 
   public void doRight(ActionEvent ae)

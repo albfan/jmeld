@@ -21,25 +21,28 @@ public abstract class SvnCmd<T>
     Process p;
     BufferedReader br;
     InputStream is;
-    int c;
+    int count;
     ByteArrayOutputStream baos;
     String text;
     StringBuilder errorText;
+    byte[] data;
 
     try
     {
       pb = new ProcessBuilder(command);
       p = pb.start();
 
-      System.out.println("execute: " + Arrays.asList(command));
+      //System.out.println("execute: " + Arrays.asList(command));
+
+      data = new byte[4096];
 
       baos = new ByteArrayOutputStream();
-      br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-      while ((c = br.read()) != -1)
+      is = new BufferedInputStream(p.getInputStream());
+      while ((count = is.read(data, 0, data.length)) != -1)
       {
-        baos.write(c);
+        baos.write(data, 0, count);
       }
-      br.close();
+      is.close();
 
       p.waitFor();
       if (p.exitValue() != 0)

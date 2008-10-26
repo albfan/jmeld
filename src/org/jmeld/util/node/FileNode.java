@@ -100,4 +100,9 @@ public class FileNode
   {
     exists = file.exists();
   }
+
+  public boolean isReadonly()
+  {
+    return false;
+  }
 }

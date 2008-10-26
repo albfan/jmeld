@@ -43,6 +43,7 @@ public class DiffScrollComponent
   private Object antiAlias;
   private boolean leftsideReadonly;
   private boolean rightsideReadonly;
+  private boolean simpleDraw = true;
 
   public DiffScrollComponent(BufferDiffPanel diffPanel, int fromPanelIndex,
       int toPanelIndex)
@@ -324,21 +325,28 @@ public class DiffScrollComponent
         x0 = x + width;
         y0 = y;
 
-        if (height > 0)
+        if (simpleDraw)
         {
-          g2.setColor(color);
-          g2.fillRect(x, y, width, height);
+          if (height > 0)
+          {
+            g2.setColor(color);
+            g2.fillRect(x, y, width, height);
+          }
+
+          g2.setColor(darkerColor);
+          g2.drawLine(x, y, x + width, y);
+          if (height > 0)
+          {
+            g2.drawLine(x, y + height, x + width, y + height);
+            if (simpleDraw)
+            {
+              g2.drawLine(x + width, y, x + width, y + height);
+            }
+          }
+
+          x = x + width + 1;
         }
 
-        g2.setColor(darkerColor);
-        g2.drawLine(x, y, x + width, y);
-        if (height > 0)
-        {
-          g2.drawLine(x + width, y, x + width, y + height);
-          g2.drawLine(x, y + height, x + width, y + height);
-        }
-
-        x = x + width + 1;
         if (selected)
         {
           selectionWidth = 5;
@@ -410,50 +418,61 @@ public class DiffScrollComponent
         x1 = x;
         y1 = y;
 
-        if (height > 0)
+        if (simpleDraw)
         {
+          if (height > 0)
+          {
+            g2.setColor(color);
+            g2.fillRect(x, y, width, height);
+          }
+
+          g2.setColor(darkerColor);
+          g2.drawLine(x, y, x + width, y);
+          if (height > 0)
+          {
+            g2.drawLine(x, y + height, x + width, y + height);
+            if (simpleDraw)
+            {
+              g2.drawLine(x, y, x, y + height);
+            }
+          }
+        }
+
+        if (!simpleDraw)
+        {
+          int curveX2 = x + width;
+          int curveY2 = y;
+          int curveX3 = x + width;
+          int curveY3 = y + (height > 0 ? height : 0);
+
+          GeneralPath curve = new GeneralPath();
+          /*
+          curve.append(new Line2D.Float(curveX4, curveY4, curveX1, curveY1),
+            false);
+          */
+          curve.append(new CubicCurve2D.Float(curveX1, curveY1,
+              curveX1 + ((curveX2 - curveX1) / 2), curveY1,
+              curveX1 + ((curveX2 - curveX1) / 2), curveY2, curveX2, curveY2),
+            true);
+          //curve.append(new CubicCurve2D.Float(curveX1, curveY1, curveX2, curveY1,
+          //  curveX1, curveY2, curveX2, curveY2), true);
+          /*
+          curve.append(new Line2D.Float(curveX2, curveY2, curveX3, curveY3),
+            false);
+          */
+          //curve.append(new CubicCurve2D.Float(curveX3, curveY3, curveX4, curveY3,
+          //    curveX3, curveY4, curveX4, curveY4), true);
+          curve.append(new CubicCurve2D.Float(curveX3, curveY3,
+              curveX3 + ((curveX4 - curveX3) / 2), curveY3,
+              curveX3 + ((curveX4 - curveX3) / 2), curveY4, curveX4, curveY4),
+            true);
           g2.setColor(color);
-          g2.fillRect(x, y, width, height);
+          g2.fill(curve);
+          g2.setColor(darkerColor);
+          setAntiAlias(g2);
+          g2.draw(curve);
+          resetAntiAlias(g2);
         }
-
-        g2.setColor(darkerColor);
-        g2.drawLine(x, y, x + width, y);
-        if (height > 0)
-        {
-          g2.drawLine(x, y, x, y + height);
-          g2.drawLine(x, y + height, x + width, y + height);
-        }
-
-        int curveX2 = x;
-        int curveY2 = y;
-        int curveX3 = x;
-        int curveY3 = y + (height > 0 ? height : 0);
-
-/*
-        GeneralPath curve = new GeneralPath();
-        curve.append(new Line2D.Float(curveX4, curveY4, curveX1, curveY1),
-          false);
-        curve.append(new CubicCurve2D.Float(curveX1, curveY1, 
-                        curveX1 + ((curveX2 - curveX1) / 2), curveY1,
-                        curveX1 + ((curveX2 - curveX1) / 2), curveY2,
-                        curveX2, curveY2), true);
-        //curve.append(new CubicCurve2D.Float(curveX1, curveY1, curveX2, curveY1,
-        //  curveX1, curveY2, curveX2, curveY2), true);
-        curve.append(new Line2D.Float(curveX2, curveY2, curveX3, curveY3),
-          false);
-        //curve.append(new CubicCurve2D.Float(curveX3, curveY3, curveX4, curveY3,
-        //    curveX3, curveY4, curveX4, curveY4), true);
-        curve.append(new CubicCurve2D.Float(curveX3, curveY3, 
-                        curveX3 + ((curveX4 - curveX3) / 2), curveY3,
-                        curveX3 + ((curveX4 - curveX3) / 2), curveY4,
-                        curveX4, curveY4), true);
-        g2.setColor(color);
-        g2.fill(curve);
-        g2.setColor(darkerColor);
-        setAntiAlias(g2);
-        g2.draw(curve);
-        resetAntiAlias(g2);
-        */
 
         if (selected)
         {
@@ -473,15 +492,18 @@ public class DiffScrollComponent
         }
 
         // Draw the chunk connection:
-        g2.setColor(darkerColor);
-        g2.drawLine(x0, y0, x0 + 15, y0);
-        setAntiAlias(g2);
-        g2.drawLine(x0 + 15, y0, x1 - 15, y1);
-        resetAntiAlias(g2);
-        g2.drawLine(x1 - 15, y1, x1, y1);
+        if (simpleDraw)
+        {
+          g2.setColor(darkerColor);
+          g2.drawLine(x0, y0, x0 + 15, y0);
+          setAntiAlias(g2);
+          g2.drawLine(x0 + 15, y0, x1 - 15, y1);
+          resetAntiAlias(g2);
+          g2.drawLine(x1 - 15, y1, x1, y1);
+        }
 
         // Draw merge right->left command.
-        if (!leftsideReadonly)
+        if (!leftsideReadonly && !bdFrom.isReadonly())
         {
           shape = new Polygon();
           shape.addPoint(x0, y0);
@@ -509,7 +531,7 @@ public class DiffScrollComponent
         }
 
         // Draw merge left->right command.
-        if (!rightsideReadonly)
+        if (!rightsideReadonly && !bdTo.isReadonly())
         {
           shape = new Polygon();
           shape.addPoint(x1, y1);

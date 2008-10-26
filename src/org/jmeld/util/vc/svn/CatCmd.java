@@ -1,12 +1,9 @@
 package org.jmeld.util.vc.svn;
 
-import org.jmeld.diff.*;
 import org.jmeld.util.*;
 import org.jmeld.util.vc.*;
 
 import java.io.*;
-import java.util.*;
-import java.util.regex.*;
 
 public class CatCmd
     extends SvnCmd<BaseFile>
@@ -21,34 +18,27 @@ public class CatCmd
 
   public Result execute()
   {
-    super.execute("svn", "cat", "--non-interactive", "-r", "BASE", file.getPath());
+    super.execute("svn", "cat", "--non-interactive", "-r", "BASE", file
+        .getPath());
 
     return getResult();
   }
 
   protected void build(byte[] data)
   {
-    System.out.println(data);
-    setResultData(new BaseFile(new String(data).toCharArray()));
+    setResultData(new BaseFile(data));
   }
 
   public static void main(String[] args)
   {
-    BufferedReader reader;
-    String line;
     BaseFile result;
+    byte[]   byteArray;
 
     try
     {
       result = new SubversionVersionControl().getBaseFile(new File(args[0]));
-      if (result != null)
-      {
-        reader = new BufferedReader(new CharArrayReader(result.getCharArray()));
-        while ((line = reader.readLine()) != null)
-        {
-          System.out.println(line);
-        }
-      }
+      byteArray = result.getByteArray();
+      System.out.write(byteArray, 0, byteArray.length);
     }
     catch (Exception ex)
     {

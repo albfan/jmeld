@@ -658,6 +658,11 @@ public abstract class AbstractBufferDocument
     return null;
   }
 
+  public boolean isReadonly()
+  {
+    return false;
+  }
+
   public String toString()
   {
     return "Document[name=" + name + "]";

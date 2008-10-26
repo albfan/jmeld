@@ -60,4 +60,6 @@ public interface BufferDocumentIF
   public void print();
 
   public Reader getReader() throws JMeldException;
+
+  public boolean isReadonly();
 }

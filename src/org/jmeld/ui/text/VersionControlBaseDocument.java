@@ -21,14 +21,20 @@ import org.jmeld.*;
 import java.io.*;
 
 import org.jmeld.util.vc.*;
+import org.jmeld.util.*;
+
+import java.io.*;
+import java.nio.charset.*;
 
 public class VersionControlBaseDocument
     extends AbstractBufferDocument
 {
   // instance variables:
   private VersionControlIF versionControl;
-  private File             file;
-  private BaseFile         baseFile;
+  private File file;
+  private BaseFile baseFile;
+  private boolean  baseFileInitialized;
+  private Charset charset;
 
   public VersionControlBaseDocument(VersionControlIF versionControl, File file)
   {
@@ -51,13 +57,18 @@ public class VersionControlBaseDocument
   @Override
   public int getBufferSize()
   {
-    return (int) file.length();
+    BaseFile bf;
+
+    bf = getBaseFile();
+
+    return bf == null ? -1 : bf.getLength();
   }
 
   @Override
-  public Reader getReader()
-      throws JMeldException
+  public Reader getReader() throws JMeldException
   {
+    BufferedInputStream bais;
+
     if (!file.isFile() || !file.canRead())
     {
       throw new JMeldException("Could not open file: " + file);
@@ -65,17 +76,9 @@ public class VersionControlBaseDocument
 
     try
     {
-      if (baseFile == null)
-      {
-        baseFile = versionControl.getBaseFile(file);
-        if (baseFile == null)
-        {
-          throw new JMeldException("Could not create BaseFileReader for : "
-                                   + file.getName());
-        }
-      }
-
-      return new CharArrayReader(baseFile.getCharArray());
+      bais = new BufferedInputStream(new ByteArrayInputStream(getBaseFile().getByteArray()));
+      charset = CharsetDetector.getInstance().getCharset(bais);
+      return new BufferedReader(new InputStreamReader(bais, charset));
     }
     catch (Exception ex)
     {
@@ -84,11 +87,27 @@ public class VersionControlBaseDocument
     }
   }
 
-    @Override
-  protected Writer getWriter()
-      throws JMeldException
+  @Override
+  protected Writer getWriter() throws JMeldException
   {
     return null;
+  }
+
+  private BaseFile getBaseFile() 
+  {
+    if (!baseFileInitialized)
+    {
+      baseFile = versionControl.getBaseFile(file);
+      baseFileInitialized = true;
+    }
+
+    return baseFile;
+  }
+
+  @Override
+  public boolean isReadonly()
+  {
+    return true;
   }
 
   public static void main(String[] args)

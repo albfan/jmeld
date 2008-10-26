@@ -4,15 +4,20 @@ import java.util.*;
 
 public class BaseFile
 {
-  private char[] charArray;
+  private byte[] byteArray;
 
-  public BaseFile(char[] charArray)
+  public BaseFile(byte[] byteArray)
   {
-    this.charArray = charArray;
+    this.byteArray = byteArray;
   }
 
-  public char[] getCharArray()
+  public int getLength()
   {
-    return charArray;
+    return byteArray.length;
+  }
+
+  public byte[] getByteArray()
+  {
+    return byteArray;
   }
 }

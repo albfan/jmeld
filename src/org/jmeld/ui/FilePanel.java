@@ -47,7 +47,6 @@ public class FilePanel
   private String           name;
   private int              position;
   private DiffLabel        fileLabel;
-  private JButton          browseButton;
   private JComboBox        fileBox;
   private JScrollPane      scrollPane;
   private JTextArea        editor;
@@ -69,7 +68,6 @@ public class FilePanel
 
   private void init()
   {
-    Font font;
     ImageIcon icon;
 
     editor = new JTextArea();
@@ -94,9 +92,6 @@ public class FilePanel
       scrollPane.getVerticalScrollBar()
           .putClientProperty("JScrollBar.isFreeStanding", Boolean.TRUE);
     }
-
-    browseButton = new JButton("Browse...");
-    browseButton.addActionListener(getBrowseButtonAction());
 
     fileBox = new JComboBox();
     fileBox.addActionListener(getFileBoxAction());
@@ -128,11 +123,6 @@ public class FilePanel
     return filePanelBar;
   }
 
-  JButton getBrowseButton()
-  {
-    return browseButton;
-  }
-
   JComboBox getFileBox()
   {
     return fileBox;
@@ -161,24 +151,6 @@ public class FilePanel
   JButton getSaveButton()
   {
     return saveButton;
-  }
-
-  private void setFile(File file)
-  {
-    BufferDocumentIF bd;
-
-    try
-    {
-      bd = new FileDocument(file);
-      bd.read();
-
-      setBufferDocument(bd);
-      checkActions();
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
   }
 
   public void setBufferDocument(BufferDocumentIF bd)
@@ -219,6 +191,7 @@ public class FilePanel
       fileLabel.setText(fileName);
 
       checkActions();
+      initConfiguration();
     }
     catch (Exception ex)
     {
@@ -540,36 +513,6 @@ public class FilePanel
     }
   }
 
-  public ActionListener getBrowseButtonAction()
-  {
-    return new ActionListener()
-    {
-      public void actionPerformed(ActionEvent ae)
-      {
-        FileChooserPreference pref;
-        JFileChooser chooser;
-        int result;
-        File file;
-
-        // Don't allow accidentaly creation or rename of files.
-        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-        chooser = new JFileChooser();
-        // Reset the readOnly property as it is systemwide.
-        UIManager.put("FileChooser.readOnly", Boolean.FALSE);
-        chooser.setApproveButtonText("Choose");
-        chooser.setDialogTitle("Load file");
-        pref = new FileChooserPreference("Browse", chooser);
-        result = chooser.showOpenDialog(diffPanel);
-
-        if (result == JFileChooser.APPROVE_OPTION)
-        {
-          pref.save();
-          setFile(chooser.getSelectedFile());
-        }
-      }
-    };
-  }
-
   public ActionListener getSaveButtonAction()
   {
     return new ActionListener()
@@ -725,6 +668,12 @@ public class FilePanel
     else if (position == BufferDiffPanel.RIGHT)
     {
       readonly = c.getEditor().getRightsideReadonly();
+    }
+
+    if(bufferDocument != null &&
+       bufferDocument.isReadonly())
+    {
+      readonly = true;
     }
 
     editor.setEditable(!readonly);
