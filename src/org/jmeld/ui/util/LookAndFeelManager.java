@@ -1,6 +1,7 @@
 package org.jmeld.ui.util;
 
 import com.jgoodies.looks.plastic.*;
+import com.jgoodies.looks.plastic.theme.*;
 
 import java.awt.*;
 import java.util.*;
@@ -28,18 +29,13 @@ public class LookAndFeelManager
 
   private void init()
   {
-    Plastic3DLookAndFeel plastic;
-    String name, className;
-
     try
     {
-      PlasticLookAndFeel.setPlasticTheme(new MeldBlue());
       PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
+      System.setProperty(PlasticLookAndFeel.DEFAULT_THEME_KEY, "SkyBluer");
 
-      plastic = new Plastic3DLookAndFeel();
-      name = plastic.getName();
-      className = plastic.getClass().getName();
-      UIManager.installLookAndFeel(name, className);
+      UIManager.installLookAndFeel("JGoodies Plastic 3D",
+        "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
     }
     catch (Exception e)
     {
@@ -75,7 +71,7 @@ public class LookAndFeelManager
       UIManager.setLookAndFeel(lookAndFeelClassName);
 
       root = SwingUtilities.getRoot(JMeld.getJMeldPanel());
-      if(root != null)
+      if (root != null)
       {
         SwingUtilities.updateComponentTreeUI(root);
       }
