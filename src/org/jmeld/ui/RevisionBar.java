@@ -28,23 +28,21 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class RevisionBar
-       extends JComponent
+    extends JComponent
 {
   private BufferDiffPanel diffPanel;
-  private FilePanel       filePanel;
-  private boolean         original;
+  private FilePanel filePanel;
+  private boolean original;
 
-  public RevisionBar(
-    BufferDiffPanel diffPanel,
-    FilePanel       filePanel,
-    boolean         original)
+  public RevisionBar(BufferDiffPanel diffPanel, FilePanel filePanel,
+      boolean original)
   {
     this.diffPanel = diffPanel;
     this.filePanel = filePanel;
     this.original = original;
 
-    setBorder(
-      BorderFactory.createLineBorder(UIManager.getColor("controlShadow")));
+    setBorder(BorderFactory.createLineBorder(ColorUtil.darker(Colors
+        .getPanelBackground())));
 
     addMouseListener(getMouseListener());
   }
@@ -52,76 +50,76 @@ public class RevisionBar
   private MouseListener getMouseListener()
   {
     return new MouseAdapter()
+    {
+      public void mouseClicked(MouseEvent me)
       {
-        public void mouseClicked(MouseEvent me)
+        Rectangle r;
+        int y;
+        int line;
+        int lineBefore;
+        int lineAfter;
+        JMRevision revision;
+        Point p;
+        BufferDocumentIF bd;
+        int offset;
+        JTextComponent editor;
+        JViewport viewport;
+        int numberOfLines;
+        JMChunk original;
+
+        r = getDrawableRectangle();
+        if (r == null)
         {
-          Rectangle        r;
-          int              y;
-          int              line;
-          int              lineBefore;
-          int              lineAfter;
-          JMRevision       revision;
-          Point            p;
-          BufferDocumentIF bd;
-          int              offset;
-          JTextComponent   editor;
-          JViewport        viewport;
-          int              numberOfLines;
-          JMChunk          original;
-
-          r = getDrawableRectangle();
-          if(r == null)
-          {
-            return;
-          }
-
-          if(r.height <= 0)
-          {
-            return;
-          }
-
-          y = me.getY() - r.y;
-
-          revision = diffPanel.getCurrentRevision();
-          if (revision == null)
-          {
-            return;
-          }
-
-          numberOfLines = getNumberOfLines(revision);
-          line = (y * numberOfLines) / r.height;
-          if (line > numberOfLines)
-          {
-            line = numberOfLines;
-          }
-
-          if (line < 0)
-          {
-            line = 0;
-          }
-
-          // If the files are very large the resolution of one pixel contains 
-          //   a lot of lines of the document. Check if there is a chunk in 
-          //   the revision between those lines and if there is position on 
-          //   that chunk.
-          lineBefore = ((y - 3) * numberOfLines) / r.height;
-          lineAfter = ((y + 3) * numberOfLines) / r.height;
-          for (JMDelta delta : revision.getDeltas())
-          {
-            original = delta.getOriginal();
-
-            // The chunk starts within the bounds of the line-resolution.
-            if (original.getAnchor() > lineBefore
-              && original.getAnchor() < lineAfter)
-            {
-              diffPanel.doGotoDelta(delta);
-              return;
-            }
-          }
-
-          diffPanel.doGotoLine(line);
+          return;
         }
-      };
+
+        if (r.height <= 0)
+        {
+          return;
+        }
+
+        y = me.getY() - r.y;
+
+        revision = diffPanel.getCurrentRevision();
+        if (revision == null)
+        {
+          return;
+        }
+
+        numberOfLines = getNumberOfLines(revision);
+        line = (y * numberOfLines) / r.height;
+        if (line > numberOfLines)
+        {
+          line = numberOfLines;
+        }
+
+        if (line < 0)
+        {
+          line = 0;
+        }
+
+        // If the files are very large the resolution of one pixel contains 
+        //   a lot of lines of the document. Check if there is a chunk in 
+        //   the revision between those lines and if there is position on 
+        //   that chunk.
+        lineBefore = ((y - 3) * numberOfLines) / r.height;
+        lineAfter = ((y + 3) * numberOfLines) / r.height;
+        for (JMDelta delta : revision.getDeltas())
+        {
+          original = delta.getOriginal();
+
+          // The chunk starts within the bounds of the line-resolution.
+          if (original.getAnchor() > lineBefore
+              && original.getAnchor() < lineAfter)
+          {
+            diffPanel.doGotoDelta(delta);
+            return;
+          }
+        }
+
+        diffPanel.doGotoLine(line);
+      }
+    };
   }
 
   /** Calculate the rectangle that can be used to draw the diffs.
@@ -130,8 +128,8 @@ public class RevisionBar
   private Rectangle getDrawableRectangle()
   {
     JScrollBar sb;
-    Rectangle  r;
-    int        buttonHeight;
+    Rectangle r;
+    int buttonHeight;
 
     sb = filePanel.getScrollPane().getVerticalScrollBar();
     r = sb.getBounds();
@@ -153,14 +151,14 @@ public class RevisionBar
 
   public void paintComponent(Graphics g)
   {
-    Rectangle  r;
+    Rectangle r;
     Graphics2D g2;
     JMRevision revision;
-    JMChunk    chunk;
-    int        y;
-    int        height;
-    int        numberOfLines;
-    Rectangle  clipBounds;
+    JMChunk chunk;
+    int y;
+    int height;
+    int numberOfLines;
+    Rectangle clipBounds;
 
     g2 = (Graphics2D) g;
 

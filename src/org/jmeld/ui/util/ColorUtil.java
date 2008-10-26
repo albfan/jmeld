@@ -13,6 +13,11 @@ public class ColorUtil
     return brighter(color, 0.05f);
   }
 
+  public static Color darker(Color color)
+  {
+    return brighter(color, -0.05f);
+  }
+
   /** Create a brighter color by changing the b component of a
    *    hsb-color (b=brightness, h=hue, s=saturation)
    */
@@ -22,11 +27,6 @@ public class ColorUtil
   {
     float[] hsbvals;
 
-    if (factor < 0.0f || factor > 1.0f)
-    {
-      return color;
-    }
-
     hsbvals = new float[3];
     Color.RGBtoHSB(
       color.getRed(),
@@ -34,10 +34,8 @@ public class ColorUtil
       color.getBlue(),
       hsbvals);
     hsbvals[2] = hsbvals[2] + factor;
-    if (hsbvals[2] > 1.0f)
-    {
-      hsbvals[2] = 1.0f;
-    }
+    hsbvals[2] = Math.min(hsbvals[2], 1.0f);
+    hsbvals[2] = Math.max(hsbvals[2], 0.0f);
 
     return new Color(Color.HSBtoRGB(hsbvals[0], hsbvals[1], hsbvals[2]));
   }
