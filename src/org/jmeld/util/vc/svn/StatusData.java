@@ -119,6 +119,16 @@ public class StatusData
       return props;
     }
 
+    public String getRevision()
+    {
+      if(revision == null)
+      {
+        return "0";
+      }
+
+      return revision.toString();
+    }
+
     public ItemStatus getItem()
     {
       return item;

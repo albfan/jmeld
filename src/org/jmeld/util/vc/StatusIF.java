@@ -41,6 +41,8 @@ public interface StatusIF
     public String getProps();
 
     public ItemStatusIF getItem();
+
+    public String getRevision();
   }
 
   public interface ItemStatusIF

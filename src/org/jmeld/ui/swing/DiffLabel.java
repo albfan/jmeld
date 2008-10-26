@@ -27,7 +27,7 @@ import javax.swing.text.*;
 import java.util.List;
 
 public class DiffLabel
-       extends JTextPane
+    extends JTextPane
 {
   public DiffLabel()
   {
@@ -36,8 +36,8 @@ public class DiffLabel
 
   public void init()
   {
-    Style          s;
-    Style          defaultStyle;
+    Style s;
+    Style defaultStyle;
     StyledDocument doc;
 
     setEditable(false);
@@ -58,18 +58,16 @@ public class DiffLabel
    *  Some parts of the text will be displayed in bold-style.
    *  These parts are the differences between text and otherText.
    */
-  public void setText(
-    String text,
-    String otherText)
+  public void setText(String text, String otherText)
   {
-    WordTokenizer  wt;
-    List<String>   textList;
-    List<String>   otherTextList;
-    JMRevision     revision;
-    JTextPane      fl;
-    String[]       styles;
-    JMChunk        chunk;
-    String         styleName;
+    WordTokenizer wt;
+    List<String> textList;
+    List<String> otherTextList;
+    JMRevision revision;
+    JTextPane fl;
+    String[] styles;
+    JMChunk chunk;
+    String styleName;
     StyledDocument doc;
 
     try
@@ -78,28 +76,29 @@ public class DiffLabel
       textList = wt.getTokens(text);
       otherTextList = wt.getTokens(otherText);
 
-      revision = new JMDiff().diff(textList, otherTextList, Ignore.NULL_IGNORE);
-
       styles = new String[textList.size()];
-      for (JMDelta delta : revision.getDeltas())
+
+      if (otherTextList.size() != 0)
       {
-        chunk = delta.getOriginal();
-        for (int i = 0; i < chunk.getSize(); i++)
+        revision = new JMDiff().diff(textList, otherTextList,
+          Ignore.NULL_IGNORE);
+
+        for (JMDelta delta : revision.getDeltas())
         {
-          styles[chunk.getAnchor() + i] = "bold";
+          chunk = delta.getOriginal();
+          for (int i = 0; i < chunk.getSize(); i++)
+          {
+            styles[chunk.getAnchor() + i] = "bold";
+          }
         }
       }
 
       doc = getStyledDocument();
-      doc.remove(
-        0,
-        doc.getLength());
+      doc.remove(0, doc.getLength());
 
       for (int i = 0; i < textList.size(); i++)
       {
-        doc.insertString(
-          doc.getLength(),
-          textList.get(i),
+        doc.insertString(doc.getLength(), textList.get(i),
           (styles[i] != null ? doc.getStyle(styles[i]) : null));
       }
     }

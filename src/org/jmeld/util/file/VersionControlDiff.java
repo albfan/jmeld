@@ -42,10 +42,10 @@ public class VersionControlDiff
 
     try
     {
-      setLeftFolderShortName(directory.getName() + " (revision XXXX)");
-      setRightFolderShortName(directory.getName() + " (workingcopy)");
-      setLeftFolderName(directory.getCanonicalPath() + " (revision XXXX)");
-      setRightFolderName(directory.getCanonicalPath() + " (workingcopy)");
+      setLeftFolderShortName(directory.getName());
+      setRightFolderShortName("");
+      setLeftFolderName(directory.getCanonicalPath());
+      setRightFolderName("");
     }
     catch (Exception ex)
     {
@@ -100,7 +100,7 @@ public class VersionControlDiff
         node = addNode(entry.getPath(), !file.isDirectory());
 
         node.setBufferNodeLeft(new VersionControlBaseNode(versionControl,
-            entry.getPath(), file));
+            entry.getPath() + " R" + entry.getWcStatus().getRevision(), file));
         node.setBufferNodeRight(new FileNode(entry.getPath(), file));
       }
     }
