@@ -72,27 +72,21 @@
                   <Component id="folder2Label" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="onlyRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="leftRightChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="onlyLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="leftRightUnChangedButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="103" alignment="0" groupAlignment="3" max="-2" attributes="0">
-                      <Component id="copyToLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="copyToRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="deleteRightButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="deleteLeftButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="hierarchyComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="compareButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="refreshButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jToggleButton1" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="expandAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="collapseAllButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="expandAllButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="collapseAllButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="hierarchyComboBox" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="compareButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="refreshButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="jToggleButton1" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteLeftButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="copyToLeftButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="copyToRightButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="deleteRightButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="onlyLeftButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftRightChangedButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="onlyRightButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftRightUnChangedButton" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="362" max="32767" attributes="0"/>
