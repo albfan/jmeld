@@ -40,11 +40,28 @@ public class Colors
   {
     Color color;
 
-    color = new JTable().getSelectionBackground();
+    color = getSelectionColor();
     color = ColorUtil.setSaturation(color, 0.05f);
     color = ColorUtil.setBrightness(color, 1.00f);
 
     return color;
+  }
+
+  public static Color getDarkLookAndFeelColor()
+  {
+    Color color;
+
+    color = getSelectionColor();
+    color = ColorUtil.setBrightness(color, 0.40f);
+
+    return color;
+  }
+
+  public static Color getSelectionColor()
+  {
+    // DO NOT USE UIManager to get colors because it is not lookandfeel
+    //   independent! (Learned it the hard way with Nimbus l&f)
+    return new JList().getSelectionBackground();
   }
 
   public static Color getPanelBackground()

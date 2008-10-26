@@ -41,8 +41,8 @@ public class RevisionBar
     this.filePanel = filePanel;
     this.original = original;
 
-    setBorder(BorderFactory.createLineBorder(ColorUtil.darker(Colors
-        .getPanelBackground())));
+    setBorder(BorderFactory.createLineBorder(ColorUtil.darker(ColorUtil
+        .darker(Colors.getPanelBackground()))));
 
     addMouseListener(getMouseListener());
   }

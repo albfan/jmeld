@@ -54,9 +54,11 @@ public class LineNumberBorder
   private void init()
   {
     FontMetrics fm;
+    Color       baseColor;
 
-    lineColor = Colors.getPanelBackground();
-    background = ColorUtil.brighter(lineColor);
+    baseColor = Colors.getPanelBackground();
+    lineColor = ColorUtil.darker(baseColor);
+    background = ColorUtil.brighter(baseColor);
     font = new Font("Monospaced", Font.PLAIN, 10);
 
     fm = filePanel.getEditor().getFontMetrics(font);

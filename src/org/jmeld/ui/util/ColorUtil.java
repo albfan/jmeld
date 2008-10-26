@@ -21,28 +21,31 @@ public class ColorUtil
   /** Create a brighter color by changing the b component of a
    *    hsb-color (b=brightness, h=hue, s=saturation)
    */
-  public static Color brighter(
-    Color color,
-    float factor)
+  public static Color brighter(Color color, float factor)
   {
     float[] hsbvals;
 
     hsbvals = new float[3];
-    Color.RGBtoHSB(
-      color.getRed(),
-      color.getGreen(),
-      color.getBlue(),
-      hsbvals);
-    hsbvals[2] = hsbvals[2] + factor;
-    hsbvals[2] = Math.min(hsbvals[2], 1.0f);
-    hsbvals[2] = Math.max(hsbvals[2], 0.0f);
+    Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbvals);
 
-    return new Color(Color.HSBtoRGB(hsbvals[0], hsbvals[1], hsbvals[2]));
+    return setBrightness(color, hsbvals[2] + factor);
   }
 
-  public static Color setSaturation(
-    Color color,
-    float saturation)
+  /** Get the brightness of a color. 
+   *    The H from HSB!
+   */
+  public static float getBrightness(Color color)
+  {
+    float[] hsbvals;
+
+    hsbvals = new float[3];
+    Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbvals);
+
+    return hsbvals[2];
+  }
+
+
+  public static Color setSaturation(Color color, float saturation)
   {
     float[] hsbvals;
 
@@ -52,11 +55,7 @@ public class ColorUtil
     }
 
     hsbvals = new float[3];
-    Color.RGBtoHSB(
-      color.getRed(),
-      color.getGreen(),
-      color.getBlue(),
-      hsbvals);
+    Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbvals);
     hsbvals[1] = saturation;
 
     color = new Color(Color.HSBtoRGB(hsbvals[0], hsbvals[1], hsbvals[2]));
@@ -64,24 +63,15 @@ public class ColorUtil
     return color;
   }
 
-  public static Color setBrightness(
-    Color color,
-    float brightness)
+  public static Color setBrightness(Color color, float brightness)
   {
     float[] hsbvals;
 
-    if (brightness < 0.0f || brightness > 1.0f)
-    {
-      return color;
-    }
-
     hsbvals = new float[3];
-    Color.RGBtoHSB(
-      color.getRed(),
-      color.getGreen(),
-      color.getBlue(),
-      hsbvals);
+    Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbvals);
     hsbvals[2] = brightness;
+    hsbvals[2] = Math.min(hsbvals[2], 1.0f);
+    hsbvals[2] = Math.max(hsbvals[2], 0.0f);
 
     color = new Color(Color.HSBtoRGB(hsbvals[0], hsbvals[1], hsbvals[2]));
 

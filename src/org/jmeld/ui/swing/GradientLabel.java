@@ -3,6 +3,8 @@ package org.jmeld.ui.swing;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import org.jmeld.ui.util.*;
+
 import java.awt.*;
 
 public class GradientLabel
@@ -21,7 +23,7 @@ public class GradientLabel
   private void initialize()
   {
     setOpaque(false);
-    setGradientColor(Color.darkGray);
+    setGradientColor(Colors.getDarkLookAndFeelColor());
     setForeground(Color.white);
   }
 
