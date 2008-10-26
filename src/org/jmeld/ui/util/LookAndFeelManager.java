@@ -83,7 +83,24 @@ public class LookAndFeelManager
 
   public String getInstalledLookAndFeelName()
   {
-    return UIManager.getLookAndFeel().getName();
+    LookAndFeel  lf;
+
+    lf = UIManager.getLookAndFeel();
+
+    // WATCH OUT: 
+    //   The lookandfeel can be registered in the UIManager with a different
+    //   name than the lookAndFeel.getName() (Is this a bug?)
+
+    for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+    {
+      if(ObjectUtil.equals(info.getClassName(), lf.getClass().getName()))
+      {
+        return info.getName();
+      }
+    }
+
+    // This should never happen!
+    return lf.getName();
   }
 
   private String getDefaultLookAndFeelClassName()
