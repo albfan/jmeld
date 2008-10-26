@@ -433,10 +433,13 @@ public class EditorSettingsPanel
     settings = getEditorSettings();
     ignore = settings.getIgnore();
     colorAddedButton.setIcon(new EmptyIcon(settings.getAddedColor(), 20, 20));
+    colorAddedButton.setText("");
     colorDeletedButton
         .setIcon(new EmptyIcon(settings.getDeletedColor(), 20, 20));
+    colorDeletedButton.setText("");
     colorChangedButton
         .setIcon(new EmptyIcon(settings.getChangedColor(), 20, 20));
+    colorChangedButton.setText("");
     showLineNumbersCheckBox.setSelected(settings.getShowLineNumbers());
     ignoreWhitespaceAtBeginCheckBox.setSelected(ignore.ignoreWhitespaceAtBegin);
     ignoreWhitespaceInBetweenCheckBox
