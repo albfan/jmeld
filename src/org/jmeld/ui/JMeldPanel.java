@@ -1244,6 +1244,7 @@ public class JMeldPanel
       barContainer.remove(currentBarDialog);
       barContainer.revalidate();
       currentBarDialog.deactivate();
+      currentBarDialog = null;
     }
   }
 
