@@ -68,6 +68,10 @@ public class EditorSettingsForm extends javax.swing.JPanel
     ignoreEOLCheckBox = new javax.swing.JCheckBox();
     ignoreWhitespaceAtEndCheckBox = new javax.swing.JCheckBox();
     ignoreWhitespaceInBetweenCheckBox = new javax.swing.JCheckBox();
+    detailHeader6 = new org.jmeld.ui.swing.DetailHeader();
+    jLabel6 = new javax.swing.JLabel();
+    toolbarButtonTextEnabledCheckBox = new javax.swing.JCheckBox();
+    toolbarButtonIconComboBox = new javax.swing.JComboBox();
     gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
 
     buttonGroup1.add(defaultFontRadioButton);
@@ -278,6 +282,16 @@ public class EditorSettingsForm extends javax.swing.JPanel
     ignoreWhitespaceInBetweenCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
     ignoreWhitespaceInBetweenCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
 
+    detailHeader6.setText("Toolbar appearance");
+
+    jLabel6.setText("Icon in button");
+
+    toolbarButtonTextEnabledCheckBox.setText("Text in button");
+    toolbarButtonTextEnabledCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+    toolbarButtonTextEnabledCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+    toolbarButtonIconComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
     org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
     jPanel2.setLayout(jPanel2Layout);
     jPanel2Layout.setHorizontalGroup(
@@ -304,7 +318,16 @@ public class EditorSettingsForm extends javax.swing.JPanel
               .add(ignoreCaseCheckBox)
               .add(ignoreWhitespaceAtEndCheckBox)
               .add(ignoreWhitespaceInBetweenCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-          .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+          .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(detailHeader6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+          .add(jPanel2Layout.createSequentialGroup()
+            .add(12, 12, 12)
+            .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+              .add(toolbarButtonTextEnabledCheckBox)
+              .add(jPanel2Layout.createSequentialGroup()
+                .add(jLabel6)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(toolbarButtonIconComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))))
         .addContainerGap())
     );
     jPanel2Layout.setVerticalGroup(
@@ -334,7 +357,14 @@ public class EditorSettingsForm extends javax.swing.JPanel
         .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
           .add(specificEncodingRadioButton)
           .add(specificEncodingComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(detailHeader6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+          .add(jLabel6)
+          .add(toolbarButtonIconComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        .add(toolbarButtonTextEnabledCheckBox))
     );
 
     gradientLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
@@ -356,10 +386,13 @@ public class EditorSettingsForm extends javax.swing.JPanel
       layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
       .add(layout.createSequentialGroup()
         .add(gradientLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-        .add(0, 0, 0)
         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-          .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+          .add(layout.createSequentialGroup()
+            .add(0, 0, 0)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+          .add(layout.createSequentialGroup()
+            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+            .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
         .addContainerGap())
     );
   }// </editor-fold>//GEN-END:initComponents
@@ -391,6 +424,7 @@ private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent 
   protected org.jmeld.ui.swing.DetailHeader detailHeader3;
   protected org.jmeld.ui.swing.DetailHeader detailHeader4;
   protected org.jmeld.ui.swing.DetailHeader detailHeader5;
+  protected org.jmeld.ui.swing.DetailHeader detailHeader6;
   protected javax.swing.JRadioButton detectEncodingRadioButton;
   protected javax.swing.JButton fontChooserButton;
   protected org.jmeld.ui.swing.GradientLabel gradientLabel1;
@@ -405,6 +439,7 @@ private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent 
   protected javax.swing.JLabel jLabel3;
   protected javax.swing.JLabel jLabel4;
   protected javax.swing.JLabel jLabel5;
+  protected javax.swing.JLabel jLabel6;
   protected javax.swing.JPanel jPanel1;
   protected javax.swing.JPanel jPanel2;
   protected javax.swing.JCheckBox leftsideReadonlyCheckBox;
@@ -415,6 +450,8 @@ private void leftsideReadonlyCheckBoxActionPerformed(java.awt.event.ActionEvent 
   protected javax.swing.JComboBox specificEncodingComboBox;
   protected javax.swing.JRadioButton specificEncodingRadioButton;
   protected javax.swing.JSpinner tabSizeSpinner;
+  protected javax.swing.JComboBox toolbarButtonIconComboBox;
+  protected javax.swing.JCheckBox toolbarButtonTextEnabledCheckBox;
   // End of variables declaration//GEN-END:variables
 
 }

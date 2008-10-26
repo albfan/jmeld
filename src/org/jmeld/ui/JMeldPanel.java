@@ -80,6 +80,7 @@ public class JMeldPanel
   private JPanel barContainer;
   private AbstractBarDialog currentBarDialog;
   private SearchBarDialog searchBarDialog;
+  private JComponent toolBar;
   private boolean mergeMode;
 
   public JMeldPanel()
@@ -92,7 +93,7 @@ public class JMeldPanel
     initActions();
 
     setLayout(new BorderLayout());
-    add(getToolBar(), BorderLayout.PAGE_START);
+    addToolBar();
     add(tabbedPane, BorderLayout.CENTER);
     add(getBar(), BorderLayout.PAGE_END);
 
@@ -196,6 +197,19 @@ public class JMeldPanel
   public void openVersionControlComparison(File directory)
   {
     new NewVersionControlComparisonPanel(directory).execute();
+  }
+
+  public void addToolBar()
+  {
+    if (toolBar != null)
+    {
+      remove(toolBar);
+    }
+
+    toolBar = getToolBar();
+    add(toolBar, BorderLayout.PAGE_START);
+
+    revalidate();
   }
 
   private JComponent getToolBar()

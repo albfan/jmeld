@@ -23,21 +23,22 @@ import org.jmeld.util.conf.*;
 import javax.xml.bind.annotation.*;
 
 import java.awt.*;
+import java.util.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class EditorSettings
     extends AbstractConfigurationElement
 {
   @XmlElement
-  private boolean      showLineNumbers;
+  private boolean showLineNumbers;
   @XmlElement
-  private int          tabSize                    = 4;
+  private int tabSize = 4;
   @XmlElement
-  private Ignore       ignore                     = new Ignore();
+  private Ignore ignore = new Ignore();
   @XmlElement
-  private boolean      leftsideReadonly;
+  private boolean leftsideReadonly;
   @XmlElement
-  private boolean      rightsideReadonly;
+  private boolean rightsideReadonly;
   @XmlElement
   private ColorSetting addedColor;
   @XmlElement
@@ -45,21 +46,25 @@ public class EditorSettings
   @XmlElement
   private ColorSetting deletedColor;
   @XmlElement
-  private boolean      customFont;
+  private boolean customFont;
   @XmlElement
-  private FontSetting  font;
+  private FontSetting font;
   @XmlElement
-  private boolean      antialias;
+  private boolean antialias;
   @XmlElement
-  private boolean      defaultFileEncodingEnabled = true;
+  private boolean defaultFileEncodingEnabled = true;
   @XmlElement
-  private boolean      detectFileEncodingEnabled;
+  private boolean detectFileEncodingEnabled;
   @XmlElement
-  private boolean      specificFileEncodingEnabled;
+  private boolean specificFileEncodingEnabled;
   @XmlElement
-  private String       specificFileEncodingName;
+  private String specificFileEncodingName;
   @XmlElement
-  private String       lookAndFeelName;
+  private String lookAndFeelName;
+  @XmlElement
+  private ToolbarButtonIcon toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+  @XmlElement
+  private boolean toolbarButtonTextEnabled = true;
 
   public EditorSettings()
   {
@@ -320,6 +325,59 @@ public class EditorSettings
     return lookAndFeelName;
   }
 
+  public void setToolbarButtonIcon(ToolbarButtonIcon toolbarButtonIcon)
+  {
+    if(this.toolbarButtonIcon == toolbarButtonIcon)
+    {
+      return;
+    }
+
+    this.toolbarButtonIcon = toolbarButtonIcon;
+
+    // Don't allow the buttons to disappear!
+    if(toolbarButtonIcon == ToolbarButtonIcon.NO)
+    {
+      toolbarButtonTextEnabled = true;
+    }
+
+
+    fireChanged();
+  }
+
+  public ToolbarButtonIcon getToolbarButtonIcon()
+  {
+    return toolbarButtonIcon;
+  }
+
+  public void setToolbarButtonTextEnabled(boolean toolbarButtonTextEnabled)
+  {
+    if(this.toolbarButtonTextEnabled == toolbarButtonTextEnabled)
+    {
+      return;
+    }
+
+    this.toolbarButtonTextEnabled = toolbarButtonTextEnabled;
+
+    // Don't allow the buttons to disappear!
+    if(!toolbarButtonTextEnabled &&
+       toolbarButtonIcon == ToolbarButtonIcon.NO)
+    {
+      toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+    }
+
+    fireChanged();
+  }
+
+  public ToolbarButtonIcon[] getToolbarButtonIcons()
+  {
+    return ToolbarButtonIcon.values();
+  }
+
+  public boolean isToolbarButtonTextEnabled()
+  {
+    return toolbarButtonTextEnabled;
+  }
+
   public void enableCustomFont(boolean customFont)
   {
     this.customFont = customFont;
@@ -353,8 +411,7 @@ public class EditorSettings
     return font == null ? null : font.getFont();
   }
 
-  private Color getColor(ColorSetting cc,
-                         Color defaultColor)
+  private Color getColor(ColorSetting cc, Color defaultColor)
   {
     Color c;
 
@@ -370,5 +427,25 @@ public class EditorSettings
     }
 
     return c;
+  }
+
+  public enum ToolbarButtonIcon
+  {
+    NO("no icon"),
+    SMALL("small icon"),
+    LARGE("large icon");
+
+    // instance variables:
+    private String text;
+
+    private ToolbarButtonIcon(String text)
+    {
+      this.text = text;
+    }
+
+    public String toString()
+    {
+      return text;
+    }
   }
 }

@@ -6,6 +6,8 @@
 package org.jmeld.ui.settings;
 
 import com.l2fprod.common.swing.*;
+
+import org.jmeld.*;
 import org.jmeld.settings.*;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.*;
@@ -89,6 +91,14 @@ public class EditorSettingsPanel
     specificEncodingComboBox.setSelectedItem(getEditorSettings()
         .getSpecificFileEncodingName());
     specificEncodingComboBox.addActionListener(getSpecificEncodingNameAction());
+
+    // Toolbar appearance:
+    toolbarButtonIconComboBox.setModel(getToolbarButtonIconModel());
+    toolbarButtonIconComboBox.setSelectedItem(getEditorSettings()
+        .getToolbarButtonIcon());
+    toolbarButtonIconComboBox.addActionListener(getToolbarButtonIconAction());
+    toolbarButtonTextEnabledCheckBox
+        .addActionListener(getToolbarButtonTextEnabledAction());
   }
 
   private ChangeListener getTabSizeChangeListener()
@@ -345,6 +355,33 @@ public class EditorSettingsPanel
     };
   }
 
+  private ActionListener getToolbarButtonIconAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setToolbarButtonIcon(
+          (EditorSettings.ToolbarButtonIcon) toolbarButtonIconComboBox
+              .getSelectedItem());
+        JMeld.getJMeldPanel().addToolBar();
+      }
+    };
+  }
+
+  private ActionListener getToolbarButtonTextEnabledAction()
+  {
+    return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setToolbarButtonTextEnabled(
+          toolbarButtonTextEnabledCheckBox.isSelected());
+        JMeld.getJMeldPanel().addToolBar();
+      }
+    };
+  }
+
   private ActionListener getDefaultFontAction()
   {
     return new ActionListener()
@@ -419,6 +456,11 @@ public class EditorSettingsPanel
         .getInstalledLookAndFeels().toArray());
   }
 
+  private ComboBoxModel getToolbarButtonIconModel()
+  {
+    return new DefaultComboBoxModel(getEditorSettings().getToolbarButtonIcons());
+  }
+
   public void configurationChanged()
   {
     initConfiguration();
@@ -472,6 +514,11 @@ public class EditorSettingsPanel
         .getDetectFileEncodingEnabled());
     specificEncodingRadioButton.setSelected(settings
         .getSpecificFileEncodingEnabled());
+
+    toolbarButtonIconComboBox.setSelectedItem(getEditorSettings()
+        .getToolbarButtonIcon());
+    toolbarButtonTextEnabledCheckBox.setSelected(getEditorSettings()
+        .isToolbarButtonTextEnabled());
 
     revalidate();
   }

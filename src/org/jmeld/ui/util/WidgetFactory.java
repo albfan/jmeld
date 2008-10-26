@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui.util;
 
+import org.jmeld.settings.*;
 import org.jmeld.ui.action.*;
 
 import javax.swing.*;
@@ -42,20 +43,37 @@ public class WidgetFactory
 
   public static JButton getToolBarButton(Action action)
   {
-    JButton   button;
+    JButton button;
     ImageIcon icon;
     Dimension size;
+    EditorSettings settings;
+    EditorSettings.ToolbarButtonIcon toolbarButtonIcon;
+
+    settings = JMeldSettings.getInstance().getEditor();
 
     button = new JButton(action);
     button.setVerticalTextPosition(AbstractButton.BOTTOM);
     button.setHorizontalTextPosition(AbstractButton.CENTER);
     button.setFocusable(false);
 
-    icon = (ImageIcon) action.getValue(MeldAction.LARGE_ICON_KEY);
-    if (icon != null)
+    toolbarButtonIcon = settings.getToolbarButtonIcon();
+
+    icon = null;
+    if (toolbarButtonIcon == EditorSettings.ToolbarButtonIcon.SMALL)
     {
-      button.setIcon(icon);
-      button.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+      icon = (ImageIcon) action.getValue(MeldAction.SMALL_ICON);
+    }
+    else if (toolbarButtonIcon == EditorSettings.ToolbarButtonIcon.LARGE)
+    {
+      icon = (ImageIcon) action.getValue(MeldAction.LARGE_ICON_KEY);
+    }
+
+    button.setIcon(icon);
+    button.setDisabledIcon(ImageUtil.createTransparentIcon(icon));
+
+    if (!settings.isToolbarButtonTextEnabled())
+    {
+      button.setText("");
     }
 
     size = button.getPreferredSize();
