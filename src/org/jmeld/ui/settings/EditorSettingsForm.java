@@ -105,7 +105,7 @@ public class EditorSettingsForm extends javax.swing.JPanel
 
     jLabel2.setText("Lines have been deleted");
 
-    jLabel4.setText("Lines are changed");
+    jLabel4.setText("Lines have been changed");
 
     restoreOriginalColorsButton.setText("Restore original colors");
 
