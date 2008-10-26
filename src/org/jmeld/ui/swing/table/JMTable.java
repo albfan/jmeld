@@ -42,7 +42,7 @@ import java.io.*;
 import java.util.*;
 
 public class JMTable
-       extends JTable
+    extends JTable
 {
   private int charWidth;
 
@@ -53,15 +53,11 @@ public class JMTable
 
   public void setModel(JMTableModel tableModel)
   {
-    TableColumnModel         columnModel;
-    GroupableTableHeader     tableHeader;
-    TableColumn              column;
-    int                      preferredWidth;
-    Map<String, ColumnGroup> columnGroups;
-    String                   groupName;
-    ColumnGroup              group;
-    TableCellEditor          editor;
-    TableCellRenderer        renderer;
+    TableColumnModel columnModel;
+    TableColumn column;
+    int preferredWidth;
+    TableCellEditor editor;
+    TableCellRenderer renderer;
 
     super.setModel(tableModel);
 
@@ -75,10 +71,6 @@ public class JMTable
 
       columnModel = getColumnModel();
 
-      tableHeader = new GroupableTableHeader(columnModel);
-      setTableHeader(tableHeader);
-
-      columnGroups = new HashMap<String, ColumnGroup>();
       for (int i = 0; i < tableModel.getColumnCount(); i++)
       {
         column = columnModel.getColumn(i);
@@ -102,32 +94,13 @@ public class JMTable
           column.setMaxWidth(preferredWidth);
           column.setPreferredWidth(preferredWidth);
         }
-
-        groupName = tableModel.getColumnGroupName(i);
-        if (groupName != null)
-        {
-          group = columnGroups.get(groupName);
-          if (group == null)
-          {
-            group = new ColumnGroup(groupName);
-            columnGroups.put(groupName, group);
-          }
-          group.add(column);
-        }
-      }
-
-      for (ColumnGroup cg : columnGroups.values())
-      {
-        tableHeader.addColumnGroup(cg);
       }
     }
   }
 
-  public TableCellEditor getCellEditor(
-    int row,
-    int column)
+  public TableCellEditor getCellEditor(int row, int column)
   {
-    Class           clazz;
+    Class clazz;
     TableCellEditor editor;
 
     clazz = ((JMTableModel) getModel()).getColumnClass(row, column);
@@ -140,13 +113,11 @@ public class JMTable
     return super.getCellEditor(row, column);
   }
 
-  public TableCellRenderer getCellRenderer(
-    int row,
-    int column)
+  public TableCellRenderer getCellRenderer(int row, int column)
   {
-    Class             clazz;
+    Class clazz;
     TableCellRenderer renderer;
-    TableModel        model;
+    TableModel model;
 
     model = getModel();
     if (model instanceof JMTableModel)
