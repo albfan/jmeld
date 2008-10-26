@@ -31,6 +31,8 @@ public class EditorSettingsPanel
 
   public EditorSettingsPanel()
   {
+    originalAntialias = getEditorSettings().isAntialiasEnabled();
+
     initConfiguration();
     init();
 
@@ -39,8 +41,6 @@ public class EditorSettingsPanel
 
   private void init()
   {
-    originalAntialias = getEditorSettings().isAntialiasEnabled();
-
     // ignore:
     ignoreWhitespaceAtBeginCheckBox
         .addActionListener(getIgnoreWhitespaceAtBeginAction());
