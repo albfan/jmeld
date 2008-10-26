@@ -243,6 +243,12 @@ public class JMDiffNode
       return;
     }
 
+    if(!isLeaf())
+    {
+      compareState = Compare.Equal;
+      return;
+    }
+
     equals = CompareUtil.contentEquals(nodeLeft, nodeRight, ignore);
     compareState = equals ? Compare.Equal : Compare.NotEqual;
   }

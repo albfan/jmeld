@@ -93,11 +93,6 @@ public class JMeldNode
   {
   }
 
-  public boolean contentEquals(JMeldNode node)
-  {
-    return true;
-  }
-
   @Override
   public String toString()
   {

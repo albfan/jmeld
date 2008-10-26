@@ -45,6 +45,18 @@ public class CompareUtil
     {
       return contentEquals((FileNode) nodeLeft, (FileNode) nodeRight, ignore);
     }
+    else
+    {
+      try
+      {
+        return contentEquals(nodeLeft.getDocument().getReader(),
+                             nodeRight.getDocument().getReader(), ignore);
+      }
+      catch(Exception ex)
+      {
+        ex.printStackTrace();
+      }
+    }
 
     return false;
   }

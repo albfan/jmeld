@@ -22,7 +22,7 @@ public class StatusCmd
 
   public Result execute()
   {
-    super.execute("svn", "status", "--non-interactive", /* "-v",*/ "--xml",
+    super.execute("svn", "status", "--non-interactive", "-v", "--xml",
                   recursive ? "" : "-N", file.getPath());
 
     return getResult();

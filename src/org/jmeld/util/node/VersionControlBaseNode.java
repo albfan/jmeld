@@ -20,8 +20,6 @@ import org.jmeld.ui.text.*;
 import org.jmeld.util.vc.*;
 
 import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
 
 public class VersionControlBaseNode
     extends JMeldNode
@@ -30,7 +28,6 @@ public class VersionControlBaseNode
   private VersionControlIF           versionControl;
   private File                       file;
   private VersionControlBaseDocument document;
-  private boolean                    exists;
 
   public VersionControlBaseNode(VersionControlIF versionControl, String name,
       File file)
@@ -38,8 +35,6 @@ public class VersionControlBaseNode
     super(name, !file.isDirectory());
     this.versionControl = versionControl;
     this.file = file;
-
-    initialize();
   }
 
   public File getFile()
@@ -56,18 +51,14 @@ public class VersionControlBaseNode
 
   public boolean exists()
   {
-    return exists;
+    return true;
   }
 
   public VersionControlBaseDocument getDocument()
   {
-    if (document == null || isDocumentOutOfDate())
+    if (document == null)
     {
-      initialize();
-      if (exists())
-      {
-        document = new VersionControlBaseDocument(versionControl, file);
-      }
+      document = new VersionControlBaseDocument(versionControl, file);
     }
 
     return document;
@@ -79,19 +70,7 @@ public class VersionControlBaseNode
     return getDocument().getBufferSize();
   }
 
-  @Override
-  public boolean contentEquals(JMeldNode node)
-  {
-    return false;
-  }
-
-  private boolean isDocumentOutOfDate()
-  {
-    return false;
-  }
-
   private void initialize()
   {
-    exists = getDocument() != null;
   }
 }

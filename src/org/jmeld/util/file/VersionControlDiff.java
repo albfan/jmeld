@@ -70,7 +70,7 @@ public class VersionControlDiff
     StopWatch stopWatch;
     int numberOfNodes;
     int currentNumber;
-    FileNode fn;
+    File file;
     VersionControlIF versionControl;
     StatusIF status;
 
@@ -95,10 +95,12 @@ public class VersionControlDiff
     {
       for (StatusIF.EntryIF entry : target.getEntryList())
       {
-        fn = new FileNode(entry.getPath(), new File(entry.getPath()));
-        node = addNode(entry.getPath());
-        node.setBufferNodeLeft(fn);
-        node.setBufferNodeRight(fn);
+        file = new File(entry.getPath());
+
+        node = addNode(entry.getPath(), !file.isDirectory());
+
+        node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry.getPath(), file));
+        node.setBufferNodeRight(new FileNode(entry.getPath(), file));
       }
     }
 
@@ -118,14 +120,14 @@ public class VersionControlDiff
     StatusBar.getInstance().stop();
   }
 
-  private JMDiffNode addNode(String name)
+  private JMDiffNode addNode(String name, boolean leaf)
   {
     JMDiffNode node;
 
     node = nodes.get(name);
     if (node == null)
     {
-      node = addNode(new JMDiffNode(name, true));
+      node = addNode(new JMDiffNode(name, leaf));
     }
 
     return node;

@@ -19,6 +19,8 @@ package org.jmeld.ui.text;
 import org.jmeld.*;
 import org.jmeld.util.vc.*;
 
+import java.io.*;
+
 import javax.swing.text.*;
 
 public interface BufferDocumentIF
@@ -51,11 +53,11 @@ public interface BufferDocumentIF
 
   public int getLineForOffset(int offset);
 
-  public void read()
-    throws JMeldException;
+  public void read() throws JMeldException;
 
-  public void write()
-    throws JMeldException;
+  public void write() throws JMeldException;
 
   public void print();
+
+  public Reader getReader() throws JMeldException;
 }

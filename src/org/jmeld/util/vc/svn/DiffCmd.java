@@ -11,10 +11,10 @@ public class DiffCmd
     extends SvnCmd<DiffData>
 {
   // Instance variables:
-  private File           file;
-  private boolean        recursive;
+  private File file;
+  private boolean recursive;
   private BufferedReader reader;
-  private String         unreadLine;
+  private String unreadLine;
 
   public DiffCmd(File file, boolean recursive)
   {
@@ -24,8 +24,8 @@ public class DiffCmd
 
   public Result execute()
   {
-    super.execute("svn", "diff", "--non-interactive", recursive ? "" : "-N",
-                  file.getPath());
+    super.execute("svn", "diff", "--non-interactive", "--no-diff-deleted",
+      recursive ? "" : "-N", file.getPath());
 
     return getResult();
   }
@@ -80,8 +80,7 @@ public class DiffCmd
     setResultData(diffData);
   }
 
-  private String readIndex()
-      throws IOException
+  private String readIndex() throws IOException
   {
     final String indexMarker = "Index: ";
     String line;
@@ -95,8 +94,7 @@ public class DiffCmd
     return line.substring(indexMarker.length());
   }
 
-  private JMDelta readDelta()
-      throws IOException
+  private JMDelta readDelta() throws IOException
   {
     final Pattern deltaPattern = Pattern
         .compile("@@ -(\\d*),(\\d*) \\+(\\d*),(\\d*) @@");
@@ -159,8 +157,7 @@ public class DiffCmd
     this.unreadLine = unreadLine;
   }
 
-  private String readLine()
-      throws IOException
+  private String readLine() throws IOException
   {
     String line;
 
