@@ -28,34 +28,52 @@ public class StatusCmd
     return getResult();
   }
 
-  public StatusData getStatusData()
+  public StatusResult getStatusResult()
   {
-    return getResultData();
+    StatusData sd;
+    StatusResult result;
+    StatusResult.Status status;
+
+    sd = getResultData();
+
+    result = new StatusResult(file);
+    if (sd != null)
+    {
+      for (StatusData.Target t : sd.getTargetList())
+      {
+        for (StatusData.Entry te : t.getEntryList())
+        {
+          status = null;
+          switch (te.getWcStatus().getItem())
+          {
+            case added:
+              status = StatusResult.Status.added;
+              break;
+            case conflicted:
+              status = StatusResult.Status.conflicted;
+              break;
+          }
+
+          result.addEntry(te.getPath(), status);
+        }
+      }
+    }
+
+    return result;
   }
 
   public static void main(String[] args)
   {
     StatusCmd cmd;
-    StatusIF result;
-    StatusIF.WcStatusIF wcStatus;
+    StatusResult result;
 
-    result = new SubversionVersionControl().executeStatus(new File(args[0]),
-      true);
+    result = new SubversionVersionControl().executeStatus(new File(args[0]));
     if (result != null)
     {
-      for (StatusIF.TargetIF target : result.getTargetList())
+      for (StatusResult.Entry entry : result.getEntryList())
       {
-        for (StatusIF.EntryIF entry : target.getEntryList())
-        {
-          wcStatus = entry.getWcStatus();
-          if (wcStatus.getItem() == StatusData.ItemStatus.normal)
-          {
-            continue;
-          }
-
-          System.out.println(wcStatus.getItem().getShortText() + " "
-                             + entry.getPath());
-        }
+        System.out.println(entry.getStatus().getShortText() + " "
+                           + entry.getName());
       }
     }
   }

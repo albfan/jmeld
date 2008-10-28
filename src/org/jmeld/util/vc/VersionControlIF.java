@@ -4,15 +4,17 @@ import java.io.*;
 
 public interface VersionControlIF
 {
+  public boolean isInstalled();
+
   public String getName();
 
-  public boolean accept(File file);
+  public boolean isEnabled(File file);
 
   //public BlameIF executeBlame(File file);
 
   //public DiffIF executeDiff(File dir, boolean recursive);
 
-  public StatusIF executeStatus(File dir, boolean recursive);
+  public StatusResult executeStatus(File dir);
 
   public BaseFile getBaseFile(File dir);
 }

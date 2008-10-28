@@ -7,6 +7,10 @@ import java.util.*;
 
 public abstract class VcCmd<T>
 {
+  // Class variables:
+  static private boolean debug = true;
+
+  // Instance variables:
   private Result result;
   private T resultData;
 
@@ -32,7 +36,7 @@ public abstract class VcCmd<T>
       pb = new ProcessBuilder(command);
       p = pb.start();
 
-      //System.out.println("execute: " + Arrays.asList(command));
+      debug("execute: " + Arrays.asList(command));
 
       data = new byte[4096];
 
@@ -45,6 +49,8 @@ public abstract class VcCmd<T>
       is.close();
 
       p.waitFor();
+
+      debug("  exitValue = " + p.exitValue());
       if (p.exitValue() != 0)
       {
         errorText = new StringBuilder();
@@ -101,5 +107,13 @@ public abstract class VcCmd<T>
   public T getResultData()
   {
     return resultData;
+  }
+
+  private void debug(String text)
+  {
+    if(debug)
+    {
+      System.out.println(text);
+    }
   }
 }

@@ -71,8 +71,9 @@ public class VersionControlDiff
     int numberOfNodes;
     int currentNumber;
     File file;
+    List<VersionControlIF> versionControlList;
     VersionControlIF versionControl;
-    StatusIF status;
+    StatusResult statusResult;
 
     stopWatch = new StopWatch();
     stopWatch.start();
@@ -83,26 +84,27 @@ public class VersionControlDiff
     rootNode = new JMDiffNode("<root>", false);
     nodes = new HashMap<String, JMDiffNode>();
 
-    versionControl = VersionControlUtil.getVersionControl(directory);
-    if (versionControl == null)
+    versionControlList = VersionControlUtil.getVersionControl(directory);
+    if(versionControlList.isEmpty())
     {
       return;
     }
 
-    status = versionControl.executeStatus(directory, true);
+    // TODO: versioncontrol should be a parameter in the constructor. 
+    //       The user has to decide which vc is used (popup)
+    versionControl = versionControlList.get(0);
 
-    for (StatusIF.TargetIF target : status.getTargetList())
+    statusResult = versionControl.executeStatus(directory);
+
+    for (StatusResult.Entry entry : statusResult.getEntryList())
     {
-      for (StatusIF.EntryIF entry : target.getEntryList())
-      {
-        file = new File(entry.getPath());
+      file = new File(statusResult.getPath(), entry.getName());
 
-        node = addNode(entry.getPath(), !file.isDirectory());
+      node = addNode(entry.getName(), !file.isDirectory());
 
-        node.setBufferNodeLeft(new VersionControlBaseNode(versionControl,
-            entry.getPath() + " R" + entry.getWcStatus().getRevision(), file));
-        node.setBufferNodeRight(new FileNode(entry.getPath(), file));
-      }
+      node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry
+          .getName(), file));
+      node.setBufferNodeRight(new FileNode(entry.getName(), file));
     }
 
     StatusBar.getInstance().setState("Comparing nodes...");

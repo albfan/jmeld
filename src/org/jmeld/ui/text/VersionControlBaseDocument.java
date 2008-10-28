@@ -112,25 +112,4 @@ public class VersionControlBaseDocument
   {
     return true;
   }
-
-  public static void main(String[] args)
-  {
-    File file;
-    VersionControlBaseDocument fd;
-    VersionControlIF versionControl;
-
-    try
-    {
-      file = new File(args[0]);
-
-      versionControl = VersionControlUtil.getVersionControl(file);
-      fd = new VersionControlBaseDocument(versionControl, file);
-      fd.read();
-      fd.print();
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-  }
 }

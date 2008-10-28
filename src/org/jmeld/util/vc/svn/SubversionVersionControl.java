@@ -8,15 +8,31 @@ import java.util.*;
 public class SubversionVersionControl
     implements VersionControlIF
 {
+  private Boolean installed;
+
   public String getName()
   {
     return "subversion";
   }
 
-  public boolean accept(File file)
+  public boolean isInstalled()
+  {
+    InstalledCmd cmd;
+
+    if (installed == null)
+    {
+      cmd = new InstalledCmd();
+      cmd.execute();
+      installed = cmd.getResult().isTrue();
+    }
+
+    return installed.booleanValue();
+  }
+
+  public boolean isEnabled(File file)
   {
     StatusCmd cmd;
-    StatusData statusData;
+    StatusResult statusResult;
 
     // Don't check for existence of '.svn' because an installations
     //   can change that default.
@@ -32,22 +48,13 @@ public class SubversionVersionControl
     // Subversion has a bug until 1.5.1.
     // It will return an invalid xmldocument on a file that is not
     //   in a working copy.
-    statusData = cmd.getStatusData();
-    if (statusData == null)
+    statusResult = cmd.getStatusResult();
+    if (statusResult == null)
     {
       return false;
     }
 
-    if (statusData.getTargetList().size() != 1)
-    {
-      return false;
-    }
-
-
-    // Check for the existence of 1 entry!
-    // If it is not a workingcopy it won't have an entry!
-    // TODO: Check with subversion 1.5.1 and higher!
-    return statusData.getTargetList().get(0).getEntryList().size() != 1;
+    return statusResult.getEntryList().size() >= 1;
   }
 
   public BlameIF executeBlame(File file)
@@ -68,13 +75,13 @@ public class SubversionVersionControl
     return cmd.getResultData();
   }
 
-  public StatusIF executeStatus(File file, boolean recursive)
+  public StatusResult executeStatus(File file)
   {
     StatusCmd cmd;
 
-    cmd = new StatusCmd(file, recursive);
+    cmd = new StatusCmd(file, true);
     cmd.execute();
-    return cmd.getResultData();
+    return cmd.getStatusResult();
   }
 
   public BaseFile getBaseFile(File file)
