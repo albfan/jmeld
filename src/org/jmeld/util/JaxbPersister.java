@@ -24,25 +24,19 @@ public class JaxbPersister
 
   /** Load a object of type 'clazz' from a file.
    */
-  public <T> T load(
-    Class<T> clazz,
-    File     file)
-    throws FileNotFoundException, JAXBException
+  public <T> T load(Class<T> clazz, File file)
+      throws FileNotFoundException, JAXBException
   {
-    return load(
-      clazz,
-      new FileInputStream(file));
+    return load(clazz, new FileInputStream(file));
   }
 
   /** Load a object of type 'clazz' from a file.
    */
-  public <T> T load(
-    Class<T>    clazz,
-    InputStream is)
-    throws JAXBException
+  public <T> T load(Class<T> clazz, InputStream is)
+      throws JAXBException
   {
     Context context;
-    T       object;
+    T object;
 
     context = getContext(clazz);
     synchronized (context)
@@ -54,24 +48,18 @@ public class JaxbPersister
 
   /** Save a object to a file.
    */
-  public void save(
-    Object object,
-    File   file)
-    throws JAXBException, IOException
+  public void save(Object object, File file)
+      throws JAXBException, IOException
   {
-    save(
-      object,
-      new FileOutputStream(file));
+    save(object, new FileOutputStream(file));
   }
 
   /** Save a object to a outputstream.
    */
-  public void save(
-    Object       object,
-    OutputStream os)
-    throws JAXBException, IOException
+  public void save(Object object, OutputStream os)
+      throws JAXBException
   {
-    Writer  writer;
+    Writer writer;
     Context context;
 
     writer = new OutputStreamWriter(os);
@@ -107,8 +95,8 @@ public class JaxbPersister
 
   class Context
   {
-    private JAXBContext  jaxbContext;
-    private Marshaller   marshaller;
+    private JAXBContext jaxbContext;
+    private Marshaller marshaller;
     private Unmarshaller unmarshaller;
 
     Context(Class clazz)
@@ -130,16 +118,14 @@ public class JaxbPersister
       }
     }
 
-    public void marshal(
-      Object object,
-      Writer writer)
-      throws JAXBException
+    public void marshal(Object object, Writer writer)
+        throws JAXBException
     {
       marshaller.marshal(object, writer);
     }
 
     public Object unmarshal(InputStream is)
-      throws JAXBException
+        throws JAXBException
     {
       return unmarshaller.unmarshal(is);
     }
