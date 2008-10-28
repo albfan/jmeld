@@ -25,20 +25,20 @@ public class JMDiffNode
     LeftMissing,
     BothMissing;
   }
-  private String           text;
-  private String           name;
-  private String           id;
-  private String           shortName;
-  private String           parentName;
-  private JMDiffNode       parent;
+  private String text;
+  private String name;
+  private String id;
+  private String shortName;
+  private String parentName;
+  private JMDiffNode parent;
   private List<JMDiffNode> children;
-  private BufferNode       nodeLeft;
-  private BufferNode       nodeRight;
-  private boolean          leaf;
-  private Compare          compareState;
-  private JMDiff           diff;
-  private JMRevision       revision;
-  private Ignore           ignore;
+  private BufferNode nodeLeft;
+  private BufferNode nodeRight;
+  private boolean leaf;
+  private Compare compareState;
+  private JMDiff diff;
+  private JMRevision revision;
+  private Ignore ignore;
 
   public JMDiffNode(String name, boolean leaf)
   {
@@ -227,30 +227,30 @@ public class JMDiffNode
 
     if (!nodeLeft.exists() && !nodeRight.exists())
     {
-      compareState = Compare.BothMissing;
+      setCompareState(Compare.BothMissing);
       return;
     }
 
     if (nodeLeft.exists() && !nodeRight.exists())
     {
-      compareState = Compare.RightMissing;
+      setCompareState(Compare.RightMissing);
       return;
     }
 
     if (!nodeLeft.exists() && nodeRight.exists())
     {
-      compareState = Compare.LeftMissing;
+      setCompareState(Compare.LeftMissing);
       return;
     }
 
-    if(!isLeaf())
+    if (!isLeaf())
     {
-      compareState = Compare.Equal;
+      setCompareState(Compare.Equal);
       return;
     }
 
     equals = CompareUtil.contentEquals(nodeLeft, nodeRight, ignore);
-    compareState = equals ? Compare.Equal : Compare.NotEqual;
+    setCompareState(equals ? Compare.Equal : Compare.NotEqual);
   }
 
   public void diff()
@@ -289,7 +289,7 @@ public class JMDiffNode
     StatusBar.getInstance().setState("Calculating differences");
     diff = new JMDiff();
     left = documentLeft == null ? null : documentLeft.getLines();
-    right = documentRight == null ? null : documentRight .getLines();
+    right = documentRight == null ? null : documentRight.getLines();
 
     revision = diff.diff(left, right, ignore);
     StatusBar.getInstance().setState("Ready calculating differences");
@@ -304,6 +304,11 @@ public class JMDiffNode
   public JMRevision getRevision()
   {
     return revision;
+  }
+
+  public void setCompareState(Compare state)
+  {
+    compareState = state;
   }
 
   public boolean isCompareEqual(Compare state)
