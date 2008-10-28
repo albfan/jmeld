@@ -14,39 +14,53 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
-package org.jmeld.util.vc;
+package org.jmeld.vc.svn;
+
+import org.jmeld.diff.*;
+import org.jmeld.vc.*;
 
 import java.util.*;
 
-public interface StatusIF
+public class DiffData
+    implements DiffIF
 {
-  public List<? extends TargetIF> getTargetList();
+  private List<Target> targetList;
 
-  public interface TargetIF
+  public DiffData()
   {
-    public String getPath();
-
-    public List<? extends EntryIF> getEntryList();
+    targetList = new ArrayList<Target>();
   }
 
-  public interface EntryIF
+  public void addTarget(String path, JMRevision revision)
   {
-    public String getPath();
-
-    public WcStatusIF getWcStatus();
+    targetList.add(new Target(path, revision));
   }
 
-  public interface WcStatusIF
+  public List<Target> getTargetList()
   {
-    public String getProps();
-
-    public ItemStatusIF getItem();
-
-    public String getRevision();
+    return targetList;
   }
 
-  public interface ItemStatusIF
+  static class Target
+      implements DiffIF.TargetIF
   {
-    public char getShortText();
+    private String path;
+    private JMRevision revision;
+
+    public Target(String path, JMRevision revision)
+    {
+      this.path = path;
+      this.revision = revision;
+    }
+
+    public String getPath()
+    {
+      return path;
+    }
+
+    public JMRevision getRevision()
+    {
+      return revision;
+    }
   }
 }

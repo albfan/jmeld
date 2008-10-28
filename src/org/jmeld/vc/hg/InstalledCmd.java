@@ -1,10 +1,8 @@
-package org.jmeld.util.vc.svn;
+package org.jmeld.vc.hg;
 
 import org.jmeld.util.*;
-import org.jmeld.util.vc.*;
-import org.jmeld.util.vc.util.*;
-
-import java.io.*;
+import org.jmeld.vc.*;
+import org.jmeld.vc.util.*;
 
 public class InstalledCmd
     extends VcCmd<Boolean>
@@ -15,7 +13,7 @@ public class InstalledCmd
 
   public Result execute()
   {
-    super.execute("svn", "--version");
+    super.execute("hg", "--version");
 
     return getResult();
   }

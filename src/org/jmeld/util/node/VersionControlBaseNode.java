@@ -16,8 +16,10 @@
  */
 package org.jmeld.util.node;
 
+import org.jmeld.vc.VersionControlIF;
+import org.jmeld.vc.StatusResult;
 import org.jmeld.ui.text.*;
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import java.io.*;
 

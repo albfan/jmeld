@@ -1,7 +1,7 @@
-package org.jmeld.util.vc.svn;
+package org.jmeld.vc.svn;
 
 import org.jmeld.util.*;
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import java.io.*;
 

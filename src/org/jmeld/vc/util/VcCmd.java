@@ -1,4 +1,4 @@
-package org.jmeld.util.vc.util;
+package org.jmeld.vc.util;
 
 import org.jmeld.util.*;
 
@@ -17,6 +17,8 @@ public abstract class VcCmd<T>
 
   public void initWorkingDirectory(File file)
   {
+    file = file.getAbsoluteFile();
+
     if(!file.isDirectory())
     {
       file = file.getParentFile();
@@ -24,7 +26,7 @@ public abstract class VcCmd<T>
 
     if(file.isDirectory())
     {
-      workingDirectory = file.getAbsoluteFile();
+      workingDirectory = file;
     }
     else
     {

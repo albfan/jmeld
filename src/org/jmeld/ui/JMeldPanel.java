@@ -16,6 +16,7 @@
  */
 package org.jmeld.ui;
 
+import org.jmeld.vc.VersionControlUtil;
 import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingworker.SwingWorker;
@@ -31,7 +32,7 @@ import org.jmeld.util.*;
 import org.jmeld.util.conf.*;
 import org.jmeld.util.file.*;
 import org.jmeld.util.node.*;
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import javax.help.*;
 import javax.swing.*;

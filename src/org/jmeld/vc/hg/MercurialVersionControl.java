@@ -1,6 +1,6 @@
-package org.jmeld.util.vc.hg;
+package org.jmeld.vc.hg;
 
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import java.io.*;
 

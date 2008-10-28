@@ -16,13 +16,16 @@
  */
 package org.jmeld.util.file;
 
+import org.jmeld.vc.VersionControlUtil;
+import org.jmeld.vc.VersionControlIF;
+import org.jmeld.vc.StatusResult;
 import org.apache.jmeld.tools.ant.*;
 import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.*;
 import org.jmeld.util.node.*;
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import java.io.*;
 import java.util.*;
@@ -98,7 +101,8 @@ public class VersionControlDiff
 
     for (StatusResult.Entry entry : statusResult.getEntryList())
     {
-      file = new File(statusResult.getPath(), entry.getName());
+      //file = new File(statusResult.getPath(), entry.getName());
+      file = new File(entry.getName());
 
       node = addNode(entry.getName(), !file.isDirectory());
 

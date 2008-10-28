@@ -16,11 +16,13 @@
  */
 package org.jmeld.ui.text;
 
+import org.jmeld.vc.VersionControlIF;
+import org.jmeld.vc.BaseFile;
 import org.jmeld.*;
 
 import java.io.*;
 
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 import org.jmeld.util.*;
 
 import java.io.*;

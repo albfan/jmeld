@@ -14,9 +14,9 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA  02110-1301  USA
  */
-package org.jmeld.util.vc.svn;
+package org.jmeld.vc.svn;
 
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import javax.xml.bind.annotation.*;
 

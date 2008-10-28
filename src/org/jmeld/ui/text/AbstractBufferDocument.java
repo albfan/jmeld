@@ -16,9 +16,10 @@
  */
 package org.jmeld.ui.text;
 
+import org.jmeld.vc.BlameIF;
 import org.jmeld.*;
 import org.jmeld.util.*;
-import org.jmeld.util.vc.*;
+import org.jmeld.vc.*;
 
 import javax.swing.event.*;
 import javax.swing.text.*;

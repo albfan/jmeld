@@ -1,4 +1,4 @@
-package org.jmeld.util.vc;
+package org.jmeld.vc;
 
 import java.io.*;
 import java.util.*;
