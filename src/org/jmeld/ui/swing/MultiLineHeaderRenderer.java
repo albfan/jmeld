@@ -8,8 +8,8 @@ import java.io.*;
 import java.util.*;
 
 public class MultiLineHeaderRenderer
-       extends JLabel
-       implements TableCellRenderer
+    extends JLabel
+    implements TableCellRenderer
 {
   private Icon icon;
 
@@ -21,27 +21,22 @@ public class MultiLineHeaderRenderer
       "TableHeader.foreground", "TableHeader.font");
     LookAndFeel.installBorder(this, "TableHeader.cellBorder");
 
-/*
-    renderer = getCellRenderer();
-    if (renderer instanceof JLabel)
-    {
-      ((JLabel) renderer).setHorizontalAlignment(JLabel.CENTER);
-      setCellRenderer(renderer);
-    }
-    */
-    
+    /*
+        renderer = getCellRenderer();
+        if (renderer instanceof JLabel)
+        {
+          ((JLabel) renderer).setHorizontalAlignment(JLabel.CENTER);
+          setCellRenderer(renderer);
+        }
+        */
+
     setOpaque(false);
   }
 
-  public Component getTableCellRendererComponent(
-    JTable  table,
-    Object  value,
-    boolean isSelected,
-    boolean hasFocus,
-    int     row,
-    int     column)
+  public Component getTableCellRendererComponent(JTable table, Object value,
+      boolean isSelected, boolean hasFocus, int row, int column)
   {
-    String         str;
+    String str;
 
     str = (value == null) ? "" : value.toString();
 
@@ -56,25 +51,25 @@ public class MultiLineHeaderRenderer
     this.icon = icon;
   }
 
-/*
-  public void paintComponent(Graphics g)
-  {
-    Rectangle r;
-    int       x;
-    int       y;
-
-    super.paintComponent(g);
-
-    if (icon != null)
+  /*
+    public void paintComponent(Graphics g)
     {
-      r = getBounds();
-      x = r.width - icon.getIconWidth();
-      y = ((r.height - icon.getIconHeight()) / 2);
+      Rectangle r;
+      int       x;
+      int       y;
 
-      icon.paintIcon(this, g, x, y);
+      super.paintComponent(g);
+
+      if (icon != null)
+      {
+        r = getBounds();
+        x = r.width - icon.getIconWidth();
+        y = ((r.height - icon.getIconHeight()) / 2);
+
+        icon.paintIcon(this, g, x, y);
+      }
     }
-  }
-  */
+    */
 
   private static final long serialVersionUID = 101783804743496189L;
 }

@@ -23,17 +23,15 @@ import java.util.*;
 public class JMRevision
 {
   // Class variables:
-  private static boolean      incrementalUpdateActivated = false;
+  private static boolean incrementalUpdateActivated = false;
 
   // Instance variables:
-  private Object[]            orgArray;
-  private Object[]            revArray;
+  private Object[] orgArray;
+  private Object[] revArray;
   private LinkedList<JMDelta> deltaList;
-  private Ignore              ignore;
+  private Ignore ignore;
 
-  public JMRevision(
-    Object[] orgArray,
-    Object[] revArray)
+  public JMRevision(Object[] orgArray, Object[] revArray)
   {
     this.orgArray = orgArray;
     this.revArray = revArray;
@@ -59,9 +57,7 @@ public class JMRevision
     return deltaList;
   }
 
-  public void update(
-    Object[] oArray,
-    Object[] rArray)
+  public void update(Object[] oArray, Object[] rArray)
   {
     this.orgArray = oArray;
     this.revArray = rArray;
@@ -70,36 +66,30 @@ public class JMRevision
   /** The arrays have changed! Try to change the delta's incrementally.
    * This solves a performance issue while editing one of the array's.
    */
-  public boolean update(
-    Object[] oArray,
-    Object[] rArray,
-    boolean  original,
-    int      startLine,
-    int      numberOfLines)
+  public boolean update(Object[] oArray, Object[] rArray, boolean original,
+      int startLine, int numberOfLines)
   {
     update(oArray, rArray);
     return incrementalUpdate(original, startLine, numberOfLines);
   }
 
-  private boolean incrementalUpdate(
-    boolean original,
-    int     startLine,
-    int     numberOfLines)
+  private boolean incrementalUpdate(boolean original, int startLine,
+      int numberOfLines)
   {
-    JMChunk       chunk;
+    JMChunk chunk;
     List<JMDelta> deltaListToRemove;
     List<JMChunk> chunkListToChange;
-    int           endLine;
-    int           orgStartLine;
-    int           orgEndLine;
-    int           revStartLine;
-    int           revEndLine;
-    JMRevision    deltaRevision;
-    int           index;
-    Object[]      orgArrayDelta;
-    Object[]      revArrayDelta;
-    JMDelta       firstDelta;
-    int           length;
+    int endLine;
+    int orgStartLine;
+    int orgEndLine;
+    int revStartLine;
+    int revEndLine;
+    JMRevision deltaRevision;
+    int index;
+    Object[] orgArrayDelta;
+    Object[] revArrayDelta;
+    JMDelta firstDelta;
+    int length;
 
     // It is not yet prroduction ready !
     if (!incrementalUpdateActivated)
@@ -108,7 +98,8 @@ public class JMRevision
     }
 
     System.out.println((original ? "left" : "right")
-      + " changed starting at line " + startLine + " #" + numberOfLines);
+                       + " changed starting at line " + startLine + " #"
+                       + numberOfLines);
 
     if (original)
     {
@@ -116,7 +107,7 @@ public class JMRevision
       orgEndLine = startLine + (numberOfLines < 0 ? 0 : numberOfLines) + 1;
       revStartLine = DiffUtil.getRevisedLine(this, startLine);
       revEndLine = DiffUtil.getRevisedLine(this,
-          startLine + (numberOfLines > 0 ? 0 : -numberOfLines)) + 1;
+        startLine + (numberOfLines > 0 ? 0 : -numberOfLines)) + 1;
     }
     else
     {
@@ -124,7 +115,7 @@ public class JMRevision
       revEndLine = startLine + (numberOfLines < 0 ? 0 : numberOfLines) + 1;
       orgStartLine = DiffUtil.getOriginalLine(this, startLine);
       orgEndLine = DiffUtil.getOriginalLine(this,
-          startLine + (numberOfLines > 0 ? 0 : -numberOfLines)) + 1;
+        startLine + (numberOfLines > 0 ? 0 : -numberOfLines)) + 1;
     }
 
     System.out.println("orgStartLine=" + orgStartLine);
@@ -249,7 +240,7 @@ public class JMRevision
       for (JMDelta delta : deltaList)
       {
         if (delta.getOriginal().getAnchor() > firstDelta.getOriginal()
-                                                        .getAnchor())
+            .getAnchor())
         {
           break;
         }
@@ -289,10 +280,7 @@ public class JMRevision
     deltaList.add(delta);
   }
 
-  private JMDelta findDelta(
-    boolean original,
-    int     anchor,
-    int     size)
+  private JMDelta findDelta(boolean original, int anchor, int size)
   {
     JMChunk chunk;
 
@@ -301,13 +289,13 @@ public class JMRevision
     {
       chunk = original ? delta.getOriginal() : delta.getRevised();
       if (anchor >= chunk.getAnchor()
-        && anchor <= chunk.getAnchor() + chunk.getSize())
+          && anchor <= chunk.getAnchor() + chunk.getSize())
       {
         return delta;
       }
 
       if (anchor + size >= chunk.getAnchor()
-        && anchor + size <= chunk.getAnchor() + chunk.getSize())
+          && anchor + size <= chunk.getAnchor() + chunk.getSize())
       {
         return delta;
       }
@@ -336,13 +324,11 @@ public class JMRevision
     return getObjects(revArray, chunk);
   }
 
-  private String getObjects(
-    Object[] objects,
-    JMChunk  chunk)
+  private String getObjects(Object[] objects, JMChunk chunk)
   {
-    Object[]     result;
+    Object[] result;
     StringBuffer sb;
-    int          end;
+    int end;
 
     if (chunk.getSize() <= 0)
     {

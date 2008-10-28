@@ -20,30 +20,25 @@ import org.eclipse.compare.rangedifferencer.*;
 import org.jmeld.*;
 
 public class EclipseDiff
-       extends AbstractJMDiffAlgorithm
+    extends AbstractJMDiffAlgorithm
 {
   public EclipseDiff()
   {
   }
 
-  public JMRevision diff(
-    Object[] orig,
-    Object[] rev)
-    throws JMeldException
+  public JMRevision diff(Object[] orig, Object[] rev)
+      throws JMeldException
   {
     RangeDifference[] differences;
 
-    differences = RangeDifferencer.findDifferences(
-        new RangeComparator(orig),
-        new RangeComparator(rev));
+    differences = RangeDifferencer.findDifferences(new RangeComparator(orig),
+      new RangeComparator(rev));
 
     return buildRevision(differences, orig, rev);
   }
 
-  private JMRevision buildRevision(
-    RangeDifference[] differences,
-    Object[]          orig,
-    Object[]          rev)
+  private JMRevision buildRevision(RangeDifference[] differences,
+      Object[] orig, Object[] rev)
   {
     JMRevision result;
 
@@ -60,21 +55,15 @@ public class EclipseDiff
     result = new JMRevision(orig, rev);
     for (RangeDifference rd : differences)
     {
-      result.add(
-        new JMDelta(
-          new JMChunk(
-            rd.leftStart(),
-            rd.leftLength()),
-          new JMChunk(
-            rd.rightStart(),
-            rd.rightLength())));
+      result.add(new JMDelta(new JMChunk(rd.leftStart(), rd.leftLength()),
+          new JMChunk(rd.rightStart(), rd.rightLength())));
     }
 
     return result;
   }
 
   private class RangeComparator
-         implements IRangeComparator
+      implements IRangeComparator
   {
     private Object[] objectArray;
 
@@ -88,10 +77,8 @@ public class EclipseDiff
       return objectArray.length;
     }
 
-    public boolean rangesEqual(
-      int              thisIndex,
-      IRangeComparator other,
-      int              otherIndex)
+    public boolean rangesEqual(int thisIndex, IRangeComparator other,
+        int otherIndex)
     {
       Object o1;
       Object o2;
@@ -117,10 +104,8 @@ public class EclipseDiff
       return o1.equals(o2);
     }
 
-    public boolean skipRangeComparison(
-      int              length,
-      int              maxLength,
-      IRangeComparator other)
+    public boolean skipRangeComparison(int length, int maxLength,
+        IRangeComparator other)
     {
       return false;
     }

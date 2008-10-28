@@ -23,10 +23,10 @@ import java.io.*;
 import java.nio.charset.*;
 
 public class FileDocument
-       extends AbstractBufferDocument
+    extends AbstractBufferDocument
 {
   // instance variables:
-  private File    file;
+  private File file;
   private Charset charset;
 
   public FileDocument(File file)
@@ -52,7 +52,7 @@ public class FileDocument
   }
 
   public Reader getReader()
-    throws JMeldException
+      throws JMeldException
   {
     BufferedInputStream bis;
 
@@ -73,12 +73,12 @@ public class FileDocument
     catch (Exception ex)
     {
       throw new JMeldException("Could not create FileReader for : "
-        + file.getName(), ex);
+                               + file.getName(), ex);
     }
   }
 
   protected Writer getWriter()
-    throws JMeldException
+      throws JMeldException
   {
     BufferedOutputStream bos;
 
@@ -90,7 +90,7 @@ public class FileDocument
     catch (IOException ex)
     {
       throw new JMeldException("Cannot create FileWriter for file: "
-        + file.getName(), ex);
+                               + file.getName(), ex);
     }
   }
 

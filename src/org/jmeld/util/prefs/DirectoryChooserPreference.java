@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.io.*;
 
 public class DirectoryChooserPreference
-       extends Preference
+    extends Preference
 {
   // Class variables:
   private static String DIRECTORY = "DIRECTORY";
@@ -29,9 +29,7 @@ public class DirectoryChooserPreference
   // Instance variables:
   private JFileChooser target;
 
-  public DirectoryChooserPreference(
-    String       preferenceName,
-    JFileChooser target)
+  public DirectoryChooserPreference(String preferenceName, JFileChooser target)
   {
     super("DirectoryChooser-" + preferenceName);
 
@@ -54,7 +52,7 @@ public class DirectoryChooserPreference
   public void save()
   {
     String fileName;
-    File   file;
+    File file;
 
     file = target.getSelectedFile();
     if (file == null || !file.exists())

@@ -15,7 +15,7 @@ public class CharsetDetector
   private static CharsetDetector instance = new CharsetDetector();
 
   // Instance variables:
-  private Map<String, Charset>   charsetMap;
+  private Map<String, Charset> charsetMap;
 
   private CharsetDetector()
   {

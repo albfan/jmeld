@@ -9,33 +9,31 @@ import java.util.*;
 public class ColumnGroup
 {
   protected TableCellRenderer renderer;
-  protected Vector            v;
-  protected String            text;
+  protected Vector v;
+  protected String text;
 
   public ColumnGroup(String text)
   {
     this(null, text);
   }
 
-  public ColumnGroup(
-    TableCellRenderer renderer,
-    String            text)
+  public ColumnGroup(TableCellRenderer renderer, String text)
   {
     MultiLineHeaderRenderer multiHeaderRenderer;
-    ListCellRenderer        internalRenderer;
+    ListCellRenderer internalRenderer;
 
     if (renderer == null)
     {
       multiHeaderRenderer = new MultiLineHeaderRenderer();
 
-/*
-      internalRenderer = multiHeaderRenderer.getCellRenderer();
-      if (internalRenderer instanceof JLabel)
-      {
-        ((JLabel) internalRenderer).setOpaque(false);
-        multiHeaderRenderer.setCellRenderer(internalRenderer);
-      }
-      */
+      /*
+            internalRenderer = multiHeaderRenderer.getCellRenderer();
+            if (internalRenderer instanceof JLabel)
+            {
+              ((JLabel) internalRenderer).setOpaque(false);
+              multiHeaderRenderer.setCellRenderer(internalRenderer);
+            }
+            */
       this.renderer = multiHeaderRenderer;
     }
     else
@@ -62,9 +60,7 @@ public class ColumnGroup
    * @param c    TableColumn
    * @param v    ColumnGroups
    */
-  public Vector getColumnGroups(
-    TableColumn c,
-    Vector      g)
+  public Vector getColumnGroups(TableColumn c, Vector g)
   {
     g.addElement(this);
     if (v.contains(c))
@@ -80,7 +76,7 @@ public class ColumnGroup
       if (obj instanceof ColumnGroup)
       {
         Vector groups = (Vector) ((ColumnGroup) obj).getColumnGroups(c,
-            (Vector) g.clone());
+          (Vector) g.clone());
 
         if (groups != null)
         {
@@ -111,20 +107,15 @@ public class ColumnGroup
 
   public Dimension getSize(JTable table)
   {
-    Component   comp;
-    int         height;
-    int         width;
+    Component comp;
+    int height;
+    int width;
     Enumeration enumerate;
-    Object      obj;
+    Object obj;
     TableColumn aColumn;
 
-    comp = renderer.getTableCellRendererComponent(
-        table,
-        getHeaderValue(),
-        false,
-        false,
-        -1,
-        -1);
+    comp = renderer.getTableCellRendererComponent(table, getHeaderValue(),
+      false, false, -1, -1);
     height = comp.getPreferredSize().height;
     width = 0;
     enumerate = v.elements();

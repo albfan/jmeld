@@ -20,18 +20,16 @@ import org.gnu.diff.*;
 import org.jmeld.*;
 
 public class GNUDiff
-       extends AbstractJMDiffAlgorithm
+    extends AbstractJMDiffAlgorithm
 {
   public GNUDiff()
   {
   }
 
-  public JMRevision diff(
-    Object[] orig,
-    Object[] rev)
-    throws JMeldException
+  public JMRevision diff(Object[] orig, Object[] rev)
+      throws JMeldException
   {
-    Diff        diff;
+    Diff diff;
     Diff.change change;
 
     try
@@ -47,10 +45,8 @@ public class GNUDiff
     return buildRevision(change, orig, rev);
   }
 
-  private JMRevision buildRevision(
-    Diff.change change,
-    Object[]    orig,
-    Object[]    rev)
+  private JMRevision buildRevision(Diff.change change, Object[] orig,
+      Object[] rev)
   {
     JMRevision result;
 
@@ -67,9 +63,7 @@ public class GNUDiff
     result = new JMRevision(orig, rev);
     while (change != null)
     {
-      result.add(
-        new JMDelta(
-          new JMChunk(change.line0, change.deleted),
+      result.add(new JMDelta(new JMChunk(change.line0, change.deleted),
           new JMChunk(change.line1, change.inserted)));
 
       change = change.link;

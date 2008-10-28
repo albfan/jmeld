@@ -17,16 +17,14 @@
 package org.jmeld.util.node;
 
 public class JMeldNode
-       implements Comparable<JMeldNode>
+    implements Comparable<JMeldNode>
 {
   // instance variables:
-  private String  name;
+  private String name;
   private boolean isLeaf;
   private boolean collapsed;
 
-  public JMeldNode(
-    String  name,
-    boolean isLeaf)
+  public JMeldNode(String name, boolean isLeaf)
   {
     this.name = name;
     this.isLeaf = isLeaf;

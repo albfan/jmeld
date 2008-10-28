@@ -31,7 +31,7 @@ import java.util.List;
 public class JMeld
     implements Runnable
 {
-  private List<String>      fileNameList;
+  private List<String> fileNameList;
   private static JMeldPanel jmeldPanel;
 
   public JMeld(String[] args)
@@ -86,8 +86,7 @@ public class JMeld
           }
 
           @Override
-          public void processKeyEvent(Component focusedComponent,
-                                      KeyEvent e)
+          public void processKeyEvent(Component focusedComponent, KeyEvent e)
           {
             //System.out.println("processKeyEvent[" + focusedComponent.getClass()
             //+ "] : " + KeyStroke.getKeyStrokeForEvent(e));

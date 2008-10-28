@@ -7,9 +7,9 @@ import java.util.*;
 
 public abstract class AbstractConfiguration
 {
-  private boolean                 changed;
+  private boolean changed;
   private ConfigurationPreference preference;
-  private boolean                 disableFireChanged;
+  private boolean disableFireChanged;
 
   public AbstractConfiguration()
   {
@@ -44,9 +44,7 @@ public abstract class AbstractConfiguration
   {
     try
     {
-      ConfigurationPersister.getInstance().save(
-        this,
-        preference.getFile());
+      ConfigurationPersister.getInstance().save(this, preference.getFile());
       changed = false;
       fireChanged(changed);
     }
@@ -58,16 +56,12 @@ public abstract class AbstractConfiguration
 
   public void addConfigurationListener(ConfigurationListenerIF listener)
   {
-    getManager().addConfigurationListener(
-      getClass(),
-      listener);
+    getManager().addConfigurationListener(getClass(), listener);
   }
 
   public void removeConfigurationListener(ConfigurationListenerIF listener)
   {
-    getManager().removeConfigurationListener(
-      getClass(),
-      listener);
+    getManager().removeConfigurationListener(getClass(), listener);
   }
 
   void disableFireChanged(boolean disable)

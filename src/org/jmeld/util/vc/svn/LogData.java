@@ -41,16 +41,16 @@ public class LogData
   static class Entry
   {
     @XmlAttribute
-    private Integer    revision;
+    private Integer revision;
     @XmlElement
-    private String     author;
+    private String author;
     @XmlElement
-    private Date       date;
+    private Date date;
     @XmlElementWrapper(name = "paths")
     @XmlElement(name = "path")
     private List<Path> pathList;
     @XmlElement
-    private String     msg;
+    private String msg;
 
     public Entry()
     {
@@ -85,12 +85,12 @@ public class LogData
   static class Path
   {
     @XmlAttribute
-    private String  action;
+    private String action;
     @XmlAttribute(name = "copyfrom-path")
-    private String  copyFromPath;
+    private String copyFromPath;
     @XmlAttribute(name = "copyfrom-rev")
     private Integer copyFromRev;
-    private String  pathName;
+    private String pathName;
 
     public Path()
     {

@@ -25,7 +25,7 @@ import java.io.*;
 import java.util.*;
 
 public class TabbedPanePreference
-       extends Preference
+    extends Preference
 {
   // Class variables:
   private static String TITLE = "TITLE";
@@ -33,9 +33,7 @@ public class TabbedPanePreference
   // Instance variables:
   private JTabbedPane target;
 
-  public TabbedPanePreference(
-    String      preferenceName,
-    JTabbedPane target)
+  public TabbedPanePreference(String preferenceName, JTabbedPane target)
   {
     super("TabbedPane-" + preferenceName);
 
@@ -67,7 +65,7 @@ public class TabbedPanePreference
 
   private void save()
   {
-    int    index;
+    int index;
     String title;
 
     index = target.getSelectedIndex();
@@ -78,11 +76,11 @@ public class TabbedPanePreference
   private ChangeListener getChangeListener()
   {
     return new ChangeListener()
+    {
+      public void stateChanged(ChangeEvent e)
       {
-        public void stateChanged(ChangeEvent e)
-        {
-          save();
-        }
-      };
+        save();
+      }
+    };
   }
 }

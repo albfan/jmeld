@@ -21,12 +21,12 @@ import org.jmeld.ui.util.*;
 import javax.swing.*;
 
 public class FilePanelBar
-       extends JPanel
+    extends JPanel
 {
   private FilePanel filePanel;
-  private JLabel    selected;
-  private JLabel    lineNumber;
-  private JLabel    columnNumber;
+  private JLabel selected;
+  private JLabel lineNumber;
+  private JLabel columnNumber;
   private ImageIcon iconSelected;
   private ImageIcon iconNotSelected;
 
@@ -60,12 +60,12 @@ public class FilePanelBar
 
   public void update()
   {
-    Icon      icon;
+    Icon icon;
     JTextArea editor;
-    int       caretPosition;
-    String    text;
-    int       line;
-    int       column;
+    int caretPosition;
+    String text;
+    int line;
+    int column;
 
     icon = filePanel.isSelected() ? iconSelected : iconNotSelected;
     if (selected.getIcon() != icon)
@@ -93,10 +93,7 @@ public class FilePanelBar
       column = -1;
     }
 
-    text = String.format(
-        "Line: %05d/%05d",
-        line + 1,
-        editor.getLineCount());
+    text = String.format("Line: %05d/%05d", line + 1, editor.getLineCount());
     lineNumber.setText(text);
 
     text = String.format("Column: %03d", column);

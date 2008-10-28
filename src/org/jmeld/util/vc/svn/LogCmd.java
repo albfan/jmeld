@@ -5,7 +5,7 @@ import org.jmeld.util.*;
 import java.io.*;
 
 public class LogCmd
-       extends SvnXmlCmd<LogData>
+    extends SvnXmlCmd<LogData>
 {
   private File file;
 
@@ -18,13 +18,8 @@ public class LogCmd
 
   public Result execute()
   {
-    super.execute(
-      "svn",
-      "log",
-      "--non-interactive",
-      "-v",
-      "--xml",
-      file.getPath());
+    super.execute("svn", "log", "--non-interactive", "-v", "--xml", file
+        .getPath());
 
     return getResult();
   }

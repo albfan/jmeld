@@ -23,10 +23,7 @@ public class SearchHit
   int toOffset;
   int size;
 
-  public SearchHit(
-    int line,
-    int offset,
-    int size)
+  public SearchHit(int line, int offset, int size)
   {
     this.line = line;
     this.fromOffset = offset;
@@ -58,14 +55,13 @@ public class SearchHit
   {
     SearchHit sh;
 
-    if(!(o instanceof SearchHit))
+    if (!(o instanceof SearchHit))
     {
       return false;
     }
 
     sh = (SearchHit) o;
 
-    return (sh.getFromOffset() == getFromOffset()
-    && sh.getToOffset() == getToOffset());
+    return (sh.getFromOffset() == getFromOffset() && sh.getToOffset() == getToOffset());
   }
 }

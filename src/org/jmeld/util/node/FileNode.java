@@ -21,17 +21,15 @@ import org.jmeld.ui.text.*;
 import java.io.*;
 
 public class FileNode
-       extends JMeldNode
-       implements BufferNode
+    extends JMeldNode
+    implements BufferNode
 {
-  private File         file;
-  private long         fileLastModified;
+  private File file;
+  private long fileLastModified;
   private FileDocument document;
-  private boolean      exists;
+  private boolean exists;
 
-  public FileNode(
-    String name,
-    File   file)
+  public FileNode(String name, File file)
   {
     super(name, !file.isDirectory());
     this.file = file;
@@ -91,7 +89,8 @@ public class FileNode
     if (outOfDate)
     {
       System.out.println("FileNode[" + this + "] is out of date ["
-        + file.lastModified() + " != " + fileLastModified + "]");
+                         + file.lastModified() + " != " + fileLastModified
+                         + "]");
     }
     return outOfDate;
   }

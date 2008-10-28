@@ -15,22 +15,21 @@ public class Ignore
 
   // Instance variables:
   @XmlElement
-  public boolean             ignoreWhitespaceAtBegin;
+  public boolean ignoreWhitespaceAtBegin;
   @XmlElement
-  public boolean             ignoreWhitespaceInBetween;
+  public boolean ignoreWhitespaceInBetween;
   @XmlElement
-  public boolean             ignoreWhitespaceAtEnd;
+  public boolean ignoreWhitespaceAtEnd;
   @XmlElement
-  public boolean             ignoreEOL;
+  public boolean ignoreEOL;
   @XmlElement
-  public boolean             ignoreBlankLines;
+  public boolean ignoreBlankLines;
   @XmlElement
-  public boolean             ignoreCase;
+  public boolean ignoreCase;
   @XmlElement
-
   // Transient:
-  public boolean             ignore;
-  public boolean             ignoreWhitespace;
+  public boolean ignore;
+  public boolean ignoreWhitespace;
 
   public Ignore(Ignore ignore)
   {

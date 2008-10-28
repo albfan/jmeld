@@ -34,4 +34,3 @@ public class StringUtil
     return text.replaceAll("\n", "<LF>").replaceAll("\r", "<CR>");
   }
 }
-

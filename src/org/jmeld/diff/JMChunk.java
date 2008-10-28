@@ -21,9 +21,7 @@ public class JMChunk
   private int anchor;
   private int size;
 
-  public JMChunk(
-    int anchor,
-    int size)
+  public JMChunk(int anchor, int size)
   {
     this.anchor = anchor;
     this.size = size;
@@ -53,7 +51,7 @@ public class JMChunk
   {
     JMChunk c;
 
-    if(!(o instanceof JMChunk))
+    if (!(o instanceof JMChunk))
     {
       return false;
     }

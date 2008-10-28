@@ -43,19 +43,19 @@ public class FilePanel
   private static final int MAXSIZE_CHANGE_DIFF = 1000;
 
   // Instance variables:
-  private BufferDiffPanel  diffPanel;
-  private String           name;
-  private int              position;
-  private DiffLabel        fileLabel;
-  private JComboBox        fileBox;
-  private JScrollPane      scrollPane;
-  private JTextArea        editor;
+  private BufferDiffPanel diffPanel;
+  private String name;
+  private int position;
+  private DiffLabel fileLabel;
+  private JComboBox fileBox;
+  private JScrollPane scrollPane;
+  private JTextArea editor;
   private BufferDocumentIF bufferDocument;
-  private JButton          saveButton;
-  private Timer            timer;
-  private SearchHits       searchHits;
-  private boolean          selected;
-  private FilePanelBar     filePanelBar;
+  private JButton saveButton;
+  private Timer timer;
+  private SearchHits searchHits;
+  private boolean selected;
+  private FilePanelBar filePanelBar;
 
   FilePanel(BufferDiffPanel diffPanel, String name, int position)
   {
@@ -89,8 +89,8 @@ public class FilePanel
 
       // Normally the leftside is not painted of a scrollbar that is
       //   NOT freestanding.
-      scrollPane.getVerticalScrollBar()
-          .putClientProperty("JScrollBar.isFreeStanding", Boolean.TRUE);
+      scrollPane.getVerticalScrollBar().putClientProperty(
+        "JScrollBar.isFreeStanding", Boolean.TRUE);
     }
 
     fileBox = new JComboBox();
@@ -200,14 +200,12 @@ public class FilePanel
       JOptionPane.showMessageDialog(diffPanel, "Could not read file: "
                                                + bufferDocument.getName()
                                                + "\n" + ex.getMessage(),
-                                    "Error opening file",
-                                    JOptionPane.ERROR_MESSAGE);
+        "Error opening file", JOptionPane.ERROR_MESSAGE);
       return;
     }
   }
 
-  void updateFileLabel(String name1,
-                       String name2)
+  void updateFileLabel(String name1, String name2)
   {
     fileLabel.setText(name1, name2);
   }
@@ -237,7 +235,7 @@ public class FilePanel
     SearchCommand searchCommand;
 
     searchCommand = diffPanel.getSearchCommand();
-    if(searchCommand == null)
+    if (searchCommand == null)
     {
       return null;
     }
@@ -326,13 +324,14 @@ public class FilePanel
 
   private void paintSearchHighlights()
   {
-    if(searchHits != null)
+    if (searchHits != null)
     {
       for (SearchHit sh : searchHits.getSearchHits())
       {
-        setHighlight(JMHighlighter.LAYER2, sh.getFromOffset(), sh.getToOffset(),
-                     searchHits.isCurrent(sh) ? JMHighlightPainter.CURRENT_SEARCH
-                                             : JMHighlightPainter.SEARCH);
+        setHighlight(JMHighlighter.LAYER2, sh.getFromOffset(),
+          sh.getToOffset(),
+          searchHits.isCurrent(sh) ? JMHighlightPainter.CURRENT_SEARCH
+                                  : JMHighlightPainter.SEARCH);
       }
     }
   }
@@ -384,7 +383,7 @@ public class FilePanel
         if (delta.isAdd())
         {
           setHighlight(fromOffset, fromOffset + 1,
-                       JMHighlightPainter.ADDED_LINE);
+            JMHighlightPainter.ADDED_LINE);
         }
         else if (delta.isDelete())
         {
@@ -411,7 +410,7 @@ public class FilePanel
                 toOffset2 = fromOffset2 + changeOriginal.getSize();
 
                 setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                             JMHighlightPainter.CHANGED2);
+                  JMHighlightPainter.CHANGED2);
               }
             }
           }
@@ -443,7 +442,7 @@ public class FilePanel
         else if (delta.isDelete())
         {
           setHighlight(fromOffset, fromOffset + 1,
-                       JMHighlightPainter.DELETED_LINE);
+            JMHighlightPainter.DELETED_LINE);
         }
         else if (delta.isChange())
         {
@@ -465,7 +464,7 @@ public class FilePanel
                 toOffset2 = fromOffset2 + changeRevised.getSize();
 
                 setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                             JMHighlightPainter.CHANGED2);
+                  JMHighlightPainter.CHANGED2);
               }
             }
           }
@@ -491,17 +490,14 @@ public class FilePanel
     jmhl.removeHighlights(JMHighlighter.LAYER2);
   }
 
-  private void setHighlight(int offset,
-                            int size,
-                            Highlighter.HighlightPainter highlight)
+  private void setHighlight(int offset, int size,
+      Highlighter.HighlightPainter highlight)
   {
     setHighlight(JMHighlighter.LAYER0, offset, size, highlight);
   }
 
-  private void setHighlight(Integer layer,
-                            int offset,
-                            int size,
-                            Highlighter.HighlightPainter highlight)
+  private void setHighlight(Integer layer, int offset, int size,
+      Highlighter.HighlightPainter highlight)
   {
     try
     {
@@ -526,11 +522,9 @@ public class FilePanel
         catch (Exception ex)
         {
           JOptionPane.showMessageDialog(SwingUtilities.getRoot(editor),
-                                        "Could not save file: "
-                                            + bufferDocument.getName() + "\n"
-                                            + ex.getMessage(),
-                                        "Error saving file",
-                                        JOptionPane.ERROR_MESSAGE);
+            "Could not save file: " + bufferDocument.getName() + "\n"
+                + ex.getMessage(), "Error saving file",
+            JOptionPane.ERROR_MESSAGE);
         }
       }
     };
@@ -670,8 +664,7 @@ public class FilePanel
       readonly = c.getEditor().getRightsideReadonly();
     }
 
-    if(bufferDocument != null &&
-       bufferDocument.isReadonly())
+    if (bufferDocument != null && bufferDocument.isReadonly())
     {
       readonly = true;
     }

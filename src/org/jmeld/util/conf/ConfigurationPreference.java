@@ -21,19 +21,19 @@ import org.jmeld.util.prefs.*;
 import java.io.*;
 
 public class ConfigurationPreference
-       extends Preference
+    extends Preference
 {
   // Class variables:
   private static String FILENAME = "FILENAME";
 
   // Instance variables:
   private Class clazz;
-  private File  file;
+  private File file;
 
   public ConfigurationPreference(Class clazz)
   {
     super("Configuration-" + clazz);
-    
+
     this.clazz = clazz;
 
     init();
@@ -43,7 +43,7 @@ public class ConfigurationPreference
   {
     String fileName;
     String defaultFileName;
-    int    index;
+    int index;
 
     defaultFileName = clazz.getName();
     index = defaultFileName.lastIndexOf(".");
@@ -53,8 +53,7 @@ public class ConfigurationPreference
     }
     try
     {
-      defaultFileName = new File(
-          System.getProperty("user.home"),
+      defaultFileName = new File(System.getProperty("user.home"),
           defaultFileName).getCanonicalPath();
     }
     catch (Exception ex)
@@ -83,9 +82,7 @@ public class ConfigurationPreference
   {
     try
     {
-      putString(
-        FILENAME,
-        file.getCanonicalPath());
+      putString(FILENAME, file.getCanonicalPath());
     }
     catch (IOException ex)
     {

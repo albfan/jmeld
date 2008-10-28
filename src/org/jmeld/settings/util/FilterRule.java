@@ -25,7 +25,7 @@ import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class FilterRule
-       extends AbstractConfigurationElement
+    extends AbstractConfigurationElement
 {
   public enum Rule
   {
@@ -47,19 +47,16 @@ public class FilterRule
     }
   }
   @XmlAttribute
-  private boolean              active;
+  private boolean active;
   @XmlAttribute
-  private String               pattern;
+  private String pattern;
   @XmlAttribute
-  private Rule                 rule;
+  private Rule rule;
   @XmlAttribute
-  private String               description;
+  private String description;
 
-  public FilterRule(
-    String  description,
-    Rule    rule,
-    String  pattern,
-    boolean active)
+  public FilterRule(String description, Rule rule, String pattern,
+      boolean active)
   {
     setDescription(description);
     setRule(rule);

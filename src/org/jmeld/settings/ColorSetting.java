@@ -25,15 +25,15 @@ import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class ColorSetting
-       extends AbstractConfigurationElement
+    extends AbstractConfigurationElement
 {
   @XmlAttribute
-  private int              b = -1;
+  private int b = -1;
   @XmlAttribute
-  private int              g = -1;
+  private int g = -1;
   @XmlAttribute
-  private int              r = -1;
-  private Color            color;
+  private int r = -1;
+  private Color color;
 
   public ColorSetting()
   {

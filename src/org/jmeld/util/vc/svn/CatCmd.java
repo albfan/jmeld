@@ -33,7 +33,7 @@ public class CatCmd
   public static void main(String[] args)
   {
     BaseFile result;
-    byte[]   byteArray;
+    byte[] byteArray;
 
     try
     {

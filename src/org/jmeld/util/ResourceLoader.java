@@ -32,8 +32,7 @@ public class ResourceLoader
     return this.getClass().getClassLoader();
   }
 
-  public static synchronized InputStream getResourceAsStream(
-    String resourceName)
+  public static synchronized InputStream getResourceAsStream(String resourceName)
   {
     return resourceLoader.getClassLoader().getResourceAsStream(resourceName);
   }

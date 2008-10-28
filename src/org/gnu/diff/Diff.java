@@ -50,8 +50,8 @@ public class Diff
 
   /** When set to true, the algorithm returns a guarranteed minimal
      set of changes.  This makes things slower, sometimes much slower. */
-  private int[] xvec;  /* Vectors being compared. */
-  private int[] yvec;  /* Vectors being compared. */
+  private int[] xvec; /* Vectors being compared. */
+  private int[] yvec; /* Vectors being compared. */
   private int[] fdiag;
   /* Vector, indexed by diagonal, containing
      the X coordinate of the point furthest
@@ -67,11 +67,11 @@ public class Diff
      the X coordinate of the point furthest
      along the given diagonal in the backward
      search of the edit matrix. */
-  private int               bdiagoff;
+  private int bdiagoff;
   private final file_data[] filevec = new file_data[2];
-  private int               cost;
-  private int               too_expensive = 100;
-  private boolean           minimal = true;
+  private int cost;
+  private int too_expensive = 100;
+  private boolean minimal = true;
 
   /** Prepare to find differences between two arrays.  Each element of
      the arrays is translated to an "equivalence number" based on
@@ -80,9 +80,7 @@ public class Diff
      be needed again later to print the results of the comparison as
      an edit script, if desired.
    */
-  public Diff(
-    Object[] a,
-    Object[] b)
+  public Diff(Object[] a, Object[] b)
   {
     Map h = new HashMap(a.length + b.length);
 
@@ -109,27 +107,22 @@ public class Diff
      the value of bdiag at that diagonal is "wrong",
      the worst this can do is cause suboptimal diff output.
      It cannot cause incorrect diff output.  */
-  private void diag(
-    int       xoff,
-    int       xlim,
-    int       yoff,
-    int       ylim,
-    boolean   find_minimal,
-    Partition part)
+  private void diag(int xoff, int xlim, int yoff, int ylim,
+      boolean find_minimal, Partition part)
   {
-    int dmin = xoff - ylim;  // Minimum valid diagonal.
-    int dmax = xlim - yoff;  // Maximum valid diagonal.
-    int fmid = xoff - yoff;  // Center diagonal of top-down search.
-    int bmid = xlim - ylim;  // Center diagonal of bottom-up search.
-    int fmin = fmid;  // Limits of top-down search.
-    int fmax = fmid;  // Limits of top-down search.
-    int bmin = bmid;  // Limits of bottom-up search.
-                      /* True if southeast corner is on an odd
-       diagonal with respect to the northwest. */
+    int dmin = xoff - ylim; // Minimum valid diagonal.
+    int dmax = xlim - yoff; // Maximum valid diagonal.
+    int fmid = xoff - yoff; // Center diagonal of top-down search.
+    int bmid = xlim - ylim; // Center diagonal of bottom-up search.
+    int fmin = fmid; // Limits of top-down search.
+    int fmax = fmid; // Limits of top-down search.
+    int bmin = bmid; // Limits of bottom-up search.
+    /* True if southeast corner is on an odd
+    diagonal with respect to the northwest. */
 
-    int bmax = bmid;  // Limits of bottom-up search.
-                      /* True if southeast corner is on an odd
-       diagonal with respect to the northwest. */
+    int bmax = bmid; // Limits of bottom-up search.
+    /* True if southeast corner is on an odd
+    diagonal with respect to the northwest. */
 
     boolean odd = (fmid - bmid & 1) != 0;
 
@@ -138,7 +131,7 @@ public class Diff
 
     for (int c = 1;; ++c)
     {
-      int     d;  /* Active diagonal. */
+      int d; /* Active diagonal. */
       boolean big_snake = false;
 
       /* Extend the top-down search by an edit step in each diagonal. */
@@ -192,7 +185,7 @@ public class Diff
 
         fdiag[fdiagoff + d] = x;
         if (odd && bmin <= d && d <= bmax
-          && bdiag[bdiagoff + d] <= fdiag[fdiagoff + d])
+            && bdiag[bdiagoff + d] <= fdiag[fdiagoff + d])
         {
           part.xmid = x;
           part.ymid = y;
@@ -287,7 +280,7 @@ public class Diff
           if (v > 12 * (c + (dd < 0 ? -dd : dd)))
           {
             if (v > best && xoff + SNAKE_LIMIT <= x && x < xlim
-              && yoff + SNAKE_LIMIT <= y && y < ylim)
+                && yoff + SNAKE_LIMIT <= y && y < ylim)
             {
               /* We have a good enough best diagonal;
                  now insist that it end with a significant snake.  */
@@ -323,7 +316,7 @@ public class Diff
           if (v > 12 * (c + (dd < 0 ? -dd : dd)))
           {
             if (v > best && xoff < x && x <= xlim - SNAKE_LIMIT && yoff < y
-              && y <= ylim - SNAKE_LIMIT)
+                && y <= ylim - SNAKE_LIMIT)
             {
               /* We have a good enough best diagonal;
                  now insist that it end with a significant snake.  */
@@ -421,12 +414,8 @@ public class Diff
      The subsequence of file 0 is [XOFF, XLIM) and likewise for file 1.
      Note that XLIM, YLIM are exclusive bounds.
      All line numbers are origin-0 and discarded lines are not counted.  */
-  private void compareseq(
-    int     xoff,
-    int     xlim,
-    int     yoff,
-    int     ylim,
-    boolean find_minimal)
+  private void compareseq(int xoff, int xlim, int yoff, int ylim,
+      boolean find_minimal)
   {
     /* Slide down the bottom initial diagonal. */
     while (xoff < xlim && yoff < ylim && xvec[xoff] == yvec[yoff])
@@ -490,13 +479,13 @@ public class Diff
      producing an edit script in forward order.  */
   private change build_script()
   {
-    change          script = null;
+    change script = null;
     final boolean[] changed0 = filevec[0].changed_flag;
     final boolean[] changed1 = filevec[1].changed_flag;
-    final int       len0 = filevec[0].buffered_lines;
-    final int       len1 = filevec[1].buffered_lines;
-    int             i0 = len0;
-    int             i1 = len1;
+    final int len0 = filevec[0].buffered_lines;
+    final int len1 = filevec[1].buffered_lines;
+    int i0 = len0;
+    int i1 = len1;
 
     /* Note that changedN[-1] does exist, and contains 0.  */
     while (i0 >= 0 || i1 >= 0)
@@ -549,7 +538,7 @@ public class Diff
     yvec = filevec[1].undiscarded;
 
     int diags = filevec[0].nondiscarded_lines + filevec[1].nondiscarded_lines
-      + 3;
+                + 3;
 
     fdiag = new int[diags];
     fdiagoff = filevec[1].nondiscarded_lines + 1;
@@ -597,12 +586,7 @@ public class Diff
        INSERTED is the number of lines inserted here in file 1.
        If DELETED is 0 then LINE0 is the number of the line before
        which the insertion was done; vice versa for INSERTED and LINE1.  */
-    change(
-      int    line0,
-      int    line1,
-      int    deleted,
-      int    inserted,
-      change old)
+    change(int line0, int line1, int deleted, int inserted, change old)
     {
       this.line0 = line0;
       this.line1 = line1;
@@ -624,7 +608,7 @@ public class Diff
     public String toString()
     {
       return "line0=" + line0 + ", line1=" + line1 + ", inserted=" + inserted
-      + ", deleted=" + deleted;
+             + ", deleted=" + deleted;
     }
   }
 
@@ -694,11 +678,11 @@ public class Diff
      */
     private byte[] discardable(final int[] counts)
     {
-      final int    end = buffered_lines;
+      final int end = buffered_lines;
       final byte[] discards = new byte[end];
-      final int[]  equivs = this.equivs;
-      int          many = 5;
-      int          tem = end / 64;
+      final int[] equivs = this.equivs;
+      int many = 5;
+      int tem = end / 64;
 
       /* Multiply MANY by approximate square root of number of lines.
          That is the threshold for provisionally discardable lines.  */
@@ -915,9 +899,7 @@ public class Diff
       nondiscarded_lines = j;
     }
 
-    file_data(
-      Object[] data,
-      Map      h)
+    file_data(Object[] data, Map h)
     {
       buffered_lines = data.length;
 
@@ -931,9 +913,7 @@ public class Diff
 
         if (ir == null)
         {
-          h.put(
-            data[i],
-            new Integer(equivs[i] = equiv_max++));
+          h.put(data[i], new Integer(equivs[i] = equiv_max++));
         }
         else
         {
@@ -957,11 +937,11 @@ public class Diff
     {
       final boolean[] changed = changed_flag;
       final boolean[] other_changed = f.changed_flag;
-      int             i = 0;
-      int             j = 0;
-      int             i_end = buffered_lines;
-      int             preceding = -1;
-      int             other_preceding = -1;
+      int i = 0;
+      int j = 0;
+      int i_end = buffered_lines;
+      int preceding = -1;
+      int other_preceding = -1;
 
       for (;;)
       {
@@ -1009,10 +989,11 @@ public class Diff
 
           /* You might ask, how could this run follow right after another?
              Only because the previous run was shifted here.  */
-          if (end != i_end && equivs[start] == equivs[end]
-            && !other_changed[1 + j] && end != i_end
-            && !((preceding >= 0 && start == preceding)
-            || (other_preceding >= 0 && other_start == other_preceding)))
+          if (end != i_end
+              && equivs[start] == equivs[end]
+              && !other_changed[1 + j]
+              && end != i_end
+              && !((preceding >= 0 && start == preceding) || (other_preceding >= 0 && other_start == other_preceding)))
           {
             changed[1 + end++] = true;
             changed[1 + start++] = false;
@@ -1060,8 +1041,8 @@ public class Diff
 
   class Partition
   {
-    int     xmid;
-    int     ymid;
+    int xmid;
+    int ymid;
     boolean lo_minimal;
     boolean hi_minimal;
   }

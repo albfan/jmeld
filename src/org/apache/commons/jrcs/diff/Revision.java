@@ -85,11 +85,11 @@ import java.util.ListIterator;
  * Added visitor pattern Visitor interface and accept() method.
  */
 public class Revision
-       extends ToString
+    extends ToString
 {
   private List deltas_ = new LinkedList();
-  private int  orgSize;
-  private int  revSize;
+  private int orgSize;
+  private int revSize;
 
   /**
    * Creates an empty Revision.
@@ -173,7 +173,7 @@ public class Revision
    * @throws PatchFailedException if any of the patches cannot be applied.
    */
   public Object[] patch(Object[] src)
-    throws PatchFailedException
+      throws PatchFailedException
   {
     List target = new ArrayList(Arrays.asList(src));
 
@@ -188,7 +188,7 @@ public class Revision
    * @throws PatchFailedException if any of the patches cannot be applied.
    */
   public synchronized void applyTo(List target)
-    throws PatchFailedException
+      throws PatchFailedException
   {
     ListIterator i = deltas_.listIterator(deltas_.size());
 
@@ -221,9 +221,7 @@ public class Revision
    * representation will be appended.
    * @param EOL the string to use as line separator.
    */
-  public synchronized void toRCSString(
-    StringBuffer s,
-    String       EOL)
+  public synchronized void toRCSString(StringBuffer s, String EOL)
   {
     Iterator i = deltas_.iterator();
 

@@ -327,7 +327,7 @@ public class EditorSettings
 
   public void setToolbarButtonIcon(ToolbarButtonIcon toolbarButtonIcon)
   {
-    if(this.toolbarButtonIcon == toolbarButtonIcon)
+    if (this.toolbarButtonIcon == toolbarButtonIcon)
     {
       return;
     }
@@ -335,7 +335,7 @@ public class EditorSettings
     this.toolbarButtonIcon = toolbarButtonIcon;
 
     // Don't allow the buttons to disappear!
-    if(toolbarButtonIcon == ToolbarButtonIcon.NO)
+    if (toolbarButtonIcon == ToolbarButtonIcon.NO)
     {
       toolbarButtonTextEnabled = true;
     }
@@ -351,7 +351,7 @@ public class EditorSettings
 
   public void setToolbarButtonTextEnabled(boolean toolbarButtonTextEnabled)
   {
-    if(this.toolbarButtonTextEnabled == toolbarButtonTextEnabled)
+    if (this.toolbarButtonTextEnabled == toolbarButtonTextEnabled)
     {
       return;
     }
@@ -359,8 +359,7 @@ public class EditorSettings
     this.toolbarButtonTextEnabled = toolbarButtonTextEnabled;
 
     // Don't allow the buttons to disappear!
-    if(!toolbarButtonTextEnabled &&
-       toolbarButtonIcon == ToolbarButtonIcon.NO)
+    if (!toolbarButtonTextEnabled && toolbarButtonIcon == ToolbarButtonIcon.NO)
     {
       toolbarButtonIcon = ToolbarButtonIcon.LARGE;
     }

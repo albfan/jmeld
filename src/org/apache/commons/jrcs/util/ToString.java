@@ -105,8 +105,8 @@ public class ToString
   public static String[] stringToArray(String value)
   {
     BufferedReader reader = new BufferedReader(new StringReader(value));
-    List           l = new LinkedList();
-    String         s;
+    List l = new LinkedList();
+    String s;
 
     try
     {
@@ -131,9 +131,7 @@ public class ToString
    */
   public static String arrayToString(Object[] o)
   {
-    return arrayToString(
-      o,
-      System.getProperty("line.separator"));
+    return arrayToString(o, System.getProperty("line.separator"));
   }
 
   /**
@@ -142,9 +140,7 @@ public class ToString
    * @param o the array of objects.
    * @param EOL the string to use as line separator.
    */
-  public static String arrayToString(
-    Object[] o,
-    String   EOL)
+  public static String arrayToString(Object[] o, String EOL)
   {
     StringBuffer buf = new StringBuffer();
 

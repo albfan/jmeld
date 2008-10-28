@@ -17,7 +17,7 @@
 package org.jmeld.diff;
 
 public abstract class AbstractJMDiffAlgorithm
-       implements JMDiffAlgorithmIF
+    implements JMDiffAlgorithmIF
 {
   private boolean checkMaxTime;
 

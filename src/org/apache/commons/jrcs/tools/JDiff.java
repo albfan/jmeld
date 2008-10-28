@@ -77,11 +77,11 @@ import java.util.List;
 public class JDiff
 {
   static final String[] loadFile(String name)
-    throws IOException
+      throws IOException
   {
     BufferedReader data = new BufferedReader(new FileReader(name));
-    List           lines = new ArrayList();
-    String         s;
+    List lines = new ArrayList();
+    String s;
 
     while ((s = data.readLine()) != null)
     {
@@ -97,7 +97,7 @@ public class JDiff
   }
 
   public static void main(String[] argv)
-    throws Exception
+      throws Exception
   {
     if (argv.length < 2)
     {
@@ -108,7 +108,7 @@ public class JDiff
       Object[] orig = loadFile(argv[0]);
       Object[] rev = loadFile(argv[1]);
 
-      Diff     df = new Diff(orig);
+      Diff df = new Diff(orig);
       Revision r = df.diff(rev);
 
       System.err.println("------");
@@ -122,8 +122,8 @@ public class JDiff
         //String recos = Diff.arrayToString(reco);
         if (!Diff.compare(rev, reco))
         {
-          System.err.println("INTERNAL ERROR:"
-            + "files differ after patching!");
+          System.err
+              .println("INTERNAL ERROR:" + "files differ after patching!");
         }
       }
       catch (Throwable o)

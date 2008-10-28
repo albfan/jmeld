@@ -12,7 +12,7 @@ public class ConfigurationManager
   private static ConfigurationManager instance = new ConfigurationManager();
 
   // instance variables:
-  private Map<String, AbstractConfiguration>                configurations;
+  private Map<String, AbstractConfiguration> configurations;
   private Map<String, WeakHashSet<ConfigurationListenerIF>> listenerMap;
 
   private ConfigurationManager()
@@ -26,9 +26,7 @@ public class ConfigurationManager
     return instance;
   }
 
-  public boolean reload(
-    File  file,
-    Class clazz)
+  public boolean reload(File file, Class clazz)
   {
     AbstractConfiguration configuration;
 
@@ -41,9 +39,7 @@ public class ConfigurationManager
     // Set the new filename AFTER the load was succesfull!
     configuration.setConfigurationFile(file);
 
-    configurations.put(
-      clazz.getName(),
-      configuration);
+    configurations.put(clazz.getName(), configuration);
 
     // Let everybody know that there is a new configuration!
     fireChanged(clazz);
@@ -54,7 +50,7 @@ public class ConfigurationManager
   public AbstractConfiguration get(Class clazz)
   {
     AbstractConfiguration configuration;
-    String                key;
+    String key;
 
     key = clazz.getName();
 
@@ -86,7 +82,7 @@ public class ConfigurationManager
   private AbstractConfiguration load(Class clazz)
   {
     ConfigurationPreference preference;
-    File                    file;
+    File file;
 
     preference = new ConfigurationPreference(clazz);
     file = preference.getFile();
@@ -94,9 +90,7 @@ public class ConfigurationManager
     return load(clazz, file);
   }
 
-  private AbstractConfiguration load(
-    Class clazz,
-    File  file)
+  private AbstractConfiguration load(Class clazz, File file)
   {
     if (file.exists())
     {
@@ -113,12 +107,10 @@ public class ConfigurationManager
     return null;
   }
 
-  void addConfigurationListener(
-    Class                   clazz,
-    ConfigurationListenerIF listener)
+  void addConfigurationListener(Class clazz, ConfigurationListenerIF listener)
   {
     WeakHashSet<ConfigurationListenerIF> listeners;
-    String                               key;
+    String key;
 
     key = clazz.getName();
 
@@ -132,9 +124,7 @@ public class ConfigurationManager
     listeners.add(listener);
   }
 
-  void removeConfigurationListener(
-    Class                   clazz,
-    ConfigurationListenerIF listener)
+  void removeConfigurationListener(Class clazz, ConfigurationListenerIF listener)
   {
     Set<ConfigurationListenerIF> listeners;
 

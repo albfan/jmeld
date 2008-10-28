@@ -8,7 +8,7 @@ import java.util.*;
 public abstract class VcCmd<T>
 {
   private Result result;
-  private T      resultData;
+  private T resultData;
 
   public void execute(String... command)
   {
@@ -54,7 +54,8 @@ public abstract class VcCmd<T>
           errorText.append(text);
         }
         br.close();
-        return Result.FALSE(errorText.toString() + " (exitvalue=" + p.exitValue() + ")");
+        return Result.FALSE(errorText.toString() + " (exitvalue="
+                            + p.exitValue() + ")");
       }
 
       build(baos.toByteArray());

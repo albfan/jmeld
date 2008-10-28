@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DetailHeader
-       extends JLabel
+    extends JLabel
 {
   public DetailHeader()
   {

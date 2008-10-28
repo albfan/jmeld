@@ -25,16 +25,14 @@ public class DiffUtil
 {
   public static boolean debug = false;
 
-  public static int getRevisedLine(
-    JMRevision revision,
-    int        originalLine)
+  public static int getRevisedLine(JMRevision revision, int originalLine)
   {
     JMDelta delta;
-    int     originalAnchor;
-    int     originalSize;
-    int     revisedAnchor;
-    int     revisedSize;
-    int     revisedLine;
+    int originalAnchor;
+    int originalSize;
+    int revisedAnchor;
+    int revisedSize;
+    int revisedLine;
 
     if (revision == null)
     {
@@ -58,7 +56,7 @@ public class DiffUtil
       else
       {
         revisedLine = revisedAnchor + revisedSize - originalSize
-          + (originalLine - originalAnchor);
+                      + (originalLine - originalAnchor);
       }
     }
     else
@@ -78,16 +76,14 @@ public class DiffUtil
     return revisedLine;
   }
 
-  public static int getOriginalLine(
-    JMRevision revision,
-    int        revisedLine)
+  public static int getOriginalLine(JMRevision revision, int revisedLine)
   {
     JMDelta delta;
-    int     originalAnchor;
-    int     originalSize;
-    int     revisedAnchor;
-    int     revisedSize;
-    int     originalLine;
+    int originalAnchor;
+    int originalSize;
+    int revisedAnchor;
+    int revisedSize;
+    int originalLine;
 
     originalLine = revisedLine;
 
@@ -106,7 +102,7 @@ public class DiffUtil
       else
       {
         originalLine = originalAnchor + originalSize - revisedSize
-          + (revisedLine - revisedAnchor);
+                       + (revisedLine - revisedAnchor);
       }
     }
     else
@@ -126,27 +122,21 @@ public class DiffUtil
     return originalLine;
   }
 
-  private static JMDelta findOriginalDelta(
-    JMRevision revision,
-    int        line)
+  private static JMDelta findOriginalDelta(JMRevision revision, int line)
   {
     return findDelta(revision, line, true);
   }
 
-  private static JMDelta findRevisedDelta(
-    JMRevision revision,
-    int        line)
+  private static JMDelta findRevisedDelta(JMRevision revision, int line)
   {
     return findDelta(revision, line, false);
   }
 
-  private static JMDelta findDelta(
-    JMRevision revision,
-    int        line,
-    boolean    originalDelta)
+  private static JMDelta findDelta(JMRevision revision, int line,
+      boolean originalDelta)
   {
     JMDelta previousDelta;
-    int   anchor;
+    int anchor;
 
     if (revision == null)
     {

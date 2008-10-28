@@ -19,15 +19,16 @@ import org.jmeld.ui.util.ImageUtil;
  *
  * @author  kees
  */
-public class SettingsPanelForm extends AbstractContentPanel
+public class SettingsPanelForm
+    extends AbstractContentPanel
 {
-  
+
   /** Creates new form SettingsPanel2 */
-  public SettingsPanelForm ()
+  public SettingsPanelForm()
   {
-    initComponents ();
+    initComponents();
   }
-  
+
   /** This method is called from within the constructor to
    * initialize the form.
    * WARNING: Do NOT modify this code. The content of this method is
@@ -55,50 +56,60 @@ public class SettingsPanelForm extends AbstractContentPanel
     settingItems.setModel(new javax.swing.AbstractListModel()
     {
       String[] strings = { "MyEditor", "MyFilter" };
-      public int getSize() { return strings.length; }
-      public Object getElementAt(int i) { return strings[i]; }
+
+      public int getSize()
+      {
+        return strings.length;
+      }
+
+      public Object getElementAt(int i)
+      {
+        return strings[i];
+      }
     });
     jScrollPane1.setViewportView(settingItems);
 
-    org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+    org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(
+        this);
     this.setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(layout.createSequentialGroup()
-            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(settingsPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE))
-          .add(layout.createSequentialGroup()
-            .add(saveButton)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(fileLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(reloadButton)
-            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-            .add(saveAsButton)))
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-      .add(layout.createSequentialGroup()
-        .addContainerGap()
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-          .add(saveButton)
-          .add(saveAsButton)
-          .add(reloadButton)
-          .add(fileLabel))
-        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-          .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-          .add(settingsPanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
-        .addContainerGap())
-    );
+    layout.setHorizontalGroup(layout.createParallelGroup(
+      org.jdesktop.layout.GroupLayout.LEADING).add(
+      layout.createSequentialGroup().addContainerGap().add(
+        layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(
+              layout.createSequentialGroup().add(jScrollPane1,
+                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+                org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                  .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                  .add(settingsPanel,
+                    org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 319,
+                    Short.MAX_VALUE)).add(
+              layout.createSequentialGroup().add(saveButton).addPreferredGap(
+                org.jdesktop.layout.LayoutStyle.RELATED).add(fileLabel,
+                org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 139,
+                Short.MAX_VALUE).addPreferredGap(
+                org.jdesktop.layout.LayoutStyle.RELATED).add(reloadButton)
+                  .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                  .add(saveAsButton))).addContainerGap()));
+    layout.setVerticalGroup(layout.createParallelGroup(
+      org.jdesktop.layout.GroupLayout.LEADING).add(
+      layout.createSequentialGroup().addContainerGap()
+          .add(
+            layout
+                .createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(saveButton).add(saveAsButton).add(reloadButton).add(
+                  fileLabel)).addPreferredGap(
+            org.jdesktop.layout.LayoutStyle.RELATED).add(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(jScrollPane1,
+                  org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240,
+                  Short.MAX_VALUE).add(settingsPanel,
+                  org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 240,
+                  Short.MAX_VALUE)).addContainerGap()));
   }// </editor-fold>//GEN-END:initComponents
-  
-  
+
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   protected javax.swing.JLabel fileLabel;
   protected javax.swing.JScrollPane jScrollPane1;

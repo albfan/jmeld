@@ -21,8 +21,7 @@ public class FileUtil
     return result;
   }
 
-  public static void copy(File src,
-                          File dst)
+  public static void copy(File src, File dst)
       throws IOException
   {
     FileChannel inChannel;
@@ -37,8 +36,7 @@ public class FileUtil
     outChannel.close();
   }
 
-  public static void copy2(File src,
-                           File dst)
+  public static void copy2(File src, File dst)
       throws IOException
   {
     InputStream in;
@@ -60,8 +58,7 @@ public class FileUtil
     out.close();
   }
 
-  public static File createTempFile(String prefix,
-                                    String suffix)
+  public static File createTempFile(String prefix, String suffix)
       throws IOException
   {
     File file;

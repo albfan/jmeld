@@ -25,8 +25,8 @@ public class VersionControlBaseNode
     extends JMeldNode
     implements BufferNode
 {
-  private VersionControlIF           versionControl;
-  private File                       file;
+  private VersionControlIF versionControl;
+  private File file;
   private VersionControlBaseDocument document;
 
   public VersionControlBaseNode(VersionControlIF versionControl, String name,

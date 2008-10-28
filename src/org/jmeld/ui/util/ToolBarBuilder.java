@@ -22,7 +22,7 @@ import com.jgoodies.forms.layout.*;
 import javax.swing.*;
 
 public class ToolBarBuilder
-       extends AbstractFormBuilder
+    extends AbstractFormBuilder
 {
   public ToolBarBuilder(JComponent toolBar)
   {

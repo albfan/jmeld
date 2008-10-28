@@ -67,7 +67,7 @@ public interface JMeldContentPanelIF
   public void doRefresh();
 
   public void doMergeMode(boolean mergeMode);
-  
+
   public boolean checkExit();
 
   public String getSelectedText();

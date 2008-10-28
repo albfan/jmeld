@@ -83,7 +83,7 @@ public class LookAndFeelManager
 
   public String getInstalledLookAndFeelName()
   {
-    LookAndFeel  lf;
+    LookAndFeel lf;
 
     lf = UIManager.getLookAndFeel();
 
@@ -93,7 +93,7 @@ public class LookAndFeelManager
 
     for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
     {
-      if(ObjectUtil.equals(info.getClassName(), lf.getClass().getName()))
+      if (ObjectUtil.equals(info.getClassName(), lf.getClass().getName()))
       {
         return info.getName();
       }

@@ -66,7 +66,7 @@ package org.apache.commons.jrcs.diff;
  * @see Diff
  */
 public class PatchFailedException
-       extends DiffException
+    extends DiffException
 {
   public PatchFailedException()
   {

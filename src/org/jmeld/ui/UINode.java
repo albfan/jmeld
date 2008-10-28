@@ -10,21 +10,19 @@ import java.util.*;
 import java.io.*;
 
 public class UINode
-       implements TreeTableNode, Comparable<UINode>
+    implements TreeTableNode, Comparable<UINode>
 {
-  private JMTreeTableModel    treeTableModel;
-  private String              text;
-  private String              name;
-  private boolean             leaf;
-  private JMDiffNode          diffNode;
-  private UINode              parent;
-  private List<UINode>        children = new ArrayList<UINode>();
+  private JMTreeTableModel treeTableModel;
+  private String text;
+  private String name;
+  private boolean leaf;
+  private JMDiffNode diffNode;
+  private UINode parent;
+  private List<UINode> children = new ArrayList<UINode>();
   private Map<String, UINode> childrenMap = new HashMap<String, UINode>();
-  private boolean             checkSort;
+  private boolean checkSort;
 
-  public UINode(
-    JMTreeTableModel treeTableModel,
-    JMDiffNode       diffNode)
+  public UINode(JMTreeTableModel treeTableModel, JMDiffNode diffNode)
   {
     this.treeTableModel = treeTableModel;
     this.diffNode = diffNode;
@@ -33,10 +31,7 @@ public class UINode
     this.leaf = diffNode.isLeaf();
   }
 
-  public UINode(
-    JMTreeTableModel treeTableModel,
-    String           name,
-    boolean          leaf)
+  public UINode(JMTreeTableModel treeTableModel, String name, boolean leaf)
   {
     assert name != null;
 
@@ -62,9 +57,7 @@ public class UINode
     c = childrenMap.get(child.getName());
     if (c == null)
     {
-      childrenMap.put(
-        child.getName(),
-        child);
+      childrenMap.put(child.getName(), child);
       children.add(child);
       child.setParent(this);
       checkSort = true;
@@ -190,9 +183,7 @@ public class UINode
     return false;
   }
 
-  public void setValueAt(
-    Object aValue,
-    int    column)
+  public void setValueAt(Object aValue, int column)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }

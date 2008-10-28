@@ -21,16 +21,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ToolBarSeparator
-       extends JComponent
+    extends JComponent
 {
   public ToolBarSeparator()
   {
     this(10, 10);
   }
 
-  public ToolBarSeparator(
-    int width,
-    int height)
+  public ToolBarSeparator(int width, int height)
   {
     Dimension dimension;
 
@@ -44,8 +42,8 @@ public class ToolBarSeparator
   protected void paintComponent(Graphics g)
   {
     Dimension d;
-    int       h;
-    int       x;
+    int h;
+    int x;
 
     d = getSize();
 

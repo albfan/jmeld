@@ -71,7 +71,7 @@ package org.apache.commons.jrcs.diff.myers;
  *
  */
 public final class Snake
-       extends PathNode
+    extends PathNode
 {
   /**
    * Constructs a snake node.
@@ -80,10 +80,7 @@ public final class Snake
    * @param the position in the revised sequence
    * @param prev the previous node in the path.
    */
-  public Snake(
-    int      i,
-    int      j,
-    PathNode prev)
+  public Snake(int i, int j, PathNode prev)
   {
     super(i, j, prev);
   }

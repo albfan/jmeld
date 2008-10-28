@@ -5,11 +5,11 @@ import javax.swing.undo.*;
 import java.util.*;
 
 public abstract class AbstractCmd
-       extends AbstractUndoableEdit
+    extends AbstractUndoableEdit
 {
   private List<Command> commandList = new ArrayList<Command>();
   private List<Command> finallyCommandList = new ArrayList<Command>();
-  protected boolean     debug = true;
+  protected boolean debug = true;
 
   public void setDebug(boolean debug)
   {
@@ -17,7 +17,7 @@ public abstract class AbstractCmd
   }
 
   public synchronized void execute()
-    throws Exception
+      throws Exception
   {
     commandList.clear();
     finallyCommandList.clear();
@@ -35,7 +35,7 @@ public abstract class AbstractCmd
   }
 
   protected abstract void createCommands()
-    throws Exception;
+      throws Exception;
 
   protected void addCommand(Command command)
   {
@@ -115,7 +115,7 @@ public abstract class AbstractCmd
   abstract class Command
   {
     public abstract void execute()
-      throws Exception;
+        throws Exception;
 
     public void redo()
     {

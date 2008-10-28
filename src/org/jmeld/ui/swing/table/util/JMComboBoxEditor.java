@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.List;
 
 public class JMComboBoxEditor
-       extends DefaultCellEditor
+    extends DefaultCellEditor
 {
   public JMComboBoxEditor(Object[] items)
   {

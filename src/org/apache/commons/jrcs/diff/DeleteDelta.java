@@ -68,7 +68,7 @@ import java.util.List;
  * @see Chunk
  */
 public class DeleteDelta
-       extends Delta
+    extends Delta
 {
   DeleteDelta()
   {
@@ -81,7 +81,7 @@ public class DeleteDelta
   }
 
   public void verify(List target)
-    throws PatchFailedException
+      throws PatchFailedException
   {
     if (!original.verify(target))
     {
@@ -103,9 +103,7 @@ public class DeleteDelta
     original.toString(s, "< ", Diff.NL);
   }
 
-  public void toRCSString(
-    StringBuffer s,
-    String       EOL)
+  public void toRCSString(StringBuffer s, String EOL)
   {
     s.append("d");
     s.append(original.rcsfrom());

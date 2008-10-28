@@ -35,29 +35,29 @@ public class TabIcon
     implements Icon
 {
   // class variables:
-  private static int                   CLOSE_ICON_HEIGHT = 7;
-  private static int                   CLOSE_ICON_WIDTH  = 7;
-  private static int                   SPACE_WIDTH       = 5;
+  private static int CLOSE_ICON_HEIGHT = 7;
+  private static int CLOSE_ICON_WIDTH = 7;
+  private static int SPACE_WIDTH = 5;
 
   // instance variables:
-  private Icon                         icon;
-  private String                       text;
-  private int                          width;
-  private int                          height;
-  private JLabel                       label;
-  private int                          stringWidth;
-  private Rectangle                    closeBounds;
-  private JTabbedPane                  tabbedPane;
-  private Icon                         currentIcon;
-  private Icon                         closeIcon;
-  private Icon                         closeIcon_rollover;
-  private Icon                         closeIcon_pressed;
-  private Icon                         closeIcon_disabled;
-  private boolean                      pressed;
-  private boolean                      ignoreNextMousePressed;
-  private ChangeListener               changeListener;
-  private MouseListener                mouseListener;
-  private MouseMotionListener          mouseMotionListener;
+  private Icon icon;
+  private String text;
+  private int width;
+  private int height;
+  private JLabel label;
+  private int stringWidth;
+  private Rectangle closeBounds;
+  private JTabbedPane tabbedPane;
+  private Icon currentIcon;
+  private Icon closeIcon;
+  private Icon closeIcon_rollover;
+  private Icon closeIcon_pressed;
+  private Icon closeIcon_disabled;
+  private boolean pressed;
+  private boolean ignoreNextMousePressed;
+  private ChangeListener changeListener;
+  private MouseListener mouseListener;
+  private MouseMotionListener mouseMotionListener;
   private ArrayList<TabExitListenerIF> tabExitListeners;
 
   public TabIcon(Icon icon, String text)
@@ -152,10 +152,7 @@ public class TabIcon
     return height;
   }
 
-  public void paintIcon(Component c,
-                        Graphics g,
-                        int x,
-                        int y)
+  public void paintIcon(Component c, Graphics g, int x, int y)
   {
     FontMetrics fm;
     int x0;
@@ -188,7 +185,7 @@ public class TabIcon
       if (JMeldSettings.getInstance().getEditor().isAntialiasEnabled())
       {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+          RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       }
 
       fm = label.getFontMetrics(label.getFont());

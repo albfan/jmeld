@@ -22,7 +22,7 @@ import org.jmeld.util.vc.*;
 import java.util.*;
 
 public class DiffData
-       implements DiffIF
+    implements DiffIF
 {
   private List<Target> targetList;
 
@@ -42,9 +42,9 @@ public class DiffData
   }
 
   static class Target
-         implements DiffIF.TargetIF
+      implements DiffIF.TargetIF
   {
-    private String      path;
+    private String path;
     private JMRevision revision;
 
     public Target(String path, JMRevision revision)

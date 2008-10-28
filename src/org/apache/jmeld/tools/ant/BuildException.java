@@ -24,7 +24,7 @@ import java.io.PrintWriter;
  *
  */
 public class BuildException
-       extends RuntimeException
+    extends RuntimeException
 {
   /** Exception that might have caused this one. */
   private Throwable cause;
@@ -57,9 +57,7 @@ public class BuildException
    * @param cause The exception that might have caused this one.
    *              May be <code>null</code>.
    */
-  public BuildException(
-    String    message,
-    Throwable cause)
+  public BuildException(String message, Throwable cause)
   {
     super(message);
     this.cause = cause;

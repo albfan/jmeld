@@ -6,14 +6,11 @@ import java.util.*;
 public class Result
 {
   // instance variables
-  private boolean   result;
-  private String    description = "";
+  private boolean result;
+  private String description = "";
   private Exception exception;
 
-  private Result(
-    boolean   result,
-    String    description,
-    Exception exception)
+  private Result(boolean result, String description, Exception exception)
   {
     this.result = result;
     this.description = description;
@@ -30,9 +27,7 @@ public class Result
     return new Result(false, description, null);
   }
 
-  public static Result FALSE(
-    String    description,
-    Exception ex)
+  public static Result FALSE(String description, Exception ex)
   {
     return new Result(false, description, ex);
   }

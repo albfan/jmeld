@@ -25,7 +25,7 @@ import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class FolderSettings
-       extends AbstractConfigurationElement
+    extends AbstractConfigurationElement
 {
   public enum FolderView
   {
@@ -49,15 +49,15 @@ public class FolderSettings
 
   // Instance variables:
   @XmlElement
-  private FolderView            view = FolderView.packageView;
+  private FolderView view = FolderView.packageView;
   @XmlElement
-  private boolean               onlyLeft = true;
+  private boolean onlyLeft = true;
   @XmlElement
-  private boolean               leftRightChanged = true;
+  private boolean leftRightChanged = true;
   @XmlElement
-  private boolean               onlyRight = false;
+  private boolean onlyRight = false;
   @XmlElement
-  private boolean               leftRightUnChanged = false;
+  private boolean leftRightUnChanged = false;
 
   public FolderSettings()
   {

@@ -8,8 +8,8 @@ import java.util.*;
 import java.util.List;
 
 public class JMComboBoxRenderer
-       extends JComboBox
-       implements TableCellRenderer
+    extends JComboBox
+    implements TableCellRenderer
 {
   public JMComboBoxRenderer(Object[] items)
   {
@@ -21,13 +21,8 @@ public class JMComboBoxRenderer
     this(items.toArray());
   }
 
-  public Component getTableCellRendererComponent(
-    JTable  table,
-    Object  value,
-    boolean isSelected,
-    boolean hasFocus,
-    int     row,
-    int     column)
+  public Component getTableCellRendererComponent(JTable table, Object value,
+      boolean isSelected, boolean hasFocus, int row, int column)
   {
     if (isSelected)
     {

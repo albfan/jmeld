@@ -33,20 +33,20 @@ import java.util.*;
 import java.util.List;
 
 public class BufferDiffPanel
-       extends AbstractContentPanel
+    extends AbstractContentPanel
 {
-  public static final int    LEFT = 0;
-  public static final int    MIDDLE = 1;
-  public static final int    RIGHT = 2;
-  private JMeldPanel         mainPanel;
-  private FilePanel[]        filePanels;
-  private JMDiffNode         diffNode;
-  int                        filePanelSelectedIndex = -1;
-  private JMRevision         currentRevision;
-  private JMDelta            selectedDelta;
-  private int                selectedLine;
+  public static final int LEFT = 0;
+  public static final int MIDDLE = 1;
+  public static final int RIGHT = 2;
+  private JMeldPanel mainPanel;
+  private FilePanel[] filePanels;
+  private JMDiffNode diffNode;
+  int filePanelSelectedIndex = -1;
+  private JMRevision currentRevision;
+  private JMDelta selectedDelta;
+  private int selectedLine;
   private ScrollSynchronizer scrollSynchronizer;
-  private JMDiff             diff;
+  private JMDiff diff;
 
   BufferDiffPanel(JMeldPanel mainPanel)
   {
@@ -70,18 +70,13 @@ public class BufferDiffPanel
     bnLeft = diffNode.getBufferNodeLeft();
     bnRight = diffNode.getBufferNodeRight();
 
-    setBufferDocuments(
-      bnLeft == null ? null : bnLeft.getDocument(),
-      bnRight == null ? null : bnRight.getDocument(),
-      diffNode.getDiff(),
+    setBufferDocuments(bnLeft == null ? null : bnLeft.getDocument(),
+      bnRight == null ? null : bnRight.getDocument(), diffNode.getDiff(),
       diffNode.getRevision());
   }
 
-  private void setBufferDocuments(
-    BufferDocumentIF bd1,
-    BufferDocumentIF bd2,
-    JMDiff           diff,
-    JMRevision       revision)
+  private void setBufferDocuments(BufferDocumentIF bd1, BufferDocumentIF bd2,
+      JMDiff diff, JMRevision revision)
   {
     this.diff = diff;
 
@@ -99,12 +94,8 @@ public class BufferDiffPanel
 
     if (bd1 != null && bd2 != null)
     {
-      filePanels[LEFT].updateFileLabel(
-        bd1.getName(),
-        bd2.getName());
-      filePanels[RIGHT].updateFileLabel(
-        bd2.getName(),
-        bd1.getName());
+      filePanels[LEFT].updateFileLabel(bd1.getName(), bd2.getName());
+      filePanels[RIGHT].updateFileLabel(bd2.getName(), bd1.getName());
     }
 
     if (bd1 != null && bd2 != null)
@@ -128,9 +119,9 @@ public class BufferDiffPanel
 
   public String getTitle()
   {
-    String           title;
+    String title;
     BufferDocumentIF bd;
-    List<String>     titles;
+    List<String> titles;
 
     title = "";
 
@@ -179,7 +170,7 @@ public class BufferDiffPanel
 
   public boolean revisionChanged(JMDocumentEvent de)
   {
-    FilePanel        fp;
+    FilePanel fp;
     BufferDocumentIF bd1;
     BufferDocumentIF bd2;
 
@@ -198,12 +189,9 @@ public class BufferDiffPanel
       bd1 = filePanels[LEFT].getBufferDocument();
       bd2 = filePanels[RIGHT].getBufferDocument();
 
-      if(!currentRevision.update(
-          bd1 != null ? bd1.getLines() : null,
-          bd2 != null ? bd2.getLines() : null,
-          fp == filePanels[LEFT],
-          de.getStartLine(),
-          de.getNumberOfLines()))
+      if (!currentRevision.update(bd1 != null ? bd1.getLines() : null,
+        bd2 != null ? bd2.getLines() : null, fp == filePanels[LEFT], de
+            .getStartLine(), de.getNumberOfLines()))
       {
         return false;
       }
@@ -244,10 +232,8 @@ public class BufferDiffPanel
     {
       try
       {
-        currentRevision = diff.diff(
-            bd1.getLines(),
-            bd2.getLines(),
-            diffNode.getIgnore());
+        currentRevision = diff.diff(bd1.getLines(), bd2.getLines(), diffNode
+            .getIgnore());
 
         reDisplay();
       }
@@ -260,9 +246,9 @@ public class BufferDiffPanel
 
   private void init()
   {
-    FormLayout      layout;
-    String          columns;
-    String          rows;
+    FormLayout layout;
+    String columns;
+    String rows;
     CellConstraints cc;
 
     columns = "3px, pref, 3px, 0:grow, 5px, min, 60px, 0:grow, 25px, min, 3px, pref, 3px";
@@ -276,42 +262,20 @@ public class BufferDiffPanel
     filePanels[RIGHT] = new FilePanel(this, BufferDocumentIF.REVISED, RIGHT);
 
     // panel for file1
-    add(
-      new RevisionBar(this, filePanels[LEFT], true),
-      cc.xy(2, 4));
-    add(
-      filePanels[LEFT].getSaveButton(),
-      cc.xy(2, 2));
-    add(
-      filePanels[LEFT].getFileLabel(),
-      cc.xyw(4, 2, 3));
-    add(
-      filePanels[LEFT].getScrollPane(),
-      cc.xyw(4, 4, 3));
-    add(
-      filePanels[LEFT].getFilePanelBar(),
-      cc.xyw(4, 5, 3));
+    add(new RevisionBar(this, filePanels[LEFT], true), cc.xy(2, 4));
+    add(filePanels[LEFT].getSaveButton(), cc.xy(2, 2));
+    add(filePanels[LEFT].getFileLabel(), cc.xyw(4, 2, 3));
+    add(filePanels[LEFT].getScrollPane(), cc.xyw(4, 4, 3));
+    add(filePanels[LEFT].getFilePanelBar(), cc.xyw(4, 5, 3));
 
-    add(
-      new DiffScrollComponent(this, LEFT, RIGHT),
-      cc.xy(7, 4));
+    add(new DiffScrollComponent(this, LEFT, RIGHT), cc.xy(7, 4));
 
     // panel for file2
-    add(
-      new RevisionBar(this, filePanels[RIGHT], false),
-      cc.xy(12, 4));
-    add(
-      filePanels[RIGHT].getFileLabel(),
-      cc.xyw(8, 2, 3));
-    add(
-      filePanels[RIGHT].getScrollPane(),
-      cc.xyw(8, 4, 3));
-    add(
-      filePanels[RIGHT].getSaveButton(),
-      cc.xy(12, 2));
-    add(
-      filePanels[RIGHT].getFilePanelBar(),
-      cc.xyw(8, 5, 3));
+    add(new RevisionBar(this, filePanels[RIGHT], false), cc.xy(12, 4));
+    add(filePanels[RIGHT].getFileLabel(), cc.xyw(8, 2, 3));
+    add(filePanels[RIGHT].getScrollPane(), cc.xyw(8, 4, 3));
+    add(filePanels[RIGHT].getSaveButton(), cc.xy(12, 2));
+    add(filePanels[RIGHT].getFilePanelBar(), cc.xyw(8, 5, 3));
 
     scrollSynchronizer = new ScrollSynchronizer(this, filePanels[LEFT],
         filePanels[RIGHT]);
@@ -392,9 +356,9 @@ public class BufferDiffPanel
       catch (JMeldException ex)
       {
         ex.printStackTrace();
-        JOptionPane.showMessageDialog(mainPanel,
-          "Can't write file" + document.getName(), "Problem writing file",
-          JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(mainPanel, "Can't write file"
+                                                 + document.getName(),
+          "Problem writing file", JOptionPane.ERROR_MESSAGE);
       }
     }
   }
@@ -433,7 +397,7 @@ public class BufferDiffPanel
   @Override
   public SearchHits doSearch()
   {
-    FilePanel  fp;
+    FilePanel fp;
     SearchHits searchHits;
 
     fp = getSelectedPanel();
@@ -452,7 +416,7 @@ public class BufferDiffPanel
   @Override
   public void doNextSearch()
   {
-    FilePanel  fp;
+    FilePanel fp;
     SearchHits searchHits;
 
     fp = getSelectedPanel();
@@ -471,7 +435,7 @@ public class BufferDiffPanel
   @Override
   public void doPreviousSearch()
   {
-    FilePanel  fp;
+    FilePanel fp;
     SearchHits searchHits;
 
     fp = getSelectedPanel();
@@ -505,14 +469,12 @@ public class BufferDiffPanel
     }
   }
 
-  private void scrollToSearch(
-    FilePanel  fp,
-    SearchHits searchHits)
+  private void scrollToSearch(FilePanel fp, SearchHits searchHits)
   {
     SearchHit currentHit;
-    int       line;
+    int line;
 
-    if(searchHits == null)
+    if (searchHits == null)
     {
       return;
     }
@@ -530,7 +492,7 @@ public class BufferDiffPanel
   private FilePanel getSelectedPanel()
   {
     if (filePanelSelectedIndex >= 0
-      && filePanelSelectedIndex < filePanels.length)
+        && filePanelSelectedIndex < filePanels.length)
     {
       return filePanels[filePanelSelectedIndex];
     }
@@ -585,22 +547,20 @@ public class BufferDiffPanel
     runChange(LEFT, RIGHT);
   }
 
-  void runChange(
-    int fromPanelIndex,
-    int toPanelIndex)
+  void runChange(int fromPanelIndex, int toPanelIndex)
   {
-    JMDelta          delta;
+    JMDelta delta;
     BufferDocumentIF fromBufferDocument;
     BufferDocumentIF toBufferDocument;
-    PlainDocument    from;
-    String           s;
-    int              fromLine;
-    int              fromOffset;
-    int              toOffset;
-    int              size;
-    JMChunk          fromChunk;
-    JMChunk          toChunk;
-    JTextComponent   toEditor;
+    PlainDocument from;
+    String s;
+    int fromLine;
+    int fromOffset;
+    int toOffset;
+    int size;
+    JMChunk fromChunk;
+    JMChunk toChunk;
+    JTextComponent toEditor;
 
     delta = getSelectedDelta();
     if (delta == null)
@@ -688,20 +648,18 @@ public class BufferDiffPanel
     }
   }
 
-  void runDelete(
-    int fromPanelIndex,
-    int toPanelIndex)
+  void runDelete(int fromPanelIndex, int toPanelIndex)
   {
-    JMDelta          delta;
+    JMDelta delta;
     BufferDocumentIF bufferDocument;
-    PlainDocument    document;
-    String           s;
-    int              fromLine;
-    int              fromOffset;
-    int              toOffset;
-    int              size;
-    JMChunk          chunk;
-    JTextComponent   toEditor;
+    PlainDocument document;
+    String s;
+    int fromLine;
+    int fromOffset;
+    int toOffset;
+    int size;
+    JMChunk chunk;
+    JTextComponent toEditor;
 
     try
     {
@@ -771,10 +729,10 @@ public class BufferDiffPanel
   @Override
   public void doDown()
   {
-    JMDelta       d;
-    JMDelta       sd;
+    JMDelta d;
+    JMDelta sd;
     List<JMDelta> deltas;
-    int           index;
+    int index;
 
     if (currentRevision == null)
     {
@@ -815,11 +773,11 @@ public class BufferDiffPanel
   @Override
   public void doUp()
   {
-    JMDelta       d;
-    JMDelta       sd;
-    JMDelta       previousDelta;
+    JMDelta d;
+    JMDelta sd;
+    JMDelta previousDelta;
     List<JMDelta> deltas;
-    int           index;
+    int index;
 
     if (currentRevision == null)
     {
@@ -872,14 +830,14 @@ public class BufferDiffPanel
   public void doGotoLine(int line)
   {
     BufferDocumentIF bd;
-    int              offset;
-    int              startOffset;
-    int              endOffset;
-    JViewport        viewport;
-    JTextComponent   editor;
-    Point            p;
-    FilePanel        fp;
-    Rectangle        rect;
+    int offset;
+    int startOffset;
+    int endOffset;
+    JViewport viewport;
+    JTextComponent editor;
+    Point p;
+    FilePanel fp;
+    Rectangle rect;
 
     setSelectedLine(line);
 
@@ -920,9 +878,9 @@ public class BufferDiffPanel
   public void doZoom(boolean direction)
   {
     JTextComponent c;
-    Font           font;
-    float          size;
-    Zoom           zoom;
+    Font font;
+    float size;
+    Zoom zoom;
 
     for (FilePanel p : filePanels)
     {
@@ -960,7 +918,7 @@ public class BufferDiffPanel
   @Override
   public void doGoToFirst()
   {
-    JMDelta       d;
+    JMDelta d;
     List<JMDelta> deltas;
 
     if (currentRevision == null)
@@ -979,7 +937,7 @@ public class BufferDiffPanel
   @Override
   public void doGoToLast()
   {
-    JMDelta       d;
+    JMDelta d;
     List<JMDelta> deltas;
 
     if (currentRevision == null)

@@ -27,19 +27,16 @@ import java.io.*;
 import java.util.*;
 
 public class DirectoryDiff
-       extends FolderDiff
+    extends FolderDiff
 {
-  private File                    rightDirectory;
-  private File                    leftDirectory;
-  private JMDiffNode              rootNode;
+  private File rightDirectory;
+  private File leftDirectory;
+  private JMDiffNode rootNode;
   private Map<String, JMDiffNode> nodes;
-  private Filter                  filter;
+  private Filter filter;
 
-  public DirectoryDiff(
-    File   leftDirectory,
-    File   rightDirectory,
-    Filter filter,
-    Mode   mode)
+  public DirectoryDiff(File leftDirectory, File rightDirectory, Filter filter,
+      Mode mode)
   {
     super(mode);
 
@@ -73,11 +70,11 @@ public class DirectoryDiff
   public void diff()
   {
     DirectoryScanner ds;
-    JMDiffNode       node;
-    StopWatch        stopWatch;
-    int              numberOfNodes;
-    int              currentNumber;
-    FileNode         fn;
+    JMDiffNode node;
+    StopWatch stopWatch;
+    int numberOfNodes;
+    int currentNumber;
+    FileNode fn;
 
     stopWatch = new StopWatch();
     stopWatch.start();
@@ -131,12 +128,13 @@ public class DirectoryDiff
       // This makes the following copying actions possible :
       // - copy 'left' to 'not existing'
       // - copy 'right' to 'not existing'
-      if(n.getBufferNodeRight() == null || n.getBufferNodeLeft() == null)
+      if (n.getBufferNodeRight() == null || n.getBufferNodeLeft() == null)
       {
-        if(n.getBufferNodeRight() == null)
+        if (n.getBufferNodeRight() == null)
         {
           fn = (FileNode) n.getBufferNodeLeft();
-          fn = new FileNode(fn.getName(), new File(rightDirectory, fn.getName()));
+          fn = new FileNode(fn.getName(),
+              new File(rightDirectory, fn.getName()));
           n.setBufferNodeRight(fn);
         }
         else
@@ -152,8 +150,9 @@ public class DirectoryDiff
       StatusBar.getInstance().setProgress(++currentNumber, numberOfNodes);
     }
 
-    StatusBar.getInstance().setState("Ready comparing directories (took "
-      + (stopWatch.getElapsedTime() / 1000) + " seconds)");
+    StatusBar.getInstance().setState(
+      "Ready comparing directories (took "
+          + (stopWatch.getElapsedTime() / 1000) + " seconds)");
     StatusBar.getInstance().stop();
   }
 
@@ -172,13 +171,11 @@ public class DirectoryDiff
 
   private JMDiffNode addNode(JMDiffNode node)
   {
-    String     parentName;
+    String parentName;
     JMDiffNode parent;
-    File       file;
+    File file;
 
-    nodes.put(
-      node.getName(),
-      node);
+    nodes.put(node.getName(), node);
 
     parentName = node.getParentName();
     if (StringUtil.isEmpty(parentName))
@@ -191,8 +188,10 @@ public class DirectoryDiff
       if (parent == null)
       {
         parent = addNode(new JMDiffNode(parentName, false));
-        parent.setBufferNodeRight(new FileNode(parentName, new File(rightDirectory, parentName)));
-        parent.setBufferNodeLeft(new FileNode(parentName, new File(leftDirectory, parentName)));
+        parent.setBufferNodeRight(new FileNode(parentName, new File(
+            rightDirectory, parentName)));
+        parent.setBufferNodeLeft(new FileNode(parentName, new File(
+            leftDirectory, parentName)));
       }
     }
 
@@ -208,11 +207,9 @@ public class DirectoryDiff
   public static void main(String[] args)
   {
     DirectoryDiff diff;
-    StopWatch     stopWatch;
+    StopWatch stopWatch;
 
-    diff = new DirectoryDiff(
-        new File(args[0]),
-        new File(args[1]),
+    diff = new DirectoryDiff(new File(args[0]), new File(args[1]),
         JMeldSettings.getInstance().getFilter().getFilter("default"),
         DirectoryDiff.Mode.TWO_WAY);
     stopWatch = new StopWatch();

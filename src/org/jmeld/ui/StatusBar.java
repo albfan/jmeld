@@ -30,19 +30,19 @@ import java.util.*;
 import java.util.List;
 
 public class StatusBar
-       extends JPanel
+    extends JPanel
 {
   // Class variables:
   private static StatusBar instance = new StatusBar();
 
   // Instance variables:
-  private JLabel           statusLabel;
-  private JPanel           progressArea;
-  private JProgressBar     progressBar;
-  private BusyLabel        busy;
+  private JLabel statusLabel;
+  private JPanel progressArea;
+  private JProgressBar progressBar;
+  private BusyLabel busy;
   private DragAndDropPanel dragAndDrop;
-  private Timer            timer;
-  private JPanel           notificationArea;
+  private Timer timer;
+  private JPanel notificationArea;
 
   private StatusBar()
   {
@@ -63,10 +63,8 @@ public class StatusBar
     statusLabel = new JLabel(" ");
     statusLabel.setBorder(new EmptyBorder(4, 2, 4, 2));
     progressBar = new JProgressBar();
-    progressBar.setBorder(
-      new CompoundBorder(
-        BorderFactory.createEmptyBorder(2, 5, 2, 5),
-        progressBar.getBorder()));
+    progressBar.setBorder(new CompoundBorder(BorderFactory.createEmptyBorder(2,
+      5, 2, 5), progressBar.getBorder()));
     progressBar.setStringPainted(true);
     busy = new BusyLabel();
     dragAndDrop = new DragAndDropPanel();
@@ -82,9 +80,7 @@ public class StatusBar
     panel.add(notificationArea, BorderLayout.CENTER);
     panel.add(busy, BorderLayout.EAST);
 
-    timer = new Timer(
-        3000,
-        clearText());
+    timer = new Timer(3000, clearText());
     timer.setRepeats(false);
 
     setMinimumSize(new Dimension(25, 25));
@@ -96,9 +92,7 @@ public class StatusBar
     busy.start();
   }
 
-  public void setState(
-    String    format,
-    Object... args)
+  public void setState(String format, Object... args)
   {
     String text;
 
@@ -106,26 +100,20 @@ public class StatusBar
     statusLabel.setText(text);
   }
 
-  public void setText(
-    String    format,
-    Object... args)
+  public void setText(String format, Object... args)
   {
     setState(format, args);
     stop();
   }
 
-  public void setAlarm(
-    String    format,
-    Object... args)
+  public void setAlarm(String format, Object... args)
   {
     statusLabel.setForeground(Color.red);
     setState(format, args);
     stop();
   }
 
-  public void setProgress(
-    int value,
-    int maximum)
+  public void setProgress(int value, int maximum)
   {
     if (progressArea.getComponentCount() == 0)
     {
@@ -157,9 +145,7 @@ public class StatusBar
     revalidate();
   }
 
-  public void setNotification(
-    String    id,
-    ImageIcon icon)
+  public void setNotification(String id, ImageIcon icon)
   {
     JLabel label;
 
@@ -169,16 +155,12 @@ public class StatusBar
     setNotification(id, label);
   }
 
-  public void setNotification(
-    String     id,
-    JComponent component)
+  public void setNotification(String id, JComponent component)
   {
     _setNotification(id, component);
   }
 
-  private void _setNotification(
-    String     id,
-    JComponent component)
+  private void _setNotification(String id, JComponent component)
   {
     id = getNotificationId(id);
 
@@ -225,11 +207,11 @@ public class StatusBar
   private ActionListener clearText()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
-        {
-          clear();
-        }
-      };
+        clear();
+      }
+    };
   }
 }

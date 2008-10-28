@@ -7,17 +7,15 @@ import java.io.*;
 import java.util.*;
 
 public class CopyFileCmd
-       extends AbstractCmd
+    extends AbstractCmd
 {
   private JMDiffNode diffNode;
-  private FileNode   fromFileNode;
-  private FileNode   toFileNode;
+  private FileNode fromFileNode;
+  private FileNode toFileNode;
 
-  public CopyFileCmd(
-    JMDiffNode diffNode,
-    FileNode   fromFileNode,
-    FileNode   toFileNode)
-    throws Exception
+  public CopyFileCmd(JMDiffNode diffNode, FileNode fromFileNode,
+      FileNode toFileNode)
+      throws Exception
   {
     this.diffNode = diffNode;
     this.fromFileNode = fromFileNode;
@@ -25,11 +23,11 @@ public class CopyFileCmd
   }
 
   public void createCommands()
-    throws Exception
+      throws Exception
   {
     List<File> parentFiles;
-    File       fromFile;
-    File       toFile;
+    File fromFile;
+    File toFile;
 
     fromFile = fromFileNode.getFile().getCanonicalFile();
     toFile = toFileNode.getFile().getCanonicalFile();
@@ -48,18 +46,18 @@ public class CopyFileCmd
   }
 
   class MkDirCommand
-         extends Command
+      extends Command
   {
     private File dirFile;
 
     MkDirCommand(File dirFile)
-      throws Exception
+        throws Exception
     {
       this.dirFile = dirFile;
     }
 
     public void execute()
-      throws Exception
+        throws Exception
     {
       if (debug)
       {
@@ -79,23 +77,21 @@ public class CopyFileCmd
   }
 
   class CopyCommand
-         extends Command
+      extends Command
   {
-    private File    fromFile;
-    private File    toFile;
-    private File    backupFile;
+    private File fromFile;
+    private File toFile;
+    private File backupFile;
     private boolean toFileExists;
 
-    CopyCommand(
-      File fromFile,
-      File toFile)
+    CopyCommand(File fromFile, File toFile)
     {
       this.fromFile = fromFile;
       this.toFile = toFile;
     }
 
     public void execute()
-      throws Exception
+        throws Exception
     {
       if (toFile.exists())
       {
@@ -169,7 +165,7 @@ public class CopyFileCmd
   }
 
   class ResetCommand
-         extends Command
+      extends Command
   {
     private FileNode fileNode;
 
@@ -179,7 +175,7 @@ public class CopyFileCmd
     }
 
     public void execute()
-      throws Exception
+        throws Exception
     {
       reset();
     }

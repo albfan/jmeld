@@ -20,23 +20,21 @@ import org.jmeld.*;
 import org.netbeans.api.diff.*;
 
 public class HuntDiff
-       extends AbstractJMDiffAlgorithm
+    extends AbstractJMDiffAlgorithm
 {
   public HuntDiff()
   {
   }
 
-  public JMRevision diff(
-    Object[] orig,
-    Object[] rev)
-    throws JMeldException
+  public JMRevision diff(Object[] orig, Object[] rev)
+      throws JMeldException
   {
     Difference[] differences;
 
     try
     {
-      differences = org.netbeans.modules.diff.builtin.provider.HuntDiff.diff(orig,
-          rev);
+      differences = org.netbeans.modules.diff.builtin.provider.HuntDiff.diff(
+        orig, rev);
     }
     catch (Exception ex)
     {
@@ -46,16 +44,14 @@ public class HuntDiff
     return buildRevision(differences, orig, rev);
   }
 
-  private JMRevision buildRevision(
-    Difference[] differences,
-    Object[]     orig,
-    Object[]     rev)
+  private JMRevision buildRevision(Difference[] differences, Object[] orig,
+      Object[] rev)
   {
     JMRevision result;
-    int        firstSize;
-    int        firstStart;
-    int        secondSize;
-    int        secondStart;
+    int firstSize;
+    int firstStart;
+    int secondSize;
+    int secondStart;
 
     if (orig == null)
     {
@@ -96,10 +92,8 @@ public class HuntDiff
         secondSize = 0;
       }
 
-      result.add(
-        new JMDelta(
-          new JMChunk(firstStart, firstSize),
-          new JMChunk(secondStart, secondSize)));
+      result.add(new JMDelta(new JMChunk(firstStart, firstSize), new JMChunk(
+          secondStart, secondSize)));
     }
 
     return result;

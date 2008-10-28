@@ -39,9 +39,6 @@ public interface FileSelector
    * @return whether the file should be selected or not
    * @exception BuildException if the selector was not configured correctly
    */
-  boolean isSelected(
-    File   basedir,
-    String filename,
-    File   file)
-    throws BuildException;
+  boolean isSelected(File basedir, String filename, File file)
+      throws BuildException;
 }

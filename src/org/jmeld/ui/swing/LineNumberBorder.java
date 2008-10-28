@@ -26,16 +26,16 @@ import javax.swing.border.*;
 import java.awt.*;
 
 public class LineNumberBorder
-       extends EmptyBorder
+    extends EmptyBorder
 {
   private static int MARGIN = 4;
-  private FilePanel  filePanel;
-  private Color      background;
-  private Color      lineColor;
-  private Font       font;
-  private int        fontWidth;
-  private int        fontHeight;
-  private boolean    enableBlame = true;
+  private FilePanel filePanel;
+  private Color background;
+  private Color lineColor;
+  private Font font;
+  private int fontWidth;
+  private int fontHeight;
+  private boolean enableBlame = true;
 
   public LineNumberBorder(FilePanel filePanel)
   {
@@ -54,7 +54,7 @@ public class LineNumberBorder
   private void init()
   {
     FontMetrics fm;
-    Color       baseColor;
+    Color baseColor;
 
     baseColor = Colors.getPanelBackground();
     lineColor = ColorUtil.darker(baseColor);
@@ -76,18 +76,15 @@ public class LineNumberBorder
     g.fillRect(0, clip.y, left - MARGIN, clip.y + clip.height);
   }
 
-  public void paintAfter(
-    Graphics g,
-    int      startOffset,
-    int      endOffset)
+  public void paintAfter(Graphics g, int startOffset, int endOffset)
   {
     Rectangle clip;
-    int       startLine;
-    int       endLine;
-    int       y;
-    int       lineHeight;
-    String    s;
-    int       heightCorrection;
+    int startLine;
+    int endLine;
+    int y;
+    int lineHeight;
+    String s;
+    int heightCorrection;
     Rectangle r1;
     JTextArea textArea;
     Graphics2D g2;
@@ -109,10 +106,11 @@ public class LineNumberBorder
       g.setColor(lineColor);
       g.drawLine(left - MARGIN, clip.y, left - MARGIN, clip.y + clip.height);
 
-      if(JMeldSettings.getInstance().getEditor().isAntialiasEnabled());
+      if (JMeldSettings.getInstance().getEditor().isAntialiasEnabled())
+        ;
       {
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
+          RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       }
 
       g.setFont(font);

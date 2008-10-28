@@ -23,7 +23,7 @@ import java.awt.image.*;
 
 /** Filter that adds transparency */
 class TransparentFilter
-       extends RGBImageFilter
+    extends RGBImageFilter
 {
   int percent;
 
@@ -33,10 +33,7 @@ class TransparentFilter
     this.percent = percent;
   }
 
-  public int filterRGB(
-    int x,
-    int y,
-    int rgb)
+  public int filterRGB(int x, int y, int rgb)
   {
     int alpha;
 

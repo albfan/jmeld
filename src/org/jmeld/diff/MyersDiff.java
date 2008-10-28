@@ -21,19 +21,17 @@ import org.gnu.diff.*;
 import org.jmeld.*;
 
 public class MyersDiff
-       extends AbstractJMDiffAlgorithm
+    extends AbstractJMDiffAlgorithm
 {
   public MyersDiff()
   {
   }
 
-  public JMRevision diff(
-    Object[] orig,
-    Object[] rev)
-    throws JMeldException
+  public JMRevision diff(Object[] orig, Object[] rev)
+      throws JMeldException
   {
     org.apache.commons.jrcs.diff.myers.MyersDiff diff;
-    Revision                                     revision;
+    Revision revision;
 
     try
     {
@@ -49,15 +47,13 @@ public class MyersDiff
     return buildRevision(revision, orig, rev);
   }
 
-  private JMRevision buildRevision(
-    Revision revision,
-    Object[] orig,
-    Object[] rev)
+  private JMRevision buildRevision(Revision revision, Object[] orig,
+      Object[] rev)
   {
     JMRevision result;
-    Delta      delta;
-    Chunk      original;
-    Chunk      revised;
+    Delta delta;
+    Chunk original;
+    Chunk revised;
 
     if (orig == null)
     {
@@ -76,14 +72,8 @@ public class MyersDiff
       original = delta.getOriginal();
       revised = delta.getRevised();
 
-      result.add(
-        new JMDelta(
-          new JMChunk(
-            original.anchor(),
-            original.size()),
-          new JMChunk(
-            revised.anchor(),
-            revised.size())));
+      result.add(new JMDelta(new JMChunk(original.anchor(), original.size()),
+          new JMChunk(revised.anchor(), revised.size())));
     }
 
     return result;

@@ -26,22 +26,19 @@ import java.awt.event.*;
 import java.lang.reflect.*;
 
 public class MeldAction
-       extends AbstractAction
+    extends AbstractAction
 {
   // class variables:
   //   backwards compatible with jdk1.5
   public static String LARGE_ICON_KEY = "SwingLargeIconKey";
 
   // instance variables:
-  private Object        object;
-  private Method        actionMethod;
-  private Method        isActionEnabledMethod;
+  private Object object;
+  private Method actionMethod;
+  private Method isActionEnabledMethod;
   private ActionHandler actionHandler;
 
-  MeldAction(
-    ActionHandler actionHandler,
-    Object        object,
-    String        name)
+  MeldAction(ActionHandler actionHandler, Object object, String name)
   {
     super(name);
 
@@ -54,8 +51,8 @@ public class MeldAction
   {
     try
     {
-      actionMethod = object.getClass()
-                           .getMethod("do" + getName(), ActionEvent.class);
+      actionMethod = object.getClass().getMethod("do" + getName(),
+        ActionEvent.class);
     }
     catch (Exception ex)
     {
@@ -67,8 +64,8 @@ public class MeldAction
     {
       // This method is not mandatory! 
       //   If it is not available the method is always enabled.
-      isActionEnabledMethod = object.getClass()
-                                    .getMethod("is" + getName() + "Enabled");
+      isActionEnabledMethod = object.getClass().getMethod(
+        "is" + getName() + "Enabled");
     }
     catch (NoSuchMethodException ex)
     {
@@ -87,12 +84,8 @@ public class MeldAction
 
   public void setIcon(String iconName)
   {
-    putValue(
-      SMALL_ICON,
-      ImageUtil.getSmallImageIcon(iconName));
-    putValue(
-      LARGE_ICON_KEY,
-      ImageUtil.getImageIcon(iconName));
+    putValue(SMALL_ICON, ImageUtil.getSmallImageIcon(iconName));
+    putValue(LARGE_ICON_KEY, ImageUtil.getImageIcon(iconName));
   }
 
   public ImageIcon getTransparentSmallImageIcon()

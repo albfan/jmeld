@@ -40,23 +40,23 @@ public class InfoData
   static class Entry
   {
     @XmlAttribute
-    private String     path;
+    private String path;
     @XmlAttribute
-    private String     dir;
+    private String dir;
     @XmlAttribute
-    private String     file;
+    private String file;
     @XmlAttribute
-    private Integer    revision;
+    private Integer revision;
     @XmlElement
-    private String     url;
+    private String url;
     @XmlElement
     private Repository repository;
     @XmlElement(name = "wc-info")
-    private WcInfo     wcInfo;
+    private WcInfo wcInfo;
     @XmlElement
-    private Commit     commit;
+    private Commit commit;
     @XmlElement
-    private Lock       lock;
+    private Lock lock;
 
     public Entry()
     {
@@ -128,17 +128,17 @@ public class InfoData
   static class WcInfo
   {
     @XmlElement
-    private String  schedule;
+    private String schedule;
     @XmlElement(name = "copy-from-url")
-    private String  copyFromUrl;
+    private String copyFromUrl;
     @XmlElement(name = "copy-from-rev")
-    private String  copyFromRev;
+    private String copyFromRev;
     @XmlElement(name = "text-updated")
-    private Date    textUpdated;
+    private Date textUpdated;
     @XmlElement(name = "prop-updated")
-    private Date    propUpdated;
+    private Date propUpdated;
     @XmlElement
-    private String  checksum;
+    private String checksum;
     @XmlElement
     private Confict conflict;
 
@@ -183,9 +183,9 @@ public class InfoData
     @XmlAttribute
     private Integer revision;
     @XmlElement
-    private String  author;
+    private String author;
     @XmlElement
-    private Date    date;
+    private Date date;
 
     public Commit()
     {
@@ -216,9 +216,9 @@ public class InfoData
     @XmlElement
     private String comment;
     @XmlElement
-    private Date   created;
+    private Date created;
     @XmlElement
-    private Date   expires;
+    private Date expires;
 
     public Lock()
     {

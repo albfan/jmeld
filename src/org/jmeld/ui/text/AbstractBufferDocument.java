@@ -28,22 +28,22 @@ import java.util.*;
 import java.util.List;
 
 public abstract class AbstractBufferDocument
-       implements BufferDocumentIF, DocumentListener
+    implements BufferDocumentIF, DocumentListener
 {
   // instance variables:
-  private String                               name;
-  private String                               shortName;
-  private Line[]                               lineArray;
-  private int[]                                lineOffsetArray;
-  private PlainDocument                        document;
-  private MyGapContent                         content;
+  private String name;
+  private String shortName;
+  private Line[] lineArray;
+  private int[] lineOffsetArray;
+  private PlainDocument document;
+  private MyGapContent content;
   private List<BufferDocumentChangeListenerIF> listeners;
 
   // Variables to detect if this document has been changed (and needs
   //   to be saved!)
   private boolean changed;
-  private int     originalLength;
-  private int     digest;
+  private int originalLength;
+  private int digest;
 
   public AbstractBufferDocument()
   {
@@ -63,10 +63,10 @@ public abstract class AbstractBufferDocument
   abstract int getBufferSize();
 
   abstract public Reader getReader()
-    throws JMeldException;
+      throws JMeldException;
 
   abstract Writer getWriter()
-    throws JMeldException;
+      throws JMeldException;
 
   protected void setName(String name)
   {
@@ -158,7 +158,7 @@ public abstract class AbstractBufferDocument
 
   public int getLineForOffset(int offset)
   {
-    int    searchIndex;
+    int searchIndex;
     Line[] la;
 
     if (offset < 0)
@@ -187,11 +187,11 @@ public abstract class AbstractBufferDocument
   }
 
   public void read()
-    throws JMeldException
+      throws JMeldException
   {
     try
     {
-      Reader    reader;
+      Reader reader;
       StopWatch stopWatch;
 
       if (document != null)
@@ -223,16 +223,16 @@ public abstract class AbstractBufferDocument
     catch (Exception ex)
     {
       throw new JMeldException("Problem reading document (name=" + getName()
-        + ") in buffer", ex);
+                               + ") in buffer", ex);
     }
   }
 
   private void initLines()
   {
-    Element   paragraph;
-    Element   e;
-    int       size;
-    Line      line;
+    Element paragraph;
+    Element e;
+    int size;
+    Line line;
 
     if (lineArray != null)
     {
@@ -247,7 +247,7 @@ public abstract class AbstractBufferDocument
     for (int i = 0; i < lineArray.length; i++)
     {
       e = paragraph.getElement(i);
-      line= new Line(e);
+      line = new Line(e);
 
       lineArray[i] = line;
       lineOffsetArray[i] = line.getOffset();
@@ -261,7 +261,7 @@ public abstract class AbstractBufferDocument
   }
 
   public void write()
-    throws JMeldException
+      throws JMeldException
   {
     Writer out;
 
@@ -269,11 +269,7 @@ public abstract class AbstractBufferDocument
     try
     {
       out = getWriter();
-      new DefaultEditorKit().write(
-        out,
-        document,
-        0,
-        document.getLength());
+      new DefaultEditorKit().write(out, document, 0, document.getLength());
       out.flush();
       out.close();
 
@@ -286,12 +282,12 @@ public abstract class AbstractBufferDocument
     catch (Exception ex)
     {
       throw new JMeldException("Problem writing document (name=" + getName()
-        + ") from buffer", ex);
+                               + ") from buffer", ex);
     }
   }
 
   class MyGapContent
-         extends GapContent
+      extends GapContent
   {
     public MyGapContent(int length)
     {
@@ -321,21 +317,17 @@ public abstract class AbstractBufferDocument
       return getCharArray()[offset];
     }
 
-    public boolean equals(
-      MyGapContent c2,
-      int          start1,
-      int          end1,
-      int          start2)
+    public boolean equals(MyGapContent c2, int start1, int end1, int start2)
     {
       char[] array1;
       char[] array2;
-      int    g1_0;
-      int    g1_1;
-      int    g2_0;
-      int    g2_1;
-      int    size;
-      int    o1;
-      int    o2;
+      int g1_0;
+      int g1_1;
+      int g2_0;
+      int g2_1;
+      int size;
+      int o1;
+      int o2;
 
       array1 = getCharArray();
       array2 = c2.getCharArray();
@@ -385,16 +377,14 @@ public abstract class AbstractBufferDocument
       return true;
     }
 
-    public int hashCode(
-      int start,
-      int end)
+    public int hashCode(int start, int end)
     {
       char[] array;
-      int    g0;
-      int    g1;
-      int    size;
-      int    h;
-      int    o;
+      int g0;
+      int g1;
+      int size;
+      int h;
+      int o;
 
       h = 0;
 
@@ -435,14 +425,12 @@ public abstract class AbstractBufferDocument
 
     public int getDigest()
     {
-      return hashCode(
-        0,
-        document.getLength());
+      return hashCode(0, document.getLength());
     }
   }
 
   public class Line
-         implements Comparable
+      implements Comparable
   {
     Element element;
 
@@ -463,21 +451,19 @@ public abstract class AbstractBufferDocument
 
     public void print()
     {
-      System.out.printf(
-        "[%08d]: %s\n",
-        getOffset(),
-        StringUtil.replaceNewLines(toString()));
+      System.out.printf("[%08d]: %s\n", getOffset(), StringUtil
+          .replaceNewLines(toString()));
     }
 
     @Override
     public boolean equals(Object o)
     {
       Element element2;
-      Line    line2;
-      int     start1;
-      int     start2;
-      int     end1;
-      int     end2;
+      Line line2;
+      int start1;
+      int start2;
+      int end1;
+      int end2;
 
       if (!(o instanceof Line))
       {
@@ -498,19 +484,13 @@ public abstract class AbstractBufferDocument
         return false;
       }
 
-      return content.equals(
-        line2.getContent(),
-        start1,
-        end1,
-        start2);
+      return content.equals(line2.getContent(), start1, end1, start2);
     }
 
     @Override
     public int hashCode()
     {
-      return content.hashCode(
-        element.getStartOffset(),
-        element.getEndOffset());
+      return content.hashCode(element.getStartOffset(), element.getEndOffset());
     }
 
     @Override
@@ -518,8 +498,7 @@ public abstract class AbstractBufferDocument
     {
       try
       {
-        return content.getString(
-          element.getStartOffset(),
+        return content.getString(element.getStartOffset(),
           element.getEndOffset() - element.getStartOffset());
       }
       catch (Exception ex)
@@ -581,12 +560,12 @@ public abstract class AbstractBufferDocument
 
   private void documentChanged(DocumentEvent de)
   {
-    boolean         newChanged;
-    int             newDigest;
-    int             startLine;
-    int             numberOfLinesChanged;
+    boolean newChanged;
+    int newDigest;
+    int startLine;
+    int numberOfLinesChanged;
     JMDocumentEvent jmde;
-    String          text;
+    String text;
 
     jmde = new JMDocumentEvent(this, de);
     numberOfLinesChanged = 0;
@@ -598,9 +577,7 @@ public abstract class AbstractBufferDocument
       {
         try
         {
-          text = document.getText(
-              de.getOffset(),
-              de.getLength());
+          text = document.getText(de.getOffset(), de.getLength());
         }
         catch (BadLocationException ex)
         {

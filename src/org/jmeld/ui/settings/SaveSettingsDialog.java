@@ -29,9 +29,9 @@ import java.util.*;
 
 public class SaveSettingsDialog
 {
-// Instance variables:
+  // Instance variables:
   private JMeldPanel meldPanel;
-  private boolean    ok;
+  private boolean ok;
 
   public SaveSettingsDialog(JMeldPanel meldPanel)
   {
@@ -41,11 +41,9 @@ public class SaveSettingsDialog
   public void show()
   {
     JOptionPane pane;
-    JDialog     dialog;
+    JDialog dialog;
 
-    pane = new JOptionPane(
-        getSaveSettings(),
-        JOptionPane.WARNING_MESSAGE);
+    pane = new JOptionPane(getSaveSettings(), JOptionPane.WARNING_MESSAGE);
     pane.setOptionType(JOptionPane.YES_NO_OPTION);
 
     dialog = pane.createDialog(meldPanel, "Save settings");
@@ -54,9 +52,7 @@ public class SaveSettingsDialog
     {
       dialog.show();
 
-      if (ObjectUtil.equals(
-          pane.getValue(),
-          JOptionPane.YES_OPTION))
+      if (ObjectUtil.equals(pane.getValue(), JOptionPane.YES_OPTION))
       {
         ok = true;
       }

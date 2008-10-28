@@ -45,10 +45,7 @@ public interface IRangeComparator
    * @param otherIndex the index of the comparable entity within the other <code>IRangeComparator</code>
    * @return <code>true</code> if the comparable entities are equal
    */
-  boolean rangesEqual(
-    int              thisIndex,
-    IRangeComparator other,
-    int              otherIndex);
+  boolean rangesEqual(int thisIndex, IRangeComparator other, int otherIndex);
 
   /**
    * Returns whether a comparison should be skipped because it would be too costly (or lengthy).
@@ -60,8 +57,5 @@ public interface IRangeComparator
    * @param other the other <code>IRangeComparator</code> to compare with
    * @return <code>true</code> to avoid a too lengthy range comparison
    */
-  boolean skipRangeComparison(
-    int              length,
-    int              maxLength,
-    IRangeComparator other);
+  boolean skipRangeComparison(int length, int maxLength, IRangeComparator other);
 }

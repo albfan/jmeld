@@ -56,9 +56,8 @@ public final class RangeDifferencer
    * @return an array of range differences, or an empty array if no differences were found
    * @since 2.0
    */
-  public static RangeDifference[] findDifferences(
-    IRangeComparator left,
-    IRangeComparator right)
+  public static RangeDifference[] findDifferences(IRangeComparator left,
+      IRangeComparator right)
   {
     return RangeComparatorLCS.findDifferences(left, right);
   }
@@ -76,93 +75,90 @@ public final class RangeDifferencer
    * @return an array of range differences, or an empty array if no differences were found
    * @since 2.0
    */
-  public static RangeDifference[] findDifferences(
-    IRangeComparator ancestor,
-    IRangeComparator left,
-    IRangeComparator right)
+  public static RangeDifference[] findDifferences(IRangeComparator ancestor,
+      IRangeComparator left, IRangeComparator right)
   {
-      if (ancestor == null)
-      {
-        return findDifferences(left, right);
-      }
-      RangeDifference[] leftAncestorScript = null;
-      RangeDifference[] rightAncestorScript = findDifferences(ancestor, right);
-      if (rightAncestorScript != null)
-      {
-        leftAncestorScript = findDifferences(ancestor, left);
-      }
-      if (rightAncestorScript == null || leftAncestorScript == null)
-      {
-        return null;
-      }
+    if (ancestor == null)
+    {
+      return findDifferences(left, right);
+    }
+    RangeDifference[] leftAncestorScript = null;
+    RangeDifference[] rightAncestorScript = findDifferences(ancestor, right);
+    if (rightAncestorScript != null)
+    {
+      leftAncestorScript = findDifferences(ancestor, left);
+    }
+    if (rightAncestorScript == null || leftAncestorScript == null)
+    {
+      return null;
+    }
 
-      DifferencesIterator myIter = new DifferencesIterator(rightAncestorScript);
-      DifferencesIterator yourIter = new DifferencesIterator(leftAncestorScript);
+    DifferencesIterator myIter = new DifferencesIterator(rightAncestorScript);
+    DifferencesIterator yourIter = new DifferencesIterator(leftAncestorScript);
 
-      List                diff3 = new ArrayList();
-      diff3.add(new RangeDifference(RangeDifference.ERROR));  // add a sentinel
+    List diff3 = new ArrayList();
+    diff3.add(new RangeDifference(RangeDifference.ERROR)); // add a sentinel
 
-      int changeRangeStart = 0;
-      int changeRangeEnd = 0;
+    int changeRangeStart = 0;
+    int changeRangeEnd = 0;
 
+    //
+    // Combine the two two-way edit scripts into one
+    //
+    while (myIter.fDifference != null || yourIter.fDifference != null)
+    {
+      DifferencesIterator startThread;
+      myIter.removeAll();
+      yourIter.removeAll();
       //
-      // Combine the two two-way edit scripts into one
+      // take the next diff that is closer to the start
       //
-      while (myIter.fDifference != null || yourIter.fDifference != null)
+      if (myIter.fDifference == null)
       {
-        DifferencesIterator startThread;
-        myIter.removeAll();
-        yourIter.removeAll();
-        //
-        // take the next diff that is closer to the start
-        //
-        if (myIter.fDifference == null)
-        {
-          startThread = yourIter;
-        }
-        else if (yourIter.fDifference == null)
+        startThread = yourIter;
+      }
+      else if (yourIter.fDifference == null)
+      {
+        startThread = myIter;
+      }
+      else
+      { // not at end of both scripts take the lowest range
+        if (myIter.fDifference.fLeftStart <= yourIter.fDifference.fLeftStart) // 2 -> common (Ancestor) change range
         {
           startThread = myIter;
         }
         else
-        {  // not at end of both scripts take the lowest range
-          if (myIter.fDifference.fLeftStart <= yourIter.fDifference.fLeftStart)  // 2 -> common (Ancestor) change range
-          {
-            startThread = myIter;
-          }
-          else
-          {
-            startThread = yourIter;
-          }
-        }
-        changeRangeStart = startThread.fDifference.fLeftStart;
-        changeRangeEnd = startThread.fDifference.leftEnd();
-
-        startThread.next();
-        //
-        // check for overlapping changes with other thread
-        // merge overlapping changes with this range
-        //
-        DifferencesIterator other = startThread.other(myIter, yourIter);
-        while (other.fDifference != null
-          && other.fDifference.fLeftStart <= changeRangeEnd)
         {
-          int newMax = other.fDifference.leftEnd();
-          other.next();
-          if (newMax >= changeRangeEnd)
-          {
-            changeRangeEnd = newMax;
-            other = other.other(myIter, yourIter);
-          }
+          startThread = yourIter;
         }
-        diff3.add(
-          createRangeDifference3(myIter, yourIter, diff3, right, left,
-            changeRangeStart, changeRangeEnd));
       }
+      changeRangeStart = startThread.fDifference.fLeftStart;
+      changeRangeEnd = startThread.fDifference.leftEnd();
 
-      // remove sentinel
-      diff3.remove(0);
-      return (RangeDifference[]) diff3.toArray(EMPTY_RESULT);
+      startThread.next();
+      //
+      // check for overlapping changes with other thread
+      // merge overlapping changes with this range
+      //
+      DifferencesIterator other = startThread.other(myIter, yourIter);
+      while (other.fDifference != null
+             && other.fDifference.fLeftStart <= changeRangeEnd)
+      {
+        int newMax = other.fDifference.leftEnd();
+        other.next();
+        if (newMax >= changeRangeEnd)
+        {
+          changeRangeEnd = newMax;
+          other = other.other(myIter, yourIter);
+        }
+      }
+      diff3.add(createRangeDifference3(myIter, yourIter, diff3, right, left,
+        changeRangeStart, changeRangeEnd));
+    }
+
+    // remove sentinel
+    diff3.remove(0);
+    return (RangeDifference[]) diff3.toArray(EMPTY_RESULT);
   }
 
   /**
@@ -175,24 +171,25 @@ public final class RangeDifferencer
    * @return an array of range differences
    * @since 2.0
    */
-  public static RangeDifference[] findRanges(
-    IRangeComparator left,
-    IRangeComparator right)
+  public static RangeDifference[] findRanges(IRangeComparator left,
+      IRangeComparator right)
   {
     RangeDifference[] in = findDifferences(left, right);
-    List              out = new ArrayList();
+    List out = new ArrayList();
 
-    RangeDifference   rd;
+    RangeDifference rd;
 
-    int               mstart = 0;
-    int               ystart = 0;
+    int mstart = 0;
+    int ystart = 0;
 
     for (int i = 0; i < in.length; i++)
     {
       RangeDifference es = in[i];
 
-      rd = new RangeDifference(RangeDifference.NOCHANGE, mstart,
-          es.rightStart() - mstart, ystart, es.leftStart() - ystart);
+      rd = new RangeDifference(RangeDifference.NOCHANGE, mstart, es
+          .rightStart()
+                                                                 - mstart,
+          ystart, es.leftStart() - ystart);
       if (rd.maxLength() != 0)
       {
         out.add(rd);
@@ -203,8 +200,10 @@ public final class RangeDifferencer
       mstart = es.rightEnd();
       ystart = es.leftEnd();
     }
-    rd = new RangeDifference(RangeDifference.NOCHANGE, mstart,
-        right.getRangeCount() - mstart, ystart, left.getRangeCount() - ystart);
+    rd = new RangeDifference(RangeDifference.NOCHANGE, mstart, right
+        .getRangeCount()
+                                                               - mstart,
+        ystart, left.getRangeCount() - ystart);
     if (rd.maxLength() > 0)
     {
       out.add(rd);
@@ -226,10 +225,8 @@ public final class RangeDifferencer
    * @return an array of range differences
    * @since 2.0
    */
-  public static RangeDifference[] findRanges(
-    IRangeComparator ancestor,
-    IRangeComparator left,
-    IRangeComparator right)
+  public static RangeDifference[] findRanges(IRangeComparator ancestor,
+      IRangeComparator left, IRangeComparator right)
   {
     if (ancestor == null)
     {
@@ -237,21 +234,22 @@ public final class RangeDifferencer
     }
 
     RangeDifference[] in = findDifferences(ancestor, left, right);
-    List              out = new ArrayList();
+    List out = new ArrayList();
 
-    RangeDifference   rd;
+    RangeDifference rd;
 
-    int               mstart = 0;
-    int               ystart = 0;
-    int               astart = 0;
+    int mstart = 0;
+    int ystart = 0;
+    int astart = 0;
 
     for (int i = 0; i < in.length; i++)
     {
       RangeDifference es = in[i];
 
-      rd = new RangeDifference(RangeDifference.NOCHANGE, mstart,
-          es.rightStart() - mstart, ystart, es.leftStart() - ystart, astart,
-          es.ancestorStart() - astart);
+      rd = new RangeDifference(RangeDifference.NOCHANGE, mstart, es
+          .rightStart()
+                                                                 - mstart,
+          ystart, es.leftStart() - ystart, astart, es.ancestorStart() - astart);
       if (rd.maxLength() > 0)
       {
         out.add(rd);
@@ -263,9 +261,11 @@ public final class RangeDifferencer
       ystart = es.leftEnd();
       astart = es.ancestorEnd();
     }
-    rd = new RangeDifference(RangeDifference.NOCHANGE, mstart,
-        right.getRangeCount() - mstart, ystart, left.getRangeCount() - ystart,
-        astart, ancestor.getRangeCount() - astart);
+    rd = new RangeDifference(RangeDifference.NOCHANGE, mstart, right
+        .getRangeCount()
+                                                               - mstart,
+        ystart, left.getRangeCount() - ystart, astart, ancestor.getRangeCount()
+                                                       - astart);
     if (rd.maxLength() > 0)
     {
       out.add(rd);
@@ -281,23 +281,19 @@ public final class RangeDifferencer
    * state of two DifferenceIterators.
    */
   private static RangeDifference createRangeDifference3(
-    DifferencesIterator myIter,
-    DifferencesIterator yourIter,
-    List                diff3,
-    IRangeComparator    right,
-    IRangeComparator    left,
-    int                 changeRangeStart,
-    int                 changeRangeEnd)
+      DifferencesIterator myIter, DifferencesIterator yourIter, List diff3,
+      IRangeComparator right, IRangeComparator left, int changeRangeStart,
+      int changeRangeEnd)
   {
-    int             rightStart;
-    int             rightEnd;
-    int             leftStart;
-    int             leftEnd;
-    int             kind = RangeDifference.ERROR;
+    int rightStart;
+    int rightEnd;
+    int leftStart;
+    int leftEnd;
+    int kind = RangeDifference.ERROR;
     RangeDifference last = (RangeDifference) diff3.get(diff3.size() - 1);
 
     if (myIter.getCount() == 0)
-    {  // only left changed
+    { // only left changed
       rightStart = changeRangeStart - last.ancestorEnd() + last.rightEnd();
       rightEnd = changeRangeEnd - last.ancestorEnd() + last.rightEnd();
       kind = RangeDifference.LEFT;
@@ -312,7 +308,7 @@ public final class RangeDifferencer
     }
 
     if (yourIter.getCount() == 0)
-    {  // only right changed
+    { // only right changed
       leftStart = changeRangeStart - last.ancestorEnd() + last.leftEnd();
       leftEnd = changeRangeEnd - last.ancestorEnd() + last.leftEnd();
       kind = RangeDifference.RIGHT;
@@ -327,9 +323,9 @@ public final class RangeDifferencer
     }
 
     if (kind == RangeDifference.ERROR)
-    {  // overlapping change (conflict) -> compare the changed ranges
+    { // overlapping change (conflict) -> compare the changed ranges
       if (rangeSpansEqual(right, rightStart, rightEnd - rightStart, left,
-          leftStart, leftEnd - leftStart))
+        leftStart, leftEnd - leftStart))
       {
         kind = RangeDifference.ANCESTOR;
       }
@@ -339,20 +335,16 @@ public final class RangeDifferencer
       }
     }
     return new RangeDifference(kind, rightStart, rightEnd - rightStart,
-      leftStart, leftEnd - leftStart, changeRangeStart,
-      changeRangeEnd - changeRangeStart);
+        leftStart, leftEnd - leftStart, changeRangeStart, changeRangeEnd
+                                                          - changeRangeStart);
   }
 
   /*
    * Tests whether <code>right</code> and <code>left</code> changed in the same way
    */
-  private static boolean rangeSpansEqual(
-    IRangeComparator right,
-    int              rightStart,
-    int              rightLen,
-    IRangeComparator left,
-    int              leftStart,
-    int              leftLen)
+  private static boolean rangeSpansEqual(IRangeComparator right,
+      int rightStart, int rightLen, IRangeComparator left, int leftStart,
+      int leftLen)
   {
     if (rightLen == leftLen)
     {
@@ -375,11 +367,8 @@ public final class RangeDifferencer
   /*
    * Tests if two ranges are equal
    */
-  private static boolean rangesEqual(
-    IRangeComparator a,
-    int              ai,
-    IRangeComparator b,
-    int              bi)
+  private static boolean rangesEqual(IRangeComparator a, int ai,
+      IRangeComparator b, int bi)
   {
     return a.rangesEqual(ai, b, bi);
   }

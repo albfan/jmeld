@@ -28,11 +28,11 @@ import java.util.*;
 import java.util.List;
 
 public class BusyLabel
-       extends JLabel
+    extends JLabel
 {
   // Instance variables:
-  private Timer    timer;
-  private boolean  busy;
+  private Timer timer;
+  private boolean busy;
   private BusyIcon icon;
 
   public BusyLabel()
@@ -40,9 +40,7 @@ public class BusyLabel
     icon = new BusyIcon();
     setIcon(icon);
 
-    timer = new Timer(
-        125,
-        busy());
+    timer = new Timer(125, busy());
     timer.setRepeats(false);
   }
 
@@ -60,26 +58,26 @@ public class BusyLabel
   private ActionListener busy()
   {
     return new ActionListener()
+    {
+      public void actionPerformed(ActionEvent ae)
       {
-        public void actionPerformed(ActionEvent ae)
+        if (busy)
         {
-          if (busy)
-          {
-            icon.roll();
-            repaint();
-            timer.restart();
-          }
-          else
-          {
-            icon.stop();
-            repaint();
-          }
+          icon.roll();
+          repaint();
+          timer.restart();
         }
-      };
+        else
+        {
+          icon.stop();
+          repaint();
+        }
+      }
+    };
   }
 
   class BusyIcon
-         implements Icon
+      implements Icon
   {
     private int startIndex;
     List<Color> colors;
@@ -126,15 +124,11 @@ public class BusyLabel
       return 16;
     }
 
-    public void paintIcon(
-      Component component,
-      Graphics  g,
-      int       x,
-      int       y)
+    public void paintIcon(Component component, Graphics g, int x, int y)
     {
       Color c;
-      int   tx;
-      int   ty;
+      int tx;
+      int ty;
 
       for (int i = 0; i < 8; i++)
       {

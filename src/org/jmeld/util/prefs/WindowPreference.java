@@ -21,7 +21,7 @@ import java.awt.event.*;
 import java.io.*;
 
 public class WindowPreference
-       extends Preference
+    extends Preference
 {
   // Class variables:
   private static String X = "X";
@@ -32,9 +32,7 @@ public class WindowPreference
   // Instance variables:
   private Window target;
 
-  public WindowPreference(
-    String preferenceName,
-    Window target)
+  public WindowPreference(String preferenceName, Window target)
   {
     super("Window-" + preferenceName);
 
@@ -44,12 +42,8 @@ public class WindowPreference
 
   private void init()
   {
-    target.setLocation(
-      getInt(X, 0),
-      getInt(Y, 0));
-    target.setSize(
-      getInt(WIDTH, 500),
-      getInt(HEIGHT, 400));
+    target.setLocation(getInt(X, 0), getInt(Y, 0));
+    target.setSize(getInt(WIDTH, 500), getInt(HEIGHT, 400));
 
     target.addWindowListener(getWindowListener());
   }
@@ -65,11 +59,11 @@ public class WindowPreference
   private WindowListener getWindowListener()
   {
     return new WindowAdapter()
+    {
+      public void windowClosing(WindowEvent we)
       {
-        public void windowClosing(WindowEvent we)
-        {
-          save();
-        }
-      };
+        save();
+      }
+    };
   }
 }

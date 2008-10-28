@@ -58,54 +58,47 @@ public class HuntDiff
    * @param lines2 array of lines from the second source
    * @return computed diff
    */
-  public static Difference[] diff(
-    Object[] lines1,
-    Object[] lines2)
+  public static Difference[] diff(Object[] lines1, Object[] lines2)
   {
-    int      m = lines1.length;
-    int      n = lines2.length;
+    int m = lines1.length;
+    int n = lines2.length;
     Object[] lines1_original = lines1;
     Object[] lines2_original = lines2;
-    Line[]   l2s = new Line[n + 1];
+    Line[] l2s = new Line[n + 1];
 
     // In l2s we have sorted lines of the second file <1, n>
     for (int i = 1; i <= n; i++)
     {
       l2s[i] = new Line(i, lines2[i - 1]);
     }
-    Arrays.sort(
-      l2s,
-      1,
-      n + 1,
-      new Comparator<Line>()
+    Arrays.sort(l2s, 1, n + 1, new Comparator<Line>()
+    {
+      public int compare(Line l1, Line l2)
       {
-        public int compare(
-          Line l1,
-          Line l2)
-        {
-          return l1.line.compareTo(l2.line);
-        }
+        return l1.line.compareTo(l2.line);
+      }
 
-        public boolean equals(Object obj)
-        {
-          return obj == this;
-        }
-      });
+      public boolean equals(Object obj)
+      {
+        return obj == this;
+      }
+    });
 
-    int[]     equvalenceLines = new int[n + 1];
+    int[] equvalenceLines = new int[n + 1];
     boolean[] equivalence = new boolean[n + 1];
     for (int i = 1; i <= n; i++)
     {
       Line l = l2s[i];
       equvalenceLines[i] = l.lineNo;
-      equivalence[i] = (i == n) || !l.line.equals(l2s[i + 1].line);  //((Line) l2s.get(i)).line);
+      equivalence[i] = (i == n) || !l.line.equals(l2s[i + 1].line); //((Line) l2s.get(i)).line);
     }
     equvalenceLines[0] = 0;
     equivalence[0] = true;
     int[] equivalenceAssoc = new int[m + 1];
     for (int i = 1; i <= m; i++)
     {
-      equivalenceAssoc[i] = findAssoc((Comparable) lines1[i - 1], l2s, equivalence);
+      equivalenceAssoc[i] = findAssoc((Comparable) lines1[i - 1], l2s,
+        equivalence);
     }
 
     l2s = null;
@@ -120,7 +113,7 @@ public class HuntDiff
         k = merge(K, k, i, equvalenceLines, equivalence, equivalenceAssoc[i]);
       }
     }
-    int[]     J = new int[m + 2];  // Initialized with zeros
+    int[] J = new int[m + 2]; // Initialized with zeros
 
     Candidate c = K[k];
     while (c != null)
@@ -130,15 +123,13 @@ public class HuntDiff
     }
 
     List<Difference> differences = getDifferences(J, lines1_original,
-        lines2_original);
+      lines2_original);
     cleanup(differences);
     return differences.toArray(new Difference[0]);
   }
 
-  private static int findAssoc(
-    Comparable line1,
-    Line[]     l2s,
-    boolean[]  equivalence)
+  private static int findAssoc(Comparable line1, Line[] l2s,
+      boolean[] equivalence)
   {
     int idx = binarySearch(l2s, line1, 1, l2s.length - 1);
     if (idx < 1)
@@ -159,17 +150,13 @@ public class HuntDiff
     }
   }
 
-  private static int binarySearch(
-    Line[]     L,
-    Comparable key,
-    int        low,
-    int        high)
+  private static int binarySearch(Line[] L, Comparable key, int low, int high)
   {
     while (low <= high)
     {
-      int        mid = (low + high) >> 1;
+      int mid = (low + high) >> 1;
       Comparable midVal = L[mid].line;
-      int        comparison = midVal.compareTo(key);
+      int comparison = midVal.compareTo(key);
       if (comparison < 0)
       {
         low = mid + 1;
@@ -186,11 +173,7 @@ public class HuntDiff
     return -(low + 1);
   }
 
-  private static int binarySearch(
-    Candidate[] K,
-    int         key,
-    int         low,
-    int         high)
+  private static int binarySearch(Candidate[] K, int key, int low, int high)
   {
     while (low <= high)
     {
@@ -212,15 +195,10 @@ public class HuntDiff
     return -(low + 1);
   }
 
-  private static int merge(
-    Candidate[] K,
-    int         k,
-    int         i,
-    int[]       equvalenceLines,
-    boolean[]   equivalence,
-    int         p)
+  private static int merge(Candidate[] K, int k, int i, int[] equvalenceLines,
+      boolean[] equivalence, int p)
   {
-    int       r = 0;
+    int r = 0;
     Candidate c = K[0];
     do
     {
@@ -269,16 +247,14 @@ public class HuntDiff
     return k;
   }
 
-  private static List<Difference> getDifferences(
-    int[]    J,
-    Object[] lines1,
-    Object[] lines2)
+  private static List<Difference> getDifferences(int[] J, Object[] lines1,
+      Object[] lines2)
   {
     List<Difference> differences = new ArrayList<Difference>();
-    int              n = lines1.length;
-    int              m = lines2.length;
-    int              start1 = 1;
-    int              start2 = 1;
+    int n = lines1.length;
+    int m = lines2.length;
+    int start1 = 1;
+    int start2 = 1;
     do
     {
       while (start1 <= n && J[start1] == start2)
@@ -291,8 +267,8 @@ public class HuntDiff
         break;
       }
       if (J[start1] < start2)
-      {  // There's something extra in the first file
-        int          end1 = start1 + 1;
+      { // There's something extra in the first file
+        int end1 = start1 + 1;
         StringBuffer deletedText = new StringBuffer();
         deletedText.append(lines1[start1 - 1]).append('\n');
         while (end1 <= n && J[end1] < start2)
@@ -301,42 +277,28 @@ public class HuntDiff
           deletedText.append(line).append('\n');
           end1++;
         }
-        differences.add(
-          new Difference(
-            Difference.DELETE,
-            start1,
-            end1 - 1,
-            start2 - 1,
-            0,
-            deletedText.toString(),
-            null));
+        differences.add(new Difference(Difference.DELETE, start1, end1 - 1,
+            start2 - 1, 0, deletedText.toString(), null));
         start1 = end1;
       }
       else
-      {  // There's something extra in the second file
-        int          end2 = J[start1];
+      { // There's something extra in the second file
+        int end2 = J[start1];
         StringBuffer addedText = new StringBuffer();
         for (int i = start2; i < end2; i++)
         {
           Object line = lines2[i - 1];
           addedText.append(line).append('\n');
         }
-        differences.add(
-          new Difference(
-            Difference.ADD,
-            (start1 - 1),
-            0,
-            start2,
-            (end2 - 1),
-            null,
-            addedText.toString()));
+        differences.add(new Difference(Difference.ADD, (start1 - 1), 0, start2,
+            (end2 - 1), null, addedText.toString()));
         start2 = end2;
       }
     }
     while (start1 <= n);
     if (start2 <= m)
-    {  // There's something extra at the end of the second file
-      int           end2 = start2 + 1;
+    { // There's something extra at the end of the second file
+      int end2 = start2 + 1;
       StringBuilder addedText = new StringBuilder();
       addedText.append(lines2[start2 - 1]).append('\n');
       while (end2 <= m)
@@ -345,14 +307,7 @@ public class HuntDiff
         addedText.append(line).append('\n');
         end2++;
       }
-      differences.add(
-        new Difference(
-          Difference.ADD,
-          n,
-          0,
-          start2,
-          m,
-          null,
+      differences.add(new Difference(Difference.ADD, n, 0, start2, m, null,
           addedText.toString()));
     }
     return differences;
@@ -367,9 +322,9 @@ public class HuntDiff
       if (last != null)
       {
         if (diff.getType() == Difference.ADD
-          && last.getType() == Difference.DELETE
-          || diff.getType() == Difference.DELETE
-          && last.getType() == Difference.ADD)
+            && last.getType() == Difference.DELETE
+            || diff.getType() == Difference.DELETE
+            && last.getType() == Difference.ADD)
         {
           Difference add;
           Difference del;
@@ -384,16 +339,13 @@ public class HuntDiff
             del = diff;
           }
           int d1f1l1 = add.getFirstStart()
-            - (del.getFirstEnd() - del.getFirstStart());
+                       - (del.getFirstEnd() - del.getFirstStart());
           int d2f1l1 = del.getFirstStart();
           if (d1f1l1 == d2f1l1)
           {
-            Difference newDiff = new Difference(Difference.CHANGE, d1f1l1,
-                del.getFirstEnd(),
-                add.getSecondStart(),
-                add.getSecondEnd(),
-                del.getFirstText(),
-                add.getSecondText());
+            Difference newDiff = new Difference(Difference.CHANGE, d1f1l1, del
+                .getFirstEnd(), add.getSecondStart(), add.getSecondEnd(), del
+                .getFirstText(), add.getSecondText());
             diffs.set(i - 1, newDiff);
             diffs.remove(i);
             i--;
@@ -407,13 +359,11 @@ public class HuntDiff
 
   private static class Line
   {
-    public int        lineNo;
+    public int lineNo;
     public Comparable line;
-    public int        hash;
+    public int hash;
 
-    public Line(
-      int    lineNo,
-      Object line)
+    public Line(int lineNo, Object line)
     {
       this.lineNo = lineNo;
       this.line = (Comparable) line;
@@ -423,14 +373,11 @@ public class HuntDiff
 
   private static class Candidate
   {
-    private int       a;
-    private int       b;
+    private int a;
+    private int b;
     private Candidate c;
 
-    public Candidate(
-      int       a,
-      int       b,
-      Candidate c)
+    public Candidate(int a, int b, Candidate c)
     {
       this.a = a;
       this.b = b;

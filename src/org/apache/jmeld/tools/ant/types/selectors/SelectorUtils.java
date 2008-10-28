@@ -68,9 +68,7 @@ public final class SelectorUtils
    * @return whether or not a given path matches the start of a given
    * pattern up to the first "**".
    */
-  public static boolean matchPatternStart(
-    String pattern,
-    String str)
+  public static boolean matchPatternStart(String pattern, String str)
   {
     return matchPatternStart(pattern, str, true);
   }
@@ -93,10 +91,8 @@ public final class SelectorUtils
    * @return whether or not a given path matches the start of a given
    * pattern up to the first "**".
    */
-  public static boolean matchPatternStart(
-    String  pattern,
-    String  str,
-    boolean isCaseSensitive)
+  public static boolean matchPatternStart(String pattern, String str,
+      boolean isCaseSensitive)
   {
     // When str starts with a File.separator, pattern has to start with a
     // File.separator.
@@ -160,9 +156,7 @@ public final class SelectorUtils
    * @return <code>true</code> if the pattern matches against the string,
    *         or <code>false</code> otherwise.
    */
-  public static boolean matchPath(
-    String pattern,
-    String str)
+  public static boolean matchPath(String pattern, String str)
   {
     return matchPath(pattern, str, true);
   }
@@ -180,10 +174,8 @@ public final class SelectorUtils
    * @return <code>true</code> if the pattern matches against the string,
    *         or <code>false</code> otherwise.
    */
-  public static boolean matchPath(
-    String  pattern,
-    String  str,
-    boolean isCaseSensitive)
+  public static boolean matchPath(String pattern, String str,
+      boolean isCaseSensitive)
   {
     // When str starts with a File.separator, pattern has to start with a
     // File.separator.
@@ -299,8 +291,7 @@ public final class SelectorUtils
       int patLength = (patIdxTmp - patIdxStart - 1);
       int strLength = (strIdxEnd - strIdxStart + 1);
       int foundIdx = -1;
-strLoop: 
-      for (int i = 0; i <= strLength - patLength; i++)
+      strLoop: for (int i = 0; i <= strLength - patLength; i++)
       {
         for (int j = 0; j < patLength; j++)
         {
@@ -354,9 +345,7 @@ strLoop:
    * @return <code>true</code> if the string matches against the pattern,
    *         or <code>false</code> otherwise.
    */
-  public static boolean match(
-    String pattern,
-    String str)
+  public static boolean match(String pattern, String str)
   {
     return match(pattern, str, true);
   }
@@ -378,18 +367,16 @@ strLoop:
    * @return <code>true</code> if the string matches against the pattern,
    *         or <code>false</code> otherwise.
    */
-  public static boolean match(
-    String  pattern,
-    String  str,
-    boolean isCaseSensitive)
+  public static boolean match(String pattern, String str,
+      boolean isCaseSensitive)
   {
     char[] patArr = pattern.toCharArray();
     char[] strArr = str.toCharArray();
-    int    patIdxStart = 0;
-    int    patIdxEnd = patArr.length - 1;
-    int    strIdxStart = 0;
-    int    strIdxEnd = strArr.length - 1;
-    char   ch;
+    int patIdxStart = 0;
+    int patIdxEnd = patArr.length - 1;
+    int strIdxStart = 0;
+    int strIdxEnd = strArr.length - 1;
+    char ch;
 
     boolean containsStar = false;
     for (int i = 0; i < patArr.length; i++)
@@ -406,7 +393,7 @@ strLoop:
       // No '*'s, so we make a shortcut
       if (patIdxEnd != strIdxEnd)
       {
-        return false;  // Pattern and string do not have the same size
+        return false; // Pattern and string do not have the same size
       }
       for (int i = 0; i <= patIdxEnd; i++)
       {
@@ -415,21 +402,21 @@ strLoop:
         {
           if (isCaseSensitive && ch != strArr[i])
           {
-            return false;  // Character mismatch
+            return false; // Character mismatch
           }
           if (!isCaseSensitive
-            && Character.toUpperCase(ch) != Character.toUpperCase(strArr[i]))
+              && Character.toUpperCase(ch) != Character.toUpperCase(strArr[i]))
           {
-            return false;  // Character mismatch
+            return false; // Character mismatch
           }
         }
       }
-      return true;  // String matches against pattern
+      return true; // String matches against pattern
     }
 
     if (patIdxEnd == 0)
     {
-      return true;  // Pattern contains only '*', which matches anything
+      return true; // Pattern contains only '*', which matches anything
     }
 
     // Process characters before first star
@@ -439,13 +426,13 @@ strLoop:
       {
         if (isCaseSensitive && ch != strArr[strIdxStart])
         {
-          return false;  // Character mismatch
+          return false; // Character mismatch
         }
         if (!isCaseSensitive
-          && Character.toUpperCase(ch) != Character.toUpperCase(
-            strArr[strIdxStart]))
+            && Character.toUpperCase(ch) != Character
+                .toUpperCase(strArr[strIdxStart]))
         {
-          return false;  // Character mismatch
+          return false; // Character mismatch
         }
       }
       patIdxStart++;
@@ -472,13 +459,13 @@ strLoop:
       {
         if (isCaseSensitive && ch != strArr[strIdxEnd])
         {
-          return false;  // Character mismatch
+          return false; // Character mismatch
         }
         if (!isCaseSensitive
-          && Character.toUpperCase(ch) != Character.toUpperCase(
-            strArr[strIdxEnd]))
+            && Character.toUpperCase(ch) != Character
+                .toUpperCase(strArr[strIdxEnd]))
         {
-          return false;  // Character mismatch
+          return false; // Character mismatch
         }
       }
       patIdxEnd--;
@@ -523,8 +510,7 @@ strLoop:
       int patLength = (patIdxTmp - patIdxStart - 1);
       int strLength = (strIdxEnd - strIdxStart + 1);
       int foundIdx = -1;
-strLoop: 
-      for (int i = 0; i <= strLength - patLength; i++)
+      strLoop: for (int i = 0; i <= strLength - patLength; i++)
       {
         for (int j = 0; j < patLength; j++)
         {
@@ -536,8 +522,8 @@ strLoop:
               continue strLoop;
             }
             if (!isCaseSensitive
-              && Character.toUpperCase(ch) != Character.toUpperCase(
-                strArr[strIdxStart + i + j]))
+                && Character.toUpperCase(ch) != Character
+                    .toUpperCase(strArr[strIdxStart + i + j]))
             {
               continue strLoop;
             }
@@ -591,11 +577,9 @@ strLoop:
    * @return a Vector of path elements from the tokenized path
    * @since Ant 1.6
    */
-  public static Vector tokenizePath(
-    String path,
-    String separator)
+  public static Vector tokenizePath(String path, String separator)
   {
-    Vector          ret = new Vector();
+    Vector ret = new Vector();
     StringTokenizer st = new StringTokenizer(path, separator);
     while (st.hasMoreTokens())
     {
@@ -610,9 +594,9 @@ strLoop:
   private static String[] tokenizePathAsArray(String path)
   {
     char sep = File.separatorChar;
-    int  start = 0;
-    int  len = path.length();
-    int  count = 0;
+    int start = 0;
+    int len = path.length();
+    int count = 0;
     for (int pos = 0; pos < len; pos++)
     {
       if (path.charAt(pos) == sep)
@@ -646,7 +630,7 @@ strLoop:
     if (len != start)
     {
       String tok = path.substring(start);
-      l[count  /*++*/] = tok;
+      l[count /*++*/] = tok;
     }
     return l;
   }
@@ -665,10 +649,7 @@ strLoop:
    *        determining out of dateness
    * @return whether the target is out of date
    */
-  public static boolean isOutOfDate(
-    File src,
-    File target,
-    int  granularity)
+  public static boolean isOutOfDate(File src, File target, int granularity)
   {
     if (!src.exists())
     {
@@ -699,10 +680,8 @@ strLoop:
    *        determining out of dateness
    * @return whether the target is out of date
    */
-  public static boolean isOutOfDate(
-    Resource src,
-    Resource target,
-    int      granularity)
+  public static boolean isOutOfDate(Resource src, Resource target,
+      int granularity)
   {
     if (!src.isExists())
     {
@@ -758,7 +737,7 @@ strLoop:
    */
   public static String rtrimWildcardTokens(String input)
   {
-    Vector       v = tokenizePath(input, File.separator);
+    Vector v = tokenizePath(input, File.separator);
     StringBuffer sb = new StringBuffer();
     for (int counter = 0; counter < v.size(); counter++)
     {

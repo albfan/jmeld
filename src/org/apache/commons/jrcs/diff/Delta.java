@@ -77,10 +77,10 @@ import java.util.List;
  * Added visitor pattern accept() method
  */
 public abstract class Delta
-       extends org.apache.commons.jrcs.util.ToString
+    extends org.apache.commons.jrcs.util.ToString
 {
-  protected Chunk  original;
-  protected Chunk  revised;
+  protected Chunk original;
+  protected Chunk revised;
   static Class[][] DeltaClass;
 
   static
@@ -104,9 +104,7 @@ public abstract class Delta
    * @param orig the chunk in the original text.
    * @param rev  the chunk in the revised text.
    */
-  public static Delta newDelta(
-    Chunk orig,
-    Chunk rev)
+  public static Delta newDelta(Chunk orig, Chunk rev)
   {
     Class c = DeltaClass[orig.size() > 0 ? 1 : 0][rev.size() > 0 ? 1 : 0];
     Delta result;
@@ -135,9 +133,7 @@ public abstract class Delta
    * Creates a delta object with the given chunks from the original
    * and revised texts.
    */
-  protected Delta(
-    Chunk orig,
-    Chunk rev)
+  protected Delta(Chunk orig, Chunk rev)
   {
     init(orig, rev);
   }
@@ -146,9 +142,7 @@ public abstract class Delta
    * Initializaes the delta with the given chunks from the original
    * and revised texts.
    */
-  protected void init(
-    Chunk orig,
-    Chunk rev)
+  protected void init(Chunk orig, Chunk rev)
   {
     original = orig;
     revised = rev;
@@ -160,7 +154,7 @@ public abstract class Delta
    * @throws PatchFailedException if the patch cannot be applied.
    */
   public abstract void verify(List target)
-    throws PatchFailedException;
+      throws PatchFailedException;
 
   /**
    * Applies this delta as a patch to the given text.
@@ -168,7 +162,7 @@ public abstract class Delta
    * @throws PatchFailedException if the patch cannot be applied.
    */
   public final void patch(List target)
-    throws PatchFailedException
+      throws PatchFailedException
   {
     verify(target);
     try
@@ -211,9 +205,7 @@ public abstract class Delta
    * representation will be appended.
    * @param EOL the string to use as line separator.
    */
-  public abstract void toRCSString(
-    StringBuffer s,
-    String       EOL);
+  public abstract void toRCSString(StringBuffer s, String EOL);
 
   /**
    * Converts this delta into its RCS style string representation.

@@ -23,18 +23,16 @@ import java.io.*;
 import java.util.*;
 
 public class ComboBoxPreference
-       extends Preference
+    extends Preference
 {
   // Class variables:
   private static String ITEMS = "ITEMS";
 
   // Instance variables:
   private JComboBox target;
-  private int       maxItems = 10;
+  private int maxItems = 10;
 
-  public ComboBoxPreference(
-    String    preferenceName,
-    JComboBox target)
+  public ComboBoxPreference(String preferenceName, JComboBox target)
   {
     super("ComboBox-" + preferenceName);
 
@@ -63,9 +61,9 @@ public class ComboBoxPreference
 
   private void save()
   {
-    List<String>  list;
+    List<String> list;
     ComboBoxModel model;
-    String        item;
+    String item;
 
     list = new ArrayList<String>();
 
@@ -97,21 +95,21 @@ public class ComboBoxPreference
   private ListDataListener getListDataListener()
   {
     return new ListDataListener()
+    {
+      public void contentsChanged(ListDataEvent e)
       {
-        public void contentsChanged(ListDataEvent e)
-        {
-          save();
-        }
+        save();
+      }
 
-        public void intervalAdded(ListDataEvent e)
-        {
-          save();
-        }
+      public void intervalAdded(ListDataEvent e)
+      {
+        save();
+      }
 
-        public void intervalRemoved(ListDataEvent e)
-        {
-          save();
-        }
-      };
+      public void intervalRemoved(ListDataEvent e)
+      {
+        save();
+      }
+    };
   }
 }

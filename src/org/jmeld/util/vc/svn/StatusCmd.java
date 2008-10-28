@@ -9,7 +9,7 @@ import java.io.*;
 public class StatusCmd
     extends SvnXmlCmd<StatusData>
 {
-  private File    file;
+  private File file;
   private boolean recursive;
 
   public StatusCmd(File file, boolean recursive)
@@ -23,7 +23,7 @@ public class StatusCmd
   public Result execute()
   {
     super.execute("svn", "status", "--non-interactive", "-v", "--xml",
-                  recursive ? "" : "-N", file.getPath());
+      recursive ? "" : "-N", file.getPath());
 
     return getResult();
   }
@@ -40,7 +40,7 @@ public class StatusCmd
     StatusIF.WcStatusIF wcStatus;
 
     result = new SubversionVersionControl().executeStatus(new File(args[0]),
-                                                          true);
+      true);
     if (result != null)
     {
       for (StatusIF.TargetIF target : result.getTargetList())

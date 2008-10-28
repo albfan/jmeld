@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.io.*;
 
 public class FileChooserPreference
-       extends Preference
+    extends Preference
 {
   // Class variables:
   private static String FILE = "FILE";
@@ -29,9 +29,7 @@ public class FileChooserPreference
   // Instance variables:
   private JFileChooser target;
 
-  public FileChooserPreference(
-    String       preferenceName,
-    JFileChooser target)
+  public FileChooserPreference(String preferenceName, JFileChooser target)
   {
     super("FileChooser-" + preferenceName);
 
@@ -54,7 +52,7 @@ public class FileChooserPreference
   public void save()
   {
     String fileName;
-    File   file;
+    File file;
 
     file = target.getSelectedFile();
     if (file != null)

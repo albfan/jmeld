@@ -96,7 +96,7 @@ import java.util.*;
  * algorithm class to allow pluggable algorithms.
  */
 public class Diff
-       extends ToString
+    extends ToString
 {
   /** The standard line separator. */
   public static final String NL = System.getProperty("line.separator");
@@ -126,9 +126,7 @@ public class Diff
    * @param o the original text which will be compared against
    * @param algorithm the difference algorithm to use.
    */
-  public Diff(
-    Object[]      original,
-    DiffAlgorithm algorithm)
+  public Diff(Object[] original, DiffAlgorithm algorithm)
   {
     if (original == null)
     {
@@ -158,10 +156,8 @@ public class Diff
    * @param rev the revision to compare with the original.
    * @return a Revision describing the differences
    */
-  public static Revision diff(
-    Object[] orig,
-    Object[] rev)
-    throws DifferentiationFailedException
+  public static Revision diff(Object[] orig, Object[] rev)
+      throws DifferentiationFailedException
   {
     if (orig == null || rev == null)
     {
@@ -179,11 +175,9 @@ public class Diff
    * @param algorithm the difference algorithm to use
    * @return a Revision describing the differences
    */
-  public static Revision diff(
-    Object[]      orig,
-    Object[]      rev,
-    DiffAlgorithm algorithm)
-    throws DifferentiationFailedException
+  public static Revision diff(Object[] orig, Object[] rev,
+      DiffAlgorithm algorithm)
+      throws DifferentiationFailedException
   {
     if (orig == null || rev == null)
     {
@@ -200,7 +194,7 @@ public class Diff
    * @return a Revision describing the differences
    */
   public Revision diff(Object[] rev)
-    throws DifferentiationFailedException
+      throws DifferentiationFailedException
   {
     Revision revision;
 
@@ -217,9 +211,7 @@ public class Diff
    * @param rev The revised sequence.
    * @return true if the sequences are identical. False otherwise.
    */
-  public static boolean compare(
-    Object[] orig,
-    Object[] rev)
+  public static boolean compare(Object[] orig, Object[] rev)
   {
     if (orig.length != rev.length)
     {
@@ -284,22 +276,20 @@ public class Diff
    * @param seed A seed value for the randomizer.
    * @return The sequence with random edits performed.
    */
-  public static Object[] randomEdit(
-    Object[] text,
-    long     seed)
+  public static Object[] randomEdit(Object[] text, long seed)
   {
-    List   result = new ArrayList(Arrays.asList(text));
+    List result = new ArrayList(Arrays.asList(text));
     Random r = new Random(seed);
-    int    nops = r.nextInt(10);
+    int nops = r.nextInt(10);
 
     for (int i = 0; i < nops; i++)
     {
       boolean del = r.nextBoolean();
-      int     pos = r.nextInt(result.size() + 1);
-      int     len = Math.min(result.size() - pos, 1 + r.nextInt(4));
+      int pos = r.nextInt(result.size() + 1);
+      int len = Math.min(result.size() - pos, 1 + r.nextInt(4));
 
       if (del && result.size() > 0)
-      {  // delete
+      { // delete
         result.subList(pos, pos + len).clear();
       }
       else
@@ -330,9 +320,7 @@ public class Diff
    * @param seed A seed value for randomizing the suffle.
    * @return The shuffled sequence.
    */
-  public static Object[] shuffle(
-    Object[] text,
-    long     seed)
+  public static Object[] shuffle(Object[] text, long seed)
   {
     List result = new ArrayList(Arrays.asList(text));
 
@@ -356,12 +344,10 @@ public class Diff
    * @param seed A seed value for randomizing the generation.
    * @return The generated sequence.
    */
-  public static Object[] randomSequence(
-    int  size,
-    long seed)
+  public static Object[] randomSequence(int size, long seed)
   {
     Integer[] result = new Integer[size];
-    Random    r = new Random(seed);
+    Random r = new Random(seed);
 
     for (int i = 0; i < result.length; i++)
     {

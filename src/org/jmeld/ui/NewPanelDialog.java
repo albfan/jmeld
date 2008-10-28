@@ -42,32 +42,32 @@ public class NewPanelDialog
     VERSION_CONTROL;
   }
 
-  private static String RIGHT_FILENAME            = "RIGHT_FILENAME";
-  private static String LEFT_FILENAME             = "LEFT_FILENAME";
+  private static String RIGHT_FILENAME = "RIGHT_FILENAME";
+  private static String LEFT_FILENAME = "LEFT_FILENAME";
 
   // Directory comparison:
-  private static String RIGHT_DIRECTORY           = "RIGHT_DIRECTORY";
-  private static String LEFT_DIRECTORY            = "LEFT_DIRECTORY";
+  private static String RIGHT_DIRECTORY = "RIGHT_DIRECTORY";
+  private static String LEFT_DIRECTORY = "LEFT_DIRECTORY";
 
   // Version control :
   private static String VERSION_CONTROL_DIRECTORY = "VERSION_CONTROL_DIRECTORY";
 
   // Instance variables:
-  private JMeldPanel    meldPanel;
-  private JTabbedPane   tabbedPane;
-  private Function      function;
-  private String        leftFileName;
-  private String        rightFileName;
-  private JComboBox     leftFileComboBox;
-  private JComboBox     rightFileComboBox;
-  private String        leftDirectoryName;
-  private String        rightDirectoryName;
-  private JComboBox     leftDirectoryComboBox;
-  private JComboBox     rightDirectoryComboBox;
-  private String        versionControlDirectoryName;
-  private JComboBox     versionControlDirectoryComboBox;
-  private JComboBox     filterComboBox;
-  private JDialog       dialog;
+  private JMeldPanel meldPanel;
+  private JTabbedPane tabbedPane;
+  private Function function;
+  private String leftFileName;
+  private String rightFileName;
+  private JComboBox leftFileComboBox;
+  private JComboBox rightFileComboBox;
+  private String leftDirectoryName;
+  private String rightDirectoryName;
+  private JComboBox leftDirectoryComboBox;
+  private JComboBox rightDirectoryComboBox;
+  private String versionControlDirectoryName;
+  private JComboBox versionControlDirectoryComboBox;
+  private JComboBox filterComboBox;
+  private JDialog dialog;
 
   public NewPanelDialog(JMeldPanel meldPanel)
   {

@@ -26,14 +26,14 @@ import java.util.Locale;
  * @since Ant 1.4
  */
 public class Os
-       implements Condition
+    implements Condition
 {
   private static final String OS_NAME = System.getProperty("os.name")
-                                              .toLowerCase(Locale.US);
+      .toLowerCase(Locale.US);
   private static final String OS_ARCH = System.getProperty("os.arch")
-                                              .toLowerCase(Locale.US);
+      .toLowerCase(Locale.US);
   private static final String OS_VERSION = System.getProperty("os.version")
-                                                 .toLowerCase(Locale.US);
+      .toLowerCase(Locale.US);
   private static final String PATH_SEP = System.getProperty("path.separator");
   private String family;
   private String name;
@@ -117,7 +117,7 @@ public class Os
    * @see Os#setFamily(String)
    */
   public boolean eval()
-    throws BuildException
+      throws BuildException
   {
     return isOs(family, name, arch, version);
   }
@@ -184,11 +184,8 @@ public class Os
    * @return true if the OS matches
    * @since 1.7
    */
-  public static boolean isOs(
-    String family,
-    String name,
-    String arch,
-    String version)
+  public static boolean isOs(String family, String name, String arch,
+      String version)
   {
     boolean retValue = false;
 
@@ -228,18 +225,19 @@ public class Os
         else if (family.equals("unix"))
         {
           isFamily = PATH_SEP.equals(":") && !isFamily("openvms")
-            && (!isFamily("mac") || OS_NAME.endsWith("x"));
+                     && (!isFamily("mac") || OS_NAME.endsWith("x"));
         }
         else if (family.equals("win9x"))
         {
           isFamily = isFamily("windows")
-            && (OS_NAME.indexOf("95") >= 0 || OS_NAME.indexOf("98") >= 0
-            || OS_NAME.indexOf("me") >= 0 || OS_NAME.indexOf("ce") >= 0);
+                     && (OS_NAME.indexOf("95") >= 0
+                         || OS_NAME.indexOf("98") >= 0
+                         || OS_NAME.indexOf("me") >= 0 || OS_NAME.indexOf("ce") >= 0);
         }
         else if (family.equals("z/os"))
         {
           isFamily = OS_NAME.indexOf("z/os") > -1
-            || OS_NAME.indexOf("os/390") > -1;
+                     || OS_NAME.indexOf("os/390") > -1;
         }
         else if (family.equals("os/400"))
         {
@@ -252,7 +250,7 @@ public class Os
         else
         {
           throw new BuildException("Don\'t know how to detect os family \""
-            + family + "\"");
+                                   + family + "\"");
         }
       }
       if (name != null)

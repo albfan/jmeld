@@ -68,9 +68,7 @@ public class JMDiff
     //algorithms.add(new HuntDiff());
   }
 
-  public JMRevision diff(List<String> a,
-                         List<String> b,
-                         Ignore ignore)
+  public JMRevision diff(List<String> a, List<String> b, Ignore ignore)
       throws JMeldException
   {
     if (a == null)
@@ -84,9 +82,7 @@ public class JMDiff
     return diff(a.toArray(), b.toArray(), ignore);
   }
 
-  public JMRevision diff(Object[] a,
-                         Object[] b,
-                         Ignore ignore)
+  public JMRevision diff(Object[] a, Object[] b, Ignore ignore)
       throws JMeldException
   {
     JMRevision revision;
@@ -168,11 +164,9 @@ public class JMDiff
     return null;
   }
 
-  private void adjustRevision(JMRevision revision,
-                              Object[] orgArray,
-                              JMString[] orgArrayFiltered,
-                              Object[] revArray,
-                              JMString[] revArrayFiltered)
+  private void adjustRevision(JMRevision revision, Object[] orgArray,
+      JMString[] orgArrayFiltered, Object[] revArray,
+      JMString[] revArrayFiltered)
   {
     JMChunk chunk;
     int anchor;
@@ -248,8 +242,7 @@ public class JMDiff
     }
   }
 
-  private JMString[] filter(Ignore ignore,
-                            Object[] array)
+  private JMString[] filter(Ignore ignore, Object[] array)
   {
     List<JMString> result;
     JMString jms;
@@ -287,7 +280,7 @@ public class JMDiff
   class JMString
   {
     String s;
-    int    lineNumber;
+    int lineNumber;
 
     @Override
     public int hashCode()

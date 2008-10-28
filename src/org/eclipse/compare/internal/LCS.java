@@ -14,14 +14,14 @@ package org.eclipse.compare.internal;
 /* Used to determine the change set responsible for each line */
 public abstract class LCS
 {
-  private static final double TOO_LONG = 10000000.0;  // the value of N*M when
-                                                      // to start binding the
-                                                      // run time
-  private static final double POW_LIMIT = 1.5;  // limit the time to
-                                                // D^POW_LIMIT
-  private int                 max_differences;  // the maximum number of differences from
-                                                // each end to consider
-  private int                 length;
+  private static final double TOO_LONG = 10000000.0; // the value of N*M when
+  // to start binding the
+  // run time
+  private static final double POW_LIMIT = 1.5; // limit the time to
+  // D^POW_LIMIT
+  private int max_differences; // the maximum number of differences from
+  // each end to consider
+  private int length;
 
   /**
    * Myers' algorithm for longest common subsequence. O((M + N)D) worst case
@@ -47,7 +47,7 @@ public abstract class LCS
       return;
     }
 
-    max_differences = (length1 + length2 + 1) / 2;  // ceil((N+M)/2)
+    max_differences = (length1 + length2 + 1) / 2; // ceil((N+M)/2)
     if ((double) length1 * (double) length2 > TOO_LONG)
     {
       // limit complexity to D^POW_LIMIT for long sequences
@@ -62,9 +62,8 @@ public abstract class LCS
      */
     int forwardBound;
     int max = Math.min(length1, length2);
-    for (forwardBound = 0;
-      forwardBound < max && isRangeEqual(forwardBound, forwardBound);
-      forwardBound++)
+    for (forwardBound = 0; forwardBound < max
+                           && isRangeEqual(forwardBound, forwardBound); forwardBound++)
     {
       setLcs(forwardBound, forwardBound);
     }
@@ -73,21 +72,19 @@ public abstract class LCS
     int backBoundL2 = length2 - 1;
 
     while (backBoundL1 >= forwardBound && backBoundL2 >= forwardBound
-      && isRangeEqual(backBoundL1, backBoundL2))
+           && isRangeEqual(backBoundL1, backBoundL2))
     {
       setLcs(backBoundL1, backBoundL2);
       backBoundL1--;
       backBoundL2--;
     }
 
-    length = forwardBound + length1 - backBoundL1 - 1
-      + lcs_rec(
-        forwardBound,
-        backBoundL1,
-        forwardBound,
-        backBoundL2,
-        new int[2][length1 + length2 + 1],
-        new int[3]);
+    length = forwardBound
+             + length1
+             - backBoundL1
+             - 1
+             + lcs_rec(forwardBound, backBoundL1, forwardBound, backBoundL2,
+               new int[2][length1 + length2 + 1], new int[3]);
 
   }
 
@@ -112,13 +109,8 @@ public abstract class LCS
    *
    * @return the length of the LCS
    */
-  private int lcs_rec(
-    int     bottoml1,
-    int     topl1,
-    int     bottoml2,
-    int     topl2,
-    int[][] V,
-    int[]   snake)
+  private int lcs_rec(int bottoml1, int topl1, int bottoml2, int topl2,
+      int[][] V, int[] snake)
   {
     // check that both sequences are non-empty
     if (bottoml1 > topl1 || bottoml2 > topl2)
@@ -145,8 +137,8 @@ public abstract class LCS
     if (d > 1)
     {
       return len
-      + lcs_rec(bottoml1, startx - 1, bottoml2, starty - 1, V, snake)
-      + lcs_rec(startx + len, topl1, starty + len, topl2, V, snake);
+             + lcs_rec(bottoml1, startx - 1, bottoml2, starty - 1, V, snake)
+             + lcs_rec(startx + len, topl1, starty + len, topl2, V, snake);
     }
     else if (d == 1)
     {
@@ -186,13 +178,8 @@ public abstract class LCS
    * @return The number of differences (SES) between l1[bottoml1..topl1] and
    *         l2[bottoml2..topl2]
    */
-  private int find_middle_snake(
-    int     bottoml1,
-    int     topl1,
-    int     bottoml2,
-    int     topl2,
-    int[][] V,
-    int[]   snake)
+  private int find_middle_snake(int bottoml1, int topl1, int bottoml2,
+      int topl2, int[][] V, int[] snake)
   {
     int N = topl1 - bottoml1 + 1;
     int M = topl2 - bottoml2 + 1;
@@ -200,7 +187,7 @@ public abstract class LCS
     // System.out.println("N: " + N + " M: " + M + " bottom: " + bottoml1 +
     // ", " +
     // bottoml2 + " top: " + topl1 + ", " + topl2);
-    int     delta = N - M;
+    int delta = N - M;
     boolean isEven;
     if ((delta & 1) == 1)
     {
@@ -211,10 +198,10 @@ public abstract class LCS
       isEven = true;
     }
 
-    int limit = Math.min(max_differences, (N + M + 1) / 2);  // ceil((N+M)/2)
+    int limit = Math.min(max_differences, (N + M + 1) / 2); // ceil((N+M)/2)
 
-    int value_to_add_forward;  // a 0 or 1 that we add to the start offset
-                               // to make it odd/even
+    int value_to_add_forward; // a 0 or 1 that we add to the start offset
+    // to make it odd/even
 
     if ((M & 1) == 1)
     {
@@ -278,7 +265,7 @@ public abstract class LCS
         // System.out.println(x + " " + V[1][limit+k -delta] + " " + k +
         // " " + delta);
         if (!isEven && k >= delta - d + 1 && k <= delta + d - 1
-          && x >= V[1][limit + k - delta])
+            && x >= V[1][limit + k - delta])
         {
           // System.out.println("Returning: " + (2*d-1));
           return 2 * d - 1;
@@ -319,7 +306,7 @@ public abstract class LCS
         // System.out.println("2 x: " + x + " y: " + y + " k: " + k + "
         // d: " + d);
         while (x > 0 && y > 0
-          && isRangeEqual(x - 1 + bottoml1, y - 1 + bottoml2))
+               && isRangeEqual(x - 1 + bottoml1, y - 1 + bottoml2))
         {
           x--;
           y--;
@@ -328,7 +315,7 @@ public abstract class LCS
         V[1][limit + k] = x;
 
         if (isEven && k >= -delta - d && k <= d - delta
-          && x <= V[0][limit + k + delta])
+            && x <= V[0][limit + k + delta])
         {
           // System.out.println("Returning: " + 2*d);
           snake[0] = bottoml1 + x;
@@ -360,13 +347,13 @@ public abstract class LCS
     snake[0] = bottoml1 + most_progress[0];
     snake[1] = bottoml2 + most_progress[1];
     snake[2] = 0;
-    return 5;  /*
-     * HACK: since we didn't really finish the LCS computation
-     * we don't really know the length of the SES. We don't do
-     * anything with the result anyway, unless it's <=1. We know
-     * for a fact SES > 1 so 5 is as good a number as any to
-     * return here
-     */
+    return 5; /*
+       * HACK: since we didn't really finish the LCS computation
+       * we don't really know the length of the SES. We don't do
+       * anything with the result anyway, unless it's <=1. We know
+       * for a fact SES > 1 so 5 is as good a number as any to
+       * return here
+       */
 
   }
 
@@ -387,11 +374,7 @@ public abstract class LCS
    *         in the diagonal with the most progress and result[2] is the
    *         amount of progress made in that diagonal
    */
-  private static int[] findMostProgress(
-    int     M,
-    int     N,
-    int     limit,
-    int[][] V)
+  private static int[] findMostProgress(int M, int N, int limit, int[][] V)
   {
     int delta = N - M;
 
@@ -417,12 +400,13 @@ public abstract class LCS
       backward_start_diag = Math.max(1 - N, -limit);
     }
 
-    int     backward_end_diag = Math.min(M, limit);
+    int backward_end_diag = Math.min(M, limit);
 
     int[][] max_progress = new int[Math.max(forward_end_diag
-        - forward_start_diag, backward_end_diag - backward_start_diag) / 2 + 1][3];
-    int     num_progress = 0;  // the 1st entry is current, it is initialized
-                               // with 0s
+                                            - forward_start_diag,
+      backward_end_diag - backward_start_diag) / 2 + 1][3];
+    int num_progress = 0; // the 1st entry is current, it is initialized
+    // with 0s
 
     // first search the forward diagonals
     for (int k = forward_start_diag; k <= forward_end_diag; k += 2)
@@ -451,9 +435,9 @@ public abstract class LCS
       }
     }
 
-    boolean max_progress_forward = true;  // initially the maximum
-                                          // progress is in the forward
-                                          // direction
+    boolean max_progress_forward = true; // initially the maximum
+    // progress is in the forward
+    // direction
 
     // now search the backward diagonals
     for (int k = backward_start_diag; k <= backward_end_diag; k += 2)
@@ -491,13 +475,9 @@ public abstract class LCS
 
   protected abstract int getLength1();
 
-  protected abstract boolean isRangeEqual(
-    int i1,
-    int i2);
+  protected abstract boolean isRangeEqual(int i1, int i2);
 
-  protected abstract void setLcs(
-    int sl1,
-    int sl2);
+  protected abstract void setLcs(int sl1, int sl2);
 
   protected abstract void initializeLcs(int lcsLength);
 

@@ -21,7 +21,7 @@ import java.util.*;
 public class SearchHits
 {
   private List<SearchHit> searchHits;
-  private SearchHit       current;
+  private SearchHit current;
 
   public SearchHits()
   {

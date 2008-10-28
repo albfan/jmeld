@@ -26,8 +26,8 @@ import javax.swing.text.*;
 import java.awt.*;
 
 public class JMHighlightPainter
-       extends DefaultHighlighter.DefaultHighlightPainter
-       implements ConfigurationListenerIF
+    extends DefaultHighlighter.DefaultHighlightPainter
+    implements ConfigurationListenerIF
 {
   public static final JMHighlightPainter ADDED;
   public static final JMHighlightPainter ADDED_LINE;
@@ -58,7 +58,7 @@ public class JMHighlightPainter
     CURRENT_SEARCH.initConfiguration();
   }
 
-  private Color   color;
+  private Color color;
   private boolean line;
   private boolean debug;
 
@@ -67,9 +67,7 @@ public class JMHighlightPainter
     this(color, false);
   }
 
-  private JMHighlightPainter(
-    Color   color,
-    boolean line)
+  private JMHighlightPainter(Color color, boolean line)
   {
     super(color);
 
@@ -79,20 +77,15 @@ public class JMHighlightPainter
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
 
-  public void paint(
-    Graphics       g,
-    int            p0,
-    int            p1,
-    Shape          shape,
-    JTextComponent comp)
+  public void paint(Graphics g, int p0, int p1, Shape shape, JTextComponent comp)
   {
     Rectangle b;
     Rectangle r1;
     Rectangle r2;
-    int       x;
-    int       y;
-    int       width;
-    int       count;
+    int x;
+    int y;
+    int width;
+    int count;
 
     b = shape.getBounds();
 
@@ -193,7 +186,7 @@ public class JMHighlightPainter
 
   private void debug(String format, Object... args)
   {
-    if(debug)
+    if (debug)
     {
       System.out.printf(format, args);
     }

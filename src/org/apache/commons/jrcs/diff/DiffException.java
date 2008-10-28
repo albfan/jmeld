@@ -65,7 +65,7 @@ package org.apache.commons.jrcs.diff;
  * @author <a href="mailto:juanco@suigeneris.org">Juanco Anez</a>
  */
 public class DiffException
-       extends Exception
+    extends Exception
 {
   public DiffException()
   {

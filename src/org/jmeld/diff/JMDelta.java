@@ -32,15 +32,13 @@ public class JMDelta
   private static boolean debug = false;
 
   // Instance variables:
-  private JMChunk    original;
-  private JMChunk    revised;
-  private Type       type;
+  private JMChunk original;
+  private JMChunk revised;
+  private Type type;
   private JMRevision revision;
   private JMRevision changeRevision;
 
-  public JMDelta(
-    JMChunk original,
-    JMChunk revised)
+  public JMDelta(JMChunk original, JMChunk revised)
   {
     this.original = original;
     this.revised = revised;
@@ -95,26 +93,26 @@ public class JMDelta
 
   private JMRevision createChangeRevision()
   {
-    char[]        original1;
-    Character[]   original2;
-    char[]        revised1;
-    Character[]   revised2;
-    List<String>  o2;
-    List<String>  r2;
-    JMRevision    rev;
-    JMRevision    rev2;
-    JMChunk       o;
-    JMChunk       r;
-    JMDelta       d2;
-    int           anchor;
-    int           size;
+    char[] original1;
+    Character[] original2;
+    char[] revised1;
+    Character[] revised2;
+    List<String> o2;
+    List<String> r2;
+    JMRevision rev;
+    JMRevision rev2;
+    JMChunk o;
+    JMChunk r;
+    JMDelta d2;
+    int anchor;
+    int size;
     WordTokenizer wt;
-    int[]         oIndex;
-    int[]         rIndex;
-    int           oAnchor;
-    int           oLength;
-    int           rAnchor;
-    int           rLength;
+    int[] oIndex;
+    int[] rIndex;
+    int oAnchor;
+    int oLength;
+    int rAnchor;
+    int rLength;
 
     original1 = revision.getOriginalString(original).toCharArray();
     original2 = new Character[original1.length];
@@ -176,9 +174,8 @@ public class JMDelta
         rAnchor = anchor == 0 ? 0 : rIndex[anchor - 1];
         rLength = size > 0 ? (rIndex[anchor + size - 1] - rAnchor) : 0;
 
-        d2 = new JMDelta(
-            new JMChunk(oAnchor, oLength),
-            new JMChunk(rAnchor, rLength));
+        d2 = new JMDelta(new JMChunk(oAnchor, oLength), new JMChunk(rAnchor,
+            rLength));
         rev2.add(d2);
 
         debug("delta = " + d + " -> " + d2);

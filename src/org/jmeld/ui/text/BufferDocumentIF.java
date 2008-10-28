@@ -53,13 +53,16 @@ public interface BufferDocumentIF
 
   public int getLineForOffset(int offset);
 
-  public void read() throws JMeldException;
+  public void read()
+      throws JMeldException;
 
-  public void write() throws JMeldException;
+  public void write()
+      throws JMeldException;
 
   public void print();
 
-  public Reader getReader() throws JMeldException;
+  public Reader getReader()
+      throws JMeldException;
 
   public boolean isReadonly();
 }

@@ -18,8 +18,8 @@ package org.jmeld.util;
 
 public class StopWatch
 {
-  private long    startTime;
-  private long    stopTime;
+  private long startTime;
+  private long stopTime;
   private boolean running;
 
   public StopWatch()

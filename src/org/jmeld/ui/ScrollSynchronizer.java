@@ -30,16 +30,14 @@ import java.util.List;
 
 public class ScrollSynchronizer
 {
-  private BufferDiffPanel    diffPanel;
-  private FilePanel          filePanelLeft;
-  private FilePanel          filePanelRight;
+  private BufferDiffPanel diffPanel;
+  private FilePanel filePanelLeft;
+  private FilePanel filePanelRight;
   private AdjustmentListener horizontalAdjustmentListener;
   private AdjustmentListener verticalAdjustmentListener;
 
-  public ScrollSynchronizer(
-    BufferDiffPanel diffPanel,
-    FilePanel       filePanelLeft,
-    FilePanel       filePanelRight)
+  public ScrollSynchronizer(BufferDiffPanel diffPanel, FilePanel filePanelLeft,
+      FilePanel filePanelRight)
   {
     this.diffPanel = diffPanel;
     this.filePanelLeft = filePanelLeft;
@@ -69,9 +67,9 @@ public class ScrollSynchronizer
   private void scroll(boolean leftScrolled)
   {
     JMRevision revision;
-    FilePanel  fp1;
-    FilePanel  fp2;
-    int        line;
+    FilePanel fp1;
+    FilePanel fp2;
+    int line;
 
     revision = diffPanel.getCurrentRevision();
     if (revision == null)
@@ -106,17 +104,17 @@ public class ScrollSynchronizer
 
   void toNextDelta(boolean next)
   {
-    int           line;
-    JMRevision    revision;
-    JMDelta       previousDelta;
-    JMDelta       currentDelta;
-    JMDelta       nextDelta;
-    JMDelta       toDelta;
-    JMChunk       original;
-    int           currentIndex;
-    int           nextIndex;
+    int line;
+    JMRevision revision;
+    JMDelta previousDelta;
+    JMDelta currentDelta;
+    JMDelta nextDelta;
+    JMDelta toDelta;
+    JMChunk original;
+    int currentIndex;
+    int nextIndex;
     List<JMDelta> deltas;
-    int           i;
+    int i;
 
     revision = diffPanel.getCurrentRevision();
     if (revision == null)
@@ -185,31 +183,27 @@ public class ScrollSynchronizer
 
     if (toDelta != null)
     {
-      scrollToLine(
-        filePanelLeft,
-        toDelta.getOriginal().getAnchor());
+      scrollToLine(filePanelLeft, toDelta.getOriginal().getAnchor());
       scroll(true);
     }
   }
 
   void showDelta(JMDelta delta)
   {
-    scrollToLine(
-      filePanelLeft,
-      delta.getOriginal().getAnchor());
+    scrollToLine(filePanelLeft, delta.getOriginal().getAnchor());
     scroll(true);
   }
 
   private int getCurrentLineCenter(FilePanel fp)
   {
-    JScrollPane      scrollPane;
+    JScrollPane scrollPane;
     BufferDocumentIF bd;
-    JTextComponent   editor;
-    JViewport        viewport;
-    int              line;
-    Rectangle        rect;
-    int              offset;
-    Point            p;
+    JTextComponent editor;
+    JViewport viewport;
+    int line;
+    Rectangle rect;
+    int offset;
+    Point p;
 
     editor = fp.getEditor();
     scrollPane = fp.getScrollPane();
@@ -222,7 +216,7 @@ public class ScrollSynchronizer
 
     offset = editor.viewToModel(p);
     bd = fp.getBufferDocument();
-    if(bd == null)
+    if (bd == null)
     {
       return -1;
     }
@@ -231,27 +225,25 @@ public class ScrollSynchronizer
     return line;
   }
 
-  public void scrollToLine(
-    FilePanel fp,
-    int       line)
+  public void scrollToLine(FilePanel fp, int line)
   {
-    JScrollPane      scrollPane;
-    FilePanel        fp2;
+    JScrollPane scrollPane;
+    FilePanel fp2;
     BufferDocumentIF bd;
-    JTextComponent   editor;
-    JViewport        viewport;
-    Rectangle        rect;
-    int              offset;
-    Point            p;
-    Rectangle        viewRect;
-    Dimension        viewSize;
-    Dimension        extentSize;
-    int              x;
+    JTextComponent editor;
+    JViewport viewport;
+    Rectangle rect;
+    int offset;
+    Point p;
+    Rectangle viewRect;
+    Dimension viewSize;
+    Dimension extentSize;
+    int x;
 
     fp2 = fp == filePanelLeft ? filePanelRight : filePanelLeft;
 
     bd = fp.getBufferDocument();
-    if(bd == null)
+    if (bd == null)
     {
       return;
     }
@@ -305,9 +297,9 @@ public class ScrollSynchronizer
   private int getHeightOffset(FilePanel fp)
   {
     JScrollPane scrollPane;
-    JViewport   viewport;
-    int         offset;
-    int         unitIncrement;
+    JViewport viewport;
+    int offset;
+    int unitIncrement;
 
     scrollPane = fp.getScrollPane();
     viewport = scrollPane.getViewport();
@@ -322,10 +314,10 @@ public class ScrollSynchronizer
   private int getCorrectionOffset(FilePanel fp)
   {
     JTextComponent editor;
-    int            offset;
-    Rectangle      rect;
-    Point          p;
-    JViewport      viewport;
+    int offset;
+    Rectangle rect;
+    Point p;
+    JViewport viewport;
 
     editor = fp.getEditor();
     viewport = fp.getScrollPane().getViewport();
@@ -356,41 +348,41 @@ public class ScrollSynchronizer
     if (horizontalAdjustmentListener == null)
     {
       horizontalAdjustmentListener = new AdjustmentListener()
+      {
+        private boolean insideScroll;
+
+        public void adjustmentValueChanged(AdjustmentEvent e)
+        {
+          JScrollBar scFrom;
+          JScrollBar scTo;
+
+          if (insideScroll)
           {
-            private boolean insideScroll;
+            return;
+          }
 
-            public void adjustmentValueChanged(AdjustmentEvent e)
-            {
-              JScrollBar scFrom;
-              JScrollBar scTo;
+          if (filePanelLeft.getScrollPane().getHorizontalScrollBar() == e
+              .getSource())
+          {
+            scFrom = filePanelLeft.getScrollPane().getHorizontalScrollBar();
+            scTo = filePanelRight.getScrollPane().getHorizontalScrollBar();
+          }
+          else
+          {
+            scFrom = filePanelRight.getScrollPane().getHorizontalScrollBar();
+            scTo = filePanelLeft.getScrollPane().getHorizontalScrollBar();
+          }
 
-              if (insideScroll)
-              {
-                return;
-              }
-
-              if (filePanelLeft.getScrollPane().getHorizontalScrollBar() == e
-                .getSource())
-              {
-                scFrom = filePanelLeft.getScrollPane().getHorizontalScrollBar();
-                scTo = filePanelRight.getScrollPane().getHorizontalScrollBar();
-              }
-              else
-              {
-                scFrom = filePanelRight.getScrollPane().getHorizontalScrollBar();
-                scTo = filePanelLeft.getScrollPane().getHorizontalScrollBar();
-              }
-
-              // Stop possible recursion!
-              // An left scroll will have a right scroll as
-              //   a result. That revised scroll could have a orginal 
-              //   scroll as result. etc...
-              insideScroll = true;
-              insideScroll = true;
-              scTo.setValue(scFrom.getValue());
-              insideScroll = false;
-            }
-          };
+          // Stop possible recursion!
+          // An left scroll will have a right scroll as
+          //   a result. That revised scroll could have a orginal 
+          //   scroll as result. etc...
+          insideScroll = true;
+          insideScroll = true;
+          scTo.setValue(scFrom.getValue());
+          insideScroll = false;
+        }
+      };
     }
 
     return horizontalAdjustmentListener;
@@ -401,38 +393,38 @@ public class ScrollSynchronizer
     if (verticalAdjustmentListener == null)
     {
       verticalAdjustmentListener = new AdjustmentListener()
+      {
+        private boolean insideScroll;
+        private int counter;
+
+        public void adjustmentValueChanged(AdjustmentEvent e)
+        {
+          boolean leftScrolled;
+
+          if (insideScroll)
           {
-            private boolean insideScroll;
-            private int     counter;
+            return;
+          }
 
-            public void adjustmentValueChanged(AdjustmentEvent e)
-            {
-              boolean leftScrolled;
+          if (filePanelLeft.getScrollPane().getVerticalScrollBar() == e
+              .getSource())
+          {
+            leftScrolled = true;
+          }
+          else
+          {
+            leftScrolled = false;
+          }
 
-              if (insideScroll)
-              {
-                return;
-              }
-
-              if (filePanelLeft.getScrollPane().getVerticalScrollBar() == e
-                .getSource())
-              {
-                leftScrolled = true;
-              }
-              else
-              {
-                leftScrolled = false;
-              }
-
-              // Stop possible recursion!
-              // An left scroll will have a right scroll as
-              //   a result. That revised scroll could have a orginal 
-              //   scroll as result. etc...
-              insideScroll = true;
-              scroll(leftScrolled);
-              insideScroll = false;
-            }
-          };
+          // Stop possible recursion!
+          // An left scroll will have a right scroll as
+          //   a result. That revised scroll could have a orginal 
+          //   scroll as result. etc...
+          insideScroll = true;
+          scroll(leftScrolled);
+          insideScroll = false;
+        }
+      };
     }
 
     return verticalAdjustmentListener;

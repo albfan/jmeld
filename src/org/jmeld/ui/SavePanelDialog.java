@@ -31,11 +31,11 @@ import java.util.List;
 
 public class SavePanelDialog
 {
-// Instance variables:
-  private JMeldPanel             meldPanel;
-  private boolean                ok;
+  // Instance variables:
+  private JMeldPanel meldPanel;
+  private boolean ok;
   private List<BufferDocumentIF> documents;
-  private JCheckBox[]            checkBoxes;
+  private JCheckBox[] checkBoxes;
 
   public SavePanelDialog(JMeldPanel meldPanel)
   {
@@ -52,11 +52,9 @@ public class SavePanelDialog
   public void show()
   {
     JOptionPane pane;
-    JDialog     dialog;
+    JDialog dialog;
 
-    pane = new JOptionPane(
-        getSavePanel(),
-        JOptionPane.WARNING_MESSAGE);
+    pane = new JOptionPane(getSavePanel(), JOptionPane.WARNING_MESSAGE);
     pane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
 
     dialog = pane.createDialog(meldPanel, "Save files");
@@ -65,9 +63,7 @@ public class SavePanelDialog
     {
       dialog.show();
 
-      if (ObjectUtil.equals(
-          pane.getValue(),
-          JOptionPane.OK_OPTION))
+      if (ObjectUtil.equals(pane.getValue(), JOptionPane.OK_OPTION))
       {
         ok = true;
       }
@@ -101,7 +97,7 @@ public class SavePanelDialog
       }
 
       document = documents.get(i);
-      if(document == null)
+      if (document == null)
       {
         continue;
       }
@@ -113,24 +109,24 @@ public class SavePanelDialog
       catch (JMeldException ex)
       {
         ex.printStackTrace();
-        JOptionPane.showMessageDialog(meldPanel,
-          "Can't write file" + document.getName(), "Problem writing file",
-          JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(meldPanel, "Can't write file"
+                                                 + document.getName(),
+          "Problem writing file", JOptionPane.ERROR_MESSAGE);
       }
     }
   }
 
   private JComponent getSavePanel()
   {
-    JPanel           panel;
-    String           columns;
-    String           rows;
-    FormLayout       layout;
-    CellConstraints  cc;
-    JLabel           label;
-    JCheckBox        checkBox;
+    JPanel panel;
+    String columns;
+    String rows;
+    FormLayout layout;
+    CellConstraints cc;
+    JLabel label;
+    JCheckBox checkBox;
     BufferDocumentIF document;
-    Font             font;
+    Font font;
 
     columns = "10px, fill:pref, 10px";
     rows = "10px, fill:pref, 5px, fill:pref, 10px,";
@@ -149,21 +145,17 @@ public class SavePanelDialog
     font = label.getFont().deriveFont(Font.BOLD);
     label.setFont(font);
     label.setHorizontalAlignment(JLabel.LEFT);
-    panel.add(
-      label,
-      cc.xy(2, 2));
+    panel.add(label, cc.xy(2, 2));
     label = new JLabel("Which ones would you like to save?");
     label.setFont(font);
     label.setHorizontalAlignment(JLabel.LEFT);
-    panel.add(
-      label,
-      cc.xy(2, 4));
+    panel.add(label, cc.xy(2, 4));
 
     checkBoxes = new JCheckBox[documents.size()];
     for (int i = 0; i < documents.size(); i++)
     {
       document = documents.get(i);
-      if(document == null)
+      if (document == null)
       {
         continue;
       }
@@ -179,9 +171,7 @@ public class SavePanelDialog
         checkBox.setSelected(true);
       }
 
-      panel.add(
-        checkBox,
-        cc.xy(2, 6 + i));
+      panel.add(checkBox, cc.xy(2, 6 + i));
     }
 
     return panel;

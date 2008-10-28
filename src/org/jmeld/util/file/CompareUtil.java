@@ -25,12 +25,12 @@ import java.nio.channels.*;
 
 public class CompareUtil
 {
-  private static final int  MAX_LINE_NUMBER       = 1000;
-  private static char[]     leftLine              = new char[MAX_LINE_NUMBER];
-  private static char[]     rightLine             = new char[MAX_LINE_NUMBER];
-  private static CharBuffer leftLineBuffer        = CharBuffer.allocate(10000);
-  private static CharBuffer rightLineBuffer       = CharBuffer.allocate(10000);
-  private static CharBuffer leftLineOutputBuffer  = CharBuffer.allocate(10000);
+  private static final int MAX_LINE_NUMBER = 1000;
+  private static char[] leftLine = new char[MAX_LINE_NUMBER];
+  private static char[] rightLine = new char[MAX_LINE_NUMBER];
+  private static CharBuffer leftLineBuffer = CharBuffer.allocate(10000);
+  private static CharBuffer rightLineBuffer = CharBuffer.allocate(10000);
+  private static CharBuffer leftLineOutputBuffer = CharBuffer.allocate(10000);
   private static CharBuffer rightLineOutputBuffer = CharBuffer.allocate(10000);
 
   private CompareUtil()
@@ -38,8 +38,7 @@ public class CompareUtil
   }
 
   public static boolean contentEquals(BufferNode nodeLeft,
-                                      BufferNode nodeRight,
-                                      Ignore ignore)
+      BufferNode nodeRight, Ignore ignore)
   {
     if (nodeLeft instanceof FileNode && nodeRight instanceof FileNode)
     {
@@ -49,10 +48,10 @@ public class CompareUtil
     {
       try
       {
-        return contentEquals(nodeLeft.getDocument().getReader(),
-                             nodeRight.getDocument().getReader(), ignore);
+        return contentEquals(nodeLeft.getDocument().getReader(), nodeRight
+            .getDocument().getReader(), ignore);
       }
-      catch(Exception ex)
+      catch (Exception ex)
       {
         ex.printStackTrace();
       }
@@ -61,9 +60,8 @@ public class CompareUtil
     return false;
   }
 
-  private static boolean contentEquals(FileNode nodeLeft,
-                                       FileNode nodeRight,
-                                       Ignore ignore)
+  private static boolean contentEquals(FileNode nodeLeft, FileNode nodeRight,
+      Ignore ignore)
   {
     File fileLeft;
     File fileRight;
@@ -156,14 +154,12 @@ public class CompareUtil
     }
   }
 
-  public static boolean contentEquals(char[] left,
-                                      char[] right,
-                                      Ignore ignore)
+  public static boolean contentEquals(char[] left, char[] right, Ignore ignore)
   {
     try
     {
       return contentEquals(new CharArrayReader(left),
-                           new CharArrayReader(right), ignore);
+        new CharArrayReader(right), ignore);
     }
     catch (IOException ex)
     {
@@ -177,8 +173,7 @@ public class CompareUtil
    *    performance reasons.
    */
   private static synchronized boolean contentEquals(Reader readerLeft,
-                                                    Reader readerRight,
-                                                    Ignore ignore)
+      Reader readerRight, Ignore ignore)
       throws IOException
   {
     boolean leftEOF, rightEOF;
@@ -222,7 +217,7 @@ public class CompareUtil
         if (leftLineOutputBuffer.remaining() != 0
             && rightLineOutputBuffer.remaining() != 0)
         {
-          if(!leftLineOutputBuffer.equals(rightLineOutputBuffer))
+          if (!leftLineOutputBuffer.equals(rightLineOutputBuffer))
           {
             return false;
           }
@@ -246,8 +241,7 @@ public class CompareUtil
     }
   }
 
-  private static boolean readLine(Reader reader,
-                                  CharBuffer lineBuffer)
+  private static boolean readLine(Reader reader, CharBuffer lineBuffer)
       throws IOException
   {
     int c, nextChar;
@@ -293,8 +287,7 @@ public class CompareUtil
    *    performance reasons.
    */
   private static synchronized boolean contentEquals_old(Reader readerLeft,
-                                                        Reader readerRight,
-                                                        Ignore ignore)
+      Reader readerRight, Ignore ignore)
       throws IOException
   {
     boolean equals;
@@ -537,9 +530,7 @@ public class CompareUtil
     return equals;
   }
 
-  private static boolean equals(char[] a1,
-                                char[] a2,
-                                int size)
+  private static boolean equals(char[] a1, char[] a2, int size)
   {
     for (int i = 0; i < size; i++)
     {
@@ -564,9 +555,8 @@ public class CompareUtil
    *          ignored. It is a parameter that can be reused (which is important for
    *          performance)
    */
-  public static void removeIgnoredChars(CharBuffer inputLine,
-                                        Ignore ignore,
-                                        CharBuffer outputLine)
+  public static void removeIgnoredChars(CharBuffer inputLine, Ignore ignore,
+      CharBuffer outputLine)
   {
     boolean whitespaceAtBegin;
     boolean blankLine;
@@ -612,7 +602,7 @@ public class CompareUtil
 
       if (i < whitespaceEndIndex)
       {
-        if(Character.isWhitespace(c))
+        if (Character.isWhitespace(c))
         {
           if (whitespaceAtBegin)
           {
@@ -647,7 +637,7 @@ public class CompareUtil
       }
       else
       {
-        if(ignore.ignoreEOL)
+        if (ignore.ignoreEOL)
         {
           continue;
         }

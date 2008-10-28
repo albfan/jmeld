@@ -24,7 +24,7 @@ import javax.swing.table.*;
 public class JMTreeTable
     extends JXTreeTable
 {
-  private int                charWidth;
+  private int charWidth;
   private TreeTableHackerExt myTreeTableHacker;
 
   public JMTreeTable()

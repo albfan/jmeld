@@ -6,7 +6,7 @@ import org.jmeld.util.vc.*;
 import java.io.*;
 
 public class BlameCmd
-       extends SvnXmlCmd<BlameData>
+    extends SvnXmlCmd<BlameData>
 {
   private File file;
 
@@ -19,12 +19,7 @@ public class BlameCmd
 
   public Result execute()
   {
-    super.execute(
-      "svn",
-      "blame",
-      "--non-interactive",
-      "--xml",
-      file.getPath());
+    super.execute("svn", "blame", "--non-interactive", "--xml", file.getPath());
 
     return getResult();
   }
@@ -46,8 +41,8 @@ public class BlameCmd
         for (BlameIF.EntryIF entry : target.getEntryList())
         {
           System.out.println(entry.getLineNumber() + " : "
-            + entry.getCommit().getRevision() + " -> "
-            + entry.getCommit().getAuthor());
+                             + entry.getCommit().getRevision() + " -> "
+                             + entry.getCommit().getAuthor());
         }
       }
     }

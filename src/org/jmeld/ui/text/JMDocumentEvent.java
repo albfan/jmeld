@@ -5,18 +5,16 @@ import javax.swing.event.*;
 public class JMDocumentEvent
 {
   private AbstractBufferDocument document;
-  private DocumentEvent          de;
-  private int                    startLine;
-  private int                    numberOfLines;
+  private DocumentEvent de;
+  private int startLine;
+  private int numberOfLines;
 
   public JMDocumentEvent(AbstractBufferDocument document)
   {
     this.document = document;
   }
 
-  public JMDocumentEvent(
-    AbstractBufferDocument document,
-    DocumentEvent          de)
+  public JMDocumentEvent(AbstractBufferDocument document, DocumentEvent de)
   {
     this(document);
 

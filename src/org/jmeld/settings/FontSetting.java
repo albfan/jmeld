@@ -32,11 +32,11 @@ public class FontSetting
   @XmlAttribute
   private String name;
   @XmlAttribute
-  private int    style;
+  private int style;
   @XmlAttribute
-  private int    size;
+  private int size;
 
-  private Font   font;
+  private Font font;
 
   public FontSetting()
   {

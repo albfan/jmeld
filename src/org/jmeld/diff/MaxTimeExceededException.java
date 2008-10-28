@@ -17,7 +17,7 @@
 package org.jmeld.diff;
 
 public class MaxTimeExceededException
-       extends RuntimeException
+    extends RuntimeException
 {
   public MaxTimeExceededException(String message)
   {

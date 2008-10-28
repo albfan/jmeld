@@ -68,7 +68,7 @@ package org.apache.commons.jrcs.diff;
  * @see DiffAlgorithm
  */
 public class DifferentiationFailedException
-       extends DiffException
+    extends DiffException
 {
   public DifferentiationFailedException()
   {

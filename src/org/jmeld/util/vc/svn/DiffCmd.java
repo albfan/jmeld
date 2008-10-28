@@ -81,7 +81,8 @@ public class DiffCmd
     setResultData(diffData);
   }
 
-  private String readIndex() throws IOException
+  private String readIndex()
+      throws IOException
   {
     final String indexMarker = "Index: ";
     String line;
@@ -95,7 +96,8 @@ public class DiffCmd
     return line.substring(indexMarker.length());
   }
 
-  private JMDelta readDelta() throws IOException
+  private JMDelta readDelta()
+      throws IOException
   {
     final Pattern deltaPattern = Pattern
         .compile("@@ -(\\d*),(\\d*) \\+(\\d*),(\\d*) @@");
@@ -158,7 +160,8 @@ public class DiffCmd
     this.unreadLine = unreadLine;
   }
 
-  private String readLine() throws IOException
+  private String readLine()
+      throws IOException
   {
     String line;
 

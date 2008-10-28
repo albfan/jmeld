@@ -33,7 +33,7 @@ public class VersionControlBaseDocument
   private VersionControlIF versionControl;
   private File file;
   private BaseFile baseFile;
-  private boolean  baseFileInitialized;
+  private boolean baseFileInitialized;
   private Charset charset;
 
   public VersionControlBaseDocument(VersionControlIF versionControl, File file)
@@ -65,7 +65,8 @@ public class VersionControlBaseDocument
   }
 
   @Override
-  public Reader getReader() throws JMeldException
+  public Reader getReader()
+      throws JMeldException
   {
     BufferedInputStream bais;
 
@@ -76,7 +77,8 @@ public class VersionControlBaseDocument
 
     try
     {
-      bais = new BufferedInputStream(new ByteArrayInputStream(getBaseFile().getByteArray()));
+      bais = new BufferedInputStream(new ByteArrayInputStream(getBaseFile()
+          .getByteArray()));
       charset = CharsetDetector.getInstance().getCharset(bais);
       return new BufferedReader(new InputStreamReader(bais, charset));
     }
@@ -88,12 +90,13 @@ public class VersionControlBaseDocument
   }
 
   @Override
-  protected Writer getWriter() throws JMeldException
+  protected Writer getWriter()
+      throws JMeldException
   {
     return null;
   }
 
-  private BaseFile getBaseFile() 
+  private BaseFile getBaseFile()
   {
     if (!baseFileInitialized)
     {

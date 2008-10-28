@@ -23,14 +23,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class ListScrollSynchronizer
-       implements ChangeListener
+    implements ChangeListener
 {
   private JViewport vp1;
   private JViewport vp2;
 
-  public ListScrollSynchronizer(
-    JScrollPane sc1,
-    JScrollPane sc2)
+  public ListScrollSynchronizer(JScrollPane sc1, JScrollPane sc2)
   {
     vp1 = sc1.getViewport();
     vp2 = sc2.getViewport();

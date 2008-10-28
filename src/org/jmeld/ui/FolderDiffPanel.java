@@ -41,9 +41,9 @@ public class FolderDiffPanel
     extends FolderDiffForm
     implements ConfigurationListenerIF
 {
-  private JMeldPanel               mainPanel;
-  private FolderDiff               diff;
-  private ActionHandler            actionHandler;
+  private JMeldPanel mainPanel;
+  private FolderDiff diff;
+  private ActionHandler actionHandler;
   private FolderDiffTreeTableModel treeTableModel;
 
   FolderDiffPanel(JMeldPanel mainPanel, FolderDiff diff)
@@ -224,8 +224,7 @@ public class FolderDiffPanel
     hierarchyComboBox.setAction(action);
   }
 
-  private void installKey(String key,
-                          MeldAction action)
+  private void installKey(String key, MeldAction action)
   {
     SwingUtil.installKey(folderTreeTable, key, action);
   }
@@ -332,8 +331,7 @@ public class FolderDiffPanel
     return rootNode;
   }
 
-  private void addDirectoryViewNode(UINode rootNode,
-                                    JMDiffNode node)
+  private void addDirectoryViewNode(UINode rootNode, JMDiffNode node)
   {
     UINode parent;
     JMDiffNode uiNode;
@@ -422,8 +420,7 @@ public class FolderDiffPanel
     doOpenFileComparison(ae, false);
   }
 
-  private void doOpenFileComparison(ActionEvent ae,
-                                    boolean background)
+  private void doOpenFileComparison(ActionEvent ae, boolean background)
   {
     for (UINode uiNode : getSelectedUINodes())
     {
@@ -498,7 +495,7 @@ public class FolderDiffPanel
   class CompoundCommand
       extends CompoundEdit
   {
-    List<AbstractCmd>        cmds;
+    List<AbstractCmd> cmds;
     Map<AbstractCmd, UINode> uiNodeMap;
 
     CompoundCommand()
@@ -507,8 +504,7 @@ public class FolderDiffPanel
       cmds = new ArrayList<AbstractCmd>();
     }
 
-    void add(UINode uiNode,
-             AbstractCmd cmd)
+    void add(UINode uiNode, AbstractCmd cmd)
     {
       if (cmd == null)
       {
@@ -695,8 +691,7 @@ public class FolderDiffPanel
     return result;
   }
 
-  private void buildResult(Set<UINode> result,
-                           UINode uiNode)
+  private void buildResult(Set<UINode> result, UINode uiNode)
   {
     if (uiNode.isLeaf() && uiNode.getDiffNode() != null)
     {

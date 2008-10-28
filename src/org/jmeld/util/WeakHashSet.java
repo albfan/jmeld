@@ -3,10 +3,10 @@ package org.jmeld.util;
 import java.util.*;
 
 public class WeakHashSet<E>
-       extends AbstractSet<E>
-       implements Set<E>
+    extends AbstractSet<E>
+    implements Set<E>
 {
-  private Boolean      value = Boolean.TRUE;
+  private Boolean value = Boolean.TRUE;
   private WeakHashMap<E, Boolean> map;
 
   public WeakHashSet()
@@ -20,9 +20,7 @@ public class WeakHashSet<E>
     addAll(c);
   }
 
-  public WeakHashSet(
-    int   initialCapacity,
-    float loadFactor)
+  public WeakHashSet(int initialCapacity, float loadFactor)
   {
     map = new WeakHashMap<E, Boolean>(initialCapacity, loadFactor);
   }

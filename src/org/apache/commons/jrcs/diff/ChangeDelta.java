@@ -68,22 +68,20 @@ import java.util.List;
  * @see Chunk
  */
 public class ChangeDelta
-       extends Delta
+    extends Delta
 {
   ChangeDelta()
   {
     super();
   }
 
-  public ChangeDelta(
-    Chunk orig,
-    Chunk rev)
+  public ChangeDelta(Chunk orig, Chunk rev)
   {
     init(orig, rev);
   }
 
   public void verify(List target)
-    throws PatchFailedException
+      throws PatchFailedException
   {
     if (!original.verify(target))
     {
@@ -99,9 +97,7 @@ public class ChangeDelta
   public void applyTo(List target)
   {
     original.applyDelete(target);
-    revised.applyAdd(
-      original.first(),
-      target);
+    revised.applyAdd(original.first(), target);
   }
 
   public void toString(StringBuffer s)
@@ -116,9 +112,7 @@ public class ChangeDelta
     revised.toString(s, "> ", "\n");
   }
 
-  public void toRCSString(
-    StringBuffer s,
-    String       EOL)
+  public void toRCSString(StringBuffer s, String EOL)
   {
     s.append("d");
     s.append(original.rcsfrom());

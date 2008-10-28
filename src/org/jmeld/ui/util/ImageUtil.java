@@ -39,7 +39,7 @@ public class ImageUtil
   public static synchronized ImageIcon getImageIcon(String iconName)
   {
     ImageIcon icon;
-    URL       url;
+    URL url;
 
     iconName = "images/" + iconName + ".png";
 
@@ -58,13 +58,9 @@ public class ImageUtil
   }
 
   /** Create a x% Transparent icon */
-  public static ImageIcon createDarkerIcon(
-    ImageIcon icon,
-    float       percentage)
+  public static ImageIcon createDarkerIcon(ImageIcon icon, float percentage)
   {
-    return createIcon(
-      icon,
-      new BrightnessFilter(percentage));
+    return createIcon(icon, new BrightnessFilter(percentage));
   }
 
   /** Create a 20% Transparent icon */
@@ -74,32 +70,25 @@ public class ImageUtil
   }
 
   /** Create a x% Transparent icon */
-  public static ImageIcon createTransparentIcon(
-    ImageIcon icon,
-    int       percentage)
+  public static ImageIcon createTransparentIcon(ImageIcon icon, int percentage)
   {
-    return createIcon(
-      icon,
-      new TransparentFilter(percentage));
+    return createIcon(icon, new TransparentFilter(percentage));
   }
 
   /** Create a new icon which is filtered by some ImageFilter */
-  private static synchronized ImageIcon createIcon(
-    ImageIcon   icon,
-    ImageFilter filter)
+  private static synchronized ImageIcon createIcon(ImageIcon icon,
+      ImageFilter filter)
   {
     ImageProducer ip;
-    Image         image;
-    MediaTracker  tracker;
+    Image image;
+    MediaTracker tracker;
 
     if (icon == null)
     {
       return null;
     }
 
-    ip = new FilteredImageSource(
-        icon.getImage().getSource(),
-        filter);
+    ip = new FilteredImageSource(icon.getImage().getSource(), filter);
     image = Toolkit.getDefaultToolkit().createImage(ip);
 
     tracker = new MediaTracker(new JPanel());

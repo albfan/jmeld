@@ -18,10 +18,7 @@ public enum Settings
   private String iconName;
   private JPanel panel;
 
-  Settings(
-    String name,
-    String iconName,
-    JPanel panel)
+  Settings(String name, String iconName, JPanel panel)
   {
     this.name = name;
     this.iconName = iconName;

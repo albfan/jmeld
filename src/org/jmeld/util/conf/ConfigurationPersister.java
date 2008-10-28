@@ -24,7 +24,7 @@ public class ConfigurationPersister
   /** Load a configuration of type 'clazz' from a file.
    */
   public <T extends AbstractConfiguration> T load(Class<T> clazz, File file)
-    throws FileNotFoundException
+      throws FileNotFoundException
   {
     T configuration;
 
@@ -45,8 +45,7 @@ public class ConfigurationPersister
   /** Save a configuration to a file.
    */
   public void save(AbstractConfiguration configuration, File file)
-    throws JAXBException,
-    IOException
+      throws JAXBException, IOException
   {
     JaxbPersister.getInstance().save(configuration, file);
   }

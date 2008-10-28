@@ -22,8 +22,6 @@ public interface JMDiffAlgorithmIF
 {
   public void checkMaxTime(boolean checkMaxTime);
 
-  public JMRevision diff(
-    Object[] orig,
-    Object[] rev)
-    throws JMeldException, MaxTimeExceededException;
+  public JMRevision diff(Object[] orig, Object[] rev)
+      throws JMeldException, MaxTimeExceededException;
 }

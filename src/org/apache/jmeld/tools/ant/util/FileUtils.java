@@ -57,15 +57,15 @@ public class FileUtils
 
   //get some non-crypto-grade randomness from various places.
   private static Random rand = new Random(System.currentTimeMillis()
-      + Runtime.getRuntime().freeMemory());
+                                          + Runtime.getRuntime().freeMemory());
   private static boolean onNetWare = Os.isFamily("netware");
   private static boolean onDos = Os.isFamily("dos");
   private static final int BUF_SIZE = 8192;
 
   // for toURI
   private static boolean[] isSpecial = new boolean[256];
-  private static char[]    escapedChar1 = new char[256];
-  private static char[]    escapedChar2 = new char[256];
+  private static char[] escapedChar1 = new char[256];
+  private static char[] escapedChar2 = new char[256];
 
   /**
    * The granularity of timestamps under FAT.
@@ -88,12 +88,10 @@ public class FileUtils
     isSpecial[0x7f] = true;
     escapedChar1[0x7f] = '7';
     escapedChar2[0x7f] = 'F';
-    char[] escChs = 
-      {
-        '<', '>', '#', '%', '"', '{', '}', '|', '\\', '^', '~', '[', ']', '`'
-      };
-    int    len = escChs.length;
-    char   ch;
+    char[] escChs = { '<', '>', '#', '%', '"', '{', '}', '|', '\\', '^', '~',
+        '[', ']', '`' };
+    int len = escChs.length;
+    char ch;
     for (int i = 0; i < len; i++)
     {
       ch = escChs[i];
@@ -140,7 +138,7 @@ public class FileUtils
    *      formed.
    */
   public URL getFileURL(File file)
-    throws MalformedURLException
+      throws MalformedURLException
   {
     return new URL(toURI(file.getAbsolutePath()));
   }
@@ -153,9 +151,7 @@ public class FileUtils
    * @param time the time to which the last modified time is to be set.
    *             if this is -1, the current time is used.
    */
-  public void setFileLastModified(
-    File file,
-    long time)
+  public void setFileLastModified(File file, long time)
   {
     file.setLastModified((time < 0) ? System.currentTimeMillis() : time);
   }
@@ -176,12 +172,10 @@ public class FileUtils
    * &quot;../&quot; sequences and uses the correct separator for
    * the current platform.
    */
-  public File resolveFile(
-    File   file,
-    String filename)
+  public File resolveFile(File file, String filename)
   {
-    filename = filename.replace('/', File.separatorChar)
-                       .replace('\\', File.separatorChar);
+    filename = filename.replace('/', File.separatorChar).replace('\\',
+      File.separatorChar);
 
     // deal with absolute files
     if (isAbsolutePath(filename))
@@ -192,7 +186,7 @@ public class FileUtils
     {
       return new File(filename);
     }
-    File            helpFile = new File(file.getAbsolutePath());
+    File helpFile = new File(file.getAbsolutePath());
     StringTokenizer tok = new StringTokenizer(filename, File.separator);
     while (tok.hasMoreTokens())
     {
@@ -203,7 +197,7 @@ public class FileUtils
         if (helpFile == null)
         {
           String msg = "The file or path you specified (" + filename
-            + ") is invalid relative to " + file.getPath();
+                       + ") is invalid relative to " + file.getPath();
           throw new BuildException(msg);
         }
       }
@@ -232,7 +226,7 @@ public class FileUtils
       return true;
     }
     if (onDos && filename.length() >= 2
-      && Character.isLetter(filename.charAt(0)) && filename.charAt(1) == ':')
+        && Character.isLetter(filename.charAt(0)) && filename.charAt(1) == ':')
     {
       // Actually on windows the : must be followed by a \ for
       // the path to be absolute, else the path is relative
@@ -267,8 +261,8 @@ public class FileUtils
   {
     String orig = path;
 
-    path = path.replace('/', File.separatorChar)
-               .replace('\\', File.separatorChar);
+    path = path.replace('/', File.separatorChar).replace('\\',
+      File.separatorChar);
 
     // make sure we are dealing with an absolute path
     int colon = path.indexOf(":");
@@ -279,15 +273,16 @@ public class FileUtils
       throw new BuildException(msg);
     }
     boolean dosWithDrive = false;
-    String  root = null;
+    String root = null;
 
     // Eliminate consecutive slashes after the drive spec
-    if ((onDos && path.length() >= 2 && Character.isLetter(path.charAt(0))
-      && path.charAt(1) == ':') || (onNetWare && colon > -1))
+    if ((onDos && path.length() >= 2 && Character.isLetter(path.charAt(0)) && path
+        .charAt(1) == ':')
+        || (onNetWare && colon > -1))
     {
       dosWithDrive = true;
 
-      char[]       ca = path.replace('/', '\\').toCharArray();
+      char[] ca = path.replace('/', '\\').toCharArray();
       StringBuffer sbRoot = new StringBuffer();
       for (int i = 0; i < colon; i++)
       {
@@ -352,7 +347,7 @@ public class FileUtils
         }
       }
       else
-      {  // plain component
+      { // plain component
         s.push(thisToken);
       }
     }
@@ -387,18 +382,19 @@ public class FileUtils
   public String toVMSPath(File f)
   {
     // format: "DEVICE:[DIR.SUBDIR]FILE"
-    String  osPath;
-    String  path = normalize(f.getAbsolutePath()).getPath();
-    String  name = f.getName();
+    String osPath;
+    String path = normalize(f.getAbsolutePath()).getPath();
+    String name = f.getName();
     boolean isAbsolute = path.charAt(0) == File.separatorChar;
 
     // treat directories specified using .DIR syntax as files
     boolean isDirectory = f.isDirectory()
-      && !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4);
+                          && !name.regionMatches(true, name.length() - 4,
+                            ".DIR", 0, 4);
 
-    String  device = null;
+    String device = null;
     StringBuffer directory = null;
-    String  file = null;
+    String file = null;
 
     int index = 0;
 
@@ -416,22 +412,20 @@ public class FileUtils
     }
     if (isDirectory)
     {
-      directory = new StringBuffer(
-          path.substring(index).replace(File.separatorChar, '.'));
+      directory = new StringBuffer(path.substring(index).replace(
+        File.separatorChar, '.'));
     }
     else
     {
-      int dirEnd = path.lastIndexOf(
-          File.separatorChar,
-          path.length());
+      int dirEnd = path.lastIndexOf(File.separatorChar, path.length());
       if (dirEnd == -1 || dirEnd < index)
       {
         file = path.substring(index);
       }
       else
       {
-        directory = new StringBuffer(
-            path.substring(index, dirEnd).replace(File.separatorChar, '.'));
+        directory = new StringBuffer(path.substring(index, dirEnd).replace(
+          File.separatorChar, '.'));
         index = dirEnd + 1;
         if (path.length() > index)
         {
@@ -444,8 +438,8 @@ public class FileUtils
       directory.insert(0, '.');
     }
     osPath = ((device != null) ? device + ":" : "")
-      + ((directory != null) ? "[" + directory + "]" : "")
-      + ((file != null) ? file : "");
+             + ((directory != null) ? "[" + directory + "]" : "")
+             + ((file != null) ? file : "");
     return osPath;
   }
 
@@ -470,22 +464,19 @@ public class FileUtils
    * @return a File reference to the new temporary file.
    * @since Ant 1.5
    */
-  public File createTempFile(
-    String prefix,
-    String suffix,
-    File   parentDir)
+  public File createTempFile(String prefix, String suffix, File parentDir)
   {
-    File   result = null;
+    File result = null;
     String parent = (parentDir == null) ? System.getProperty("java.io.tmpdir")
-                                        : parentDir.getPath();
+                                       : parentDir.getPath();
 
     DecimalFormat fmt = new DecimalFormat("#####");
     synchronized (rand)
     {
       do
       {
-        result = new File(parent,
-            prefix + fmt.format(Math.abs(rand.nextInt())) + suffix);
+        result = new File(parent, prefix + fmt.format(Math.abs(rand.nextInt()))
+                                  + suffix);
       }
       while (result.exists());
     }
@@ -502,10 +493,8 @@ public class FileUtils
    *
    * @throws IOException if the files cannot be read.
    */
-  public boolean contentEquals(
-    File f1,
-    File f2)
-    throws IOException
+  public boolean contentEquals(File f1, File f2)
+      throws IOException
   {
     return contentEquals(f1, f2, false);
   }
@@ -523,11 +512,8 @@ public class FileUtils
    * @throws IOException if the files cannot be read.
    * @since Ant 1.6.3
    */
-  public boolean contentEquals(
-    File    f1,
-    File    f2,
-    boolean textfile)
-    throws IOException
+  public boolean contentEquals(File f1, File f2, boolean textfile)
+      throws IOException
   {
     if (f1.exists() != f2.exists())
     {
@@ -567,10 +553,8 @@ public class FileUtils
    * @return true if the content of the files is the same.
    * @throws IOException if the files cannot be read.
    */
-  private boolean binaryEquals(
-    File f1,
-    File f2)
-    throws IOException
+  private boolean binaryEquals(File f1, File f2)
+      throws IOException
   {
     if (f1.length() != f2.length())
     {
@@ -617,10 +601,8 @@ public class FileUtils
    * @return true if the content of the files is the same.
    * @throws IOException if the files cannot be read.
    */
-  private boolean textEquals(
-    File f1,
-    File f2)
-    throws IOException
+  private boolean textEquals(File f1, File f2)
+      throws IOException
   {
     BufferedReader in1 = null;
     BufferedReader in2 = null;
@@ -673,7 +655,7 @@ public class FileUtils
    *         reader.
    */
   public static final String readFully(Reader rdr)
-    throws IOException
+      throws IOException
   {
     return readFully(rdr, BUF_SIZE);
   }
@@ -689,18 +671,16 @@ public class FileUtils
    * @throws IOException if the contents could not be read out from the
    *         reader.
    */
-  public static final String readFully(
-    Reader rdr,
-    int    bufferSize)
-    throws IOException
+  public static final String readFully(Reader rdr, int bufferSize)
+      throws IOException
   {
     if (bufferSize <= 0)
     {
       throw new IllegalArgumentException("Buffer size must be greater "
-        + "than 0");
+                                         + "than 0");
     }
     final char[] buffer = new char[bufferSize];
-    int          bufferLength = 0;
+    int bufferLength = 0;
     StringBuffer textBuffer = null;
     while (bufferLength != -1)
     {
@@ -727,7 +707,7 @@ public class FileUtils
    * @since Ant 1.5
    */
   public boolean createNewFile(File f)
-    throws IOException
+      throws IOException
   {
     return f.createNewFile();
   }
@@ -741,10 +721,8 @@ public class FileUtils
    * @throws IOException on error.
    * @since Ant 1.6.3
    */
-  public boolean createNewFile(
-    File    f,
-    boolean mkdirs)
-    throws IOException
+  public boolean createNewFile(File f, boolean mkdirs)
+      throws IOException
   {
     File parent = f.getParentFile();
     if (mkdirs && !(parent.exists()))
@@ -768,10 +746,8 @@ public class FileUtils
    * @throws IOException on error.
    * @since Ant 1.5
    */
-  public boolean isSymbolicLink(
-    File   parent,
-    String name)
-    throws IOException
+  public boolean isSymbolicLink(File parent, String name)
+      throws IOException
   {
     if (parent == null)
     {
@@ -779,9 +755,7 @@ public class FileUtils
       parent = f.getParentFile();
       name = f.getName();
     }
-    File toTest = new File(
-        parent.getCanonicalPath(),
-        name);
+    File toTest = new File(parent.getCanonicalPath(), name);
     return !toTest.getAbsolutePath().equals(toTest.getCanonicalPath());
   }
 
@@ -796,9 +770,7 @@ public class FileUtils
    *
    * @since Ant 1.5
    */
-  public String removeLeadingPath(
-    File leading,
-    File path)
+  public String removeLeadingPath(File leading, File path)
   {
     String l = normalize(leading.getAbsolutePath()).getAbsolutePath();
     String p = normalize(path.getAbsolutePath()).getAbsolutePath();
@@ -853,8 +825,7 @@ public class FileUtils
     path = path.replace('\\', '/');
 
     CharacterIterator iter = new StringCharacterIterator(path);
-    for (char c = iter.first(); c != CharacterIterator.DONE;
-      c = iter.next())
+    for (char c = iter.first(); c != CharacterIterator.DONE; c = iter.next())
     {
       if (c < 256 && isSpecial[c])
       {
@@ -888,12 +859,10 @@ public class FileUtils
    *
    * @since Ant 1.5.3
    */
-  public boolean fileNameEquals(
-    File f1,
-    File f2)
+  public boolean fileNameEquals(File f1, File f2)
   {
-    return normalize(f1.getAbsolutePath())
-             .equals(normalize(f2.getAbsolutePath()));
+    return normalize(f1.getAbsolutePath()).equals(
+      normalize(f2.getAbsolutePath()));
   }
 
   /**
@@ -907,7 +876,7 @@ public class FileUtils
   public long getFileTimestampGranularity()
   {
     return onDos ? FAT_FILE_TIMESTAMP_GRANULARITY
-                 : UNIX_FILE_TIMESTAMP_GRANULARITY;
+                : UNIX_FILE_TIMESTAMP_GRANULARITY;
   }
 
   /**
@@ -921,10 +890,7 @@ public class FileUtils
    *              for granularity.
    * @since Ant 1.6.3
    */
-  public boolean isUpToDate(
-    File source,
-    File dest,
-    long granularity)
+  public boolean isUpToDate(File source, File dest, long granularity)
   {
     //do a check for the destination file existing
     if (!dest.exists())
@@ -944,14 +910,9 @@ public class FileUtils
    * @return true if the source is older than the dest, taking the granularity into account.
    * @since Ant 1.6.3
    */
-  public boolean isUpToDate(
-    File source,
-    File dest)
+  public boolean isUpToDate(File source, File dest)
   {
-    return isUpToDate(
-      source,
-      dest,
-      getFileTimestampGranularity());
+    return isUpToDate(source, dest, getFileTimestampGranularity());
   }
 
   /**
@@ -963,10 +924,7 @@ public class FileUtils
    * @param granularity os/filesys granularity.
    * @return true if the dest file is considered up to date.
    */
-  public boolean isUpToDate(
-    long sourceTime,
-    long destTime,
-    long granularity)
+  public boolean isUpToDate(long sourceTime, long destTime, long granularity)
   {
     if (destTime == -1)
     {
@@ -983,14 +941,9 @@ public class FileUtils
    * @param destTime    timestamp of dest file.
    * @return true if the dest file is considered up to date.
    */
-  public boolean isUpToDate(
-    long sourceTime,
-    long destTime)
+  public boolean isUpToDate(long sourceTime, long destTime)
   {
-    return isUpToDate(
-      sourceTime,
-      destTime,
-      getFileTimestampGranularity());
+    return isUpToDate(sourceTime, destTime, getFileTimestampGranularity());
   }
 
   /**

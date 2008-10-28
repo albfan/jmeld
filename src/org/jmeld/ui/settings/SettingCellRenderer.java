@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 class SettingCellRenderer
-       extends JLabel
-       implements ListCellRenderer
+    extends JLabel
+    implements ListCellRenderer
 {
   public SettingCellRenderer()
   {
@@ -23,15 +23,11 @@ class SettingCellRenderer
     setPreferredSize(new Dimension(70, 70));
   }
 
-  public Component getListCellRendererComponent(
-    JList   list,
-    Object  value,
-    int     index,
-    boolean isSelected,
-    boolean cellHasFocus)
+  public Component getListCellRendererComponent(JList list, Object value,
+      int index, boolean isSelected, boolean cellHasFocus)
   {
     Settings settings;
-    JPanel   panel;
+    JPanel panel;
 
     settings = (Settings) value;
 

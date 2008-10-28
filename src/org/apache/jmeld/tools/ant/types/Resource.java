@@ -27,15 +27,15 @@ package org.apache.jmeld.tools.ant.types;
  * @since Ant 1.5.2
  */
 public class Resource
-       implements Cloneable, Comparable
+    implements Cloneable, Comparable
 {
   /** Constant unknown size */
   public static final long UNKNOWN_SIZE = -1;
-  private String  name = null;
+  private String name = null;
   private boolean exists = true;
-  private long    lastmodified = 0;
+  private long lastmodified = 0;
   private boolean directory = false;
-  private long    size = UNKNOWN_SIZE;
+  private long size = UNKNOWN_SIZE;
 
   /**
    * Default constructor.
@@ -65,10 +65,7 @@ public class Resource
    * @param exists if true, this resource exists.
    * @param lastmodified the last modification time of this resource.
    */
-  public Resource(
-    String  name,
-    boolean exists,
-    long    lastmodified)
+  public Resource(String name, boolean exists, long lastmodified)
   {
     this(name, exists, lastmodified, false);
   }
@@ -82,11 +79,8 @@ public class Resource
    * @param lastmodified the last modification time of the resource
    * @param directory    if true, this resource is a directory
    */
-  public Resource(
-    String  name,
-    boolean exists,
-    long    lastmodified,
-    boolean directory)
+  public Resource(String name, boolean exists, long lastmodified,
+      boolean directory)
   {
     this(name, exists, lastmodified, directory, UNKNOWN_SIZE);
   }
@@ -101,12 +95,8 @@ public class Resource
    * @param directory    if true, this resource is a directory
    * @param size the size of this resource.
    */
-  public Resource(
-    String  name,
-    boolean exists,
-    long    lastmodified,
-    boolean directory,
-    long    size)
+  public Resource(String name, boolean exists, long lastmodified,
+      boolean directory, long size)
   {
     this.name = name;
     setName(name);
@@ -233,7 +223,7 @@ public class Resource
     catch (CloneNotSupportedException e)
     {
       throw new Error("CloneNotSupportedException for a "
-        + "Clonable Resource caught?");
+                      + "Clonable Resource caught?");
     }
   }
 
@@ -249,7 +239,7 @@ public class Resource
     if (!(other instanceof Resource))
     {
       throw new IllegalArgumentException("Can only be compared with "
-        + "Resources");
+                                         + "Resources");
     }
     Resource r = (Resource) other;
     return getName().compareTo(r.getName());

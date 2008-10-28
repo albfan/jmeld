@@ -4,11 +4,8 @@ import java.io.*;
 
 public class JMDiffNodeFactory
 {
-  public static JMDiffNode create(
-    String fileLeftName,
-    File   fileLeft,
-    String fileRightName,
-    File   fileRight)
+  public static JMDiffNode create(String fileLeftName, File fileLeft,
+      String fileRightName, File fileRight)
   {
     JMDiffNode node;
 

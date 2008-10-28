@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LeftScrollPaneLayout
-       extends javax.swing.ScrollPaneLayout
+    extends javax.swing.ScrollPaneLayout
 {
   public void layoutContainer(Container parent)
   {

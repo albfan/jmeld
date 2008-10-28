@@ -40,8 +40,7 @@ public class GradientLabel
         .getGreen(), fromColor.getBlue(), 0));
   }
 
-  public void setGradientColor(Color fromColor,
-                               Color toColor)
+  public void setGradientColor(Color fromColor, Color toColor)
   {
     this.fromColor = fromColor;
     this.toColor = toColor;

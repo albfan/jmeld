@@ -21,25 +21,20 @@ import javax.swing.*;
 import java.awt.*;
 
 public class EmptyIcon
-       implements Icon
+    implements Icon
 {
-  private int   width;
-  private int   height;
+  private int width;
+  private int height;
   private Color color;
 
-  public EmptyIcon(
-    Color color,
-    int   width,
-    int   height)
+  public EmptyIcon(Color color, int width, int height)
   {
     this.color = color;
     this.width = width;
     this.height = height;
   }
 
-  public EmptyIcon(
-    int width,
-    int height)
+  public EmptyIcon(int width, int height)
   {
     this(null, width, height);
   }
@@ -59,20 +54,12 @@ public class EmptyIcon
     return height;
   }
 
-  public void paintIcon(
-    Component c,
-    Graphics  g,
-    int       x,
-    int       y)
+  public void paintIcon(Component c, Graphics g, int x, int y)
   {
     if (color != null)
     {
       g.setColor(color);
-      g.fillRect(
-        x,
-        y,
-        getIconWidth(),
-        getIconHeight());
+      g.fillRect(x, y, getIconWidth(), getIconHeight());
     }
   }
 }

@@ -19,11 +19,9 @@ package org.jmeld.ui.util;
 public class TabExitEvent
 {
   private TabIcon tabIcon;
-  private int     tabIndex;
+  private int tabIndex;
 
-  public TabExitEvent(
-    TabIcon tabIcon,
-    int     tabIndex)
+  public TabExitEvent(TabIcon tabIcon, int tabIndex)
   {
     this.tabIcon = tabIcon;
     this.tabIndex = tabIndex;

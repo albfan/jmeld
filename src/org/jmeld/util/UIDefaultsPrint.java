@@ -31,8 +31,7 @@ public class UIDefaultsPrint
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
       list = new ArrayList();
-      for (Enumeration e = UIManager.getDefaults().keys();
-        e.hasMoreElements();)
+      for (Enumeration e = UIManager.getDefaults().keys(); e.hasMoreElements();)
       {
         list.add(e.nextElement().toString());
       }
@@ -40,10 +39,7 @@ public class UIDefaultsPrint
       Collections.sort(list);
       for (Object key : list)
       {
-        System.out.printf(
-          "%-40.40s = %s\n",
-          key,
-          UIManager.get(key));
+        System.out.printf("%-40.40s = %s\n", key, UIManager.get(key));
       }
     }
     catch (Exception ex)

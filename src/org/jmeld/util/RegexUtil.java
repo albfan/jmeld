@@ -6,10 +6,8 @@ public class RegexUtil
 {
   private static Pattern whiteSpacePattern;
 
-  public static String replaceAll(
-    Pattern pattern,
-    String  string,
-    String  replacement)
+  public static String replaceAll(Pattern pattern, String string,
+      String replacement)
   {
     return pattern.matcher(string).replaceAll(replacement);
   }

@@ -24,7 +24,7 @@ import javax.swing.*;
 
 
 public class FolderDiffTreeTableModel
-       extends JMTreeTableModel
+    extends JMTreeTableModel
 {
   private Column fileNameColumn;
   private Column leftSizeColumn;
@@ -36,20 +36,18 @@ public class FolderDiffTreeTableModel
   {
     fileNameColumn = addColumn("fileName", null, "File", null, -1, false, null);
     leftSizeColumn = addColumn("leftSize", "Left", "Size", Integer.class, 8,
-        false, Colors.TABLEROW_LEFT);
-    leftStateColumn = addColumn("leftState", "Left", "L", Icon.class, 3,
-        false, Colors.TABLEROW_LEFT);
+      false, Colors.TABLEROW_LEFT);
+    leftStateColumn = addColumn("leftState", "Left", "L", Icon.class, 3, false,
+      Colors.TABLEROW_LEFT);
     rightStateColumn = addColumn("rightState", "Right", "R", Icon.class, 3,
-        false, Colors.TABLEROW_RIGHT);
-    rightSizeColumn = addColumn("rightSize", "Right", "Size", Integer.class,
-        8, false, Colors.TABLEROW_RIGHT);
+      false, Colors.TABLEROW_RIGHT);
+    rightSizeColumn = addColumn("rightSize", "Right", "Size", Integer.class, 8,
+      false, Colors.TABLEROW_RIGHT);
   }
 
-  public Object getValueAt(
-    Object objectNode,
-    Column column)
+  public Object getValueAt(Object objectNode, Column column)
   {
-    UINode     uiNode;
+    UINode uiNode;
     JMDiffNode diffNode;
     BufferNode bufferNode;
 
@@ -106,10 +104,7 @@ public class FolderDiffTreeTableModel
     return null;
   }
 
-  public void setValueAt(
-    Object value,
-    Object objectNode,
-    Column column)
+  public void setValueAt(Object value, Object objectNode, Column column)
   {
   }
 
@@ -122,8 +117,8 @@ public class FolderDiffTreeTableModel
         return "stock_changed2";
       }
 
-      if (diffNode.isCompareEqual(JMDiffNode.Compare.LeftMissing) ||
-          diffNode.isCompareEqual(JMDiffNode.Compare.BothMissing))
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.LeftMissing)
+          || diffNode.isCompareEqual(JMDiffNode.Compare.BothMissing))
       {
         return "stock_deleted3";
       }
@@ -141,8 +136,8 @@ public class FolderDiffTreeTableModel
         return "stock_changed2";
       }
 
-      if (diffNode.isCompareEqual(JMDiffNode.Compare.RightMissing) ||
-          diffNode.isCompareEqual(JMDiffNode.Compare.BothMissing))
+      if (diffNode.isCompareEqual(JMDiffNode.Compare.RightMissing)
+          || diffNode.isCompareEqual(JMDiffNode.Compare.BothMissing))
       {
         return "stock_deleted3";
       }

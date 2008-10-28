@@ -25,7 +25,7 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "blame")
 public class BlameData
-       implements BlameIF
+    implements BlameIF
 {
   @XmlElement(name = "target")
   private List<Target> targetList;
@@ -42,10 +42,10 @@ public class BlameData
 
   @XmlAccessorType(XmlAccessType.NONE)
   static class Target
-         implements BlameIF.TargetIF
+      implements BlameIF.TargetIF
   {
     @XmlAttribute
-    private String      path;
+    private String path;
     @XmlElement(name = "entry")
     private List<Entry> entryList;
 
@@ -65,12 +65,12 @@ public class BlameData
   }
 
   static class Entry
-         implements BlameIF.EntryIF
+      implements BlameIF.EntryIF
   {
     @XmlAttribute(name = "line-number")
     private Integer lineNumber;
     @XmlElement
-    private Commit  commit;
+    private Commit commit;
 
     public Entry()
     {
@@ -88,14 +88,14 @@ public class BlameData
   }
 
   static class Commit
-         implements BlameIF.CommitIF
+      implements BlameIF.CommitIF
   {
     @XmlAttribute
     private Integer revision;
     @XmlElement
-    private String  author;
+    private String author;
     @XmlElement
-    private String  date;
+    private String date;
 
     public Commit()
     {

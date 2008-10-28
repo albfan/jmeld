@@ -76,10 +76,10 @@ import java.util.*;
  * @see Diff
  */
 public class MyersDiff
-       implements DiffAlgorithm
+    implements DiffAlgorithm
 {
   private static int MAXTIME = 3000;
-  public boolean     checkMaxTime = false;
+  public boolean checkMaxTime = false;
 
   /**
    * Constructs an instance of the Myers differencing algorithm.
@@ -96,10 +96,8 @@ public class MyersDiff
   /**
    * {@inheritDoc}
    */
-  public Revision diff(
-    Object[] orig,
-    Object[] rev)
-    throws DifferentiationFailedException
+  public Revision diff(Object[] orig, Object[] rev)
+      throws DifferentiationFailedException
   {
     PathNode path = buildPath(orig, rev);
 
@@ -116,28 +114,26 @@ public class MyersDiff
    * @return A minimum {@link PathNode Path} accross the differences graph.
    * @throws DifferentiationFailedException if a diff path could not be found.
    */
-  public PathNode buildPath(
-    Object[] orig,
-    Object[] rev)
-    throws DifferentiationFailedException
+  public PathNode buildPath(Object[] orig, Object[] rev)
+      throws DifferentiationFailedException
   {
-    int                    N;
-    int                    M;
-    int                    MAX;
-    int                    size;
-    int                    middle;
+    int N;
+    int M;
+    int MAX;
+    int size;
+    int middle;
     Map<Integer, PathNode> diagonal;
-    PathNode               d_kminus;
-    PathNode               d_kplus;
-    PathNode               path;
-    PathNode               node;
-    int                    kmiddle;
-    int                    kplus;
-    int                    kminus;
-    PathNode               prev;
-    int                    i;
-    int                    j;
-    long                   startTime;
+    PathNode d_kminus;
+    PathNode d_kplus;
+    PathNode path;
+    PathNode node;
+    int kmiddle;
+    int kplus;
+    int kminus;
+    PathNode prev;
+    int i;
+    int j;
+    long startTime;
 
     if (orig == null)
     {
@@ -162,15 +158,13 @@ public class MyersDiff
 
     startTime = System.currentTimeMillis();
 
-    diagonal.put(
-      middle + 1,
-      new Snake(0, -1, null));
+    diagonal.put(middle + 1, new Snake(0, -1, null));
     for (int d = 0; d < MAX; d++)
     {
       if (checkMaxTime && System.currentTimeMillis() - startTime > MAXTIME)
       {
         throw new org.jmeld.diff.MaxTimeExceededException(
-          "Algoritm is taking up to much time");
+            "Algoritm is taking up to much time");
       }
 
       for (int k = -d; k <= d; k += 2)
@@ -252,10 +246,7 @@ public class MyersDiff
    * @throws DifferentiationFailedException if a {@link Revision} could
    *         not be built from the given path.
    */
-  public Revision buildRevision(
-    PathNode path,
-    Object[] orig,
-    Object[] rev)
+  public Revision buildRevision(PathNode path, Object[] orig, Object[] rev)
   {
     if (path == null)
     {
@@ -283,7 +274,7 @@ public class MyersDiff
       if (path.isSnake())
       {
         throw new IllegalStateException(
-          "bad diffpath: found snake when looking for diff");
+            "bad diffpath: found snake when looking for diff");
       }
 
       int i = path.i;
@@ -293,9 +284,8 @@ public class MyersDiff
       int ianchor = path.i;
       int janchor = path.j;
 
-      Delta delta = Delta.newDelta(
-          new Chunk(orig, ianchor, i - ianchor),
-          new Chunk(rev, janchor, j - janchor));
+      Delta delta = Delta.newDelta(new Chunk(orig, ianchor, i - ianchor),
+        new Chunk(rev, janchor, j - janchor));
 
       revision.insertDelta(delta);
       if (path.isSnake())

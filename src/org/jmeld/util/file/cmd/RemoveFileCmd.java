@@ -8,28 +8,26 @@ import javax.swing.undo.*;
 import java.io.*;
 
 public class RemoveFileCmd
-       extends AbstractCmd
+    extends AbstractCmd
 {
   private JMDiffNode diffNode;
-  private FileNode   fileNode;
+  private FileNode fileNode;
 
-  public RemoveFileCmd(
-    JMDiffNode diffNode,
-    FileNode   fileNode)
+  public RemoveFileCmd(JMDiffNode diffNode, FileNode fileNode)
   {
     this.diffNode = diffNode;
     this.fileNode = fileNode;
   }
 
   public void createCommands()
-    throws Exception
+      throws Exception
   {
     addCommand(new RemoveCommand(fileNode.getFile()));
     addFinallyCommand(new ResetCommand(fileNode));
   }
 
   class RemoveCommand
-         extends Command
+      extends Command
   {
     private File file;
     private File originalFile;
@@ -40,7 +38,7 @@ public class RemoveFileCmd
     }
 
     public void execute()
-      throws Exception
+        throws Exception
     {
       if (file.exists())
       {
@@ -95,7 +93,7 @@ public class RemoveFileCmd
   }
 
   class ResetCommand
-         extends Command
+      extends Command
   {
     private FileNode fileNode;
 
@@ -105,7 +103,7 @@ public class RemoveFileCmd
     }
 
     public void execute()
-      throws Exception
+        throws Exception
     {
       reset();
     }

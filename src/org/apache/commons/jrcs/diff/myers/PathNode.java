@@ -82,10 +82,7 @@ public abstract class PathNode
    * @param j The position in the revised sequence for the new node.
    * @param prev The previous node in the path.
    */
-  public PathNode(
-    int      i,
-    int      j,
-    PathNode prev)
+  public PathNode(int i, int j, PathNode prev)
   {
     this.i = i;
     this.j = j;
@@ -139,7 +136,7 @@ public abstract class PathNode
   public String toString()
   {
     StringBuffer buf = new StringBuffer("[");
-    PathNode     node = this;
+    PathNode node = this;
 
     while (node != null)
     {

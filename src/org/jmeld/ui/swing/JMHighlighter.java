@@ -25,14 +25,14 @@ import java.util.List;
 /** A highlighter that paints in layers.
  */
 public class JMHighlighter
-       implements Highlighter
+    implements Highlighter
 {
   // static variables:
-  public static final Integer       LAYER0 = new Integer(1);
-  public static final Integer       LAYER1 = new Integer(2);
-  public static final Integer       LAYER2 = new Integer(3);
-  public static final Integer       LAYER3 = new Integer(4);
-  public static final Integer       UPPER_LAYER;
+  public static final Integer LAYER0 = new Integer(1);
+  public static final Integer LAYER1 = new Integer(2);
+  public static final Integer LAYER2 = new Integer(3);
+  public static final Integer LAYER3 = new Integer(4);
+  public static final Integer UPPER_LAYER;
   private static ArrayList<Integer> layers;
 
   static
@@ -46,8 +46,8 @@ public class JMHighlighter
   }
 
   private Map<Integer, List<Highlighter.Highlight>> highlights;
-  private JTextComponent                            component;
-  private boolean                                   doNotRepaint;
+  private JTextComponent component;
+  private boolean doNotRepaint;
 
   public JMHighlighter()
   {
@@ -66,31 +66,30 @@ public class JMHighlighter
    */
   public void paint(Graphics g)
   {
-    int                         upperLayer;
+    int upperLayer;
     List<Highlighter.Highlight> list;
-    Rectangle                   a;
-    Insets                      insets;
-    Rectangle                   clip;
-    int                         startOffset;
-    int                         endOffset;
-    int                         lineHeight;
+    Rectangle a;
+    Insets insets;
+    Rectangle clip;
+    int startOffset;
+    int endOffset;
+    int lineHeight;
     LineNumberBorder lineNumberBorder;
 
     clip = g.getClipRect();
     lineHeight = component.getFontMetrics(component.getFont()).getHeight();
-    startOffset = component.viewToModel(
-        new Point(clip.x - lineHeight, clip.y));
-    endOffset = component.viewToModel(
-        new Point(clip.x, clip.y + clip.height + lineHeight));
+    startOffset = component.viewToModel(new Point(clip.x - lineHeight, clip.y));
+    endOffset = component.viewToModel(new Point(clip.x, clip.y + clip.height
+                                                        + lineHeight));
 
     // Just some hacks to allow linenumbers painted in the emptyborder.
     lineNumberBorder = null;
-    if(component.getBorder() instanceof LineNumberBorder)
+    if (component.getBorder() instanceof LineNumberBorder)
     {
       lineNumberBorder = (LineNumberBorder) component.getBorder();
     }
 
-    if(lineNumberBorder != null)
+    if (lineNumberBorder != null)
     {
       lineNumberBorder.paintBefore(g);
     }
@@ -123,21 +122,17 @@ public class JMHighlighter
       {
         // Don't paint highlighters that are not in sight!
         if (hli.getStartOffset() > endOffset
-          || hli.getEndOffset() < startOffset)
+            || hli.getEndOffset() < startOffset)
         {
           continue;
         }
 
-        hli.getPainter().paint(
-          g,
-          hli.getStartOffset(),
-          hli.getEndOffset(),
-          a,
+        hli.getPainter().paint(g, hli.getStartOffset(), hli.getEndOffset(), a,
           component);
       }
     }
 
-    if(lineNumberBorder != null)
+    if (lineNumberBorder != null)
     {
       lineNumberBorder.paintAfter(g, startOffset, endOffset);
     }
@@ -154,23 +149,18 @@ public class JMHighlighter
     component = null;
   }
 
-  public Object addHighlight(
-    int                          p0,
-    int                          p1,
-    Highlighter.HighlightPainter painter)
-    throws BadLocationException
+  public Object addHighlight(int p0, int p1,
+      Highlighter.HighlightPainter painter)
+      throws BadLocationException
   {
     return addHighlight(UPPER_LAYER, p0, p1, painter);
   }
 
-  public Object addHighlight(
-    Integer                      layer,
-    int                          p0,
-    int                          p1,
-    Highlighter.HighlightPainter painter)
-    throws BadLocationException
+  public Object addHighlight(Integer layer, int p0, int p1,
+      Highlighter.HighlightPainter painter)
+      throws BadLocationException
   {
-    Document      doc;
+    Document doc;
     HighlightInfo hli;
 
     doc = component.getDocument();
@@ -191,9 +181,7 @@ public class JMHighlighter
     removeHighlight(UPPER_LAYER, object);
   }
 
-  public void removeHighlight(
-    Integer layer,
-    Object  object)
+  public void removeHighlight(Integer layer, Object object)
   {
     getLayer(layer).remove(object);
     repaint();
@@ -217,23 +205,16 @@ public class JMHighlighter
     repaint();
   }
 
-  public void changeHighlight(
-    Object object,
-    int    p0,
-    int    p1)
-    throws BadLocationException
+  public void changeHighlight(Object object, int p0, int p1)
+      throws BadLocationException
   {
     changeHighlight(UPPER_LAYER, object, p0, p1);
   }
 
-  public void changeHighlight(
-    Integer layer,
-    Object  object,
-    int     p0,
-    int     p1)
-    throws BadLocationException
+  public void changeHighlight(Integer layer, Object object, int p0, int p1)
+      throws BadLocationException
   {
-    Document      doc;
+    Document doc;
     HighlightInfo hli;
 
     doc = component.getDocument();
@@ -254,9 +235,9 @@ public class JMHighlighter
    */
   public Highlighter.Highlight[] getHighlights()
   {
-    int                     size;
+    int size;
     Highlighter.Highlight[] result;
-    int                     index;
+    int index;
 
     size = 0;
     for (Integer layer : layers)
@@ -303,10 +284,10 @@ public class JMHighlighter
   }
 
   class HighlightInfo
-         implements Highlighter.Highlight
+      implements Highlighter.Highlight
   {
-    Position                     p0;
-    Position                     p1;
+    Position p0;
+    Position p1;
     Highlighter.HighlightPainter painter;
 
     public int getStartOffset()
