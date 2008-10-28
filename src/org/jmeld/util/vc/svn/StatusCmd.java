@@ -52,6 +52,39 @@ public class StatusCmd
             case conflicted:
               status = StatusResult.Status.conflicted;
               break;
+            case deleted:
+              status = StatusResult.Status.removed;
+              break;
+            case ignored:
+              status = StatusResult.Status.ignored;
+              break;
+            case modified:
+              status = StatusResult.Status.modified;
+              break;
+            case replaced:
+              status = StatusResult.Status.modified;
+              break;
+            case external:
+              status = StatusResult.Status.dontknow;
+              break;
+            case unversioned:
+              status = StatusResult.Status.unversioned;
+              break;
+            case incomplete:
+              status = StatusResult.Status.missing;
+              break;
+            case obstructed:
+              status = StatusResult.Status.dontknow;
+              break;
+            case normal:
+              status = StatusResult.Status.clean;
+              break;
+            case none:
+              status = StatusResult.Status.clean;
+              break;
+            case missing:
+              status = StatusResult.Status.missing;
+              break;
           }
 
           result.addEntry(te.getPath(), status);

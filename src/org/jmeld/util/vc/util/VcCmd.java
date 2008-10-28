@@ -13,6 +13,24 @@ public abstract class VcCmd<T>
   // Instance variables:
   private Result result;
   private T resultData;
+  private File workingDirectory;
+
+  public void initWorkingDirectory(File file)
+  {
+    if(!file.isDirectory())
+    {
+      file = file.getParentFile();
+    }
+
+    if(file.isDirectory())
+    {
+      workingDirectory = file.getAbsoluteFile();
+    }
+    else
+    {
+      workingDirectory = null;
+    }
+  }
 
   public void execute(String... command)
   {
@@ -34,6 +52,13 @@ public abstract class VcCmd<T>
     try
     {
       pb = new ProcessBuilder(command);
+      if(workingDirectory != null)
+      {
+        pb = pb.directory(workingDirectory);
+        System.out.println("wd=" + workingDirectory);
+      }
+
+      System.out.println("wd2=" + pb.directory());
       p = pb.start();
 
       debug("execute: " + Arrays.asList(command));

@@ -64,7 +64,8 @@ public class StatusResult
     conflicted('C'),
     ignored('I'),
     unversioned('?'),
-    missing('!');
+    missing('!'),
+    dontknow('#');
 
     private char shortText;
 

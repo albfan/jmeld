@@ -25,14 +25,15 @@ public class VersionControlBaseNode
     extends JMeldNode
     implements BufferNode
 {
+  private StatusResult.Entry entry;
   private VersionControlIF versionControl;
   private File file;
   private VersionControlBaseDocument document;
 
-  public VersionControlBaseNode(VersionControlIF versionControl, String name,
+  public VersionControlBaseNode(VersionControlIF versionControl, StatusResult.Entry entry,
       File file)
   {
-    super(name, !file.isDirectory());
+    super(entry.getName(), !file.isDirectory());
     this.versionControl = versionControl;
     this.file = file;
   }

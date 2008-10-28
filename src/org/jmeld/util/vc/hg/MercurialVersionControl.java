@@ -3,7 +3,6 @@ package org.jmeld.util.vc.hg;
 import org.jmeld.util.vc.*;
 
 import java.io.*;
-import java.util.*;
 
 public class MercurialVersionControl
     implements VersionControlIF
@@ -57,6 +56,7 @@ public class MercurialVersionControl
     return cmd.getResultData();
   }
 
+  @Override
   public String toString()
   {
     return getName();

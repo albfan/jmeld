@@ -85,7 +85,7 @@ public class VersionControlDiff
     nodes = new HashMap<String, JMDiffNode>();
 
     versionControlList = VersionControlUtil.getVersionControl(directory);
-    if(versionControlList.isEmpty())
+    if (versionControlList.isEmpty())
     {
       return;
     }
@@ -102,18 +102,30 @@ public class VersionControlDiff
 
       node = addNode(entry.getName(), !file.isDirectory());
 
-      node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry
-          .getName(), file));
+      node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry,
+          file));
       node.setBufferNodeRight(new FileNode(entry.getName(), file));
-    }
 
-    StatusBar.getInstance().setState("Comparing nodes...");
-    numberOfNodes = nodes.size();
-    currentNumber = 0;
-    for (JMDiffNode n : nodes.values())
-    {
-      n.compareContents();
-      StatusBar.getInstance().setProgress(++currentNumber, numberOfNodes);
+      switch (entry.getStatus())
+      {
+        case modified:
+        case conflicted:
+        case unversioned:
+        case missing:
+        case dontknow:
+          node.setCompareState(JMDiffNode.Compare.NotEqual);
+          break;
+        case added:
+          node.setCompareState(JMDiffNode.Compare.LeftMissing);
+          break;
+        case removed:
+          node.setCompareState(JMDiffNode.Compare.RightMissing);
+          break;
+        case clean:
+        case ignored:
+          node.setCompareState(JMDiffNode.Compare.Equal);
+          break;
+      }
     }
 
     StatusBar.getInstance().setState(

@@ -14,12 +14,14 @@ public class ActiveCmd
   public ActiveCmd(File file)
   {
     this.file = file;
+
+    initWorkingDirectory(file);
   }
 
   public Result execute()
   {
     // If a root can be found than we have a mercurial working directory!
-    super.execute("hg", "root", "--noninteractive", "--cwd", file.getPath());
+    super.execute("hg", "root", "--noninteractive");
 
     return getResult();
   }
