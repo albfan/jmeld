@@ -8,9 +8,9 @@ public interface VersionControlIF
 
   public boolean accept(File file);
 
-  public BlameIF executeBlame(File file);
+  //public BlameIF executeBlame(File file);
 
-  public DiffIF executeDiff(File dir, boolean recursive);
+  //public DiffIF executeDiff(File dir, boolean recursive);
 
   public StatusIF executeStatus(File dir, boolean recursive);
 

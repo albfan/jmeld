@@ -1,12 +1,13 @@
 package org.jmeld.util.vc.svn;
 
 import org.jmeld.util.*;
+import org.jmeld.util.vc.util.*;
 
 import java.io.*;
 import java.util.*;
 
 public class SvnXmlCmd<T>
-    extends SvnCmd<T>
+    extends VcCmd<T>
 {
   private Class<T> clazz;
 

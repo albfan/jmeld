@@ -3,12 +3,13 @@ package org.jmeld.util.vc.svn;
 import org.jmeld.diff.*;
 import org.jmeld.util.*;
 import org.jmeld.util.vc.*;
+import org.jmeld.util.vc.util.*;
 
 import java.io.*;
 import java.util.regex.*;
 
 public class DiffCmd
-    extends SvnCmd<DiffData>
+    extends VcCmd<DiffData>
 {
   // Instance variables:
   private File file;

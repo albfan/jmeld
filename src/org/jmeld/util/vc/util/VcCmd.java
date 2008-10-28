@@ -1,11 +1,11 @@
-package org.jmeld.util.vc.svn;
+package org.jmeld.util.vc.util;
 
 import org.jmeld.util.*;
 
 import java.io.*;
 import java.util.*;
 
-public abstract class SvnCmd<T>
+public abstract class VcCmd<T>
 {
   private Result result;
   private T      resultData;
@@ -97,7 +97,7 @@ public abstract class SvnCmd<T>
     this.resultData = resultData;
   }
 
-  protected T getResultData()
+  public T getResultData()
   {
     return resultData;
   }

@@ -2,11 +2,12 @@ package org.jmeld.util.vc.svn;
 
 import org.jmeld.util.*;
 import org.jmeld.util.vc.*;
+import org.jmeld.util.vc.util.*;
 
 import java.io.*;
 
 public class CatCmd
-    extends SvnCmd<BaseFile>
+    extends VcCmd<BaseFile>
 {
   // Instance variables:
   private File file;
