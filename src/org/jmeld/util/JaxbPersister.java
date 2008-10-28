@@ -27,7 +27,7 @@ public class JaxbPersister
   public <T> T load(
     Class<T> clazz,
     File     file)
-    throws FileNotFoundException
+    throws FileNotFoundException, JAXBException
   {
     return load(
       clazz,
@@ -39,25 +39,17 @@ public class JaxbPersister
   public <T> T load(
     Class<T>    clazz,
     InputStream is)
+    throws JAXBException
   {
     Context context;
     T       object;
 
-    try
+    context = getContext(clazz);
+    synchronized (context)
     {
-      context = getContext(clazz);
-      synchronized (context)
-      {
-        object = (T) context.unmarshal(is);
-        return object;
-      }
+      object = (T) context.unmarshal(is);
+      return object;
     }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-    }
-
-    return null;
   }
 
   /** Save a object to a file.

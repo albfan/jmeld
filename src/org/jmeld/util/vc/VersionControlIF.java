@@ -4,6 +4,10 @@ import java.io.*;
 
 public interface VersionControlIF
 {
+  public String getName();
+
+  public boolean accept(File file);
+
   public BlameIF executeBlame(File file);
 
   public DiffIF executeDiff(File dir, boolean recursive);

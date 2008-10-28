@@ -23,13 +23,20 @@ public class ConfigurationPersister
 
   /** Load a configuration of type 'clazz' from a file.
    */
-  public <T extends AbstractConfiguration> T load(Class<T> clazz,
-                                                  File file)
-      throws FileNotFoundException
+  public <T extends AbstractConfiguration> T load(Class<T> clazz, File file)
+    throws FileNotFoundException
   {
     T configuration;
-    
-    configuration = JaxbPersister.getInstance().load(clazz, file);
+
+    try
+    {
+      configuration = JaxbPersister.getInstance().load(clazz, file);
+    }
+    catch (Exception ex)
+    {
+      return null;
+    }
+
     configuration.init();
 
     return configuration;
@@ -37,18 +44,18 @@ public class ConfigurationPersister
 
   /** Save a configuration to a file.
    */
-  public void save(AbstractConfiguration configuration,
-                   File file)
-      throws JAXBException, IOException
+  public void save(AbstractConfiguration configuration, File file)
+    throws JAXBException,
+    IOException
   {
     JaxbPersister.getInstance().save(configuration, file);
   }
 
   /** Save a configuration to a outputstream.
    */
-  public void save(AbstractConfiguration configuration,
-                   OutputStream os)
-      throws JAXBException, IOException
+  public void save(AbstractConfiguration configuration, OutputStream os)
+    throws JAXBException,
+    IOException
   {
     JaxbPersister.getInstance().save(configuration, os);
   }

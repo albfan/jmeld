@@ -1,10 +1,13 @@
 package org.jmeld.util.vc;
 
 import java.io.*;
-import org.jmeld.util.vc.svn.*;
+
+import java.util.*;
 
 public class VersionControlUtil
 {
+  static private List<VersionControlIF> versionControlList;
+
   public static boolean isVersionControlled(File file)
   {
     return getVersionControl(file) != null;
@@ -12,23 +15,26 @@ public class VersionControlUtil
 
   public static VersionControlIF getVersionControl(File file)
   {
-    if (isSubversion(file))
+    for (VersionControlIF versionControl : getVersionControlList())
     {
-      return new SubversionVersionControl();
+      if (versionControl.accept(file))
+      {
+        return versionControl;
+      }
     }
 
     return null;
   }
 
-  private static boolean isSubversion(File file)
+  public static List<VersionControlIF> getVersionControlList()
   {
-    if (new File(file, ".svn").exists())
+    if (versionControlList == null)
     {
-      return true;
+      versionControlList = new ArrayList<VersionControlIF>();
+      versionControlList
+          .add(new org.jmeld.util.vc.svn.SubversionVersionControl());
     }
 
-    //return new InfoCmd(file).execute().isTrue();
-
-    return false;
+    return versionControlList;
   }
 }
