@@ -51,13 +51,17 @@ public class JaxbPersister
   public void save(Object object, File file)
       throws JAXBException, IOException
   {
-    save(object, new FileOutputStream(file));
+    OutputStream os;
+
+    os = new FileOutputStream(file);
+    save(object, os);
+    os.close();
   }
 
   /** Save a object to a outputstream.
    */
-  public void save(Object object, OutputStream os)
-      throws JAXBException
+  private void save(Object object, OutputStream os)
+      throws JAXBException, IOException
   {
     Writer writer;
     Context context;
@@ -69,8 +73,6 @@ public class JaxbPersister
     {
       context.marshal(object, writer);
     }
-
-    os.close();
   }
 
   /** Each class has it's own context to marshal and unmarshal.

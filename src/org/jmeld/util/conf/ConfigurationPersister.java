@@ -50,13 +50,4 @@ public class ConfigurationPersister
   {
     JaxbPersister.getInstance().save(configuration, file);
   }
-
-  /** Save a configuration to a outputstream.
-   */
-  public void save(AbstractConfiguration configuration, OutputStream os)
-    throws JAXBException,
-    IOException
-  {
-    JaxbPersister.getInstance().save(configuration, os);
-  }
 }
