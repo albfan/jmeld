@@ -25,7 +25,6 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "status")
 public class StatusData
-    implements StatusIF
 {
   @XmlElement(name = "target")
   private List<Target> targetList;
@@ -41,14 +40,13 @@ public class StatusData
   }
 
   static class Target
-      implements StatusIF.TargetIF
   {
     @XmlAttribute
-    private String path;
+    private String      path;
     @XmlElement(name = "entry")
     private List<Entry> entryList;
     @XmlElement
-    private Against against;
+    private Against     against;
 
     public Target()
     {
@@ -66,12 +64,11 @@ public class StatusData
   }
 
   static class Entry
-      implements StatusIF.EntryIF
   {
     @XmlAttribute
-    private String path;
+    private String      path;
     @XmlElement(name = "wc-status")
-    private WcStatus wcStatus;
+    private WcStatus    wcStatus;
     @XmlElement(name = "repos-status")
     private ReposStatus reposStatus;
 
@@ -91,24 +88,23 @@ public class StatusData
   }
 
   static class WcStatus
-      implements StatusIF.WcStatusIF
   {
     @XmlAttribute
     private ItemStatus item;
     @XmlAttribute
-    private String props;
+    private String     props;
     @XmlAttribute
-    private Integer revision;
+    private Integer    revision;
     @XmlAttribute(name = "wc-locked")
-    private Boolean wcLocked;
+    private Boolean    wcLocked;
     @XmlAttribute
-    private Boolean copied;
+    private Boolean    copied;
     @XmlAttribute
-    private Boolean switched;
+    private Boolean    switched;
     @XmlElement
-    private Commit commit;
+    private Commit     commit;
     @XmlElement
-    private Lock lock;
+    private Lock       lock;
 
     public WcStatus()
     {
@@ -142,7 +138,7 @@ public class StatusData
     @XmlAttribute
     private String props;
     @XmlElement
-    private Lock lock;
+    private Lock   lock;
 
     public ReposStatus()
     {
@@ -174,9 +170,9 @@ public class StatusData
     @XmlAttribute
     private Integer revision;
     @XmlElement
-    private String author;
+    private String  author;
     @XmlElement
-    private Date date;
+    private Date    date;
 
     public Commit()
     {
@@ -207,16 +203,16 @@ public class StatusData
     @XmlElement
     private String comment;
     @XmlElement
-    private Date created;
+    private Date   created;
     @XmlElement
-    private Date expires;
+    private Date   expires;
 
     public Lock()
     {
     }
   }
 
-  public static enum ItemStatus implements StatusIF.ItemStatusIF
+  public static enum ItemStatus
   {
     added('A'),
     conflicted('C'),
