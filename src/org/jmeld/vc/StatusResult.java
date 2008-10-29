@@ -6,7 +6,7 @@ import java.util.*;
 public class StatusResult
 {
   private File path;
-  private List<Entry> entryList = new ArrayList<Entry>();
+  private Set<Entry> entryList = new HashSet<Entry>();
 
   public StatusResult(File path)
   {
@@ -18,22 +18,31 @@ public class StatusResult
     return path;
   }
 
-  public Entry addEntry(String name, Status status)
+  public void addEntry(String name, Status status)
   {
     Entry entry;
 
     entry = new Entry(name, status);
-    entryList.add(entry);
+    if (entryList.contains(entry))
+    {
+      return;
+    }
 
-    return entry;
+    entryList.add(entry);
   }
 
   public List<Entry> getEntryList()
   {
-    return entryList;
+    List<Entry> list;
+
+    list = new ArrayList(entryList);
+    Collections.sort(list);
+
+    return list;
   }
 
   public class Entry
+      implements Comparable<Entry>
   {
     private String name;
     private Status status;
@@ -52,6 +61,31 @@ public class StatusResult
     public Status getStatus()
     {
       return status;
+    }
+
+    public int compareTo(Entry entry)
+    {
+      return name.compareTo(entry.name);
+    }
+
+    public String toString()
+    {
+      return name;
+    }
+
+    public boolean equals(Object o)
+    {
+      if (!(o instanceof Entry))
+      {
+        return false;
+      }
+
+      return name.equals(((Entry) o).name);
+    }
+
+    public int hashCode()
+    {
+      return name.hashCode();
     }
   }
 

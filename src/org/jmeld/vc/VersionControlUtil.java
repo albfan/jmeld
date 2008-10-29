@@ -41,12 +41,12 @@ public class VersionControlUtil
     if (versionControlList == null)
     {
       versionControlList = new ArrayList<VersionControlIF>();
-      /*
       versionControlList
           .add(new org.jmeld.vc.svn.SubversionVersionControl());
-          */
       versionControlList
           .add(new org.jmeld.vc.hg.MercurialVersionControl());
+      versionControlList
+          .add(new org.jmeld.vc.bzr.BazaarVersionControl());
     }
 
     return versionControlList;

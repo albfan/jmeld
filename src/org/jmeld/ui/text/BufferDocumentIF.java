@@ -16,7 +16,6 @@
  */
 package org.jmeld.ui.text;
 
-import org.jmeld.vc.BlameIF;
 import org.jmeld.*;
 import org.jmeld.vc.*;
 

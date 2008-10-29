@@ -16,9 +16,6 @@
  */
 package org.jmeld.util.file;
 
-import org.jmeld.vc.VersionControlUtil;
-import org.jmeld.vc.VersionControlIF;
-import org.jmeld.vc.StatusResult;
 import org.apache.jmeld.tools.ant.*;
 import org.jmeld.settings.*;
 import org.jmeld.settings.util.*;
@@ -77,6 +74,7 @@ public class VersionControlDiff
     List<VersionControlIF> versionControlList;
     VersionControlIF versionControl;
     StatusResult statusResult;
+    FileNode fileNode;
 
     stopWatch = new StopWatch();
     stopWatch.start();
@@ -106,19 +104,20 @@ public class VersionControlDiff
 
       node = addNode(entry.getName(), !file.isDirectory());
 
+      fileNode = new FileNode(entry.getName(), file);
       node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry,
-          file));
-      node.setBufferNodeRight(new FileNode(entry.getName(), file));
+          fileNode, file));
+      node.setBufferNodeRight(fileNode);
 
       switch (entry.getStatus())
       {
         case modified:
         case conflicted:
-        case unversioned:
         case missing:
         case dontknow:
           node.setCompareState(JMDiffNode.Compare.NotEqual);
           break;
+        case unversioned:
         case added:
           node.setCompareState(JMDiffNode.Compare.LeftMissing);
           break;

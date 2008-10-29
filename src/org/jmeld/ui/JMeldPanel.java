@@ -16,7 +16,6 @@
  */
 package org.jmeld.ui;
 
-import org.jmeld.vc.VersionControlUtil;
 import com.jgoodies.forms.layout.*;
 
 import org.jdesktop.swingworker.SwingWorker;
@@ -1108,7 +1107,7 @@ public class JMeldPanel
       try
       {
         String result;
-        FolderDiffPanel panel;
+        VersionControlPanel panel;
 
         result = get();
 
@@ -1126,10 +1125,12 @@ public class JMeldPanel
           }
           else
           {
-            panel = new FolderDiffPanel(JMeldPanel.this, diff);
+            //panel = new FolderDiffPanel(JMeldPanel.this, diff);
+            panel = new VersionControlPanel(JMeldPanel.this, diff);
             panel.setId(contentId);
 
-            tabbedPane.add(panel, getTabIcon("stock_folder", panel.getTitle()));
+            //tabbedPane.add(panel, getTabIcon("stock_folder", panel.getTitle()));
+            tabbedPane.add(panel, getTabIcon("stock_folder", "haha"));
             tabbedPane.setSelectedComponent(panel);
           }
         }

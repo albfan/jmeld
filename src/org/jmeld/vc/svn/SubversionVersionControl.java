@@ -31,6 +31,13 @@ public class SubversionVersionControl
 
   public boolean isEnabled(File file)
   {
+    ActiveCmd cmd;
+
+    cmd = new ActiveCmd(file);
+    cmd.execute();
+
+    return cmd.getResult().isTrue();
+    /*
     StatusCmd cmd;
     StatusResult statusResult;
 
@@ -55,6 +62,7 @@ public class SubversionVersionControl
     }
 
     return statusResult.getEntryList().size() >= 1;
+    */
   }
 
   public BlameIF executeBlame(File file)

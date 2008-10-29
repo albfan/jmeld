@@ -1,4 +1,4 @@
-package org.jmeld.vc.hg;
+package org.jmeld.vc.bzr;
 
 import org.jmeld.util.*;
 import org.jmeld.vc.*;
@@ -13,7 +13,7 @@ public class InstalledCmd
 
   public Result execute()
   {
-    super.execute("hg", "version");
+    super.execute("bzr", "version");
 
     return getResult();
   }

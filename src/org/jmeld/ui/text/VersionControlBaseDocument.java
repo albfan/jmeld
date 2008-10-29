@@ -16,9 +16,9 @@
  */
 package org.jmeld.ui.text;
 
-import org.jmeld.vc.VersionControlIF;
-import org.jmeld.vc.BaseFile;
+import org.jmeld.vc.*;
 import org.jmeld.*;
+import org.jmeld.util.node.*;
 
 import java.io.*;
 
@@ -31,17 +31,22 @@ import java.nio.charset.*;
 public class VersionControlBaseDocument
     extends AbstractBufferDocument
 {
-  // instance variables:
+  // Instance variables:
   private VersionControlIF versionControl;
+  private StatusResult.Entry entry;
+  private FileNode fileNode;
   private File file;
   private BaseFile baseFile;
   private boolean baseFileInitialized;
   private Charset charset;
 
-  public VersionControlBaseDocument(VersionControlIF versionControl, File file)
+  public VersionControlBaseDocument(VersionControlIF versionControl,
+      StatusResult.Entry entry, FileNode fileNode, File file)
   {
-    this.file = file;
     this.versionControl = versionControl;
+    this.entry = entry;
+    this.fileNode = fileNode;
+    this.file = file;
 
     try
     {
@@ -59,11 +64,15 @@ public class VersionControlBaseDocument
   @Override
   public int getBufferSize()
   {
-    BaseFile bf;
-
-    bf = getBaseFile();
-
-    return bf == null ? -1 : bf.getLength();
+    if (useBaseFile())
+    {
+      initBaseFile();
+      return baseFile == null ? -1 : baseFile.getLength();
+    }
+    else
+    {
+      return fileNode.getDocument().getBufferSize();
+    }
   }
 
   @Override
@@ -72,22 +81,25 @@ public class VersionControlBaseDocument
   {
     BufferedInputStream bais;
 
-    if (!file.isFile() || !file.canRead())
+    if (useBaseFile())
     {
-      throw new JMeldException("Could not open file: " + file);
+      try
+      {
+        initBaseFile();
+        bais = new BufferedInputStream(new ByteArrayInputStream(baseFile
+            .getByteArray()));
+        charset = CharsetDetector.getInstance().getCharset(bais);
+        return new BufferedReader(new InputStreamReader(bais, charset));
+      }
+      catch (Exception ex)
+      {
+        throw new JMeldException("Could not create FileReader for : "
+                                 + file.getName(), ex);
+      }
     }
-
-    try
+    else
     {
-      bais = new BufferedInputStream(new ByteArrayInputStream(getBaseFile()
-          .getByteArray()));
-      charset = CharsetDetector.getInstance().getCharset(bais);
-      return new BufferedReader(new InputStreamReader(bais, charset));
-    }
-    catch (Exception ex)
-    {
-      throw new JMeldException("Could not create FileReader for : "
-                               + file.getName(), ex);
+      return fileNode.getDocument().getReader();
     }
   }
 
@@ -98,15 +110,27 @@ public class VersionControlBaseDocument
     return null;
   }
 
-  private BaseFile getBaseFile()
+  private boolean useBaseFile()
+  {
+    switch (entry.getStatus())
+    {
+      case modified:
+      case removed:
+      case missing:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  private void initBaseFile()
   {
     if (!baseFileInitialized)
     {
       baseFile = versionControl.getBaseFile(file);
       baseFileInitialized = true;
     }
-
-    return baseFile;
   }
 
   @Override

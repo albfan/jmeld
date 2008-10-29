@@ -16,8 +16,7 @@
  */
 package org.jmeld.util.node;
 
-import org.jmeld.vc.VersionControlIF;
-import org.jmeld.vc.StatusResult;
+import org.jmeld.vc.*;
 import org.jmeld.ui.text.*;
 import org.jmeld.vc.*;
 
@@ -27,17 +26,21 @@ public class VersionControlBaseNode
     extends JMeldNode
     implements BufferNode
 {
-  private StatusResult.Entry entry;
   private VersionControlIF versionControl;
+  private StatusResult.Entry entry;
+  private FileNode fileNode;
   private File file;
   private VersionControlBaseDocument document;
 
-  public VersionControlBaseNode(VersionControlIF versionControl, StatusResult.Entry entry,
-      File file)
+  public VersionControlBaseNode(VersionControlIF versionControl,
+      StatusResult.Entry entry, FileNode fileNode, File file)
   {
     super(entry.getName(), !file.isDirectory());
+
     this.versionControl = versionControl;
+    this.entry = entry;
     this.file = file;
+    this.fileNode = fileNode;
   }
 
   public File getFile()
@@ -61,7 +64,8 @@ public class VersionControlBaseNode
   {
     if (document == null)
     {
-      document = new VersionControlBaseDocument(versionControl, file);
+      document = new VersionControlBaseDocument(versionControl, entry,
+          fileNode, file);
     }
 
     return document;
