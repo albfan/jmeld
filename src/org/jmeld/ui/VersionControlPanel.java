@@ -59,7 +59,14 @@ public class VersionControlPanel
     FolderDiffPanel folderDiffPanel;
     JSplitPane splitPane;
 
-    folderDiffPanel = new FolderDiffPanel(mainPanel, diff);
+    folderDiffPanel = new FolderDiffPanel(mainPanel, diff)
+    {
+      @Override
+      protected JMTreeTableModel createTreeTableModel()
+      {
+        return new VersionControlTreeTableModel();
+      }
+    };
     bufferDiffPanelHolder = new JPanel();
     bufferDiffPanelHolder.setLayout(new BorderLayout());
 

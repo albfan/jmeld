@@ -91,26 +91,33 @@ public class StatusResult
 
   public enum Status
   {
-    modified('M'),
-    added('A'),
-    removed('D'),
-    clean(' '),
-    conflicted('C'),
-    ignored('I'),
-    unversioned('?'),
-    missing('!'),
-    dontknow('#');
+    modified('M', "vcModified"),
+    added('A', "vcAdded"),
+    removed('D', "vcRemoved"),
+    clean(' ', "vcClean"),
+    conflicted('C', "vcConflicted"),
+    ignored('I', "vcIgnored"),
+    unversioned('?', "vcUnversioned"),
+    missing('!', "vcMissing"),
+    dontknow('#', "vcMissing");
 
     private char shortText;
+    private String iconName;
 
-    Status(char shortText)
+    Status(char shortTexti, String iconName)
     {
       this.shortText = shortText;
+      this.iconName = iconName;
     }
 
     public char getShortText()
     {
       return shortText;
+    }
+
+    public String getIconName()
+    {
+      return iconName;
     }
   }
 }

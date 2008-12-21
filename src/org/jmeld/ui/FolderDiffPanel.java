@@ -44,7 +44,7 @@ public class FolderDiffPanel
   private JMeldPanel mainPanel;
   private FolderDiff diff;
   private ActionHandler actionHandler;
-  private FolderDiffTreeTableModel treeTableModel;
+  private JMTreeTableModel treeTableModel;
 
   FolderDiffPanel(JMeldPanel mainPanel, FolderDiff diff)
   {
@@ -112,9 +112,7 @@ public class FolderDiffPanel
     folder2Label.init();
     folder2Label.setText(diff.getRightFolderName(), diff.getLeftFolderName());
 
-    treeTableModel = new FolderDiffTreeTableModel();
-    folderTreeTable.setTreeTableModel(treeTableModel);
-    treeTableModel.setRoot(getRootNode());
+    folderTreeTable.setTreeTableModel(getTreeTableModel());
 
     folderTreeTable
         .setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -289,7 +287,7 @@ public class FolderDiffPanel
       }
     }
 
-    rootNode = new UINode(treeTableModel, "<root>", false);
+    rootNode = new UINode(getTreeTableModel(), "<root>", false);
     hierarchy = hierarchyComboBox.getSelectedItem();
 
     // Build the hierarchy:
@@ -298,12 +296,12 @@ public class FolderDiffPanel
       for (JMDiffNode node : nodes)
       {
         parent = node.getParent();
-        uiNode = new UINode(treeTableModel, node);
+        uiNode = new UINode(getTreeTableModel(), node);
 
         if (parent != null)
         {
           parentName = parent.getName();
-          uiParentNode = new UINode(treeTableModel, parent);
+          uiParentNode = new UINode(getTreeTableModel(), parent);
           uiParentNode = rootNode.addChild(uiParentNode);
           uiParentNode.addChild(uiNode);
         }
@@ -317,7 +315,7 @@ public class FolderDiffPanel
     {
       for (JMDiffNode node : nodes)
       {
-        rootNode.addChild(new UINode(treeTableModel, node));
+        rootNode.addChild(new UINode(getTreeTableModel(), node));
       }
     }
     else if (hierarchy == FolderSettings.FolderView.directoryView)
@@ -350,7 +348,7 @@ public class FolderDiffPanel
     for (int i = 1; i < uiNodes.size(); i++)
     {
       uiNode = uiNodes.get(i);
-      parent = parent.addChild(new UINode(treeTableModel, uiNode));
+      parent = parent.addChild(new UINode(getTreeTableModel(), uiNode));
     }
   }
 
@@ -591,10 +589,8 @@ public class FolderDiffPanel
     @Override
     protected void done()
     {
-      treeTableModel = new FolderDiffTreeTableModel();
-
-      folderTreeTable.setTreeTableModel(treeTableModel);
-      treeTableModel.setRoot(getRootNode());
+      treeTableModel = null;
+      folderTreeTable.setTreeTableModel(getTreeTableModel());
       folderTreeTable.expandAll();
     }
   }
@@ -812,6 +808,22 @@ public class FolderDiffPanel
     {
       return new ArrayList(diffNodeSet);
     }
+  }
+
+  private JMTreeTableModel getTreeTableModel()
+  {
+    if(treeTableModel == null)
+    {
+      treeTableModel = createTreeTableModel();
+      treeTableModel.setRoot(getRootNode());
+    }
+
+    return treeTableModel;
+  }
+
+  protected JMTreeTableModel createTreeTableModel()
+  {
+      return new FolderDiffTreeTableModel();
   }
 
   public void configurationChanged()

@@ -48,6 +48,11 @@ public class VersionControlBaseNode
     return file;
   }
 
+  public StatusResult.Entry getEntry()
+  {
+    return entry;
+  }
+
   @Override
   public void resetContent()
   {
