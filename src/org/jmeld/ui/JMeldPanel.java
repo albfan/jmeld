@@ -101,7 +101,7 @@ public class JMeldPanel
 
     JMeldSettings.getInstance().addConfigurationListener(this);
 
-    setTransferHandler(getDragAndDropHandler());
+    //setTransferHandler(getDragAndDropHandler());
   }
 
   public void openComparison(List<String> fileNameList)
@@ -1259,6 +1259,7 @@ public class JMeldPanel
     checkActions();
   }
 
+/* == JDK6!
   private TransferHandler getDragAndDropHandler()
   {
     return new TransferHandler()
@@ -1275,4 +1276,5 @@ public class JMeldPanel
       }
     };
   }
+  */
 }
