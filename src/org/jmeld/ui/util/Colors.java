@@ -22,14 +22,25 @@ import java.awt.*;
 
 public class Colors
 {
-  public static Color ADDED = new Color(180, 255, 180);
-  public static Color CHANGED = new Color(160, 200, 255);
-  public static Color CHANGED2 = new Color(200, 227, 255);
-  public static Color DELETED = new Color(255, 160, 180);
-  public static Color TABLEROW_LEFT = null;
-  public static Color TABLEROW_RIGHT = null;
-  public static Color DND_SELECTED_NEW = new Color(13, 143, 13);
-  public static Color DND_SELECTED_USED = new Color(238, 214, 128);
+  public static final Color ADDED = new Color(180, 255, 180);
+  public static final Color CHANGED = new Color(160, 200, 255);
+  public static final Color CHANGED_LIGHTER = getChangedLighterColor(CHANGED);
+  public static final Color DELETED = new Color(255, 160, 180);
+  public static final Color DND_SELECTED_NEW = new Color(13, 143, 13);
+  public static final Color DND_SELECTED_USED = new Color(238, 214, 128);
+
+  public static Color getChangedLighterColor(Color changedColor)
+  {
+    Color c;
+
+    c = changedColor;
+    c = ColorUtil.brighter(c);
+    c = ColorUtil.brighter(c);
+    c = ColorUtil.lighter(c);
+    c = ColorUtil.lighter(c);
+
+    return c;
+  }
 
   /** Get a highlighter that will match the current l&f.
    */

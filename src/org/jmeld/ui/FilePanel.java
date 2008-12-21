@@ -72,7 +72,9 @@ public class FilePanel
 
     editor = new JTextArea();
     editor.setDragEnabled(true);
+    System.out.println("highlighter = " + editor.getHighlighter());
     editor.setHighlighter(new JMHighlighter());
+    System.out.println("after highlighter = " + editor.getHighlighter());
 
     editor.addFocusListener(getFocusListener());
     editor.addCaretListener(getCaretListener());
@@ -410,7 +412,7 @@ public class FilePanel
                 toOffset2 = fromOffset2 + changeOriginal.getSize();
 
                 setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                  JMHighlightPainter.CHANGED2);
+                  JMHighlightPainter.CHANGED_LIGHTER);
               }
             }
           }
@@ -464,7 +466,7 @@ public class FilePanel
                 toOffset2 = fromOffset2 + changeRevised.getSize();
 
                 setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                  JMHighlightPainter.CHANGED2);
+                  JMHighlightPainter.CHANGED_LIGHTER);
               }
             }
           }

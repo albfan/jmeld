@@ -32,7 +32,7 @@ public class JMHighlightPainter
   public static final JMHighlightPainter ADDED;
   public static final JMHighlightPainter ADDED_LINE;
   public static final JMHighlightPainter CHANGED;
-  public static final JMHighlightPainter CHANGED2;
+  public static final JMHighlightPainter CHANGED_LIGHTER;
   public static final JMHighlightPainter DELETED;
   public static final JMHighlightPainter DELETED_LINE;
   public static final JMHighlightPainter CURRENT_SEARCH;
@@ -46,8 +46,8 @@ public class JMHighlightPainter
     ADDED_LINE.initConfiguration();
     CHANGED = new JMHighlightPainter(Colors.CHANGED);
     CHANGED.initConfiguration();
-    CHANGED2 = new JMHighlightPainter(Colors.CHANGED2);
-    CHANGED2.initConfiguration();
+    CHANGED_LIGHTER = new JMHighlightPainter(Colors.CHANGED_LIGHTER);
+    CHANGED_LIGHTER.initConfiguration();
     DELETED = new JMHighlightPainter(Colors.DELETED);
     DELETED.initConfiguration();
     DELETED_LINE = new JMHighlightPainter(Colors.DELETED, true);
@@ -60,7 +60,6 @@ public class JMHighlightPainter
 
   private Color color;
   private boolean line;
-  private boolean debug;
 
   private JMHighlightPainter(Color color)
   {
@@ -77,6 +76,7 @@ public class JMHighlightPainter
     JMeldSettings.getInstance().addConfigurationListener(this);
   }
 
+  @Override
   public void paint(Graphics g, int p0, int p1, Shape shape, JTextComponent comp)
   {
     Rectangle b;
@@ -101,7 +101,7 @@ public class JMHighlightPainter
       }
       else
       {
-        if (this == CHANGED2 || this == SEARCH || this == CURRENT_SEARCH)
+        if (this == CHANGED_LIGHTER || this == SEARCH || this == CURRENT_SEARCH)
         {
           if (r1.y == r2.y)
           {
@@ -109,13 +109,7 @@ public class JMHighlightPainter
           }
           else
           {
-            debug("r1: x=%d,y=%d,width=%d,height=%d\n", r1.x, r1.y, r1.width,
-              r1.height);
-            debug("r2: x=%d,y=%d,width=%d,height=%d\n", r2.x, r2.y, r2.width,
-              r2.height);
-
             count = ((r2.y - r1.y) / r1.height) + 1;
-            debug("count = " + count);
             y = r1.y;
             for (int i = 0; i < count; i++, y += r1.height)
             {
@@ -124,24 +118,20 @@ public class JMHighlightPainter
                 // firstline:
                 x = r1.x;
                 width = b.width - b.x;
-                debug("first     : ");
               }
               else if (i == count - 1)
               {
                 // lastline:
                 x = b.x;
                 width = r2.x - x;
-                debug("last      : ");
               }
               else
               {
                 // all lines in between the first and the lastline:
                 x = b.x;
                 width = b.width - b.x;
-                debug("in between: ");
               }
 
-              debug("x=%d,y=%d,width=%d,height=%d\n", x, y, width, r1.height);
               g.fillRect(x, y, width, r1.height);
             }
           }
@@ -177,18 +167,14 @@ public class JMHighlightPainter
     {
       color = getSettings().getChangedColor();
     }
+    else if (this == CHANGED_LIGHTER)
+    {
+      color = Colors.getChangedLighterColor(getSettings().getChangedColor());
+    }
   }
 
   private EditorSettings getSettings()
   {
     return JMeldSettings.getInstance().getEditor();
-  }
-
-  private void debug(String format, Object... args)
-  {
-    if (debug)
-    {
-      System.out.printf(format, args);
-    }
   }
 }

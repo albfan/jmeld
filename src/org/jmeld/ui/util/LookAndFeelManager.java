@@ -32,7 +32,7 @@ public class LookAndFeelManager
     try
     {
       PlasticLookAndFeel.setTabStyle(PlasticLookAndFeel.TAB_STYLE_METAL_VALUE);
-      System.setProperty(PlasticLookAndFeel.DEFAULT_THEME_KEY, "SkyBluer");
+      System.setProperty(PlasticLookAndFeel.DEFAULT_THEME_KEY, "MySkyBluer");
 
       UIManager.installLookAndFeel("JGoodies Plastic 3D",
         "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");

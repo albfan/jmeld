@@ -8,6 +8,11 @@ public class ColorUtil
   {
   }
 
+  public static Color lighter(Color color)
+  {
+    return lighter(color, -0.10f);
+  }
+
   public static Color brighter(Color color)
   {
     return brighter(color, 0.05f);
@@ -44,6 +49,18 @@ public class ColorUtil
     return hsbvals[2];
   }
 
+  /** Create a brighter color by changing the b component of a
+   *    hsb-color (b=brightness, h=hue, s=saturation)
+   */
+  public static Color lighter(Color color, float factor)
+  {
+    float[] hsbvals;
+
+    hsbvals = new float[3];
+    Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbvals);
+
+    return setSaturation(color, hsbvals[1] + factor);
+  }
 
   public static Color setSaturation(Color color, float saturation)
   {

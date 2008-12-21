@@ -18,13 +18,9 @@ package org.jmeld.ui.swing.table;
 
 import org.jdesktop.swingx.treetable.*;
 import org.jmeld.ui.*;
-import org.jmeld.util.node.*;
 
-import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.tree.*;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -49,12 +45,12 @@ public abstract class JMTreeTableModel
   }
 
   public Column addColumn(String id, String columnGroupName, String columnName,
-      Class columnClass, int columnSize, boolean editable, Color background)
+      Class columnClass, int columnSize, boolean editable)
   {
     Column column;
 
     column = new Column(id, columns.size(), columnGroupName, columnName,
-        columnClass, columnSize, editable, background);
+        columnClass, columnSize, editable);
     columns.add(column);
 
     return column;
@@ -134,13 +130,11 @@ public abstract class JMTreeTableModel
     private Class columnClass;
     private int columnSize;
     private boolean editable;
-    private Color background;
     private TableCellRenderer renderer;
     private TableCellEditor editor;
 
     public Column(String id, int columnIndex, String columnGroupName,
-        String columnName, Class columnClass, int columnSize, boolean editable,
-        Color background)
+        String columnName, Class columnClass, int columnSize, boolean editable)
     {
       this.id = id;
       this.columnIndex = columnIndex;
@@ -149,7 +143,6 @@ public abstract class JMTreeTableModel
       this.columnClass = columnClass;
       this.columnSize = columnSize;
       this.editable = editable;
-      this.background = background;
     }
 
     public String getId()
@@ -185,11 +178,6 @@ public abstract class JMTreeTableModel
     public boolean isEditable()
     {
       return editable;
-    }
-
-    public Color getBackground()
-    {
-      return background;
     }
 
     public String toString()
