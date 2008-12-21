@@ -34,12 +34,12 @@ public abstract class JMTableModel
   }
 
   public Column addColumn(String id, String columnGroupName, String columnName,
-      Class columnClass, int columnSize, boolean editable, Color background)
+      Class columnClass, int columnSize, boolean editable)
   {
     Column column;
 
     column = new Column(id, columns.size(), columnGroupName, columnName,
-        columnClass, columnSize, editable, background);
+        columnClass, columnSize, editable);
     columns.add(column);
 
     return column;
@@ -77,11 +77,6 @@ public abstract class JMTableModel
   public Class getColumnClass(int rowIndex, int columnIndex)
   {
     return getColumnClass(rowIndex, getColumn(columnIndex));
-  }
-
-  public Color getColumnBackground(int columnIndex)
-  {
-    return getColumn(columnIndex).background;
   }
 
   public String getColumnGroupName(int columnIndex)
@@ -163,13 +158,11 @@ public abstract class JMTableModel
     private Class columnClass;
     private int columnSize;
     private boolean editable;
-    private Color background;
     private TableCellRenderer renderer;
     private TableCellEditor editor;
 
     public Column(String id, int columnIndex, String columnGroupName,
-        String columnName, Class columnClass, int columnSize, boolean editable,
-        Color background)
+        String columnName, Class columnClass, int columnSize, boolean editable)
     {
       this.id = id;
       this.columnIndex = columnIndex;
@@ -178,7 +171,6 @@ public abstract class JMTableModel
       this.columnClass = columnClass;
       this.columnSize = columnSize;
       this.editable = editable;
-      this.background = background;
     }
 
     public String getId()
@@ -214,11 +206,6 @@ public abstract class JMTableModel
     public boolean isEditable()
     {
       return editable;
-    }
-
-    public Color getBackground()
-    {
-      return background;
     }
 
     public String toString()
