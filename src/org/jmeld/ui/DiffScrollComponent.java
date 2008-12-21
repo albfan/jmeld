@@ -246,8 +246,6 @@ public class DiffScrollComponent
     offset = editorTo.viewToModel(p);
     lastLineTo = bdTo.getLineForOffset(offset) + 1;
 
-    int count = 0;
-
     try
     {
       // Draw only the delta's that have some line's drawn in one of the viewports.
@@ -314,7 +312,10 @@ public class DiffScrollComponent
                  && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - fromRect.y - 1;
-          //height = toRect.y - viewportRect.y - 1;
+          if(toRect.y == fromRect.y)
+          {
+            height += fromRect.height;
+          }
         }
         else if (fromRect.y <= viewportRect.y
                  && toRect.y > viewportRect.y + viewportRect.height)
@@ -407,7 +408,10 @@ public class DiffScrollComponent
                  && toRect.y <= viewportRect.y + viewportRect.height)
         {
           height = toRect.y - fromRect.y - 1;
-          //height = toRect.y - viewportRect.y - 1;
+          if(toRect.y == fromRect.y)
+          {
+            height += fromRect.height;
+          }
         }
         else if (fromRect.y <= viewportRect.y
                  && toRect.y > viewportRect.y + viewportRect.height)

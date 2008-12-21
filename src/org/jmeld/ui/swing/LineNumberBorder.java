@@ -70,7 +70,7 @@ public class LineNumberBorder
   {
     Rectangle clip;
 
-    clip = g.getClipRect();
+    clip = g.getClipBounds();
 
     g.setColor(background);
     g.fillRect(0, clip.y, left - MARGIN, clip.y + clip.height);
@@ -91,7 +91,7 @@ public class LineNumberBorder
 
     g2 = (Graphics2D) g;
 
-    clip = g.getClipRect();
+    clip = g.getClipBounds();
 
     try
     {

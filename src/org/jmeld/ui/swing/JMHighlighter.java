@@ -76,7 +76,7 @@ public class JMHighlighter
     int lineHeight;
     LineNumberBorder lineNumberBorder;
 
-    clip = g.getClipRect();
+    clip = g.getClipBounds();
     lineHeight = component.getFontMetrics(component.getFont()).getHeight();
     startOffset = component.viewToModel(new Point(clip.x - lineHeight, clip.y));
     endOffset = component.viewToModel(new Point(clip.x, clip.y + clip.height

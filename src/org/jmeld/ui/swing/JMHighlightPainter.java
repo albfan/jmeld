@@ -85,6 +85,7 @@ public class JMHighlightPainter
     int x;
     int y;
     int width;
+    int height;
     int count;
 
     b = shape.getBounds();
@@ -138,7 +139,12 @@ public class JMHighlightPainter
         }
         else
         {
-          g.fillRect(0, r1.y, b.x + b.width, r2.y - r1.y);
+          height = r2.y - r1.y;
+          if(height == 0)
+          {
+            height = r1.height;
+          }
+          g.fillRect(0, r1.y, b.x + b.width, height);
         }
       }
     }
