@@ -66,26 +66,30 @@ Release 2.1:
 - [    ] CubicCurve in DiffScrollComponent.java
 
 Release 2.2:
-- [75%]  incremental diff (Adding to the end of the file doesn't work yet)
--        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
-         (Change it to OutLine of the netbeans project!)
--        Create manual
 - [done] L&F preference
--        Support drag and drop.
 - [done] Remove jgoodies FormLayout in favour of Matisse groupLayout.
 - [done] BUG[STA] Adjust search in FolderDiffPanel
 - [done] BUG[WEB] Search doesn't behave after editing.
 - [NO  ] Exclude patterns in diff (Text Filters in meld). [WONT IMPLEMENT!]
--        Cancel the current diff if it takes too long.
 - [done] BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and
                   in the other it is a folder!
--        Ability to use external gnu diff
+- [70% ] Implement subversion diff.
+
+Release 2.3:
+- [75%]  incremental diff (Adding to the end of the file doesn't work yet)
 -        Calculate 'isChanged' in AbstractConfiguration.
--        Diff images
--        Diff binaries
+-        Cancel the current diff if it takes too long.
+- [50%]  Support drag and drop.
+- [40%]  Implement bazaar diff.
+- [40%]  Implement mercurial diff.
+-        JXTreeTable doesn't look good with gtk-lookandfeel (highlighters)
+         (Change it to OutLine of the netbeans project!)
 
 Release 3.0:
--        Implement subversion diff.
+-        Ability to use external gnu diff
+-        Create manual
+-        Diff images
+-        Diff binaries
 
 Release 3.5:
 -        Implement 3-way diff.
