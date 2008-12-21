@@ -1,9 +1,7 @@
 package org.jmeld.util.conf;
 
-import org.jmeld.*;
 
 import java.io.*;
-import java.util.*;
 
 public abstract class AbstractConfiguration
 {
@@ -64,9 +62,9 @@ public abstract class AbstractConfiguration
     getManager().removeConfigurationListener(getClass(), listener);
   }
 
-  void disableFireChanged(boolean disable)
+  void disableFireChanged(boolean disableFireChanged)
   {
-    disableFireChanged = true;
+    this.disableFireChanged = disableFireChanged;
   }
 
   public void fireChanged()
