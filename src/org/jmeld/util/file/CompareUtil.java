@@ -564,6 +564,7 @@ public class CompareUtil
     int whitespaceEndIndex;
     int length;
     char c;
+    boolean whiteSpaceInBetweenIgnored;
 
     inputLine.flip();
     outputLine.clear();
@@ -571,6 +572,7 @@ public class CompareUtil
     length = inputLine.remaining();
     lineEndingEndIndex = length;
     blankLine = true;
+    whiteSpaceInBetweenIgnored = false;
 
     c = 0;
 
@@ -615,6 +617,7 @@ public class CompareUtil
           {
             if (ignore.ignoreWhitespaceInBetween)
             {
+              whiteSpaceInBetweenIgnored = true;
               continue;
             }
           }
@@ -649,6 +652,11 @@ public class CompareUtil
         c = Character.toLowerCase(c);
       }
 
+      if(whiteSpaceInBetweenIgnored)
+      {
+        outputLine.put(' ');
+        whiteSpaceInBetweenIgnored = false;
+      }
       outputLine.put(c);
     }
 
