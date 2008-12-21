@@ -30,9 +30,8 @@ public class VersionControlTreeTableModel
 
   public VersionControlTreeTableModel()
   {
-    fileNameColumn = addColumn("fileName", null, "File", null, -1, false, null);
-    statusColumn = addColumn("status", "Left", "Status", Icon.class, 12,
-      false, Colors.TABLEROW_LEFT);
+    fileNameColumn = addColumn("fileName", null, "File", null, -1, false);
+    statusColumn = addColumn("status", "Left", "Status", Icon.class, 12, false);
   }
 
   public Object getValueAt(Object objectNode, Column column)
