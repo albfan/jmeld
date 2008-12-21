@@ -4,6 +4,7 @@ CTYPE map
 
 <map version="1.0">
   <mapID target="shortcuts" url="htm/Shortcuts.htm" />
+  <mapID target="licenses" url="htm/Licenses.htm" />
 </map>
 
 
