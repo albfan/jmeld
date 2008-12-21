@@ -23,7 +23,6 @@ import org.jmeld.util.conf.*;
 import javax.xml.bind.annotation.*;
 
 import java.awt.*;
-import java.util.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class EditorSettings
@@ -86,7 +85,6 @@ public class EditorSettings
   public void setShowLineNumbers(boolean showLineNumbers)
   {
     this.showLineNumbers = showLineNumbers;
-    System.out.println("before firechanged");
     fireChanged();
   }
 
