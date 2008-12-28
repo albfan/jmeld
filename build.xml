@@ -52,17 +52,18 @@
       <fileset dir="resources" />
       <fileset dir="build/classes" />
       <fileset dir="doc/help/jmeld" />
+      <zipfileset src="lib/jide.jar" />
       <zipfileset src="lib/forms-1.0.7.jar" />
       <zipfileset src="lib/looks-2.2.1.jar" />
       <zipfileset src="lib/swingx-0.9.4.jar" />
       <zipfileset src="lib/swing-worker.jar" />
       <zipfileset src="lib/jhall.jar" />
-      <!--zipfileset src="lib/jaxb-api.jar" /-->
       <zipfileset src="lib/jsr173_1.0_api.jar" />
       <zipfileset src="lib/swing-layout-1.0.3.jar" />
-      <!--zipfileset src="lib/jaxb-impl.jar" /-->
       <zipfileset src="lib/icu4j-4_0.jar" />
       <zipfileset src="lib/l2fprod-common-all.jar" />
+      <zipfileset src="lib/jaxb-api.jar" />
+      <zipfileset src="lib/jaxb-impl.jar" />
       <zipfileset src="lib/activation.jar">
         <exclude name="META-INF/**" />
       </zipfileset>
