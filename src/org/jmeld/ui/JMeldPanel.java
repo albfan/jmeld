@@ -77,18 +77,17 @@ public class JMeldPanel
   private static final String EXIT_ACTION = "Exit";
 
   // instance variables:
-  private ActionHandler actionHandler;
-  private JideTabbedPane tabbedPane;
-  private JPanel        barContainer;
+  private ActionHandler     actionHandler;
+  private JideTabbedPane    tabbedPane;
+  private JPanel            barContainer;
   private AbstractBarDialog currentBarDialog;
-  private SearchBarDialog searchBarDialog;
-  private JComponent    toolBar;
-  private boolean       mergeMode;
+  private SearchBarDialog   searchBarDialog;
+  private JComponent        toolBar;
+  private boolean           mergeMode;
 
   public JMeldPanel()
   {
     setFocusable(true);
-
 
     tabbedPane = new JideTabbedPane();
     tabbedPane.setFocusable(false);
@@ -793,9 +792,13 @@ public class JMeldPanel
       return;
     }
 
-    if (!cp.checkExit())
+    // Detect if this close is due to pressing ESC.
+    if(ae.getSource() == this)
     {
-      return;
+      if (!cp.checkExit())
+      {
+        return;
+      }
     }
 
     // Exit a tab!
