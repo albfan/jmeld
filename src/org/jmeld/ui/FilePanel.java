@@ -72,9 +72,7 @@ public class FilePanel
 
     editor = new JTextArea();
     editor.setDragEnabled(true);
-    System.out.println("highlighter = " + editor.getHighlighter());
     editor.setHighlighter(new JMHighlighter());
-    System.out.println("after highlighter = " + editor.getHighlighter());
 
     editor.addFocusListener(getFocusListener());
     editor.addCaretListener(getCaretListener());
