@@ -64,6 +64,7 @@ Release 2.1:
 - [    ] Bug: diff file -> edit file -> exit tab [don't save] -> 
               diff file -> Exception!
 - [    ] CubicCurve in DiffScrollComponent.java
+- [    ] TabbedPane: cannot exit directorydiff with close button.
 
 Release 2.2:
 - [done] L&F preference
