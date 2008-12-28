@@ -94,6 +94,10 @@ public class JMeldPanel
     tabbedPane.setShowCloseButtonOnTab(true);
     tabbedPane.setShowCloseButtonOnSelectedTab(true);
 
+    // Pin the tabshape because the defaults do not look good
+    //   on lookandfeels other than JGoodies Plastic.
+    tabbedPane.setTabShape(JideTabbedPane.SHAPE_OFFICE2003);
+
     // Watch out: initActions uses 'tabbedPane' so this statement should be
     //   after the instantiation of tabbedPane.
     initActions();

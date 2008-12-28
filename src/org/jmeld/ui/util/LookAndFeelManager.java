@@ -2,6 +2,7 @@ package org.jmeld.ui.util;
 
 import com.jgoodies.looks.plastic.*;
 import com.jgoodies.looks.plastic.theme.*;
+import com.jidesoft.plaf.*;
 
 import java.awt.*;
 import java.util.*;
@@ -69,6 +70,7 @@ public class LookAndFeelManager
       }
 
       UIManager.setLookAndFeel(lookAndFeelClassName);
+      LookAndFeelFactory.installJideExtension();
 
       root = SwingUtilities.getRoot(JMeld.getJMeldPanel());
       if (root != null)
