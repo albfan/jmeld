@@ -26,7 +26,7 @@ public class FileDocument
     extends AbstractBufferDocument
 {
   // instance variables:
-  private File file;
+  private File    file;
   private Charset charset;
 
   public FileDocument(File file)
@@ -58,7 +58,7 @@ public class FileDocument
 
     if (!file.isFile() || !file.canRead())
     {
-      throw new JMeldException("Could not open file: " + file);
+      throw new JMeldException("Could not open file: " + file.getAbsolutePath());
     }
 
     try

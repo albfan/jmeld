@@ -51,7 +51,7 @@ Release 2.0:
 
 Release 2.1:
 -        Inner diff sometimes doesn't work
--        Bug when comparing filesRight/oneline.xml en filesLeft
+- [done] Bug when comparing filesRight/oneline.xml en filesLeft
 - [done] Make size of JMDelta 0 if it only contains empty lines 
          (Only when ignoreblanklines is on!)
 - [done] Keyboardfocus on diffbar. (mergmode + editpanes at the same time)
@@ -64,7 +64,7 @@ Release 2.1:
 - [    ] Bug: diff file -> edit file -> exit tab [don't save] -> 
               diff file -> Exception!
 - [    ] CubicCurve in DiffScrollComponent.java
-- [    ] TabbedPane: cannot exit directorydiff with close button.
+- [done] TabbedPane: cannot exit directorydiff with close button.
 
 Release 2.2:
 - [done] L&F preference
