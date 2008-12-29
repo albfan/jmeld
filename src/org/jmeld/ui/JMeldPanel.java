@@ -47,43 +47,43 @@ import java.util.*;
 import java.util.List;
 
 public class JMeldPanel
-       extends JPanel
-       implements ConfigurationListenerIF
+    extends JPanel
+    implements ConfigurationListenerIF
 {
   // class variables:
   // All actions:
-  private static final String NEW_ACTION = "New";
-  private static final String SAVE_ACTION = "Save";
-  private static final String UNDO_ACTION = "Undo";
-  private static final String REDO_ACTION = "Redo";
-  private static final String RIGHT_ACTION = "Right";
-  private static final String LEFT_ACTION = "Left";
-  private static final String UP_ACTION = "Up";
-  private static final String DOWN_ACTION = "Down";
-  private static final String ZOOMPLUS_ACTION = "ZoomPlus";
-  private static final String ZOOMMIN_ACTION = "ZoomMin";
-  private static final String GOTOSELECTED_ACTION = "GoToSelected";
-  private static final String GOTOFIRST_ACTION = "GoToFirst";
-  private static final String GOTOLAST_ACTION = "GoToLast";
-  private static final String GOTOLINE_ACTION = "GoToLine";
-  private static final String STARTSEARCH_ACTION = "StartSearch";
-  private static final String NEXTSEARCH_ACTION = "NextSearch";
+  private static final String NEW_ACTION            = "New";
+  private static final String SAVE_ACTION           = "Save";
+  private static final String UNDO_ACTION           = "Undo";
+  private static final String REDO_ACTION           = "Redo";
+  private static final String RIGHT_ACTION          = "Right";
+  private static final String LEFT_ACTION           = "Left";
+  private static final String UP_ACTION             = "Up";
+  private static final String DOWN_ACTION           = "Down";
+  private static final String ZOOMPLUS_ACTION       = "ZoomPlus";
+  private static final String ZOOMMIN_ACTION        = "ZoomMin";
+  private static final String GOTOSELECTED_ACTION   = "GoToSelected";
+  private static final String GOTOFIRST_ACTION      = "GoToFirst";
+  private static final String GOTOLAST_ACTION       = "GoToLast";
+  private static final String GOTOLINE_ACTION       = "GoToLine";
+  private static final String STARTSEARCH_ACTION    = "StartSearch";
+  private static final String NEXTSEARCH_ACTION     = "NextSearch";
   private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
-  private static final String REFRESH_ACTION = "Refresh";
-  private static final String MERGEMODE_ACTION = "MergeMode";
-  private static final String HELP_ACTION = "Help";
-  private static final String ABOUT_ACTION = "About";
-  private static final String SETTINGS_ACTION = "Settings";
-  private static final String EXIT_ACTION = "Exit";
+  private static final String REFRESH_ACTION        = "Refresh";
+  private static final String MERGEMODE_ACTION      = "MergeMode";
+  private static final String HELP_ACTION           = "Help";
+  private static final String ABOUT_ACTION          = "About";
+  private static final String SETTINGS_ACTION       = "Settings";
+  private static final String EXIT_ACTION           = "Exit";
 
   // instance variables:
-  private ActionHandler     actionHandler;
-  private JideTabbedPane    tabbedPane;
-  private JPanel            barContainer;
-  private AbstractBarDialog currentBarDialog;
-  private SearchBarDialog   searchBarDialog;
-  private JComponent        toolBar;
-  private boolean           mergeMode;
+  private ActionHandler       actionHandler;
+  private JideTabbedPane      tabbedPane;
+  private JPanel              barContainer;
+  private AbstractBarDialog   currentBarDialog;
+  private SearchBarDialog     searchBarDialog;
+  private JComponent          toolBar;
+  private boolean             mergeMode;
 
   public JMeldPanel()
   {
@@ -109,9 +109,7 @@ public class JMeldPanel
     setLayout(new BorderLayout());
     addToolBar();
     add(tabbedPane, BorderLayout.CENTER);
-    add(
-      getBar(),
-      BorderLayout.PAGE_END);
+    add(getBar(), BorderLayout.PAGE_END);
 
     tabbedPane.getModel().addChangeListener(getChangeListener());
 
@@ -175,15 +173,12 @@ public class JMeldPanel
     }
     else
     {
-      openComparison(
-        fileNameList.get(0),
-        null);
+      openComparison(fileNameList.get(0), null);
     }
   }
 
-  public void openComparison(
-    String leftName,
-    String rightName)
+  public void openComparison(String leftName,
+                             String rightName)
   {
     File leftFile;
     File rightFile;
@@ -197,17 +192,12 @@ public class JMeldPanel
       {
         if (rightFile.isDirectory())
         {
-          openDirectoryComparison(
-            leftFile,
-            rightFile,
-            JMeldSettings.getInstance().getFilter().getFilter("default"));
+          openDirectoryComparison(leftFile, rightFile, JMeldSettings
+              .getInstance().getFilter().getFilter("default"));
         }
         else
         {
-          openFileComparison(
-            new File(leftFile, rightName),
-            rightFile,
-            false);
+          openFileComparison(new File(leftFile, rightName), rightFile, false);
         }
       }
       else
@@ -228,25 +218,22 @@ public class JMeldPanel
     }
   }
 
-  public void openFileComparison(
-    File    leftFile,
-    File    rightFile,
-    boolean openInBackground)
+  public void openFileComparison(File leftFile,
+                                 File rightFile,
+                                 boolean openInBackground)
   {
     new NewFileComparisonPanel(leftFile, rightFile, openInBackground).execute();
   }
 
-  public void openFileComparison(
-    JMDiffNode diffNode,
-    boolean    openInBackground)
+  public void openFileComparison(JMDiffNode diffNode,
+                                 boolean openInBackground)
   {
     new NewFileComparisonPanel(diffNode, openInBackground).execute();
   }
 
-  public void openDirectoryComparison(
-    File   leftFile,
-    File   rightFile,
-    Filter filter)
+  public void openDirectoryComparison(File leftFile,
+                                      File rightFile,
+                                      Filter filter)
   {
     new NewDirectoryComparisonPanel(leftFile, rightFile, filter).execute();
   }
@@ -271,8 +258,8 @@ public class JMeldPanel
 
   private JComponent getToolBar()
   {
-    JButton        button;
-    JToolBar       tb;
+    JButton button;
+    JToolBar tb;
     ToolBarBuilder builder;
 
     tb = new JToolBar();
@@ -295,8 +282,7 @@ public class JMeldPanel
 
     builder.addSpring();
 
-    button = WidgetFactory.getToolBarButton(
-        actionHandler.get(SETTINGS_ACTION));
+    button = WidgetFactory.getToolBarButton(actionHandler.get(SETTINGS_ACTION));
     builder.addButton(button);
 
     button = WidgetFactory.getToolBarButton(actionHandler.get(HELP_ACTION));
@@ -315,12 +301,8 @@ public class JMeldPanel
     cc = new CellConstraints();
 
     barContainer = new JPanel(new FormLayout("0:grow", "pref, pref, pref"));
-    barContainer.add(
-      new JSeparator(),
-      cc.xy(1, 2));
-    barContainer.add(
-      StatusBar.getInstance(),
-      cc.xy(1, 3));
+    barContainer.add(new JSeparator(), cc.xy(1, 2));
+    barContainer.add(StatusBar.getInstance(), cc.xy(1, 3));
 
     return barContainer;
   }
@@ -458,22 +440,19 @@ public class JMeldPanel
 
     if (dialog.getFunction() == NewPanelDialog.Function.FILE_COMPARISON)
     {
-      openFileComparison(
-        new File(dialog.getLeftFileName()),
-        new File(dialog.getRightFileName()),
-        false);
+      openFileComparison(new File(dialog.getLeftFileName()), new File(dialog
+          .getRightFileName()), false);
     }
     else if (dialog.getFunction() == NewPanelDialog.Function.DIRECTORY_COMPARISON)
     {
-      openDirectoryComparison(
-        new File(dialog.getLeftDirectoryName()),
-        new File(dialog.getRightDirectoryName()),
-        dialog.getFilter());
+      openDirectoryComparison(new File(dialog.getLeftDirectoryName()),
+                              new File(dialog.getRightDirectoryName()), dialog
+                                  .getFilter());
     }
     else if (dialog.getFunction() == NewPanelDialog.Function.VERSION_CONTROL)
     {
-      openVersionControlComparison(
-        new File(dialog.getVersionControlDirectoryName()));
+      openVersionControlComparison(new File(dialog
+          .getVersionControlDirectoryName()));
     }
   }
 
@@ -685,9 +664,9 @@ public class JMeldPanel
 
     if (mergeMode)
     {
-      StatusBar.getInstance().setNotification(
-        MERGEMODE_ACTION,
-        ImageUtil.getSmallImageIcon("jmeld_mergemode-on"));
+      StatusBar.getInstance()
+          .setNotification(MERGEMODE_ACTION,
+                           ImageUtil.getSmallImageIcon("jmeld_mergemode-on"));
     }
     else
     {
@@ -699,15 +678,15 @@ public class JMeldPanel
   {
     try
     {
-      JPanel               panel;
+      JPanel panel;
       AbstractContentPanel content;
-      URL                  url;
-      HelpSet              helpSet;
-      JHelpContentViewer   viewer;
-      JHelpNavigator       navigator;
-      NavigatorView        navigatorView;
-      JSplitPane           splitPane;
-      String               contentId;
+      URL url;
+      HelpSet helpSet;
+      JHelpContentViewer viewer;
+      JHelpNavigator navigator;
+      NavigatorView navigatorView;
+      JSplitPane splitPane;
+      String contentId;
 
       contentId = "HelpPanel";
       if (checkAlreadyOpen(contentId))
@@ -715,16 +694,12 @@ public class JMeldPanel
         return;
       }
 
-      url = HelpSet.findHelpSet(
-          getClass().getClassLoader(),
-          "jmeld");
-      helpSet = new HelpSet(
-          getClass().getClassLoader(),
-          url);
+      url = HelpSet.findHelpSet(getClass().getClassLoader(), "jmeld");
+      helpSet = new HelpSet(getClass().getClassLoader(), url);
       viewer = new JHelpContentViewer(helpSet);
       navigatorView = helpSet.getNavigatorView("TOC");
-      navigator = (JHelpNavigator) navigatorView.createNavigator(
-          viewer.getModel());
+      navigator = (JHelpNavigator) navigatorView.createNavigator(viewer
+          .getModel());
       splitPane = new JSplitPane();
       splitPane.setLeftComponent(navigator);
       splitPane.setRightComponent(viewer);
@@ -733,13 +708,12 @@ public class JMeldPanel
       content.setLayout(new BorderLayout());
       content.add(splitPane, BorderLayout.CENTER);
 
-/*
-   content = new HelpPanel(this);
- */
-      tabbedPane.addTab(
-        "Help",
-        ImageUtil.getSmallImageIcon("stock_help-agent"),
-        content);
+      /*
+         content = new HelpPanel(this);
+       */
+      tabbedPane.addTab("Help",
+                        ImageUtil.getSmallImageIcon("stock_help-agent"),
+                        content);
       tabbedPane.setSelectedComponent(content);
     }
     catch (Exception ex)
@@ -751,7 +725,7 @@ public class JMeldPanel
   public void doAbout(ActionEvent ae)
   {
     AbstractContentPanel content;
-    String               contentId;
+    String contentId;
 
     contentId = "AboutPanel";
     if (checkAlreadyOpen(contentId))
@@ -762,14 +736,11 @@ public class JMeldPanel
     content = new AbstractContentPanel();
     content.setId(contentId);
     content.setLayout(new BorderLayout());
-    content.add(
-      new JButton("JMeld version: " + Version.getVersion()),
-      BorderLayout.CENTER);
+    content.add(new JButton("JMeld version: " + Version.getVersion()),
+                BorderLayout.CENTER);
 
-    tabbedPane.addTab(
-      "About",
-      ImageUtil.getSmallImageIcon("stock_about"),
-      content);
+    tabbedPane.addTab("About", ImageUtil.getSmallImageIcon("stock_about"),
+                      content);
     tabbedPane.setSelectedComponent(content);
   }
 
@@ -797,7 +768,7 @@ public class JMeldPanel
     }
 
     // Detect if this close is due to pressing ESC.
-    if(ae.getSource() == this)
+    if (ae.getSource() == this)
     {
       if (!cp.checkExit())
       {
@@ -812,7 +783,7 @@ public class JMeldPanel
   public void doSettings(ActionEvent ae)
   {
     AbstractContentPanel content;
-    String               contentId;
+    String contentId;
 
     contentId = "SettingsPanel";
     if (checkAlreadyOpen(contentId))
@@ -822,10 +793,8 @@ public class JMeldPanel
 
     content = new SettingsPanel(this);
     content.setId(contentId);
-    tabbedPane.addTab(
-      "Settings",
-      ImageUtil.getSmallImageIcon("stock_preferences"),
-      content);
+    tabbedPane.addTab("Settings", ImageUtil
+        .getSmallImageIcon("stock_preferences"), content);
     tabbedPane.setSelectedComponent(content);
   }
 
@@ -847,9 +816,7 @@ public class JMeldPanel
   {
     for (AbstractContentPanel contentPanel : getContentPanelList())
     {
-      if (ObjectUtil.equals(
-          contentPanel.getId(),
-          contentId))
+      if (ObjectUtil.equals(contentPanel.getId(), contentId))
       {
         System.out.println("already open: " + contentId);
         return contentPanel;
@@ -862,32 +829,32 @@ public class JMeldPanel
   private ChangeListener getChangeListener()
   {
     return new ChangeListener()
+    {
+      public void stateChanged(ChangeEvent e)
       {
-        public void stateChanged(ChangeEvent e)
-        {
-          checkActions();
-        }
-      };
+        checkActions();
+      }
+    };
   }
 
   public WindowListener getWindowListener()
   {
     return new WindowAdapter()
+    {
+      @Override
+      public void windowClosing(WindowEvent we)
       {
-        @Override
-        public void windowClosing(WindowEvent we)
+        for (JMeldContentPanelIF contentPanel : getContentPanelList())
         {
-          for (JMeldContentPanelIF contentPanel : getContentPanelList())
+          if (!contentPanel.checkSave())
           {
-            if (!contentPanel.checkSave())
-            {
-              return;
-            }
+            return;
           }
-
-          System.exit(1);
         }
-      };
+
+        System.exit(1);
+      }
+    };
   }
 
   private AbstractContentPanel getCurrentContentPanel()
@@ -910,7 +877,7 @@ public class JMeldPanel
   }
 
   class NewFileComparisonPanel
-         extends SwingWorker<String, Object>
+      extends SwingWorker<String, Object>
   {
     private JMDiffNode           diffNode;
     private File                 leftFile;
@@ -920,18 +887,14 @@ public class JMeldPanel
     private AbstractContentPanel contentPanel;
     private String               contentId;
 
-    NewFileComparisonPanel(
-      JMDiffNode diffNode,
-      boolean    openInBackground)
+    NewFileComparisonPanel(JMDiffNode diffNode, boolean openInBackground)
     {
       this.diffNode = diffNode;
       this.openInBackground = openInBackground;
     }
 
-    NewFileComparisonPanel(
-      File    leftFile,
-      File    rightFile,
-      boolean openInBackground)
+    NewFileComparisonPanel(File leftFile, File rightFile,
+        boolean openInBackground)
     {
       this.leftFile = leftFile;
       this.rightFile = rightFile;
@@ -952,7 +915,8 @@ public class JMeldPanel
 
           if (!leftFile.exists())
           {
-            return "left filename(" + leftFile.getName() + ") doesn't exist";
+            return "left filename(" + leftFile.getAbsolutePath()
+                   + ") doesn't exist";
           }
 
           if (StringUtil.isEmpty(rightFile.getName()))
@@ -962,14 +926,12 @@ public class JMeldPanel
 
           if (!rightFile.exists())
           {
-            return "right filename(" + rightFile.getName() + ") doesn't exist";
+            return "right filename(" + rightFile.getAbsolutePath()
+                   + ") doesn't exist";
           }
 
-          diffNode = JMDiffNodeFactory.create(
-              leftFile.getName(),
-              leftFile,
-              rightFile.getName(),
-              rightFile);
+          diffNode = JMDiffNodeFactory.create(leftFile.getName(), leftFile,
+                                              rightFile.getName(), rightFile);
         }
 
         contentId = "BufferDiffPanel:" + diffNode.getId();
@@ -1001,7 +963,8 @@ public class JMeldPanel
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
-            "Error opening file", JOptionPane.ERROR_MESSAGE);
+                                        "Error opening file",
+                                        JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -1015,10 +978,8 @@ public class JMeldPanel
             panel = new BufferDiffPanel(JMeldPanel.this);
             panel.setId(contentId);
             panel.setDiffNode(diffNode);
-            tabbedPane.addTab(
-              panel.getTitle(),
-              ImageUtil.getSmallImageIcon("stock_new"),
-              panel);
+            tabbedPane.addTab(panel.getTitle(), ImageUtil
+                .getSmallImageIcon("stock_new"), panel);
             if (!openInBackground)
             {
               tabbedPane.setSelectedComponent(panel);
@@ -1042,18 +1003,18 @@ public class JMeldPanel
     private Runnable getDoGoToFirst()
     {
       return new Runnable()
+      {
+        public void run()
         {
-          public void run()
-          {
-            panel.doGoToFirst();
-            panel.repaint();
-          }
-        };
+          panel.doGoToFirst();
+          panel.repaint();
+        }
+      };
     }
   }
 
   class NewDirectoryComparisonPanel
-         extends SwingWorker<String, Object>
+      extends SwingWorker<String, Object>
   {
     private File                 leftFile;
     private File                 rightFile;
@@ -1062,10 +1023,7 @@ public class JMeldPanel
     private AbstractContentPanel contentPanel;
     private String               contentId;
 
-    NewDirectoryComparisonPanel(
-      File   leftFile,
-      File   rightFile,
-      Filter filter)
+    NewDirectoryComparisonPanel(File leftFile, File rightFile, Filter filter)
     {
       this.leftFile = leftFile;
       this.rightFile = rightFile;
@@ -1082,13 +1040,14 @@ public class JMeldPanel
 
       if (!leftFile.exists())
       {
-        return "left directoryName(" + leftFile.getName() + ") doesn't exist";
+        return "left directoryName(" + leftFile.getAbsolutePath()
+               + ") doesn't exist";
       }
 
       if (!leftFile.isDirectory())
       {
         return "left directoryName(" + leftFile.getName()
-        + ") is not a directory";
+               + ") is not a directory";
       }
 
       if (StringUtil.isEmpty(rightFile.getName()))
@@ -1098,18 +1057,18 @@ public class JMeldPanel
 
       if (!rightFile.exists())
       {
-        return "right directoryName(" + rightFile.getName()
-        + ") doesn't exist";
+        return "right directoryName(" + rightFile.getAbsolutePath()
+               + ") doesn't exist";
       }
 
       if (!rightFile.isDirectory())
       {
         return "right directoryName(" + rightFile.getName()
-        + ") is not a directory";
+               + ") is not a directory";
       }
 
       contentId = "FolderDiffPanel:" + leftFile.getName() + "-"
-        + rightFile.getName();
+                  + rightFile.getName();
       contentPanel = getAlreadyOpen(contentId);
       if (contentPanel == null)
       {
@@ -1126,7 +1085,7 @@ public class JMeldPanel
     {
       try
       {
-        String          result;
+        String result;
         FolderDiffPanel panel;
 
         result = get();
@@ -1134,7 +1093,8 @@ public class JMeldPanel
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
-            "Error opening file", JOptionPane.ERROR_MESSAGE);
+                                        "Error opening file",
+                                        JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -1148,10 +1108,8 @@ public class JMeldPanel
             panel = new FolderDiffPanel(JMeldPanel.this, diff);
             panel.setId(contentId);
 
-            tabbedPane.addTab(
-              panel.getTitle(),
-              ImageUtil.getSmallImageIcon("stock_folder"),
-              panel);
+            tabbedPane.addTab(panel.getTitle(), ImageUtil
+                .getSmallImageIcon("stock_folder"), panel);
             tabbedPane.setSelectedComponent(panel);
           }
         }
@@ -1164,7 +1122,7 @@ public class JMeldPanel
   }
 
   class NewVersionControlComparisonPanel
-         extends SwingWorker<String, Object>
+      extends SwingWorker<String, Object>
   {
     private File                 directory;
     private VersionControlDiff   diff;
@@ -1186,7 +1144,7 @@ public class JMeldPanel
 
       if (!directory.exists())
       {
-        return "directory(" + directory.getName() + ") doesn't exist";
+        return "directory(" + directory.getAbsolutePath() + ") doesn't exist";
       }
 
       if (!directory.isDirectory())
@@ -1210,7 +1168,7 @@ public class JMeldPanel
     {
       try
       {
-        String              result;
+        String result;
         VersionControlPanel panel;
 
         result = get();
@@ -1218,7 +1176,8 @@ public class JMeldPanel
         if (result != null)
         {
           JOptionPane.showMessageDialog(JMeldPanel.this, result,
-            "Error opening file", JOptionPane.ERROR_MESSAGE);
+                                        "Error opening file",
+                                        JOptionPane.ERROR_MESSAGE);
         }
         else
         {
@@ -1233,10 +1192,8 @@ public class JMeldPanel
             panel = new VersionControlPanel(JMeldPanel.this, diff);
             panel.setId(contentId);
 
-            tabbedPane.addTab(
-              "TODO: Think of title!",
-              ImageUtil.getSmallImageIcon("stock_folder"),
-              panel);
+            tabbedPane.addTab("TODO: Think of title!", ImageUtil
+                .getSmallImageIcon("stock_folder"), panel);
             tabbedPane.setSelectedComponent(panel);
           }
         }
@@ -1248,10 +1205,9 @@ public class JMeldPanel
     }
   }
 
-  private void installKey(
-    boolean    enabled,
-    String     key,
-    MeldAction action)
+  private void installKey(boolean enabled,
+                          String key,
+                          MeldAction action)
   {
     if (!enabled)
     {
@@ -1263,54 +1219,52 @@ public class JMeldPanel
     }
   }
 
-  private void installKey(
-    String     key,
-    MeldAction action)
+  private void installKey(String key,
+                          MeldAction action)
   {
     SwingUtil.installKey(this, key, action);
   }
 
-  private void deInstallKey(
-    String     key,
-    MeldAction action)
+  private void deInstallKey(String key,
+                            MeldAction action)
   {
     SwingUtil.deInstallKey(this, key, action);
   }
 
-/*
-   private TabIcon getTabIcon(
-     String iconName,
-     String text)
-   {
-     TabIcon icon;
-     icon = new TabIcon(
-         ImageUtil.getSmallImageIcon(iconName),
-         text);
-     icon.addExitListener(getTabExitListener());
-     return icon;
-   }
-   private TabExitListenerIF getTabExitListener()
-   {
-     return new TabExitListenerIF()
-       {
-         public boolean doExit(TabExitEvent te)
+  /*
+     private TabIcon getTabIcon(
+       String iconName,
+       String text)
+     {
+       TabIcon icon;
+       icon = new TabIcon(
+           ImageUtil.getSmallImageIcon(iconName),
+           text);
+       icon.addExitListener(getTabExitListener());
+       return icon;
+     }
+     private TabExitListenerIF getTabExitListener()
+     {
+       return new TabExitListenerIF()
          {
-           int tabIndex;
-           tabIndex = te.getTabIndex();
-           if (tabIndex == -1)
+           public boolean doExit(TabExitEvent te)
            {
-             return false;
+             int tabIndex;
+             tabIndex = te.getTabIndex();
+             if (tabIndex == -1)
+             {
+               return false;
+             }
+             return doExitTab(tabbedPane.getComponentAt(tabIndex));
            }
-           return doExitTab(tabbedPane.getComponentAt(tabIndex));
-         }
-       };
-   }
- */
+         };
+     }
+   */
   private boolean doExitTab(Component component)
   {
     AbstractContentPanel content;
-    Icon                 icon;
-    int                  index;
+    Icon icon;
+    int index;
 
     if (component == null)
     {
@@ -1350,9 +1304,7 @@ public class JMeldPanel
     deactivateBarDialog();
 
     cc = new CellConstraints();
-    barContainer.add(
-      bar,
-      cc.xy(1, 1));
+    barContainer.add(bar, cc.xy(1, 1));
     bar.activate();
     currentBarDialog = bar;
     barContainer.revalidate();
@@ -1374,21 +1326,21 @@ public class JMeldPanel
     checkActions();
   }
 
-/* == JDK6!
-   private TransferHandler getDragAndDropHandler()
-   {
-     return new TransferHandler()
+  /* == JDK6!
+     private TransferHandler getDragAndDropHandler()
      {
-       public boolean canImport(TransferHandler.TransferSupport support)
+       return new TransferHandler()
        {
-         System.out.println(support);
-         return false;
-       }
-       public boolean importData(TransferHandler.TransferSupport support)
-       {
-         return true;
-       }
-     };
-   }
- */
+         public boolean canImport(TransferHandler.TransferSupport support)
+         {
+           System.out.println(support);
+           return false;
+         }
+         public boolean importData(TransferHandler.TransferSupport support)
+         {
+           return true;
+         }
+       };
+     }
+   */
 }
