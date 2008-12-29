@@ -61,9 +61,8 @@ Release 2.1:
 - [done] BUG: Abouttpanel can be instantiated twice.
 - [done] BUG: Search doesn't work OK.
 - [done] Support multiple charsets
-- [    ] Bug: diff file -> edit file -> exit tab [don't save] -> 
+- [done] Bug: diff file -> edit file -> exit tab [don't save] -> 
               diff file -> Exception!
-- [    ] CubicCurve in DiffScrollComponent.java
 - [done] TabbedPane: cannot exit directorydiff with close button.
 
 Release 2.2:
@@ -75,6 +74,7 @@ Release 2.2:
 - [done] BUG[KKU] FolderDiff goes wrong if in one tree a node is a file and
                   in the other it is a folder!
 - [70% ] Implement subversion diff.
+- [    ] CubicCurve in DiffScrollComponent.java
 
 Release 2.3:
 - [75%]  incremental diff (Adding to the end of the file doesn't work yet)

@@ -213,6 +213,8 @@ public abstract class AbstractBufferDocument
       System.out.println("create document took " + stopWatch.getElapsedTime());
       document.addDocumentListener(this);
 
+      reset();
+      
       initLines();
       initDigest();
     }
