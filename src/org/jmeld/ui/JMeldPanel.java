@@ -76,6 +76,10 @@ public class JMeldPanel
   private static final String SETTINGS_ACTION       = "Settings";
   private static final String EXIT_ACTION           = "Exit";
 
+  // Options (enable/disable before calling method start!)
+  public final Option         SHOW_TOOLBAR          = new Option(true);
+  public final Option         SHOW_TABBEDPANE       = new Option(true);
+
   // instance variables:
   private ActionHandler       actionHandler;
   private JideTabbedPane      tabbedPane;
@@ -84,15 +88,33 @@ public class JMeldPanel
   private SearchBarDialog     searchBarDialog;
   private JComponent          toolBar;
   private boolean             mergeMode;
+  private boolean             started;
 
   public JMeldPanel()
   {
     setFocusable(true);
 
+    addAncestorListener(getAncestorListener());
+  }
+
+  private void start()
+  {
+    if (started)
+    {
+      return;
+    }
+
+    started = true;
+
     tabbedPane = new JideTabbedPane();
     tabbedPane.setFocusable(false);
     tabbedPane.setShowCloseButtonOnTab(true);
     tabbedPane.setShowCloseButtonOnSelectedTab(true);
+
+    if (!SHOW_TABBEDPANE.isEnabled())
+    {
+      tabbedPane.setShowTabArea(false);
+    }
 
     // Pin the tabshape because the defaults do not look good
     //   on lookandfeels other than JGoodies Plastic.
@@ -245,15 +267,18 @@ public class JMeldPanel
 
   public void addToolBar()
   {
-    if (toolBar != null)
+    if (SHOW_TOOLBAR.isEnabled())
     {
-      remove(toolBar);
+      if (toolBar != null)
+      {
+        remove(toolBar);
+      }
+
+      toolBar = getToolBar();
+      add(toolBar, BorderLayout.PAGE_START);
+
+      revalidate();
     }
-
-    toolBar = getToolBar();
-    add(toolBar, BorderLayout.PAGE_START);
-
-    revalidate();
   }
 
   private JComponent getToolBar()
@@ -1343,4 +1368,60 @@ public class JMeldPanel
        };
      }
    */
+
+  public class Option
+  {
+    private boolean enabled;
+
+    Option(boolean enabled)
+    {
+      this.enabled = enabled;
+    }
+
+    public boolean isEnabled()
+    {
+      return enabled;
+    }
+
+    public void enable()
+    {
+      if (started)
+      {
+        System.out.println("Cannot change an option after start!");
+        return;
+      }
+
+      this.enabled = true;
+    }
+
+    public void disable()
+    {
+      if (started)
+      {
+        System.out.println("Cannot change an option after start!");
+        return;
+      }
+
+      this.enabled = false;
+    }
+  }
+
+  private AncestorListener getAncestorListener()
+  {
+    return new AncestorListener()
+    {
+      public void ancestorAdded(AncestorEvent event) 
+      {
+        start();
+      }
+
+      public void ancestorMoved(AncestorEvent event) 
+      {
+      }
+
+      public void ancestorRemoved(AncestorEvent event) 
+      {
+      }
+    };
+  }
 }
