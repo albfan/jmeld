@@ -52,33 +52,33 @@ public class JMeldPanel
 {
   // class variables:
   // All actions:
-  private static final String NEW_ACTION            = "New";
-  private static final String SAVE_ACTION           = "Save";
-  private static final String UNDO_ACTION           = "Undo";
-  private static final String REDO_ACTION           = "Redo";
-  private static final String RIGHT_ACTION          = "Right";
-  private static final String LEFT_ACTION           = "Left";
-  private static final String UP_ACTION             = "Up";
-  private static final String DOWN_ACTION           = "Down";
-  private static final String ZOOMPLUS_ACTION       = "ZoomPlus";
-  private static final String ZOOMMIN_ACTION        = "ZoomMin";
-  private static final String GOTOSELECTED_ACTION   = "GoToSelected";
-  private static final String GOTOFIRST_ACTION      = "GoToFirst";
-  private static final String GOTOLAST_ACTION       = "GoToLast";
-  private static final String GOTOLINE_ACTION       = "GoToLine";
-  private static final String STARTSEARCH_ACTION    = "StartSearch";
-  private static final String NEXTSEARCH_ACTION     = "NextSearch";
-  private static final String PREVIOUSSEARCH_ACTION = "PreviousSearch";
-  private static final String REFRESH_ACTION        = "Refresh";
-  private static final String MERGEMODE_ACTION      = "MergeMode";
-  private static final String HELP_ACTION           = "Help";
-  private static final String ABOUT_ACTION          = "About";
-  private static final String SETTINGS_ACTION       = "Settings";
-  private static final String EXIT_ACTION           = "Exit";
+  private static final String NEW_ACTION             = "New";
+  private static final String SAVE_ACTION            = "Save";
+  private static final String UNDO_ACTION            = "Undo";
+  private static final String REDO_ACTION            = "Redo";
+  private static final String RIGHT_ACTION           = "Right";
+  private static final String LEFT_ACTION            = "Left";
+  private static final String UP_ACTION              = "Up";
+  private static final String DOWN_ACTION            = "Down";
+  private static final String ZOOMPLUS_ACTION        = "ZoomPlus";
+  private static final String ZOOMMIN_ACTION         = "ZoomMin";
+  private static final String GOTOSELECTED_ACTION    = "GoToSelected";
+  private static final String GOTOFIRST_ACTION       = "GoToFirst";
+  private static final String GOTOLAST_ACTION        = "GoToLast";
+  private static final String GOTOLINE_ACTION        = "GoToLine";
+  private static final String STARTSEARCH_ACTION     = "StartSearch";
+  private static final String NEXTSEARCH_ACTION      = "NextSearch";
+  private static final String PREVIOUSSEARCH_ACTION  = "PreviousSearch";
+  private static final String REFRESH_ACTION         = "Refresh";
+  private static final String MERGEMODE_ACTION       = "MergeMode";
+  private static final String HELP_ACTION            = "Help";
+  private static final String ABOUT_ACTION           = "About";
+  private static final String SETTINGS_ACTION        = "Settings";
+  private static final String EXIT_ACTION            = "Exit";
 
   // Options (enable/disable before calling method start!)
-  public final Option         SHOW_TOOLBAR          = new Option(true);
-  public final Option         SHOW_TABBEDPANE       = new Option(true);
+  public final Option         SHOW_TOOLBAR_OPTION    = new Option(true);
+  public final Option         SHOW_TABBEDPANE_OPTION = new Option(true);
 
   // instance variables:
   private ActionHandler       actionHandler;
@@ -111,7 +111,7 @@ public class JMeldPanel
     tabbedPane.setShowCloseButtonOnTab(true);
     tabbedPane.setShowCloseButtonOnSelectedTab(true);
 
-    if (!SHOW_TABBEDPANE.isEnabled())
+    if (!SHOW_TABBEDPANE_OPTION.isEnabled())
     {
       tabbedPane.setShowTabArea(false);
     }
@@ -267,7 +267,7 @@ public class JMeldPanel
 
   public void addToolBar()
   {
-    if (SHOW_TOOLBAR.isEnabled())
+    if (SHOW_TOOLBAR_OPTION.isEnabled())
     {
       if (toolBar != null)
       {
@@ -1410,16 +1410,16 @@ public class JMeldPanel
   {
     return new AncestorListener()
     {
-      public void ancestorAdded(AncestorEvent event) 
+      public void ancestorAdded(AncestorEvent event)
       {
         start();
       }
 
-      public void ancestorMoved(AncestorEvent event) 
+      public void ancestorMoved(AncestorEvent event)
       {
       }
 
-      public void ancestorRemoved(AncestorEvent event) 
+      public void ancestorRemoved(AncestorEvent event)
       {
       }
     };
