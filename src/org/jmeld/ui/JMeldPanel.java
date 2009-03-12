@@ -893,9 +893,12 @@ public class JMeldPanel
 
     result = new ArrayList<AbstractContentPanel>();
 
-    for (int i = 0; i < tabbedPane.getTabCount(); i++)
+    if (tabbedPane != null)
     {
-      result.add((AbstractContentPanel) tabbedPane.getComponentAt(i));
+      for (int i = 0; i < tabbedPane.getTabCount(); i++)
+      {
+        result.add((AbstractContentPanel) tabbedPane.getComponentAt(i));
+      }
     }
 
     return result;
