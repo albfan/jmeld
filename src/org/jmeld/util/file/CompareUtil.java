@@ -654,7 +654,7 @@ public class CompareUtil
 
       if(whiteSpaceInBetweenIgnored)
       {
-        outputLine.put(' ');
+        //outputLine.put(' ');
         whiteSpaceInBetweenIgnored = false;
       }
       outputLine.put(c);
