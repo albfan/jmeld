@@ -108,13 +108,15 @@ public class SettingsPanel
         int result;
         File file;
         FileChooserPreference pref;
+        Window ancestor;
 
         chooser = new JFileChooser();
         chooser.setApproveButtonText("Save");
         chooser.setDialogTitle("Save settings");
         pref = new FileChooserPreference("SettingsSave", chooser);
 
-        result = chooser.showOpenDialog(SettingsPanel.this);
+        ancestor = SwingUtilities.getWindowAncestor((Component) ae.getSource());
+        result = chooser.showOpenDialog(ancestor);
         if (result == JFileChooser.APPROVE_OPTION)
         {
           pref.save();
@@ -137,13 +139,15 @@ public class SettingsPanel
         int result;
         File file;
         FileChooserPreference pref;
+        Window ancestor;
 
         chooser = new JFileChooser();
         chooser.setApproveButtonText("Reload");
         chooser.setDialogTitle("Reload settings");
         pref = new FileChooserPreference("SettingsSave", chooser);
 
-        result = chooser.showOpenDialog(SettingsPanel.this);
+        ancestor = SwingUtilities.getWindowAncestor((Component) ae.getSource());
+        result = chooser.showOpenDialog(ancestor);
         if (result == JFileChooser.APPROVE_OPTION)
         {
           pref.save();

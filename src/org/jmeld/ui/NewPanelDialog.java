@@ -232,6 +232,7 @@ public class NewPanelDialog
         File file;
         String fileName;
         JComboBox comboBox;
+        Window ancestor;
 
         // Don't allow accidentaly creation or rename of files.
         UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -243,7 +244,9 @@ public class NewPanelDialog
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         pref = new FileChooserPreference("Browse-" + ae.getActionCommand(),
             chooser);
-        result = chooser.showOpenDialog(meldPanel);
+
+        ancestor = SwingUtilities.getWindowAncestor((Component) ae.getSource());
+        result = chooser.showOpenDialog(ancestor);
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
@@ -363,6 +366,7 @@ public class NewPanelDialog
         File file;
         String fileName;
         JComboBox comboBox;
+        Window ancestor;
 
         // Don't allow accidentaly creation or rename of files.
         UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -374,7 +378,9 @@ public class NewPanelDialog
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         pref = new DirectoryChooserPreference(
             "Browse-" + ae.getActionCommand(), chooser);
-        result = chooser.showOpenDialog(meldPanel);
+
+        ancestor = SwingUtilities.getWindowAncestor((Component) ae.getSource());
+        result = chooser.showOpenDialog(ancestor);
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
@@ -479,6 +485,7 @@ public class NewPanelDialog
         File file;
         String fileName;
         JComboBox comboBox;
+        Window ancestor;
 
         // Don't allow accidentaly creation or rename of files.
         UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -489,7 +496,9 @@ public class NewPanelDialog
         chooser.setDialogTitle("Choose directory");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         pref = new DirectoryChooserPreference("VersionControlBrowse", chooser);
-        result = chooser.showOpenDialog(meldPanel);
+
+        ancestor = SwingUtilities.getWindowAncestor((Component) ae.getSource());
+        result = chooser.showOpenDialog(ancestor);
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
