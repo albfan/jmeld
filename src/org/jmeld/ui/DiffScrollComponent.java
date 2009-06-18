@@ -216,7 +216,7 @@ public class DiffScrollComponent
     // Calculate firstLine shown of the first document. 
     p = new Point(r.x, r.y);
     offset = editorFrom.viewToModel(p);
-    firstLineFrom = bdFrom.getLineForOffset(offset);
+    firstLineFrom = bdFrom.getLineForOffset(offset) + 1;
 
     // Calculate lastLine shown of the first document. 
     p = new Point(r.x, r.y + r.height);
@@ -292,35 +292,52 @@ public class DiffScrollComponent
           continue;
         }
         toRect = editorFrom.modelToView(offset);
-
+        //System.out.println("from=" + fromRect + ", to=" + toRect);
+        
         x = 0;
         y = fromRect.y - viewportRect.y + 1;
         y = y < 0 ? 0 : y;
         width = 10;
         height = 0;
+
+        // start of diff is before the first visible line.
+        // end   of diff is before the last visible line.
+        // (The first part of diff should not be visible)
         if (fromRect.y <= viewportRect.y
             && toRect.y <= viewportRect.y + viewportRect.height)
         {
-          height = toRect.y - viewportRect.y - 1;
+          //height = toRect.y - viewportRect.y - 1;
+          height = original.getSize() * fromRect.height;
+          height -= viewportRect.y - fromRect.y;
         }
+        // start of diff is after the first visible line.
+        // end   of diff is after the last visible line.
+        // (The last part of diff should not be visible)
         else if (fromRect.y > viewportRect.y
                  && toRect.y > viewportRect.y + viewportRect.height)
         {
-          height = viewportRect.y + viewportRect.height - fromRect.y - 1;
+          //height = viewportRect.y + viewportRect.height - fromRect.y - 1;
+          height = original.getSize() * fromRect.height;
+          height -= viewportRect.y + viewportRect.height - toRect.y;
         }
+        // start of diff is after the first visible line.
+        // end   of diff is before the last visible line.
+        // (The diff is completely visible)
         else if (fromRect.y > viewportRect.y
                  && toRect.y <= viewportRect.y + viewportRect.height)
         {
-          height = toRect.y - fromRect.y - 1;
-          if(toRect.y == fromRect.y)
-          {
-            height += fromRect.height;
-          }
+          //height = toRect.y - fromRect.y - 1;
+          height = original.getSize() * fromRect.height;
         }
+        // start of diff is before the first visible line.
+        // end   of diff is after the last visible line.
+        // (The first part of diff should not be visible)
+        // (The last part of diff should not be visible)
         else if (fromRect.y <= viewportRect.y
                  && toRect.y > viewportRect.y + viewportRect.height)
         {
-          height = viewportRect.height - 1;
+          //height = viewportRect.height - 1;
+          height = viewportRect.height;
         }
 
         x0 = x + width;
@@ -397,26 +414,28 @@ public class DiffScrollComponent
         if (fromRect.y <= viewportRect.y
             && toRect.y <= viewportRect.y + viewportRect.height)
         {
-          height = toRect.y - viewportRect.y - 1;
+          //height = toRect.y - viewportRect.y - 1;
+          height = revised.getSize() * fromRect.height;
+          height -= viewportRect.y - fromRect.y;
         }
         else if (fromRect.y > viewportRect.y
                  && toRect.y > viewportRect.y + viewportRect.height)
         {
-          height = viewportRect.y + viewportRect.height - fromRect.y - 1;
+          //height = viewportRect.y + viewportRect.height - fromRect.y - 1;
+          height = revised.getSize() * fromRect.height;
+          height -= viewportRect.y + viewportRect.height - toRect.y;
         }
         else if (fromRect.y > viewportRect.y
                  && toRect.y <= viewportRect.y + viewportRect.height)
         {
-          height = toRect.y - fromRect.y - 1;
-          if(toRect.y == fromRect.y)
-          {
-            height += fromRect.height;
-          }
+          //height = toRect.y - fromRect.y - 1;
+          height = revised.getSize() * fromRect.height;
         }
         else if (fromRect.y <= viewportRect.y
                  && toRect.y > viewportRect.y + viewportRect.height)
         {
-          height = viewportRect.height - 1;
+          //height = viewportRect.height - 1;
+          height = viewportRect.height;
         }
 
         x1 = x;
