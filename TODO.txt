@@ -50,7 +50,6 @@ Release 2.0:
 - [done] Diff colors don't change anymore in the settings.
 
 Release 2.1:
--        Inner diff sometimes doesn't work
 - [done] Bug when comparing filesRight/oneline.xml en filesLeft
 - [done] Make size of JMDelta 0 if it only contains empty lines 
          (Only when ignoreblanklines is on!)
@@ -64,8 +63,10 @@ Release 2.1:
 - [done] Bug: diff file -> edit file -> exit tab [don't save] -> 
               diff file -> Exception!
 - [done] TabbedPane: cannot exit directorydiff with close button.
+- [done] regression: DiffScrollBar -> 0 lines -> rectangle should be line!
 
 Release 2.2:
+-        Inner diff sometimes doesn't work
 - [done] L&F preference
 - [done] Remove jgoodies FormLayout in favour of Matisse groupLayout.
 - [done] BUG[STA] Adjust search in FolderDiffPanel
@@ -75,6 +76,7 @@ Release 2.2:
                   in the other it is a folder!
 - [70% ] Implement subversion diff.
 - [    ] CubicCurve in DiffScrollComponent.java
+- [    ] Probleem Prob1.java Prob2.java (ignore spaces at begin)
 
 Release 2.3:
 - [75%]  incremental diff (Adding to the end of the file doesn't work yet)
