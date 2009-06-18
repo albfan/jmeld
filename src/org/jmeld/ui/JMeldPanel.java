@@ -76,7 +76,7 @@ public class JMeldPanel
   private static final String SETTINGS_ACTION        = "Settings";
   private static final String EXIT_ACTION            = "Exit";
 
-  // Options (enable/disable before calling method start!)
+  // Options (enable/disable before adding this component to its container)
   public final Option         SHOW_TOOLBAR_OPTION    = new Option(true);
   public final Option         SHOW_TABBEDPANE_OPTION = new Option(true);
 
