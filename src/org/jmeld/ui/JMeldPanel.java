@@ -328,7 +328,7 @@ public class JMeldPanel
 
     barContainer = new JPanel(new FormLayout("0:grow", "pref, pref, pref"));
     barContainer.add(new JSeparator(), cc.xy(1, 2));
-    if (!SHOW_STATUSBAR_OPTION.isEnabled())
+    if (SHOW_STATUSBAR_OPTION.isEnabled())
     {
       barContainer.add(StatusBar.getInstance(), cc.xy(1, 3));
     }
