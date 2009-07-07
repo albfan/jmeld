@@ -78,6 +78,7 @@ public class JMeldPanel
 
   // Options (enable/disable before adding this component to its container)
   public final Option         SHOW_TOOLBAR_OPTION    = new Option(true);
+  public final Option         SHOW_STATUSBAR_OPTION  = new Option(true);
   public final Option         SHOW_TABBEDPANE_OPTION = new Option(true);
 
   // instance variables:
@@ -327,7 +328,10 @@ public class JMeldPanel
 
     barContainer = new JPanel(new FormLayout("0:grow", "pref, pref, pref"));
     barContainer.add(new JSeparator(), cc.xy(1, 2));
-    barContainer.add(StatusBar.getInstance(), cc.xy(1, 3));
+    if (!SHOW_STATUSBAR_OPTION.isEnabled())
+    {
+      barContainer.add(StatusBar.getInstance(), cc.xy(1, 3));
+    }
 
     return barContainer;
   }
