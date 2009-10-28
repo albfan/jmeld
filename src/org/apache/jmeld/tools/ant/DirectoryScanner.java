@@ -983,7 +983,7 @@ public class DirectoryScanner
     }
 
     // avoid double scanning of directories, can only happen in fast mode
-    if (fast && hasBeenScanned(vpath))
+    if (fast && hasBeenScanned(dir))
     {
       return;
     }
@@ -1629,9 +1629,16 @@ public class DirectoryScanner
    *
    * @since Ant 1.6
    */
-  private boolean hasBeenScanned(String vpath)
+  private boolean hasBeenScanned(File dir)
   {
-    return !scannedDirs.add(vpath);
+    try
+    {
+      return !scannedDirs.add(dir.getCanonicalFile());
+    }
+    catch(IOException ex)
+    {
+      return true;
+    }
   }
 
   /**
