@@ -28,12 +28,14 @@ public class DirectoryChooserPreference
 
   // Instance variables:
   private JFileChooser target;
+  private String defaultFileName;
 
-  public DirectoryChooserPreference(String preferenceName, JFileChooser target)
+  public DirectoryChooserPreference(String preferenceName, JFileChooser target, String defaultFileName)
   {
     super("DirectoryChooser-" + preferenceName);
 
     this.target = target;
+    this.defaultFileName = defaultFileName;
 
     init();
   }
@@ -42,7 +44,7 @@ public class DirectoryChooserPreference
   {
     String fileName;
 
-    fileName = getString(DIRECTORY, null);
+    fileName = getString(DIRECTORY, defaultFileName);
     if (fileName != null)
     {
       target.setCurrentDirectory(new File(fileName));
