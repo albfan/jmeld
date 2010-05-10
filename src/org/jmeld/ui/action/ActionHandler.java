@@ -4,23 +4,23 @@ import java.util.*;
 
 public class ActionHandler
 {
-  private Map<String, MeldAction> actions = new HashMap<String, MeldAction>();
+  private Map<Actions.Action, MeldAction> actions = new HashMap<Actions.Action, MeldAction>();
 
   public ActionHandler()
   {
   }
 
-  public MeldAction get(String name)
+  public MeldAction get(Actions.Action a)
   {
-    return actions.get(name);
+    return actions.get(a);
   }
 
-  public MeldAction createAction(Object object, String name)
+  public MeldAction createAction(Object object, Actions.Action a)
   {
     MeldAction action;
 
-    action = new MeldAction(this, object, name);
-    actions.put(name, action);
+    action = new MeldAction(this, object, a.getName());
+    actions.put(a, action);
 
     checkActions();
 

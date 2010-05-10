@@ -263,19 +263,34 @@ public class BufferDiffPanel
 
     // panel for file1
     add(new RevisionBar(this, filePanels[LEFT], true), cc.xy(2, 4));
-    add(filePanels[LEFT].getSaveButton(), cc.xy(2, 2));
-    add(filePanels[LEFT].getFileLabel(), cc.xyw(4, 2, 3));
+    if(mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled())
+    {
+      add(filePanels[LEFT].getSaveButton(), cc.xy(2, 2));
+      add(filePanels[LEFT].getFileLabel(), cc.xyw(4, 2, 3));
+    }
     add(filePanels[LEFT].getScrollPane(), cc.xyw(4, 4, 3));
-    add(filePanels[LEFT].getFilePanelBar(), cc.xyw(4, 5, 3));
+    if(mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled())
+    {
+      add(filePanels[LEFT].getFilePanelBar(), cc.xyw(4, 5, 3));
+    }
 
     add(new DiffScrollComponent(this, LEFT, RIGHT), cc.xy(7, 4));
 
     // panel for file2
     add(new RevisionBar(this, filePanels[RIGHT], false), cc.xy(12, 4));
-    add(filePanels[RIGHT].getFileLabel(), cc.xyw(8, 2, 3));
+    if(mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled())
+    {
+      add(filePanels[RIGHT].getFileLabel(), cc.xyw(8, 2, 3));
+    }
     add(filePanels[RIGHT].getScrollPane(), cc.xyw(8, 4, 3));
-    add(filePanels[RIGHT].getSaveButton(), cc.xy(12, 2));
-    add(filePanels[RIGHT].getFilePanelBar(), cc.xyw(8, 5, 3));
+    if(mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled())
+    {
+      add(filePanels[RIGHT].getSaveButton(), cc.xy(12, 2));
+    }
+    if(mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled())
+    {
+      add(filePanels[RIGHT].getFilePanelBar(), cc.xyw(8, 5, 3));
+    }
 
     scrollSynchronizer = new ScrollSynchronizer(this, filePanels[LEFT],
         filePanels[RIGHT]);

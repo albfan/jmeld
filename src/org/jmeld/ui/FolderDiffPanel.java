@@ -136,19 +136,19 @@ public class FolderDiffPanel
   {
     MeldAction action;
 
-    action = actionHandler.createAction(this, "SelectNextRow");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_SELECT_NEXT_ROW);
     installKey("DOWN", action);
 
-    action = actionHandler.createAction(this, "SelectPreviousRow");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_SELECT_PREVIOUS_ROW);
     installKey("UP", action);
 
-    action = actionHandler.createAction(this, "NextNode");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_NEXT_NODE);
     installKey("RIGHT", action);
 
-    action = actionHandler.createAction(this, "PreviousNode");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_PREVIOUS_NODE);
     installKey("LEFT", action);
 
-    action = actionHandler.createAction(this, "OpenFileComparison");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_OPEN_FILE_COMPARISON);
     action.setIcon("stock_compare");
     compareButton.setAction(action);
     compareButton.setText(null);
@@ -156,24 +156,24 @@ public class FolderDiffPanel
     compareButton.setDisabledIcon(action.getTransparentSmallImageIcon());
     installKey("ENTER", action);
 
-    action = actionHandler.createAction(this, "OpenFileComparisonBackground");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_OPEN_FILE_COMPARISON_BACKGROUND);
     action.setIcon("stock_compare");
     installKey("alt ENTER", action);
 
-    action = actionHandler.createAction(this, "ExpandAll");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_EXPAND_ALL);
     expandAllButton.setAction(action);
 
-    action = actionHandler.createAction(this, "CollapseAll");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_COLLAPSE_ALL);
     collapseAllButton.setAction(action);
 
-    action = actionHandler.createAction(this, "Refresh");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_REFRESH);
     action.setIcon("stock_refresh");
     refreshButton.setAction(action);
     refreshButton.setText(null);
     refreshButton.setFocusable(false);
     refreshButton.setDisabledIcon(action.getTransparentSmallImageIcon());
 
-    action = actionHandler.createAction(this, "RemoveRight");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_REMOVE_RIGHT);
     action.setIcon("stock_delete");
     deleteRightButton.setAction(action);
     deleteRightButton.setText(null);
@@ -182,7 +182,7 @@ public class FolderDiffPanel
     installKey("ctrl alt RIGHT", action);
     installKey("ctrl alt KP_RIGHT", action);
 
-    action = actionHandler.createAction(this, "RemoveLeft");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_REMOVE_LEFT);
     action.setIcon("stock_delete");
     deleteLeftButton.setAction(action);
     deleteLeftButton.setText(null);
@@ -191,7 +191,7 @@ public class FolderDiffPanel
     installKey("ctrl alt LEFT", action);
     installKey("ctrl alt KP_LEFT", action);
 
-    action = actionHandler.createAction(this, "CopyToLeft");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_COPY_TO_LEFT);
     action.setIcon("stock_left");
     copyToLeftButton.setAction(action);
     copyToLeftButton.setText(null);
@@ -200,7 +200,7 @@ public class FolderDiffPanel
     installKey("alt LEFT", action);
     installKey("alt KP_LEFT", action);
 
-    action = actionHandler.createAction(this, "CopyToRight");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_COPY_TO_RIGHT);
     action.setIcon("stock_right");
     copyToRightButton.setAction(action);
     copyToRightButton.setText(null);
@@ -214,7 +214,7 @@ public class FolderDiffPanel
     //copyToLeftButton.setVisible(false);
     //deleteLeftButton.setVisible(false);
 
-    action = actionHandler.createAction(this, "Filter");
+    action = actionHandler.createAction(this, mainPanel.actions.FOLDER_FILTER);
     onlyRightButton.setAction(action);
     leftRightChangedButton.setAction(action);
     onlyLeftButton.setAction(action);
