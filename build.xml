@@ -8,30 +8,30 @@
   </path>
 
   <path id="development.classpath">
-    <pathElement path="build/classes" />
-    <pathElement path="resources" />
+    <pathElement path="target/classes" />
+    <pathElement path="src/main/resources" />
     <fileset dir="./lib">
       <include name="**/*.jar" />
     </fileset>
   </path>
 
   <target name="prepare">
-    <mkdir dir="build/classes" />
-    <copy todir="build/classes">
+    <mkdir dir="target/classes" />
+    <copy todir="target/classes">
       <fileset dir="." includes="images/**,ini/**" />
     </copy>
     <jar destfile="lib/help.jar">
-      <fileset dir="doc/help/jmeld" />
+      <fileset dir="src/main/javahelp" />
     </jar>
   </target>
 
   <target name="clean">
-    <delete dir="build" quiet="true" />
+    <delete dir="target/**" quiet="true" />
   </target>
 
   <target name="compile" depends="prepare">
-    <javac srcdir="src" 
-           destdir="build/classes" 
+    <javac srcdir="src/main/java"
+           destdir="target/classes"
            debug="on" 
            source="1.5"
            target="1.5" 
@@ -41,17 +41,13 @@
     </javac>
   </target>
 
-  <target name="jmeld">
-    <antcall target="clean" />
-    <antcall target="compile" />
-    <antcall target="createExecutable" />
-  </target>
+  <target name="jmeld" depends="clean,compile,createExecutable" />
 
   <target name="createExecutable">
-    <jar destfile="JMeld.jar" manifest="etc/manifest.mf" update="false">
-      <fileset dir="resources" />
-      <fileset dir="build/classes" />
-      <fileset dir="doc/help/jmeld" />
+    <jar destfile="JMeld.jar" manifest="src/main/resources/manifest.mf" update="false">
+      <fileset dir="src/main/resources" />
+      <fileset dir="target/classes" />
+      <fileset dir="src/main/javahelp" />
       <zipfileset src="lib/jide.jar" />
       <zipfileset src="lib/forms-1.0.7.jar" />
       <zipfileset src="lib/looks-2.2.1.jar" />
@@ -73,26 +69,27 @@
     <delete file="JMeld.tgz" quiet="true" />
     <tar destfile="JMeld.tgz" compression="gzip">
       <tarfileset dir="." prefix="jmeld" defaultexcludes="yes">
-        <include name="src/**" />
+        <include name="src/main/java/**" />
         <include name="lib/**" />
         <include name="build.xml" />
-        <include name="resources/**" />
-        <include name="etc/**" />
-        <include name="doc/**" />
+        <include name="pom.xml" />
+        <include name="src/main/resources/**" />
+        <include name="src/main/javahelp/**" />
         <include name="*.txt" />
-        <include name="nbproject/**" />
       </tarfileset>
     </tar>
   </target>
 
   <target name="scripts" depends="initMyPathSeparator">
-    <mkdir dir="${basedir}/bin" />
-    <delete file="${basedir}/bin/setDevelopment.sh" quiet="true" />
+    <mkdir dir="${basedir}/src/main/scripts" />
+    <delete file="${basedir}/src/main/scripts/setDevelopment.sh" quiet="true" />
     <pathconvert dirsep="/" pathsep="${myPathSeparator}"
                  property="setEnvironment" refid="development.classpath" />
-    <echo file="${basedir}/bin/setDevelopment.sh">#!/bin/bash 
-export CLASSPATH='${setEnvironment}'</echo>
-    <chmod file="${basedir}/bin/setDevelopment.sh" perm="ugo+x" />
+    <echo file="${basedir}/src/main/scripts/setDevelopment.sh">
+        #!/bin/bash
+        export CLASSPATH='${setEnvironment}'
+    </echo>
+    <chmod file="${basedir}/src/main/scripts/setDevelopment.sh" perm="ugo+x" />
   </target>
 
   <target name="initMyPathSeparator">

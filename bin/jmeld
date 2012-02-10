@@ -1,4 +1,0 @@
-#!/bin/sh
-
-. /projecten/jmeld/trunk/bin/setDevelopment.sh
-java -Xmx400m org.jmeld.JMeld $*

@@ -1,0 +1,3 @@
+function hola(int eco) {
+   print "bye bye";
+}

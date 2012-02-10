@@ -1,0 +1,7 @@
+function hola(int eco) {
+   print "bye bye";
+}
+
+function adios(String com) {
+   print "bye bye";
+}
