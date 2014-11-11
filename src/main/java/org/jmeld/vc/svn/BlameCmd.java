@@ -33,7 +33,12 @@ public class BlameCmd
   {
     BlameCmd cmd;
 
-    cmd = new BlameCmd(new File(args[0]));
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+
+    cmd = new BlameCmd(file);
     if (cmd.execute().isTrue())
     {
       for (BlameIF.TargetIF target : cmd.getBlame().getTargetList())

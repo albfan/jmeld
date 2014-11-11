@@ -35,9 +35,14 @@ public class CatCmd
     BaseFile result;
     byte[] byteArray;
 
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+
     try
     {
-      result = new SubversionVersionControl().getBaseFile(new File(args[0]));
+      result = new SubversionVersionControl().getBaseFile(file);
       byteArray = result.getByteArray();
       System.out.write(byteArray, 0, byteArray.length);
     }

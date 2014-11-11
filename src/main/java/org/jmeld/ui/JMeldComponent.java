@@ -6,6 +6,7 @@
 package org.jmeld.ui;
 
 import org.jmeld.ui.action.Actions;
+import org.jmeld.vc.util.VcCmd;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,22 +55,21 @@ public class JMeldComponent
     JFrame         frame;
     JMeldComponent jmc;
     JPanel         panel;
-    JButton        button;
     Actions        actions;
-    Actions.Action action;
+
+    File file = VcCmd.parseFile(args, 0);
+    if (file == null) {
+      return;
+    }
 
     jmc = new JMeldComponent();
-    jmc.openComparison(new File(args[0]), new File(args[1]));
+    jmc.openComparison(file, file);
 
     panel = new JPanel(new BorderLayout());
     panel.add(jmc, BorderLayout.CENTER);
 
     actions = jmc.getActions();
     actions.SAVE.option.disable();
-
-    button = new JButton();
-    //button.setAction(jmc.getAction(actions.SAVE));
-    //panel.add(button, BorderLayout.NORTH);
 
     frame = new JFrame("Standalone JMeld");
     frame.add(jmc);

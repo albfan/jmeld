@@ -98,7 +98,12 @@ public class StatusCmd extends SvnXmlCmd<StatusData> {
     StatusCmd cmd;
     StatusResult result;
 
-    result = new SubversionVersionControl().executeStatus(new File(args[0]));
+    File file = parseFile(args);
+    if (file == null) {
+        return;
+    }
+
+    result = new SubversionVersionControl().executeStatus(file);
     if (result != null)
     {
       for (StatusResult.Entry entry : result.getEntryList())

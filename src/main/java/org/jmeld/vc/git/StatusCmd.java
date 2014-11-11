@@ -112,7 +112,12 @@ public class StatusCmd
     StatusCmd cmd;
     StatusResult result;
 
-    result = new GitVersionControl().executeStatus(new File(args[0]));
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+
+    result = new GitVersionControl().executeStatus(file);
     if (result != null)
     {
       for (StatusResult.Entry entry : result.getEntryList())

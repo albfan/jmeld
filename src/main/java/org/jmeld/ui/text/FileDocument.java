@@ -18,6 +18,7 @@ package org.jmeld.ui.text;
 
 import org.jmeld.JMeldException;
 import org.jmeld.util.CharsetDetector;
+import org.jmeld.vc.util.VcCmd;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -100,7 +101,13 @@ public class FileDocument
 
     try
     {
-      fd = new FileDocument(new File(args[0]));
+
+      File file = VcCmd.parseFile(args, 0);
+      if (file == null) {
+        return;
+      }
+
+      fd = new FileDocument(file);
       fd.read();
       fd.print();
     }

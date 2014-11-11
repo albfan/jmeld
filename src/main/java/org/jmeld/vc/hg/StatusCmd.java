@@ -92,7 +92,12 @@ public class StatusCmd
     StatusCmd cmd;
     StatusResult result;
 
-    result = new MercurialVersionControl().executeStatus(new File(args[0]));
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+
+    result = new MercurialVersionControl().executeStatus(file);
     if (result != null)
     {
       for (StatusResult.Entry entry : result.getEntryList())

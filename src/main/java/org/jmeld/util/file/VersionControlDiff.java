@@ -23,6 +23,7 @@ import org.jmeld.ui.*;
 import org.jmeld.util.*;
 import org.jmeld.util.node.*;
 import org.jmeld.vc.*;
+import org.jmeld.vc.util.VcCmd;
 
 import java.io.*;
 import java.util.*;
@@ -190,7 +191,12 @@ public class VersionControlDiff
     VersionControlDiff diff;
     StopWatch stopWatch;
 
-    diff = new VersionControlDiff(new File(args[0]),
+    File file = VcCmd.parseFile(args);
+    if (file == null) {
+      return;
+    }
+
+    diff = new VersionControlDiff(file,
         VersionControlDiff.Mode.TWO_WAY);
     stopWatch = new StopWatch();
     stopWatch.start();

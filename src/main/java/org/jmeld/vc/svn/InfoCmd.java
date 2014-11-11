@@ -33,7 +33,12 @@ public class InfoCmd
   {
     InfoCmd cmd;
 
-    cmd = new InfoCmd(new File(args[0]));
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+
+    cmd = new InfoCmd(file);
     if (cmd.execute().isTrue())
     {
       for (InfoData.Entry entry : cmd.getInfoData().getEntryList())

@@ -22,6 +22,7 @@ import org.jmeld.settings.util.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.*;
 import org.jmeld.util.node.*;
+import org.jmeld.vc.util.VcCmd;
 
 import java.io.*;
 import java.util.*;
@@ -209,7 +210,17 @@ public class DirectoryDiff
     DirectoryDiff diff;
     StopWatch stopWatch;
 
-    diff = new DirectoryDiff(new File(args[0]), new File(args[1]),
+    File file = parseDirectory(args, 0);
+    if (file == null) {
+      return;
+    }
+
+    File file2 = parseDirectory(args, 1);
+    if (file2 == null) {
+      return;
+    }
+
+    diff = new DirectoryDiff(file, file2,
         JMeldSettings.getInstance().getFilter().getFilter("default"),
         DirectoryDiff.Mode.TWO_WAY);
     stopWatch = new StopWatch();
@@ -217,5 +228,17 @@ public class DirectoryDiff
     diff.diff();
     System.out.println("diff took " + stopWatch.getElapsedTime() + " msec.");
     diff.print();
+  }
+
+  private static File parseDirectory(String[] args, int pos) {
+    File file = VcCmd.parseFile(args, pos);
+    if (file == null) {
+      return null;
+    }
+    if (!file.isDirectory()) {
+      System.err.println(file.getName()+" is not a directory");
+      return null;
+    }
+    return file;
   }
 }

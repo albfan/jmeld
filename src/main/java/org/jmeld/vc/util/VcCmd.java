@@ -143,4 +143,23 @@ public abstract class VcCmd<T>
       System.out.println(text);
     }
   }
+
+    public static final File parseFile(String[] args) {
+        return parseFile(args, 0);
+    }
+
+    public static final File parseFile(String[] args, int pos) {
+        int arglength = pos + 1;
+        if (args.length < arglength) {
+            System.err.printf("few arguments given. At least %d is required%n", arglength);
+          return null;
+      }
+      String filename = args[pos];
+      File file = new File(filename);
+      if (!file.exists()) {
+          System.err.printf("File %s not exists%n", filename);
+          return null;
+      }
+      return file;
+  }
 }

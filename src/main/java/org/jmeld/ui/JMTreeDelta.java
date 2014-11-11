@@ -6,6 +6,7 @@ import org.jmeld.diff.JMDelta;
 import org.jmeld.diff.JMDiff;
 import org.jmeld.diff.JMRevision;
 import org.jmeld.util.Ignore;
+import org.jmeld.vc.util.VcCmd;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -13,6 +14,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Vector;
@@ -30,15 +32,24 @@ public class JMTreeDelta {
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(new Dimension(400, 300));
 
+        File file = VcCmd.parseFile(args, 0);
+        if (file == null) {
+            return;
+        }
 
-        BufferedReader readerOrg = new BufferedReader(new FileReader(args[0]));
+        BufferedReader readerOrg = new BufferedReader(new FileReader(file));
         String line;
         Vector<String> vOrg = new Vector<String>();
         while ((line = readerOrg.readLine()) != null) {
             vOrg.add(line);
         }
 
-        BufferedReader readerRev = new BufferedReader(new FileReader(args[1]));
+        File file2 = VcCmd.parseFile(args, 1);
+        if (file2 == null) {
+            return;
+        }
+
+        BufferedReader readerRev = new BufferedReader(new FileReader(file2));
         Vector<String> vRev = new Vector<String>();
         while ((line = readerRev.readLine()) != null) {
             vRev.add(line);

@@ -180,8 +180,13 @@ public class DiffCmd
     DiffCmd cmd;
     DiffIF result;
 
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+
     result = new SubversionVersionControl()
-        .executeDiff(new File(args[0]), true);
+        .executeDiff(file, true);
     if (result != null)
     {
       for (DiffIF.TargetIF target : result.getTargetList())

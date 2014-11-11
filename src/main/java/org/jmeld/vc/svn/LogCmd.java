@@ -33,7 +33,11 @@ public class LogCmd
   {
     LogCmd cmd;
 
-    cmd = new LogCmd(new File(args[0]));
+    File file = parseFile(args);
+    if (file == null) {
+      return;
+    }
+    cmd = new LogCmd(file);
     if (cmd.execute().isTrue())
     {
       for (LogData.Entry entry : cmd.getLogData().getEntryList())

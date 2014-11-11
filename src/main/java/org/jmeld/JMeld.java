@@ -64,13 +64,10 @@ public class JMeld
     }
 
     public static void main(String[] args) {
-        //e.debug.EventDispatchThreadHangMonitor.initMonitoring();
         if (JMeldSettings.getInstance().getEditor().isAntialiasEnabled()) {
             System.setProperty("swing.aatext", "true");
         }
 
-        // According to the latest news EVERYTHING regarding swing should
-        //   be executed on the EventDispatchThread
         SwingUtilities.invokeLater(new JMeld(args));
     }
 }
