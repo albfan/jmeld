@@ -62,32 +62,33 @@ public class StatusCmd
           }
 
           status = null;
-          switch (text.charAt(0))
+          char indextree = text.charAt(0);
+            //TODO: interpret worktree status
+          char worktree = text.charAt(1);
+          switch (indextree)
           {
-            case '+':
-              switch (text.charAt(1))
-              {
-                case 'M':
-                case 'K':
-                  status = StatusResult.Status.modified;
-                  break;
-                case 'N':
-                  status = StatusResult.Status.added;
-                  break;
-                case 'D':
-                  status = StatusResult.Status.removed;
-                  break;
-              }
+            case 'M':
+              status = StatusResult.Status.modified;
+              break;
+            case 'A':
+              status = StatusResult.Status.added;
+              break;
+            case 'D':
+              status = StatusResult.Status.removed;
+              break;
+          case 'R':
+              status = StatusResult.Status.renamed;
+              break;
+          case 'U':
+              status = StatusResult.Status.updated;
+              break;
+          case 'C':
+              status = StatusResult.Status.copied;
               break;
             case ' ':
-              switch (text.charAt(1))
-              {
-                case 'D':
-                  status = StatusResult.Status.missing;
-                  break;
-              }
+              status = StatusResult.Status.unmodified;
               break;
-            case '-':
+            case '!':
               status = StatusResult.Status.ignored;
               break;
             case '?':
@@ -95,7 +96,7 @@ public class StatusCmd
               break;
           }
 
-          statusResult.addEntry(text.substring(4), status);
+          statusResult.addEntry(text.substring(3), status);
         }
       }
     }

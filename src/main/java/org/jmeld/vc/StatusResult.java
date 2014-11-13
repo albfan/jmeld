@@ -99,7 +99,11 @@ public class StatusResult
     ignored('I', "vcIgnored"),
     unversioned('?', "vcUnversioned"),
     missing('!', "vcMissing"),
-    dontknow('#', "vcMissing");
+    dontknow('#', "vcMissing"),
+    unmodified(' ', "vcUnmodified"),
+    renamed('R', "vcRenamed"),
+    copied('C', "vcCopied"),
+    updated('C', "vcUpdated");
 
     private char shortText;
     private String iconName;
