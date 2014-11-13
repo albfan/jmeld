@@ -1,5 +1,6 @@
 package org.jmeld.ui;
 
+import com.jidesoft.swing.JideTabbedPane;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.settings.util.Filter;
 import org.jmeld.ui.util.ImageUtil;
@@ -85,16 +86,19 @@ public class NewDirectoryComparisonPanel extends SwingWorker<String, Object> {
                         "Error opening file",
                         JOptionPane.ERROR_MESSAGE);
             } else {
-                if (contentPanel != null) {
-                    // Already opened!
-                    mainPanel.getTabbedPane().setSelectedComponent(contentPanel);
-                } else {
-                    panel = new FolderDiffPanel(mainPanel, diff);
-                    panel.setId(contentId);
+                JideTabbedPane tabbedPane = mainPanel.getTabbedPane();
+                if (tabbedPane != null) {
+                    if (contentPanel != null) {
+                        // Already opened!
+                        tabbedPane.setSelectedComponent(contentPanel);
+                    } else {
+                        panel = new FolderDiffPanel(mainPanel, diff);
+                        panel.setId(contentId);
 
-                    mainPanel.getTabbedPane().addTab(panel.getTitle(), ImageUtil
-                            .getSmallImageIcon("stock_folder"), panel);
-                    mainPanel.getTabbedPane().setSelectedComponent(panel);
+                        tabbedPane.addTab(panel.getTitle(), ImageUtil
+                                .getSmallImageIcon("stock_folder"), panel);
+                        tabbedPane.setSelectedComponent(panel);
+                    }
                 }
             }
         } catch (Exception ex) {

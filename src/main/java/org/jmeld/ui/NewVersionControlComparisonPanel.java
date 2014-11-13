@@ -1,5 +1,6 @@
 package org.jmeld.ui;
 
+import com.jidesoft.swing.JideTabbedPane;
 import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.ui.util.ImageUtil;
 import org.jmeld.util.StringUtil;
@@ -66,17 +67,20 @@ public class NewVersionControlComparisonPanel extends SwingWorker<String, Object
                         "Error opening file",
                         JOptionPane.ERROR_MESSAGE);
             } else {
-                if (contentPanel != null) {
-                    // Already opened!
-                    mainPanel.getTabbedPane().setSelectedComponent(contentPanel);
-                } else {
-                    //panel = new FolderDiffPanel(JMeldPanel.this, diff);
-                    panel = new VersionControlPanel(mainPanel, diff);
-                    panel.setId(contentId);
+                JideTabbedPane tabbedPane = mainPanel.getTabbedPane();
+                if (tabbedPane != null) {
+                    if (contentPanel != null) {
+                        // Already opened!
+                        tabbedPane.setSelectedComponent(contentPanel);
+                    } else {
+                        //panel = new FolderDiffPanel(JMeldPanel.this, diff);
+                        panel = new VersionControlPanel(mainPanel, diff);
+                        panel.setId(contentId);
 
-                    mainPanel.getTabbedPane().addTab("TODO: Think of title!", ImageUtil
-                            .getSmallImageIcon("stock_folder"), panel);
-                    mainPanel.getTabbedPane().setSelectedComponent(panel);
+                        tabbedPane.addTab("TODO: Think of title!", ImageUtil
+                                .getSmallImageIcon("stock_folder"), panel);
+                        tabbedPane.setSelectedComponent(panel);
+                    }
                 }
             }
         } catch (Exception ex) {
