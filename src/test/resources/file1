@@ -1,7 +1,5 @@
-function hola(int eco) {
-   print "bye bye";
-}
+abc
 
-function adios(String com) {
-   print "bye bye";
+function(eco) {
+   echo hola
 }
