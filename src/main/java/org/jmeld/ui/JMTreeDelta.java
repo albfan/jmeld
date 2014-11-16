@@ -28,25 +28,26 @@ import java.util.Vector;
 public class JMTreeDelta {
 
     public static void main(String[] args) throws IOException, JMeldException {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(new Dimension(400, 300));
 
         File file = VcCmd.parseFile(args, 0);
         if (file == null) {
             return;
         }
 
+        File file2 = VcCmd.parseFile(args, 1);
+        if (file2 == null) {
+            return;
+        }
+
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(new Dimension(400, 300));
+
         BufferedReader readerOrg = new BufferedReader(new FileReader(file));
         String line;
         Vector<String> vOrg = new Vector<String>();
         while ((line = readerOrg.readLine()) != null) {
             vOrg.add(line);
-        }
-
-        File file2 = VcCmd.parseFile(args, 1);
-        if (file2 == null) {
-            return;
         }
 
         BufferedReader readerRev = new BufferedReader(new FileReader(file2));

@@ -14,26 +14,51 @@ import java.io.File;
 * Date: 16/03/12
 * Time: 0:23
 */
-public class NewFileComparisonPanel extends SwingWorker<String, Object> {
+public class FileComparisonPanel extends SwingWorker<String, Object> {
     private JMeldPanel mainPanel;
     private JMDiffNode diffNode;
     private File leftFile;
     private File rightFile;
-    private boolean openInBackground;
     private BufferDiffPanel panel;
     private AbstractContentPanel contentPanel;
     private String contentId;
 
-    public NewFileComparisonPanel(JMeldPanel mainPanel, JMDiffNode diffNode, boolean openInBackground) {
+    private boolean openInBackground;
+    private boolean showLevenstein;
+    private boolean showTree;
+
+    public FileComparisonPanel(JMeldPanel mainPanel, JMDiffNode diffNode) {
         this.mainPanel = mainPanel;
         this.diffNode = diffNode;
-        this.openInBackground = openInBackground;
     }
 
-    public NewFileComparisonPanel(JMeldPanel mainPanel, File leftFile, File rightFile, boolean openInBackground) {
+    public FileComparisonPanel(JMeldPanel mainPanel, File leftFile, File rightFile) {
         this.mainPanel = mainPanel;
         this.leftFile = leftFile;
         this.rightFile = rightFile;
+    }
+
+    public boolean isShowTree() {
+        return showTree;
+    }
+
+    public void setShowTree(boolean showTree) {
+        this.showTree = showTree;
+    }
+
+    public boolean isShowLevenstein() {
+        return showLevenstein;
+    }
+
+    public void setShowLevenstein(boolean showLevenstein) {
+        this.showLevenstein = showLevenstein;
+    }
+
+    public boolean isOpenInBackground() {
+        return openInBackground;
+    }
+
+    public void setOpenInBackground(boolean openInBackground) {
         this.openInBackground = openInBackground;
     }
 
@@ -91,7 +116,7 @@ public class NewFileComparisonPanel extends SwingWorker<String, Object> {
                     // Already opened!
                     mainPanel.getTabbedPane().setSelectedComponent(contentPanel);
                 } else {
-                    panel = new BufferDiffPanel(mainPanel);
+                    panel = new BufferDiffPanel(mainPanel, showTree, showLevenstein);
                     panel.setId(contentId);
                     panel.setDiffNode(diffNode);
                     mainPanel.getTabbedPane().addTab(panel.getTitle(), ImageUtil.getSmallImageIcon("stock_new"), panel);

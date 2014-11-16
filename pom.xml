@@ -42,9 +42,10 @@
             <version>1.1.1</version>
         </dependency>
         <dependency>
+            <!-- Must be version 1.0.7, but it's not in maven repos -->
             <groupId>jgoodies</groupId>
             <artifactId>forms</artifactId>
-            <version>1.0.5</version> <!--En realidad usa la version 1.0.7-->
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
@@ -52,60 +53,57 @@
             <version>2.2.1</version>
         </dependency>
         <dependency>
+            <!-- Must be version 4.0, but it's not in maven repos -->
             <groupId>org.mod4j.com.ibm</groupId>
             <artifactId>icu</artifactId>
             <version>4.0.1</version>
-        </dependency> <!--En realidad usa la version 4.0-->
+        </dependency>
         <dependency>
             <groupId>com.sun.woodstock.dependlibs</groupId>
             <artifactId>jhall</artifactId>
             <version>2.0</version>
         </dependency> <!--java help-->
         <dependency>
+            <!--detect file type. Didn't know version, so use last -->
             <groupId>eu.medsea.mimeutil</groupId>
             <artifactId>mime-util</artifactId>
             <version>2.1.3</version>
-        </dependency> <!--detectar el tipo de los ficheros, Como no se la version pongo la última-->
+        </dependency>
         <dependency>
             <groupId>com.l2fprod</groupId>
             <artifactId>common</artifactId>
             <version>7.3</version>
         </dependency>
         <dependency>
+            <!--some need for xml, didn't find exact version -->
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.2.6</version>
-        </dependency> <!--algo para xml, no se que version usaba-->
-
+        </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
             <version>2.2.4</version>
         </dependency>
-
         <dependency>
             <groupId>javax.xml</groupId>
             <artifactId>jsr173</artifactId>
             <version>1.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.jidesoft</groupId>
             <artifactId>jide-oss</artifactId>
             <version>2.9.7</version>
         </dependency>
-
         <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
         </dependency>
-
         <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swingx</artifactId>
             <version>1.6.1</version>
         </dependency>
-
     </dependencies>
 </project>

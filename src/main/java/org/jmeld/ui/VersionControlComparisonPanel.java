@@ -15,14 +15,14 @@ import java.io.File;
 * Date: 16/03/12
 * Time: 0:30
 */
-public class NewVersionControlComparisonPanel extends SwingWorker<String, Object> {
+public class VersionControlComparisonPanel extends SwingWorker<String, Object> {
     private JMeldPanel mainPanel;
     private File file;
     private VersionControlDiff diff;
     private AbstractContentPanel contentPanel;
     private String contentId;
 
-    public NewVersionControlComparisonPanel(JMeldPanel mainPanel, File file) {
+    public VersionControlComparisonPanel(JMeldPanel mainPanel, File file) {
         this.mainPanel = mainPanel;
         this.file = file;
     }

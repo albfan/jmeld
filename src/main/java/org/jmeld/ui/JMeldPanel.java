@@ -21,7 +21,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideTabbedPane;
 import org.jmeld.Version;
 import org.jmeld.settings.JMeldSettings;
-import org.jmeld.settings.util.Filter;
 import org.jmeld.ui.action.ActionHandler;
 import org.jmeld.ui.action.Actions;
 import org.jmeld.ui.action.MeldAction;
@@ -34,7 +33,6 @@ import org.jmeld.ui.util.*;
 import org.jmeld.util.ObjectUtil;
 import org.jmeld.util.StringUtil;
 import org.jmeld.util.conf.ConfigurationListenerIF;
-import org.jmeld.util.node.JMDiffNode;
 import org.jmeld.vc.VersionControlUtil;
 
 import javax.help.HelpSet;
@@ -195,43 +193,26 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
             rightFile = new File(rightName);
             if (leftFile.isDirectory()) {
                 if (rightFile.isDirectory()) {
-                    openDirectoryComparison(leftFile, rightFile, JMeldSettings
-                            .getInstance().getFilter().getFilter("default"));
+                    new DirectoryComparisonPanel(this, leftFile, rightFile, JMeldSettings
+                                        .getInstance().getFilter().getFilter("default")).execute();
                 } else {
-                    openFileComparison(new File(leftFile, rightName), rightFile, false);
+                    FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(this, new File(leftFile, rightName), rightFile);
+                    fileComparisonPanel.setOpenInBackground(false);
+                    fileComparisonPanel.execute();
                 }
             } else {
-                openFileComparison(leftFile, rightFile, false);
+                FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(this, leftFile, rightFile);
+                fileComparisonPanel.setOpenInBackground(false);
+                fileComparisonPanel.execute();
             }
         } else {
             if (!StringUtil.isEmpty(leftName)) {
                 file = new File(leftName);
                 if (file.exists() && VersionControlUtil.isVersionControlled(file)) {
-                    openVersionControlComparison(file);
+                    new VersionControlComparisonPanel(this, file).execute();
                 }
             }
         }
-    }
-
-    public void openFileComparison(File leftFile,
-                                   File rightFile,
-                                   boolean openInBackground) {
-        new NewFileComparisonPanel(JMeldPanel.this, leftFile, rightFile, openInBackground).execute();
-    }
-
-    public void openFileComparison(JMDiffNode diffNode,
-                                   boolean openInBackground) {
-        new NewFileComparisonPanel(JMeldPanel.this, diffNode, openInBackground).execute();
-    }
-
-    public void openDirectoryComparison(File leftFile,
-                                        File rightFile,
-                                        Filter filter) {
-        new NewDirectoryComparisonPanel(JMeldPanel.this, leftFile, rightFile, filter).execute();
-    }
-
-    public void openVersionControlComparison(File file) {
-        new NewVersionControlComparisonPanel(JMeldPanel.this, file).execute();
     }
 
     public MeldAction getAction(Actions.Action action) {
@@ -425,21 +406,22 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
     }
 
     public void doNew(ActionEvent ae) {
-        NewPanelDialog dialog;
+        PanelDialog dialog;
 
-        dialog = new NewPanelDialog(this);
+        dialog = new PanelDialog(this);
         dialog.show();
 
-        if (dialog.getFunction() == NewPanelDialog.Function.FILE_COMPARISON) {
-            openFileComparison(new File(dialog.getLeftFileName()), new File(dialog
-                    .getRightFileName()), false);
-        } else if (dialog.getFunction() == NewPanelDialog.Function.DIRECTORY_COMPARISON) {
-            openDirectoryComparison(new File(dialog.getLeftDirectoryName()),
-                    new File(dialog.getRightDirectoryName()), dialog
-                    .getFilter());
-        } else if (dialog.getFunction() == NewPanelDialog.Function.VERSION_CONTROL) {
-            openVersionControlComparison(new File(dialog
-                    .getVersionControlDirectoryName()));
+        if (dialog.getFunction() == PanelDialog.Function.FILE_COMPARISON) {
+            FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(this, new File(dialog.getLeftFileName()), new File(dialog
+                        .getRightFileName()));
+            fileComparisonPanel.setOpenInBackground(false);
+            fileComparisonPanel.execute();
+        } else if (dialog.getFunction() == PanelDialog.Function.DIRECTORY_COMPARISON) {
+            new DirectoryComparisonPanel(this, new File(dialog.getLeftDirectoryName()), new File(dialog.getRightDirectoryName()), dialog
+                        .getFilter()).execute();
+        } else if (dialog.getFunction() == PanelDialog.Function.VERSION_CONTROL) {
+            new VersionControlComparisonPanel(this, new File(dialog
+                        .getVersionControlDirectoryName())).execute();
         }
     }
 

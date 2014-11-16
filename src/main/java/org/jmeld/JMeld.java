@@ -32,6 +32,7 @@ public class JMeld
     private static JMeldPanel jmeldPanel;
 
     public JMeld(String[] args) {
+        //TODO: parse options (showTree show levenstein
         fileNameList = new ArrayList<String>();
         for (String arg : args) {
             fileNameList.add(arg);

@@ -60,14 +60,20 @@ public class BufferDiffPanel extends AbstractContentPanel {
     private int selectedLine;
     private ScrollSynchronizer scrollSynchronizer;
     private JMDiff diff;
+    private JTable levensteinGraphTable;
     private JScrollPane scrollTreePane;
-    private JTable levensteinGraph;
+    private boolean showTree;
+    private boolean showLevenstein;
 
     BufferDiffPanel(JMeldPanel mainPanel) {
-        this.mainPanel = mainPanel;
+        this(mainPanel, false, false);
+    }
 
+    BufferDiffPanel(JMeldPanel mainPanel, boolean showTree, boolean showLevenstein) {
+        this.mainPanel = mainPanel;
+        this.showTree = showTree;
+        this.showLevenstein = showLevenstein;
         diff = new JMDiff();
-        filePanels = new FilePanel[NUMBER_OF_PANELS];
 
         init();
 
@@ -119,10 +125,16 @@ public class BufferDiffPanel extends AbstractContentPanel {
             }
         }
 
-        scrollTreePane.setViewportView(JMTreeDelta.buildTreeRevision(getCurrentRevision()));
-        buildLevensteinModel();
+        refreshTreeModel();
+        refreshLevensteinModel();
 
         mainPanel.repaint();
+    }
+
+    private void refreshTreeModel() {
+        if (showTree) {
+            scrollTreePane.setViewportView(JMTreeDelta.buildTreeRevision(getCurrentRevision()));
+        }
     }
 
     public String getTitle() {
@@ -236,63 +248,97 @@ public class BufferDiffPanel extends AbstractContentPanel {
         rows = "6px, pref, 3px, fill:0:grow, pref";
 
         setLayout(new BorderLayout());
-        JPanel formPanel = new JPanel();
-        layout = new FormLayout(columns, rows);
-        cc = new CellConstraints();
 
-        formPanel.setLayout(layout);
-
-        filePanels[LEFT] = new FilePanel(this, BufferDocumentIF.ORIGINAL, LEFT);
-        filePanels[RIGHT] = new FilePanel(this, BufferDocumentIF.REVISED, RIGHT);
-
-        // panel for file1
-        formPanel.add(new RevisionBar(this, filePanels[LEFT], true), cc.xy(2, 4));
-        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
-            formPanel.add(filePanels[LEFT].getSaveButton(), cc.xy(2, 2));
-            formPanel.add(filePanels[LEFT].getFileLabel(), cc.xyw(4, 2, 3));
-        }
-        formPanel.add(filePanels[LEFT].getScrollPane(), cc.xyw(4, 4, 3));
-        if (mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled()) {
-            formPanel.add(filePanels[LEFT].getFilePanelBar(), cc.xyw(4, 5, 3));
-        }
-
-        DiffScrollComponent diffScrollComponent = new DiffScrollComponent(this, LEFT, RIGHT);
-        formPanel.add(diffScrollComponent, cc.xy(7, 4));
-
-        // panel for file2
-        formPanel.add(new RevisionBar(this, filePanels[RIGHT], false), cc.xy(12, 4));
-        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
-            formPanel.add(filePanels[RIGHT].getFileLabel(), cc.xyw(8, 2, 3));
-        }
-        formPanel.add(filePanels[RIGHT].getScrollPane(), cc.xyw(8, 4, 3));
-        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
-            formPanel.add(filePanels[RIGHT].getSaveButton(), cc.xy(12, 2));
-        }
-        if (mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled()) {
-            formPanel.add(filePanels[RIGHT].getFilePanelBar(), cc.xyw(8, 5, 3));
-        }
-
-        scrollTreePane = new JScrollPane();
-        JSplitPane horSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, scrollTreePane, buildLevenstheinTable());
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, formPanel, horSplit);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, buildFilePanel(columns, rows), buildBottonSplit());
         add(splitPane);
-        JTree tree = JMTreeDelta.buildTreeRevision(null);
-        scrollTreePane.setViewportView(tree);
-
-        filePanels[RIGHT].getEditor().addKeyListener(diffScrollComponent.getKeyListener());
-        filePanels[LEFT].getEditor().addKeyListener(diffScrollComponent.getKeyListener());
 
         scrollSynchronizer = new ScrollSynchronizer(this, filePanels[LEFT], filePanels[RIGHT]);
 
         setSelectedPanel(filePanels[LEFT]);
     }
 
+    private JComponent buildBottonSplit() {
+        JScrollPane scrollTreePane = buildTreePane();
+
+        JComponent levensteinPanel = buildLevenstheinTable();
+
+        JComponent bottonSplit;
+        if (scrollTreePane != null) {
+            if (levensteinPanel != null) {
+                bottonSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, scrollTreePane, levensteinPanel);
+            } else {
+                bottonSplit = scrollTreePane;
+            }
+        } else {
+            bottonSplit = levensteinPanel;
+        }
+        return bottonSplit;
+    }
+
+    private JPanel buildFilePanel(String columns, String rows) {
+        FormLayout layout;
+        CellConstraints cc;
+        JPanel filePanel = new JPanel();
+        layout = new FormLayout(columns, rows);
+        cc = new CellConstraints();
+
+        filePanel.setLayout(layout);
+
+        filePanels = new FilePanel[NUMBER_OF_PANELS];
+
+        filePanels[LEFT] = new FilePanel(this, BufferDocumentIF.ORIGINAL, LEFT);
+        filePanels[RIGHT] = new FilePanel(this, BufferDocumentIF.REVISED, RIGHT);
+
+        // panel for file1
+        filePanel.add(new RevisionBar(this, filePanels[LEFT], true), cc.xy(2, 4));
+        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
+            filePanel.add(filePanels[LEFT].getSaveButton(), cc.xy(2, 2));
+            filePanel.add(filePanels[LEFT].getFileLabel(), cc.xyw(4, 2, 3));
+        }
+        filePanel.add(filePanels[LEFT].getScrollPane(), cc.xyw(4, 4, 3));
+        if (mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled()) {
+            filePanel.add(filePanels[LEFT].getFilePanelBar(), cc.xyw(4, 5, 3));
+        }
+
+        DiffScrollComponent diffScrollComponent = new DiffScrollComponent(this, LEFT, RIGHT);
+        filePanel.add(diffScrollComponent, cc.xy(7, 4));
+
+        // panel for file2
+        filePanel.add(new RevisionBar(this, filePanels[RIGHT], false), cc.xy(12, 4));
+        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
+            filePanel.add(filePanels[RIGHT].getFileLabel(), cc.xyw(8, 2, 3));
+        }
+        filePanel.add(filePanels[RIGHT].getScrollPane(), cc.xyw(8, 4, 3));
+        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
+            filePanel.add(filePanels[RIGHT].getSaveButton(), cc.xy(12, 2));
+        }
+        if (mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled()) {
+            filePanel.add(filePanels[RIGHT].getFilePanelBar(), cc.xyw(8, 5, 3));
+        }
+
+        filePanels[RIGHT].getEditor().addKeyListener(diffScrollComponent.getKeyListener());
+        filePanels[LEFT].getEditor().addKeyListener(diffScrollComponent.getKeyListener());
+        return filePanel;
+    }
+
+    private JScrollPane buildTreePane() {
+        if (showTree) {
+            scrollTreePane = new JScrollPane();
+            JTree tree = JMTreeDelta.buildTreeRevision(null);
+            scrollTreePane.setViewportView(tree);
+        }
+        return scrollTreePane;
+    }
+
     private JComponent buildLevenstheinTable() {
+
+        if (!showLevenstein) {
+            return null;
+        }
 
         final JSpinner spinner = new JSpinner(new SpinnerNumberModel(15, 5, Integer.MAX_VALUE, 1));
 
-        levensteinGraph = new JTable() {
+        levensteinGraphTable = new JTable() {
             /**
              * Falso si el tamaño de la tabla no es el tamaño del JScrollPane
              * @return
@@ -324,7 +370,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         spinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                TableColumnModel cm = levensteinGraph.getColumnModel();
+                TableColumnModel cm = levensteinGraphTable.getColumnModel();
                 Integer preferredWidth = (Integer) spinner.getValue();
                 for (int i = 0; i < cm.getColumnCount(); i++) {
                     //TODO: Si es menor que el mininumWidth, no hace nada
@@ -333,11 +379,11 @@ public class BufferDiffPanel extends AbstractContentPanel {
             }
         });
 
-        levensteinGraph.setTableHeader(null);
-        levensteinGraph.setFillsViewportHeight(true);
+        levensteinGraphTable.setTableHeader(null);
+        levensteinGraphTable.setFillsViewportHeight(true);
 
         JPanel panelGraph = new JPanel(new BorderLayout());
-        panelGraph.add(new JScrollPane(levensteinGraph));
+        panelGraph.add(new JScrollPane(levensteinGraphTable));
         JPanel bPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         bPanel.add(new JLabel("Min Column Width"));
         bPanel.add(spinner);
@@ -345,17 +391,18 @@ public class BufferDiffPanel extends AbstractContentPanel {
         return panelGraph;
     }
 
-    private void buildLevensteinModel() {
+    private void refreshLevensteinModel() {
 
-        final LevenshteinTableModel model;
-        try {
-            PlainDocument orgDoc = filePanels[LEFT].getBufferDocument().getDocument();
-            PlainDocument revDoc = filePanels[RIGHT].getBufferDocument().getDocument();
-            model = new LevenshteinTableModel(orgDoc.getText(0, orgDoc.getLength()), revDoc.getText(0, revDoc.getLength()));
+        if (showLevenstein) {
+            try {
+                PlainDocument orgDoc = filePanels[LEFT].getBufferDocument().getDocument();
+                PlainDocument revDoc = filePanels[RIGHT].getBufferDocument().getDocument();
+                LevenshteinTableModel model = new LevenshteinTableModel(orgDoc.getText(0, orgDoc.getLength()), revDoc.getText(0, revDoc.getLength()));
 
-            levensteinGraph.setModel(model);
-            levensteinGraph.setDefaultRenderer(Object.class, model.getCellRenderer());
-        } catch (BadLocationException e) {
+                levensteinGraphTable.setModel(model);
+                levensteinGraphTable.setDefaultRenderer(Object.class, model.getCellRenderer());
+            } catch (BadLocationException e) {
+            }
         }
     }
 
