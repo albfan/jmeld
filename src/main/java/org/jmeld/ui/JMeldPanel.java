@@ -140,23 +140,27 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
             return;
         }
 
-        // Possibilities;
-        // 1. <fileName>, <fileName>
-        // 2. <fileName>, <fileName>, <fileName>, <fileName>
-        // 3. <directory>, <directory>
-        // 4. <directory>, <fileName>, <fileName> ...
-        // 5. <directory (version controlled)>
-        // ad 2:
-        //   I always assume filepairs!
-        //   for instance: <file1> <file2> <file3> <file4>
-        //   will open 2 filediffs "file1-file2" and "file3-file4".
-        // ad 4:
-        //   The fileNames are relative and are also available in
-        //   the <directory>. So this enables you to do:
-        // jmeld ../branches/branch1 src/lala.java src/haha.java
-        //   This results in 2 compares:
-        //   1. ../branches/branch1/src/lala.java with ./src/lala.java
-        //   2. ../branches/branch1/src/haha.java with ./src/haha.java
+/*
+        Possibilities;
+
+            1. <fileName>, <fileName>
+            2. <fileName>, <fileName>, <fileName>, <fileName>
+            3. <directory>, <directory>
+            4. <directory>, <fileName>, <fileName> ...
+            5. <directory (version controlled)>
+
+        ad 2:
+            I always assume filepairs!
+            for instance: <file1> <file2> <file3> <file4>
+            will open 2 filediffs "file1-file2" and "file3-file4".
+        ad 4:
+            The fileNames are relative and are also available in
+            the <directory>. So this enables you to do:
+        jmeld ../branches/branch1 src/lala.java src/haha.java
+            This results in 2 compares:
+                1. ../branches/branch1/src/lala.java with ./src/lala.java
+                2. ../branches/branch1/src/haha.java with ./src/haha.java
+*/
         if (fileNameList.size() > 1) {
             if (new File(fileNameList.get(0)).isDirectory()) {
                 fileName1 = fileNameList.get(0);
