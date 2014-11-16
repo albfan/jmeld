@@ -21,19 +21,13 @@ import org.jmeld.util.*;
 import java.util.*;
 
 public class JMDelta {
-    // Class variables:
-    enum Type {
-        ADD,
-        DELETE,
-        CHANGE;
-    }
 
     private static boolean debug = false;
 
     // Instance variables:
     private JMChunk original;
     private JMChunk revised;
-    private Type type;
+    private TypeDiff type;
     private JMRevision revision;
     private JMRevision changeRevision;
 
@@ -57,15 +51,15 @@ public class JMDelta {
     }
 
     public boolean isAdd() {
-        return type == Type.ADD;
+        return type == TypeDiff.ADD;
     }
 
     public boolean isDelete() {
-        return type == Type.DELETE;
+        return type == TypeDiff.DELETE;
     }
 
     public boolean isChange() {
-        return type == Type.CHANGE;
+        return type == TypeDiff.CHANGE;
     }
 
     public void invalidateChangeRevision() {
@@ -80,8 +74,7 @@ public class JMDelta {
         return changeRevision;
     }
 
-    //TODO: Genera un Delta con chunks a partir de lo que detecta el algoritmo superior (es justo lo que estoy buscando)
-
+    //TODO: Creates a Delta with chunks from the algorithm
     private JMRevision createChangeRevision() {
         char[] original1;
         Character[] original2;
@@ -174,11 +167,11 @@ public class JMDelta {
 
     void initType() {
         if (original.getSize() > 0 && revised.getSize() == 0) {
-            type = Type.DELETE;
+            type = TypeDiff.DELETE;
         } else if (original.getSize() == 0 && revised.getSize() > 0) {
-            type = Type.ADD;
+            type = TypeDiff.ADD;
         } else {
-            type = Type.CHANGE;
+            type = TypeDiff.CHANGE;
         }
     }
 
@@ -208,7 +201,7 @@ public class JMDelta {
         }
     }
 
-    public Type getType() {
+    public TypeDiff getType() {
         return type;
     }
 

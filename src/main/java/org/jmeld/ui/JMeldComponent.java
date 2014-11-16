@@ -36,8 +36,7 @@ public class JMeldComponent extends Container {
         return meldPanel.actions;
     }
 
-    public Action getAction(Actions.Action action)
-    {
+    public Action getAction(Actions.Action action) {
         return meldPanel.getAction(action);
     }
 

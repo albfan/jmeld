@@ -30,6 +30,7 @@ import org.jmeld.ui.search.SearchHits;
 import org.jmeld.ui.text.AbstractBufferDocument;
 import org.jmeld.ui.text.BufferDocumentIF;
 import org.jmeld.ui.text.JMDocumentEvent;
+import org.jmeld.ui.tree.DiffTree;
 import org.jmeld.util.StringUtil;
 import org.jmeld.util.node.BufferNode;
 import org.jmeld.util.node.JMDiffNode;
@@ -61,7 +62,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
     private ScrollSynchronizer scrollSynchronizer;
     private JMDiff diff;
     private JTable levensteinGraphTable;
-    private JScrollPane scrollTreePane;
+    private DiffTree diffTree;
     private boolean showTree;
     private boolean showLevenstein;
 
@@ -133,7 +134,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
     private void refreshTreeModel() {
         if (showTree) {
-            scrollTreePane.setViewportView(JMTreeDelta.buildTreeRevision(getCurrentRevision()));
+            diffTree.setRevision(getCurrentRevision());
         }
     }
 
@@ -322,10 +323,11 @@ public class BufferDiffPanel extends AbstractContentPanel {
     }
 
     private JScrollPane buildTreePane() {
+        JScrollPane scrollTreePane = null;
         if (showTree) {
             scrollTreePane = new JScrollPane();
-            JTree tree = JMTreeDelta.buildTreeRevision(null);
-            scrollTreePane.setViewportView(tree);
+            diffTree = new DiffTree();
+            scrollTreePane.setViewportView(diffTree);
         }
         return scrollTreePane;
     }

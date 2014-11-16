@@ -7,13 +7,9 @@ import org.jmeld.util.conf.*;
 import java.util.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
-public class Ignore
-    extends AbstractConfigurationElement
-{
-  // Class variables:
+public class Ignore extends AbstractConfigurationElement {
   static public final Ignore NULL_IGNORE = new Ignore();
 
-  // Instance variables:
   @XmlElement
   public boolean ignoreWhitespaceAtBegin;
   @XmlElement
