@@ -149,9 +149,9 @@ public class JMHighlighter implements Highlighter {
         doc = component.getDocument();
         hli = new HighlightInfo();
 
-        hli.painter = painter;
         hli.p0 = doc.createPosition(p0);
         hli.p1 = doc.createPosition(p1);
+        hli.painter = painter;
 
         getLayer(layer).add(hli);
         repaint();

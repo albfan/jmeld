@@ -39,6 +39,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -129,7 +130,7 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
         return fileLabel;
     }
 
-    JScrollPane getScrollPane() {
+    public JScrollPane getScrollPane() {
         return scrollPane;
     }
 
@@ -294,119 +295,155 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
             for (SearchHit sh : searchHits.getSearchHits()) {
                 setHighlight(JMHighlighter.LAYER2, sh.getFromOffset(),
                         sh.getToOffset(),
-                        searchHits.isCurrent(sh) ? JMHighlightPainter.CURRENT_SEARCH
-                                : JMHighlightPainter.SEARCH);
+                        searchHits.isCurrent(sh)
+                                ? JMHighlightPainter.CURRENT_SEARCH: JMHighlightPainter.SEARCH);
             }
         }
     }
 
     private void paintRevisionHighlights() {
-        JMChunk original;
-        JMChunk revised;
-        int fromOffset;
-        int toOffset;
-        int fromOffset2;
-        int toOffset2;
-        JMRevision revision;
-        JMRevision changeRev;
-        JMChunk changeOriginal;
-        JMChunk changeRevised;
 
         if (bufferDocument == null) {
             return;
         }
 
-        revision = diffPanel.getCurrentRevision();
+        JMRevision revision = diffPanel.getCurrentRevision();
         if (revision == null) {
             return;
         }
 
         for (JMDelta delta : revision.getDeltas()) {
-            original = delta.getOriginal();
-            revised = delta.getRevised();
-
             if (BufferDocumentIF.ORIGINAL.equals(name)) {
-                fromOffset = bufferDocument.getOffsetForLine(original.getAnchor());
-                if (fromOffset < 0) {
-                    continue;
-                }
-
-                toOffset = bufferDocument.getOffsetForLine(original.getAnchor()
-                        + original.getSize());
-                if (toOffset < 0) {
-                    continue;
-                }
-
-                if (delta.isAdd()) {
-                    setHighlight(fromOffset, fromOffset + 1,
-                            JMHighlightPainter.ADDED_LINE);
-                } else if (delta.isDelete()) {
-                    setHighlight(fromOffset, toOffset, JMHighlightPainter.DELETED);
-                } else if (delta.isChange()) {
-                    // Mark the changes in a change in a different color.
-                    if (original.getSize() < MAXSIZE_CHANGE_DIFF
-                            && revised.getSize() < MAXSIZE_CHANGE_DIFF) {
-                        changeRev = delta.getChangeRevision();
-                        if (changeRev != null) {
-                            for (JMDelta changeDelta : changeRev.getDeltas()) {
-                                changeOriginal = changeDelta.getOriginal();
-                                if (changeOriginal.getSize() <= 0) {
-                                    continue;
-                                }
-
-                                fromOffset2 = fromOffset + changeOriginal.getAnchor();
-                                toOffset2 = fromOffset2 + changeOriginal.getSize();
-
-                                setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                                        JMHighlightPainter.CHANGED_LIGHTER);
-                            }
-                        }
-                    }
-
-                    // First color the changes in changes and after that the entire change
-                    //   (It seems that you can only color a range once!)
-                    setHighlight(fromOffset, toOffset, JMHighlightPainter.CHANGED);
-                }
+                new HighlightOriginal(delta).highlight();
             } else if (BufferDocumentIF.REVISED.equals(name)) {
-                fromOffset = bufferDocument.getOffsetForLine(revised.getAnchor());
-                if (fromOffset < 0) {
-                    continue;
-                }
+                new HighlightRevised(delta).highlight();
+            }
+        }
+    }
 
-                toOffset = bufferDocument.getOffsetForLine(revised.getAnchor()
-                        + revised.getSize());
-                if (toOffset < 0) {
-                    continue;
-                }
+    abstract class AbstractHighlight {
+        protected JMDelta delta;
 
-                if (delta.isAdd()) {
-                    setHighlight(fromOffset, toOffset, JMHighlightPainter.ADDED);
-                } else if (delta.isDelete()) {
-                    setHighlight(fromOffset, fromOffset + 1,
-                            JMHighlightPainter.DELETED_LINE);
-                } else if (delta.isChange()) {
-                    if (original.getSize() < MAXSIZE_CHANGE_DIFF
-                            && revised.getSize() < MAXSIZE_CHANGE_DIFF) {
-                        changeRev = delta.getChangeRevision();
-                        if (changeRev != null) {
-                            for (JMDelta changeDelta : changeRev.getDeltas()) {
-                                changeRevised = changeDelta.getRevised();
-                                if (changeRevised.getSize() <= 0) {
-                                    continue;
-                                }
+        public AbstractHighlight(JMDelta delta) {
+            this.delta = delta;
+        }
 
-                                fromOffset2 = fromOffset + changeRevised.getAnchor();
-                                toOffset2 = fromOffset2 + changeRevised.getSize();
+        protected void highlight() {
+            int fromOffset;
+            int toOffset;
+            JMRevision changeRev;
+            JMChunk changeOriginal;
+            int fromOffset2;
+            int toOffset2;
+            fromOffset = bufferDocument.getOffsetForLine(getPrimaryChunk().getAnchor());
+            if (fromOffset < 0) {
+                return;
+            }
 
-                                setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
-                                        JMHighlightPainter.CHANGED_LIGHTER);
+            toOffset = bufferDocument.getOffsetForLine(getPrimaryChunk().getAnchor() + getPrimaryChunk().getSize());
+            if (toOffset < 0) {
+                return;
+            }
+
+            boolean isLastNewLine = false;
+            try {
+                PlainDocument document = bufferDocument.getDocument();
+                isLastNewLine = "\n".equals(document.getText(toOffset - 1, 1));
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+
+            JMHighlightPainter highlight = null;
+            if (delta.isChange()) {
+                if (delta.getOriginal().getSize() < MAXSIZE_CHANGE_DIFF
+                        && delta.getRevised().getSize() < MAXSIZE_CHANGE_DIFF) {
+                    changeRev = delta.getChangeRevision();
+                    if (changeRev != null) {
+                        for (JMDelta changeDelta : changeRev.getDeltas()) {
+                            changeOriginal = getPrimaryChunk(changeDelta);
+                            if (changeOriginal.getSize() <= 0) {
+                                continue;
                             }
+
+                            fromOffset2 = fromOffset + changeOriginal.getAnchor();
+                            toOffset2 = fromOffset2 + changeOriginal.getSize();
+
+                            setHighlight(JMHighlighter.LAYER1, fromOffset2, toOffset2,
+                                    JMHighlightPainter.CHANGED_LIGHTER);
                         }
                     }
+                }
 
-                    setHighlight(fromOffset, toOffset, JMHighlightPainter.CHANGED);
+                highlight = JMHighlightPainter.CHANGED;
+            } else {
+                if (isEmptyLine()) {
+                    toOffset = fromOffset + 1;
+                }
+                if (delta.isAdd()) {
+                    highlight = getAddedHighlightPainter(isOriginal(), isLastNewLine);
+                } else if (delta.isDelete()) {
+                    highlight = getDeleteHighlightPainter(!isOriginal(), isLastNewLine);
                 }
             }
+            setHighlight(fromOffset, toOffset, highlight);
+        }
+
+        private JMChunk getPrimaryChunk() {
+            return getPrimaryChunk(delta);
+        }
+
+        private boolean isOriginal() {
+            return delta.getOriginal() == getPrimaryChunk();
+        }
+
+        private JMHighlightPainter getAddedHighlightPainter(boolean line, boolean isLastNewLine) {
+            return line
+                    ? JMHighlightPainter.ADDED_LINE
+                    : isLastNewLine
+                    ? JMHighlightPainter.ADDED_NEWLINE
+                    : JMHighlightPainter.ADDED;
+        }
+
+        private JMHighlightPainter getDeleteHighlightPainter(boolean line, boolean isLastNewLine) {
+            return line
+                    ? JMHighlightPainter.DELETED_LINE
+                    : isLastNewLine
+                        ? JMHighlightPainter.DELETED_NEWLINE
+                        : JMHighlightPainter.DELETED;
+        }
+
+        protected abstract JMChunk getPrimaryChunk(JMDelta changeDelta);
+
+        public abstract boolean isEmptyLine();
+    }
+
+    class HighlightOriginal extends AbstractHighlight {
+
+        public HighlightOriginal(JMDelta delta) {
+            super(delta);
+        }
+
+        public boolean isEmptyLine() {
+            return delta.isAdd();
+        }
+
+        protected JMChunk getPrimaryChunk(JMDelta changeDelta) {
+            return changeDelta.getOriginal();
+        }
+    }
+
+    class HighlightRevised extends AbstractHighlight {
+
+        public HighlightRevised(JMDelta delta) {
+            super(delta);
+        }
+
+        public boolean isEmptyLine() {
+            return delta.isDelete();
+        }
+
+        protected JMChunk getPrimaryChunk(JMDelta changeDelta) {
+            return changeDelta.getRevised();
         }
     }
 
@@ -533,28 +570,28 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
     }
 
     private void initConfiguration() {
-        JMeldSettings c;
+        JMeldSettings settings;
         boolean readonly;
         Font font;
         FontMetrics fm;
 
-        c = getConfiguration();
+        settings = getConfiguration();
 
-        setShowLineNumbers(c.getEditor().getShowLineNumbers());
+        setShowLineNumbers(settings.getEditor().getShowLineNumbers());
 
-        font = c.getEditor().isCustomFontEnabled() ? c.getEditor().getFont() : null;
+        font = settings.getEditor().isCustomFontEnabled() ? settings.getEditor().getFont() : null;
         font = font != null ? font : FontUtil.defaultTextAreaFont;
         editor.setFont(font);
         fm = editor.getFontMetrics(font);
         scrollPane.getHorizontalScrollBar().setUnitIncrement(fm.getHeight());
 
-        getEditor().setTabSize(c.getEditor().getTabSize());
+        getEditor().setTabSize(settings.getEditor().getTabSize());
 
         readonly = false;
         if (position == BufferDiffPanel.LEFT) {
-            readonly = c.getEditor().getLeftsideReadonly();
+            readonly = settings.getEditor().getLeftsideReadonly();
         } else if (position == BufferDiffPanel.RIGHT) {
-            readonly = c.getEditor().getRightsideReadonly();
+            readonly = settings.getEditor().getRightsideReadonly();
         }
 
         if (bufferDocument != null && bufferDocument.isReadonly()) {
