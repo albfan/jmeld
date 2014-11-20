@@ -24,6 +24,7 @@ import org.jmeld.diff.JMDelta;
 import org.jmeld.diff.JMDiff;
 import org.jmeld.diff.JMRevision;
 import org.jmeld.model.LevenshteinTableModel;
+import org.jmeld.ui.diffbar.DiffScrollComponent;
 import org.jmeld.ui.search.SearchCommand;
 import org.jmeld.ui.search.SearchHit;
 import org.jmeld.ui.search.SearchHits;
@@ -263,17 +264,17 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
         JComponent levensteinPanel = buildLevenstheinTable();
 
-        JComponent bottonSplit;
+        JComponent bottomSplit;
         if (scrollTreePane != null) {
             if (levensteinPanel != null) {
-                bottonSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, scrollTreePane, levensteinPanel);
+                bottomSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, scrollTreePane, levensteinPanel);
             } else {
-                bottonSplit = scrollTreePane;
+                bottomSplit = scrollTreePane;
             }
         } else {
-            bottonSplit = levensteinPanel;
+            bottomSplit = levensteinPanel;
         }
-        return bottonSplit;
+        return bottomSplit;
     }
 
     private JPanel buildFilePanel(String columns, String rows) {
@@ -319,6 +320,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
         filePanels[RIGHT].getEditor().addKeyListener(diffScrollComponent.getKeyListener());
         filePanels[LEFT].getEditor().addKeyListener(diffScrollComponent.getKeyListener());
+        filePanel.setMinimumSize(new Dimension(300,200));
         return filePanel;
     }
 
@@ -408,7 +410,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         }
     }
 
-    void toNextDelta(boolean next) {
+    public void toNextDelta(boolean next) {
         if (next) {
             doDown();
         } else {
@@ -416,7 +418,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         }
     }
 
-    JMRevision getCurrentRevision() {
+    public JMRevision getCurrentRevision() {
         return currentRevision;
     }
 
@@ -624,7 +626,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         runChange(LEFT, RIGHT, shift);
     }
 
-    void runChange(int fromPanelIndex, int toPanelIndex, boolean shift) {
+    public void runChange(int fromPanelIndex, int toPanelIndex, boolean shift) {
         JMDelta delta;
         BufferDocumentIF fromBufferDocument;
         BufferDocumentIF toBufferDocument;
@@ -715,7 +717,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         }
     }
 
-    void runDelete(int fromPanelIndex, int toPanelIndex) {
+    public void runDelete(int fromPanelIndex, int toPanelIndex) {
         JMDelta delta;
         BufferDocumentIF bufferDocument;
         PlainDocument document;
@@ -989,7 +991,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         Font font;
     }
 
-    void setSelectedDelta(JMDelta delta) {
+    public void setSelectedDelta(JMDelta delta) {
         selectedDelta = delta;
         setSelectedLine(delta == null ? 0 : delta.getOriginal().getAnchor());
     }
@@ -1024,7 +1026,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
         return selectedDelta;
     }
 
-    FilePanel getFilePanel(int index) {
+    public FilePanel getFilePanel(int index) {
         if (index < 0 || index > filePanels.length) {
             return null;
         }
