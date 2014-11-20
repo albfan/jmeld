@@ -124,12 +124,7 @@ public class FileComparisonPanel extends SwingWorker<String, Object> {
                         mainPanel.getTabbedPane().setSelectedComponent(panel);
                     }
 
-//                    panel.doGoToFirst();
-//                    panel.repaint();
-
-                    // Goto the first delta:
-                    // This should be invoked after the panel is displayed!
-                    SwingUtilities.invokeLater(getDoGoToFirst());
+                    SwingUtilities.invokeLater(doGoToFirst());
                 }
             }
         } catch (Exception ex) {
@@ -137,7 +132,7 @@ public class FileComparisonPanel extends SwingWorker<String, Object> {
         }
     }
 
-    private Runnable getDoGoToFirst() {
+    private Runnable doGoToFirst() {
         return new Runnable() {
             public void run() {
                 panel.doGoToFirst();
