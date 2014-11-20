@@ -31,9 +31,9 @@ public class EditorSettings
   @XmlElement
   private boolean showLineNumbers;
   @XmlElement
-  private int tabSize = 4;
+  private int tabSize;
   @XmlElement
-  private Ignore ignore = new Ignore();
+  private Ignore ignore;
   @XmlElement
   private boolean leftsideReadonly;
   @XmlElement
@@ -51,7 +51,7 @@ public class EditorSettings
   @XmlElement
   private boolean antialias;
   @XmlElement
-  private boolean defaultFileEncodingEnabled = true;
+  private boolean defaultFileEncodingEnabled;
   @XmlElement
   private boolean detectFileEncodingEnabled;
   @XmlElement
@@ -61,12 +61,17 @@ public class EditorSettings
   @XmlElement
   private String lookAndFeelName;
   @XmlElement
-  private ToolbarButtonIcon toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+  private ToolbarButtonIcon toolbarButtonIcon;
   @XmlElement
-  private boolean toolbarButtonTextEnabled = true;
+  private boolean toolbarButtonTextEnabled;
 
   public EditorSettings()
   {
+      tabSize = 4;
+      ignore = new Ignore();
+      toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+      toolbarButtonTextEnabled = true;
+      defaultFileEncodingEnabled = true;
   }
 
   @Override
