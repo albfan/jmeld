@@ -28,6 +28,14 @@ Start jmeld with the command:
 
     $ java -jar JMeld.jar <file1> <file2>
 
+or use [mvnexec](https://github.com/albfan/mvnexec)
+
+    $ mvnexec -Pqaf jmeld.JMeld
+    $ mvnexec -BCPqaf jmeld.JMeld src/test/resources/file{1,2}
+    $ mvnexec -BCPqaf component src/test/resources/file{1,2} 
+
+> trust me, that commands works out-of-the-box
+
 ## License
 
 This license of this program is the LGPL.
