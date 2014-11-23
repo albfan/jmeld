@@ -5,6 +5,7 @@
 
 package org.jmeld.ui;
 
+import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.action.Actions;
 import org.jmeld.vc.util.VcCmd;
 
@@ -40,8 +41,16 @@ public class JMeldComponent extends Container {
         return meldPanel.getAction(action);
     }
 
+    private void openComparison(File file, File file2) {
+        FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(meldPanel, file, file2);
+        fileComparisonPanel.setOpenInBackground(false);
+        fileComparisonPanel.setShowTree(true);
+        fileComparisonPanel.execute();
+    }
+
     static public void main(String args[]) {
-        JFrame         frame;
+
+        JFrame frame;
         JMeldComponent jmc;
         JPanel         panel;
         Actions        actions;
@@ -56,6 +65,11 @@ public class JMeldComponent extends Container {
             return;
         }
 
+        JMeldSettings settings = JMeldSettings.getInstance();
+        settings.getEditor().setShowLineNumbers(true);
+        settings.setDrawCurves(true);
+        settings.setCurveType(1);
+
         jmc = new JMeldComponent();
 
         panel = new JPanel(new BorderLayout());
@@ -65,16 +79,10 @@ public class JMeldComponent extends Container {
         actions.SAVE.option.disable();
 
         frame = new JFrame("Standalone JMeld");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.add(jmc);
-        frame.setSize(400, 200);
+        frame.setSize(800, 400);
         jmc.openComparison(file, file2);
         frame.setVisible(true);
-    }
-
-    private void openComparison(File file, File file2) {
-        FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(meldPanel, file, file2);
-        fileComparisonPanel.setOpenInBackground(false);
-        fileComparisonPanel.setShowTree(true);
-        fileComparisonPanel.execute();
     }
 }

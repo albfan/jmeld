@@ -8,8 +8,10 @@ public abstract class AbstractConfiguration
   private boolean changed;
   private ConfigurationPreference preference;
   private boolean disableFireChanged;
+    private boolean drawCurves;
+    private int curveType;
 
-  public AbstractConfiguration()
+    public AbstractConfiguration()
   {
     preference = new ConfigurationPreference(getClass());
   }
@@ -87,4 +89,24 @@ public abstract class AbstractConfiguration
   {
     return ConfigurationManager.getInstance();
   }
+
+    public boolean getDrawCurves() {
+        return drawCurves;
+    }
+
+    public boolean isDrawCurves() {
+        return drawCurves;
+    }
+
+    public void setDrawCurves(boolean drawCurves) {
+        this.drawCurves = drawCurves;
+    }
+
+    public int getCurveType() {
+        return curveType;
+    }
+
+    public void setCurveType(int curveType) {
+        this.curveType = curveType;
+    }
 }
