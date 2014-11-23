@@ -4,6 +4,7 @@ import org.jmeld.diff.JMChunk;
 import org.jmeld.diff.JMDelta;
 import org.jmeld.diff.JMRevision;
 import org.jmeld.diff.TypeDiff;
+import org.jmeld.ui.util.RevisionUtil;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -35,8 +36,9 @@ class DiffTreeCellRenderer extends DefaultTreeCellRenderer {
             setIcon(new TreeColorIcon(COLOR_CHANGE));
             setText(JMChange.toString());
         } else if (userObject instanceof JMDelta) {
-            setIcon(new TreeColorIcon(COLOR_DELTA));
-            TypeDiff type = ((JMDelta) userObject).getType();
+            JMDelta delta = (JMDelta) userObject;
+            setIcon(new TreeColorIcon(RevisionUtil.getColor(delta)));
+            TypeDiff type = delta.getType();
             setText(type.toString());
         } else if (value instanceof JMChunkNode) {
             setIcon(new TreeColorIcon(COLOR_CHUNK));

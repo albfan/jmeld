@@ -1,6 +1,7 @@
 package org.jmeld.ui.tree;
 
 import org.jmeld.diff.JMChunk;
+import org.jmeld.util.StringUtil;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -14,6 +15,8 @@ class JMChunkNode extends DefaultMutableTreeNode {
     public JMChunkNode(JMChunk chunk, String string) {
         this.chunk = chunk;
         this.string = string;
+        add(new DefaultMutableTreeNode("anchor: "+chunk.getAnchor()));
+        add(new DefaultMutableTreeNode("size: "+chunk.getSize()));
     }
 
     public JMChunk getChunk() {
@@ -21,6 +24,7 @@ class JMChunkNode extends DefaultMutableTreeNode {
     }
 
     public String getString() {
-        return string;
+        return StringUtil.replaceNewLines(string);
     }
 }
+

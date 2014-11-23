@@ -42,30 +42,57 @@ public class DiffTree extends JTree {
 
     private static DefaultTreeModel buildTreemodel(JMRevision revision) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(revision);
-        if (revision != null) {
-            addNodes(revision, root);
-        }
+        //addNodes(revision, root);
+        addRawNodes(revision, root);
         return new DefaultTreeModel(root);
     }
 
-    private static void addNodes(JMRevision revision, DefaultMutableTreeNode parent) {
-        for (JMDelta delta : revision.getDeltas()) {
-            int initLine = delta.getOriginal().getAnchor();
-            int numLines = delta.getRevised().getSize();
-            JMRevision changeRevision = delta.getChangeRevision();
-            JMDelta changeDelta = changeRevision.getDeltas().get(0);
-            JMChunk orgChunk = changeDelta.getOriginal();
-            JMChunk revChunk = changeDelta.getRevised();
-            int startCol = orgChunk.getSize();
-            int endCol = revChunk.getSize();
-            JMChange change = new JMChange(initLine, numLines, startCol, endCol);
-            DefaultMutableTreeNode changeNode = new DefaultMutableTreeNode(change);
-            parent.add(changeNode);
-            DefaultMutableTreeNode childDelta = new DefaultMutableTreeNode(changeDelta);
-            childDelta.add(new JMChunkNode(orgChunk, changeRevision.getOriginalString(orgChunk)));
-            childDelta.add(new JMChunkNode(revChunk, changeRevision.getRevisedString(revChunk)));
-            changeNode.add(childDelta);
+    private static void addNodes(JMRevision revision, DefaultMutableTreeNode root) {
+        if (revision != null) {
+            for (JMDelta delta : revision.getDeltas()) {
+                int initLine = delta.getOriginal().getAnchor();
+                int numLines = delta.getRevised().getSize();
+                JMRevision changeRevision = delta.getChangeRevision();
+                JMDelta changeDelta = changeRevision.getDeltas().get(0);
+                JMChunk orgChunk = changeDelta.getOriginal();
+                JMChunk revChunk = changeDelta.getRevised();
+                int startCol = orgChunk.getSize();
+                int endCol = revChunk.getSize();
+                JMChunkNode orgNode = new JMChunkNode(orgChunk, changeRevision.getOriginalString(orgChunk));
+                JMChunkNode revNode = new JMChunkNode(revChunk, changeRevision.getRevisedString(revChunk));
+                DefaultMutableTreeNode childDelta = new DefaultMutableTreeNode(changeDelta);
+                childDelta.add(orgNode);
+                childDelta.add(revNode);
+                JMChange change = new JMChange(initLine, numLines, startCol, endCol);
+                DefaultMutableTreeNode changeNode = new DefaultMutableTreeNode(change);
+                changeNode.add(childDelta);
+                root.add(changeNode);
+            }
         }
+    }
+
+    private static void addRawNodes(JMRevision revision, DefaultMutableTreeNode parent) {
+        if (revision != null) {
+            for (JMDelta delta : revision.getDeltas()) {
+                DefaultMutableTreeNode deltaNode = buildDeltaNode(delta, revision);
+                JMRevision changeRevision = delta.getChangeRevision();
+                for (JMDelta changeDelta : changeRevision.getDeltas()) {
+                    DefaultMutableTreeNode changeDeltaNode = buildDeltaNode(changeDelta, changeRevision);
+                    deltaNode.add(changeDeltaNode);
+                }
+                parent.add(deltaNode);
+            }
+        }
+    }
+
+    private static DefaultMutableTreeNode buildDeltaNode(JMDelta delta, JMRevision revision) {
+        JMChunk orgChunk = delta.getOriginal();
+        JMChunk revChunk = delta.getRevised();
+        DefaultMutableTreeNode deltaNode = new JMDeltaNode(delta);
+        deltaNode.add(new JMChunkNode(orgChunk, revision.getOriginalString(orgChunk)));
+        deltaNode.add(new JMChunkNode(revChunk, revision.getRevisedString(revChunk)));
+
+        return deltaNode;
     }
 
     public void setRevision(JMRevision revision) {
