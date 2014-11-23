@@ -497,7 +497,7 @@ public class DiffScrollComponent extends JComponent implements ChangeListener, C
                     g2.drawLine(x1 - 15, y1, x1, y1);
                 }
 
-                boolean showSelected = false;
+                boolean showSelected = true;
                 if (showSelected && selected) {
                     if (heightSelFrom > 0) {
                         selectionWidth = 5;
@@ -522,7 +522,7 @@ public class DiffScrollComponent extends JComponent implements ChangeListener, C
                     }
                 }
 
-                boolean drawCommandPointers = false;
+                boolean drawCommandPointers = true;
                 if(drawCommandPointers) {
                     // Draw merge right->left command.
                     if (!leftsideReadonly && !bdFrom.isReadonly()) {

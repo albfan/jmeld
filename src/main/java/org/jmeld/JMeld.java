@@ -65,7 +65,11 @@ public class JMeld
     }
 
     public static void main(String[] args) {
-        if (JMeldSettings.getInstance().getEditor().isAntialiasEnabled()) {
+        JMeldSettings settings = JMeldSettings.getInstance();
+        settings.getEditor().setShowLineNumbers(true);
+        settings.setDrawCurves(true);
+        settings.setCurveType(1);
+        if (settings.getEditor().isAntialiasEnabled()) {
             System.setProperty("swing.aatext", "true");
         }
 
