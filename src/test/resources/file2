@@ -1,9 +1,10 @@
 abdefc
 
-function(eco) {
-   echo hola
+function(bar) {
+   echo bye
 }
 
-function(eco) {
-   echo adios
+function(bazz) {
+   echo nothing
 }
+
