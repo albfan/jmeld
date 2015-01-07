@@ -65,6 +65,8 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
                 FolderSettings.FolderView.values()));
         hierarchyComboBox.setSelectedItem(getFolderSettings().getView());
         hierarchyComboBox.setFocusable(false);
+        revisionComboBox.setModel(new DefaultComboBoxModel(new String[]{"HEAD"}));
+        revisionComboBox.setFocusable(false);
 
         initActions();
 
@@ -128,8 +130,6 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
                 HighlightPredicate.EVEN, Color.white, Color.black));
         folderTreeTable.addHighlighter(new ColorHighlighter(HighlightPredicate.ODD,
                 Colors.getTableRowHighLighterColor(), Color.black));
-        //folderTreeTable.setHighlighters(new AlternateRowHighlighter(Color.white,
-        //Colors.getTableRowHighLighterColor(), Color.black));
 
         JMeldSettings.getInstance().addConfigurationListener(this);
     }
@@ -221,6 +221,7 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         onlyLeftButton.setAction(action);
         leftRightUnChangedButton.setAction(action);
         hierarchyComboBox.setAction(action);
+        revisionComboBox.setAction(action);
     }
 
     private void installKey(String key, MeldAction action) {
@@ -240,10 +241,10 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         List<JMDiffNode> nodes;
         UINode uiParentNode;
         UINode uiNode;
-        String parentName;
         UINode rootNode;
         JMDiffNode parent;
         Object hierarchy;
+        Object revision;
 
         // Filter the nodes:
         nodes = new ArrayList();
@@ -273,6 +274,7 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
 
         rootNode = new UINode(getTreeTableModel(), "<root>", false);
         hierarchy = hierarchyComboBox.getSelectedItem();
+        revision = revisionComboBox.getSelectedItem();
 
         // Build the hierarchy:
         if (hierarchy == FolderSettings.FolderView.packageView) {
@@ -281,7 +283,7 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
                 uiNode = new UINode(getTreeTableModel(), node);
 
                 if (parent != null) {
-                    parentName = parent.getName();
+                    String parentName = parent.getName();
                     uiParentNode = new UINode(getTreeTableModel(), parent);
                     uiParentNode = rootNode.addChild(uiParentNode);
                     uiParentNode.addChild(uiNode);
@@ -298,9 +300,6 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
                 addDirectoryViewNode(rootNode, node);
             }
         }
-
-//        folderTreeTable.setTreeTableModel(getTreeTableModel());
-//        folderTreeTable.expandAll();
 
         return rootNode;
     }

@@ -54,12 +54,16 @@ public class FolderSettingsForm
         new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
     onlyLeftButton.setText("L");
+    onlyLeftButton.setToolTipText("Left touched");
 
     leftRightChangedButton.setText("LR");
+    leftRightChangedButton.setToolTipText("Left and Right touched");
 
     onlyRightButton.setText("R");
+    onlyRightButton.setToolTipText("Right touched");
 
     leftRightUnChangedButton.setText("Un");
+    leftRightUnChangedButton.setToolTipText("Untouched");
 
     jLabel3.setFont(new java.awt.Font("Dialog", 0, 12));
     jLabel3.setText("Show files that only exist on the left side");

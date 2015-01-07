@@ -45,6 +45,7 @@ public class FolderDiffForm
         onlyLeftButton = new JToggleButton();
         leftRightUnChangedButton = new JToggleButton();
         hierarchyComboBox = new JComboBox();
+        revisionComboBox = new JComboBox();
         expandAllButton = new JButton();
         collapseAllButton = new JButton();
         deleteLeftButton = new JButton();
@@ -69,6 +70,7 @@ public class FolderDiffForm
         leftRightUnChangedButton.setText("Un");
 
         hierarchyComboBox.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        revisionComboBox.setModel(new DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
 
         expandAllButton.setText("Exp");
 
@@ -112,6 +114,10 @@ public class FolderDiffForm
                                                                 .add(collapseAllButton).addPreferredGap(
                                                                 LayoutStyle.RELATED).add(
                                                                 hierarchyComboBox,
+                                                                GroupLayout.PREFERRED_SIZE,
+                                                                GroupLayout.DEFAULT_SIZE,
+                                                                GroupLayout.PREFERRED_SIZE).add(
+                                                                revisionComboBox,
                                                                 GroupLayout.PREFERRED_SIZE,
                                                                 GroupLayout.DEFAULT_SIZE,
                                                                 GroupLayout.PREFERRED_SIZE)))
@@ -160,6 +166,9 @@ public class FolderDiffForm
                                 expandAllButton).add(collapseAllButton).add(hierarchyComboBox,
                                 GroupLayout.PREFERRED_SIZE,
                                 GroupLayout.DEFAULT_SIZE,
+                                GroupLayout.PREFERRED_SIZE).add(revisionComboBox,
+                                GroupLayout.PREFERRED_SIZE,
+                                GroupLayout.DEFAULT_SIZE,
                                 GroupLayout.PREFERRED_SIZE).add(compareButton)
                                 .add(refreshButton).add(deleteLeftButton).add(copyToLeftButton)
                                 .add(copyToRightButton).add(deleteRightButton).add(onlyLeftButton)
@@ -183,6 +192,7 @@ public class FolderDiffForm
     protected DiffLabel folder2Label;
     protected JMTreeTable folderTreeTable;
     protected JComboBox hierarchyComboBox;
+    protected JComboBox revisionComboBox;
     protected JScrollPane jScrollPane1;
     protected JToggleButton leftRightChangedButton;
     protected JToggleButton leftRightUnChangedButton;

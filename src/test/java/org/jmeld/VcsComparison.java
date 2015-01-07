@@ -1,5 +1,11 @@
 package org.jmeld;
 
+import org.jmeld.settings.JMeldSettings;
+import org.jmeld.ui.JMeldPanel;
+
+import javax.swing.*;
+import java.util.Arrays;
+
 /*
    JMeld is a visual diff and merge tool.
    Copyright (C) 2007  Kees Kuip
@@ -18,9 +24,17 @@ package org.jmeld;
    Boston, MA  02110-1301  USA
  */
 public class VcsComparison {
-  public static void main(String[] args) {
-    JMeld.main(new String[] { "src/test/resources/vcs/git/file1"} );
-    JMeld.main(new String[] { "src/test/resources/vcs/git/file2"} );
-    JMeld.main(new String[] { "src/test/resources/vcs/git/file3"} );
-  }
+    public static void main(String[] args) {
+        JMeld.main(new String[]{});
+        SwingUtilities.invokeLater(new Runnable() {
+               @Override
+               public void run() {
+                   JMeldPanel jMeldPanel = JMeld.getJMeldPanel();
+                   jMeldPanel.openComparison(Arrays.asList(new String[] { "src/test/resources/vcs/git/file1"}) );
+                   jMeldPanel.openComparison(Arrays.asList(new String[]{"src/test/resources/vcs/git/file2"}));
+                   jMeldPanel.openComparison(Arrays.asList(new String[]{"src/test/resources/vcs/git/file3"}));
+                   jMeldPanel.openComparison(Arrays.asList(new String[]{"src/test/resources/vcs/git"}));
+               }
+           });
+    }
 }

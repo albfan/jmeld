@@ -84,8 +84,7 @@ public class VersionControlBaseDocument
       try
       {
         initBaseFile();
-        bais = new BufferedInputStream(new ByteArrayInputStream(baseFile
-            .getByteArray()));
+        bais = new BufferedInputStream(new ByteArrayInputStream(baseFile .getByteArray()));
         charset = CharsetDetector.getInstance().getCharset(bais);
         return new BufferedReader(new InputStreamReader(bais, charset));
       }
@@ -94,9 +93,9 @@ public class VersionControlBaseDocument
         throw new JMeldException("Could not create FileReader for : "
                                  + file.getName(), ex);
       }
-    }
-    else
-    {
+    } else if (entry.getStatus() == StatusResult.Status.unversioned || entry.getStatus() == StatusResult.Status.added) {
+        return new StringReader("");
+    } else {
       return fileNode.getDocument().getReader();
     }
   }

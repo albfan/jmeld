@@ -55,10 +55,8 @@ public class JMeld
         frame.setIconImage(ImageUtil.getImageIcon("jmeld-small").getImage());
         new WindowPreference(frame.getTitle(), frame);
         frame.addWindowListener(jmeldPanel.getWindowListener());
-        //frame.getRootPane().setTransferHandler(new FileDropHandler());
         frame.setVisible(true);
 
-        // Just to keep the damned metacity happy
         frame.toFront();
 
         jmeldPanel.openComparison(fileNameList);

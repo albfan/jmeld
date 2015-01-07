@@ -13,7 +13,7 @@ public abstract class VcCmd<T>
   // Instance variables:
   private Result result;
   private T resultData;
-  private File workingDirectory;
+  protected File workingDirectory;
 
   public void initWorkingDirectory(File file)
   {
@@ -39,7 +39,7 @@ public abstract class VcCmd<T>
     setResult(_execute(command));
   }
 
-  private final Result _execute(String... command)
+  protected final Result _execute(String... command)
   {
     ProcessBuilder pb;
     Process p;
@@ -93,12 +93,10 @@ public abstract class VcCmd<T>
 
       build(baos.toByteArray());
       baos.close();
-      baos = null;
     }
     catch (Exception ex)
     {
       result = Result.FALSE(ex.getMessage(), ex);
-      baos = null;
       return result;
     }
 

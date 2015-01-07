@@ -37,13 +37,6 @@ public class VersionControlComparisonPanel extends SwingWorker<String, Object> {
             return "file(" + file.getAbsolutePath() + ") doesn't exist";
         }
 
-/*
-  if (!directory.isDirectory())
-  {
-    return "directoryName(" + directory.getName() + ") is not a directory";
-  }
-  */
-
         contentId = "VersionControlDiffPanel:" + file.getName();
         contentPanel = JMeldPanel.getAlreadyOpen(mainPanel.getTabbedPane(), contentId);
         if (contentPanel == null) {
@@ -70,15 +63,12 @@ public class VersionControlComparisonPanel extends SwingWorker<String, Object> {
                 JideTabbedPane tabbedPane = mainPanel.getTabbedPane();
                 if (tabbedPane != null) {
                     if (contentPanel != null) {
-                        // Already opened!
                         tabbedPane.setSelectedComponent(contentPanel);
                     } else {
-                        //panel = new FolderDiffPanel(JMeldPanel.this, diff);
                         panel = new VersionControlPanel(mainPanel, diff);
                         panel.setId(contentId);
 
-                        tabbedPane.addTab("TODO: Think of title!", ImageUtil
-                                .getSmallImageIcon("stock_folder"), panel);
+                        tabbedPane.addTab("VCS Comparation", ImageUtil.getSmallImageIcon("stock_folder"), panel);
                         tabbedPane.setSelectedComponent(panel);
                     }
                 }

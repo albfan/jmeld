@@ -2,8 +2,11 @@
 
 A visual diff and merge tool. It is build to be fast with large files and runs on any operating system.
 
-This is how it looks like
+This is how it looks like:
 ![jmeld](res/jmeld.png)
+
+VCS Comparation
+![VCS layout](res/jmeld-vcsdiff.png)
 
 And here is a isolate diff component
 ![jmeld component](res/jmeld-component.png)
@@ -31,8 +34,8 @@ Start jmeld with the command:
 or use [mvnexec](https://github.com/albfan/mvnexec)
 
     $ mvnexec -Pqaf jmeld.JMeld
-    $ mvnexec -BCPqaf jmeld.JMeld src/test/resources/file{1,2}
-    $ mvnexec -BCPqaf component src/test/resources/file{1,2} 
+    $ mvnexec -BCDPqaf jmeld.JMeld src/test/resources/file{1,2}
+    $ mvnexec -BCDPqaf component src/test/resources/file{1,2} 
 
 > trust me, that commands works out-of-the-box
 
