@@ -46,4 +46,15 @@ public class VersionControlUtil {
 
         return versionControlList;
     }
+
+    public static VersionControlIF getFirstVersionControl(File file) {
+        versionControlList = VersionControlUtil.getVersionControl(file);
+        if (versionControlList.isEmpty()) {
+            return null;
+        }
+
+        // TODO: versioncontrol should be a parameter in the constructor.
+        //       The user has to decide which vc is used (popup)
+        return versionControlList.get(0);
+    }
 }
