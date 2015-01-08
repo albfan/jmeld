@@ -52,7 +52,6 @@ public class VersionControlTreeTableModel
                 return "";
             }
 
-            System.out.println( vcbNode.getEntry().getStatus().getIconName());
             return ImageUtil.getImageIcon("16x16/" + vcbNode.getEntry().getStatus().getIconName());
         }
 
