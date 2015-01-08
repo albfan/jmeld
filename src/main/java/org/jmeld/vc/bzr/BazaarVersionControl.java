@@ -3,6 +3,7 @@ package org.jmeld.vc.bzr;
 import org.jmeld.vc.*;
 
 import java.io.*;
+import java.util.Vector;
 
 public class BazaarVersionControl
     implements VersionControlIF
@@ -56,7 +57,14 @@ public class BazaarVersionControl
     return cmd.getResultData();
   }
 
-  @Override
+    @Override
+    public Vector getRevisions(File file) {
+        Vector<String> revisions = new Vector<>();
+        revisions.add("HEAD");
+        return revisions;
+    }
+
+    @Override
   public String toString()
   {
     return getName();

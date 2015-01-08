@@ -6,37 +6,37 @@ import java.io.*;
 import java.util.*;
 
 public class SubversionVersionControl
-    implements VersionControlIF
+        implements VersionControlIF
 {
-  private Boolean installed;
+    private Boolean installed;
 
-  public String getName()
-  {
-    return "subversion";
-  }
-
-  public boolean isInstalled()
-  {
-    InstalledCmd cmd;
-
-    if (installed == null)
+    public String getName()
     {
-      cmd = new InstalledCmd();
-      cmd.execute();
-      installed = cmd.getResult().isTrue();
+        return "subversion";
     }
 
-    return installed.booleanValue();
-  }
+    public boolean isInstalled()
+    {
+        InstalledCmd cmd;
 
-  public boolean isEnabled(File file)
-  {
-    ActiveCmd cmd;
+        if (installed == null)
+        {
+            cmd = new InstalledCmd();
+            cmd.execute();
+            installed = cmd.getResult().isTrue();
+        }
 
-    cmd = new ActiveCmd(file);
-    cmd.execute();
+        return installed.booleanValue();
+    }
 
-    return cmd.getResult().isTrue();
+    public boolean isEnabled(File file)
+    {
+        ActiveCmd cmd;
+
+        cmd = new ActiveCmd(file);
+        cmd.execute();
+
+        return cmd.getResult().isTrue();
     /*
     StatusCmd cmd;
     StatusResult statusResult;
@@ -63,46 +63,46 @@ public class SubversionVersionControl
 
     return statusResult.getEntryList().size() >= 1;
     */
-  }
+    }
 
-  public BlameIF executeBlame(File file)
-  {
-    BlameCmd cmd;
+    public BlameIF executeBlame(File file)
+    {
+        BlameCmd cmd;
 
-    cmd = new BlameCmd(file);
-    cmd.execute();
-    return cmd.getResultData();
-  }
+        cmd = new BlameCmd(file);
+        cmd.execute();
+        return cmd.getResultData();
+    }
 
-  public DiffIF executeDiff(File file, boolean recursive)
-  {
-    DiffCmd cmd;
+    public DiffIF executeDiff(File file, boolean recursive)
+    {
+        DiffCmd cmd;
 
-    cmd = new DiffCmd(file, recursive);
-    cmd.execute();
-    return cmd.getResultData();
-  }
+        cmd = new DiffCmd(file, recursive);
+        cmd.execute();
+        return cmd.getResultData();
+    }
 
-  public StatusResult executeStatus(File file)
-  {
-    StatusCmd cmd;
+    public StatusResult executeStatus(File file)
+    {
+        StatusCmd cmd;
 
-    cmd = new StatusCmd(file, true);
-    cmd.execute();
-    return cmd.getStatusResult();
-  }
+        cmd = new StatusCmd(file, true);
+        cmd.execute();
+        return cmd.getStatusResult();
+    }
 
-  public BaseFile getBaseFile(File file)
-  {
-    CatCmd cmd;
+    public BaseFile getBaseFile(File file)
+    {
+        CatCmd cmd;
 
-    cmd = new CatCmd(file);
-    cmd.execute();
-    return cmd.getResultData();
-  }
+        cmd = new CatCmd(file);
+        cmd.execute();
+        return cmd.getResultData();
+    }
 
-  public String toString()
-  {
-    return getName();
-  }
+    public String toString()
+    {
+        return getName();
+    }
 }

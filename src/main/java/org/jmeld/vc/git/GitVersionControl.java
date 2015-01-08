@@ -5,6 +5,7 @@ import org.jmeld.vc.StatusResult;
 import org.jmeld.vc.VersionControlIF;
 
 import java.io.File;
+import java.util.Vector;
 
 public class GitVersionControl implements VersionControlIF {
     private Boolean installed;
@@ -48,6 +49,29 @@ public class GitVersionControl implements VersionControlIF {
         cmd = new CatCmd(file);
         cmd.execute();
         return cmd.getResultData();
+    }
+
+    public static final String SEPARATOR = "SEPARATOR";
+
+    @Override
+    public Vector getRevisions(File file) {
+        Vector<String> revisions = new Vector<>();
+        revisions.add("HEAD");
+        revisions.add("index");
+        revisions.add(SEPARATOR);
+        BranchCmd branchCmd = new BranchCmd(file);
+        branchCmd.execute();
+        revisions.addAll(branchCmd.getResultData().getBranchs());
+        revisions.add(SEPARATOR);
+        TagCmd tagCmd = new TagCmd(file);
+        tagCmd.execute();
+        revisions.addAll(tagCmd.getResultData().getTags());
+        revisions.add(SEPARATOR);
+        LogCmd logCmd = new LogCmd(file);
+        logCmd.execute();
+        revisions.addAll(logCmd.getResultData().getRevisions());
+
+        return revisions;
     }
 
     @Override

@@ -3,62 +3,72 @@ package org.jmeld.vc.hg;
 import org.jmeld.vc.*;
 
 import java.io.*;
+import java.util.Vector;
 
 public class MercurialVersionControl
-    implements VersionControlIF
+        implements VersionControlIF
 {
-  private Boolean installed;
+    private Boolean installed;
 
-  public String getName()
-  {
-    return "mercurial";
-  }
-
-  public boolean isInstalled()
-  {
-    InstalledCmd cmd;
-
-    if (installed == null)
+    public String getName()
     {
-      cmd = new InstalledCmd();
-      cmd.execute();
-      installed = cmd.getResult().isTrue();
+        return "mercurial";
     }
 
-    return installed.booleanValue();
-  }
+    public boolean isInstalled()
+    {
+        InstalledCmd cmd;
 
-  public boolean isEnabled(File file)
-  {
-    ActiveCmd cmd;
+        if (installed == null)
+        {
+            cmd = new InstalledCmd();
+            cmd.execute();
+            installed = cmd.getResult().isTrue();
+        }
 
-    cmd = new ActiveCmd(file);
-    cmd.execute();
+        return installed.booleanValue();
+    }
 
-    return cmd.getResult().isTrue();
-  }
+    public boolean isEnabled(File file)
+    {
+        ActiveCmd cmd;
 
-  public StatusResult executeStatus(File file)
-  {
-    StatusCmd cmd;
+        cmd = new ActiveCmd(file);
+        cmd.execute();
 
-    cmd = new StatusCmd(file);
-    cmd.execute();
-    return cmd.getResultData();
-  }
+        return cmd.getResult().isTrue();
+    }
 
-  public BaseFile getBaseFile(File file)
-  {
-    CatCmd cmd;
+    public StatusResult executeStatus(File file)
+    {
+        StatusCmd cmd;
 
-    cmd = new CatCmd(file);
-    cmd.execute();
-    return cmd.getResultData();
-  }
+        cmd = new StatusCmd(file);
+        cmd.execute();
+        return cmd.getResultData();
+    }
 
-  @Override
-  public String toString()
-  {
-    return getName();
-  }
+    public BaseFile getBaseFile(File file)
+    {
+        CatCmd cmd;
+
+        cmd = new CatCmd(file);
+        cmd.execute();
+        return cmd.getResultData();
+    }
+
+
+    @Override
+    public Vector getRevisions(File file) {
+        Vector<String> revisions = new Vector<>();
+        revisions.add("HEAD");
+        return revisions;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        return getName();
+    }
 }
