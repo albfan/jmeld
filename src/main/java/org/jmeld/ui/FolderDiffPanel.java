@@ -20,6 +20,7 @@ import org.jdesktop.swingworker.SwingWorker;
 import org.jdesktop.swingx.decorator.ColorHighlighter;
 import org.jdesktop.swingx.decorator.HighlightPredicate;
 import org.jdesktop.swingx.treetable.TreeTableNode;
+import org.jmeld.JMeldException;
 import org.jmeld.settings.EditorSettings;
 import org.jmeld.settings.FolderSettings;
 import org.jmeld.settings.JMeldSettings;
@@ -33,6 +34,8 @@ import org.jmeld.util.conf.ConfigurationListenerIF;
 import org.jmeld.util.file.FolderDiff;
 import org.jmeld.util.file.cmd.AbstractCmd;
 import org.jmeld.util.node.JMDiffNode;
+import org.jmeld.vc.VersionControlIF;
+import org.jmeld.vc.VersionControlUtil;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
@@ -46,9 +49,9 @@ import java.util.*;
 import java.util.List;
 
 public class FolderDiffPanel extends FolderDiffForm implements ConfigurationListenerIF {
-    private JMeldPanel mainPanel;
-    private FolderDiff diff;
-    private ActionHandler actionHandler;
+    protected JMeldPanel mainPanel;
+    protected FolderDiff diff;
+    protected ActionHandler actionHandler;
     private JMTreeTableModel treeTableModel;
 
     FolderDiffPanel(JMeldPanel mainPanel, FolderDiff diff) {
@@ -58,15 +61,13 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         init();
     }
 
-    private void init() {
+    protected void init() {
         actionHandler = new ActionHandler();
 
         hierarchyComboBox.setModel(new DefaultComboBoxModel(
                 FolderSettings.FolderView.values()));
         hierarchyComboBox.setSelectedItem(getFolderSettings().getView());
         hierarchyComboBox.setFocusable(false);
-        revisionComboBox.setModel(new DefaultComboBoxModel(new String[]{"HEAD"}));
-        revisionComboBox.setFocusable(false);
 
         initActions();
 
@@ -134,7 +135,7 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         JMeldSettings.getInstance().addConfigurationListener(this);
     }
 
-    private void initActions() {
+    protected void initActions() {
         MeldAction action;
 
         action = actionHandler.createAction(this, mainPanel.actions.FOLDER_SELECT_NEXT_ROW);
@@ -210,18 +211,12 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         installKey("alt RIGHT", action);
         installKey("alt KP_RIGHT", action);
 
-        //deleteRightButton.setVisible(false);
-        //copyToRightButton.setVisible(false);
-        //copyToLeftButton.setVisible(false);
-        //deleteLeftButton.setVisible(false);
-
         action = actionHandler.createAction(this, mainPanel.actions.FOLDER_FILTER);
         onlyRightButton.setAction(action);
         leftRightChangedButton.setAction(action);
         onlyLeftButton.setAction(action);
         leftRightUnChangedButton.setAction(action);
         hierarchyComboBox.setAction(action);
-        revisionComboBox.setAction(action);
     }
 
     private void installKey(String key, MeldAction action) {
@@ -244,7 +239,6 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         UINode rootNode;
         JMDiffNode parent;
         Object hierarchy;
-        Object revision;
 
         // Filter the nodes:
         nodes = new ArrayList();
@@ -274,7 +268,6 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
 
         rootNode = new UINode(getTreeTableModel(), "<root>", false);
         hierarchy = hierarchyComboBox.getSelectedItem();
-        revision = revisionComboBox.getSelectedItem();
 
         // Build the hierarchy:
         if (hierarchy == FolderSettings.FolderView.packageView) {
@@ -610,37 +603,30 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent me) {
-                UINode uiNode;
-                TreePath path;
-                int row;
-                boolean open;
-                boolean background;
-                List<JMDiffNode> diffNodeList;
-                int openCount;
 
-                background = me.getClickCount() == 1
-                        && me.getButton() == MouseEvent.BUTTON2;
-                open = me.getClickCount() == 2 || background;
+                int row = ((JTable) me.getSource()).rowAtPoint(me.getPoint());
+
+                TreePath path = folderTreeTable.getPathForRow(row);
+                if (path == null) {
+                    return;
+                }
+
+                UINode uiNode = (UINode) path.getLastPathComponent();
+                if (uiNode == null) {
+                    return;
+                }
+
+                List<JMDiffNode> diffNodeList = getDiffNodeList(uiNode);
+                if (diffNodeList.isEmpty()) {
+                    return;
+                }
+
+                boolean background = me.getClickCount() == 1 && me.getButton() == MouseEvent.BUTTON2;
+                boolean open = me.getClickCount() == 2 || background;
 
                 if (open) {
-                    row = ((JTable) me.getSource()).rowAtPoint(me.getPoint());
 
-                    path = folderTreeTable.getPathForRow(row);
-                    if (path == null) {
-                        return;
-                    }
-
-                    uiNode = (UINode) path.getLastPathComponent();
-                    if (uiNode == null) {
-                        return;
-                    }
-
-                    diffNodeList = getDiffNodeList(uiNode);
-                    if (diffNodeList.isEmpty()) {
-                        return;
-                    }
-
-                    openCount = 0;
+                    int openCount = 0;
                     for (JMDiffNode diffNode : diffNodeList) {
                         if (openCount++ > 20) {
                             break;
@@ -659,10 +645,20 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
 
                     // Make sure that UP and DOWN keys work the way I want.
                     folderTreeTable.requestFocus();
+                } else {
+                    for (JMDiffNode diffNode : diffNodeList) {
+                        try {
+                            openInContext(diffNode);
+                        } catch (JMeldException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         };
     }
+
+    protected void openInContext(JMDiffNode diffNode) throws JMeldException { }
 
     private List<JMDiffNode> getDiffNodeList(UINode uiNode) {
         return new CollectDiffNodeLeaf(uiNode).getResult();
