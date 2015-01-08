@@ -26,113 +26,91 @@ import org.jmeld.vc.VersionControlIF;
 import java.io.*;
 import java.nio.charset.Charset;
 
-public class VersionControlBaseDocument
-    extends AbstractBufferDocument
-{
-  // Instance variables:
-  private VersionControlIF versionControl;
-  private StatusResult.Entry entry;
-  private FileNode fileNode;
-  private File file;
-  private BaseFile baseFile;
-  private boolean baseFileInitialized;
-  private Charset charset;
+public class VersionControlBaseDocument extends AbstractBufferDocument {
 
-  public VersionControlBaseDocument(VersionControlIF versionControl,
-      StatusResult.Entry entry, FileNode fileNode, File file)
-  {
-    this.versionControl = versionControl;
-    this.entry = entry;
-    this.fileNode = fileNode;
-    this.file = file;
+    private VersionControlIF versionControl;
+    private StatusResult.Entry entry;
+    private FileNode fileNode;
+    private File file;
+    private BaseFile baseFile;
+    private boolean baseFileInitialized;
 
-    try
-    {
-      setName(file.getCanonicalPath());
-    }
-    catch (Exception ex)
-    {
-      ex.printStackTrace();
-      setName(file.getName());
+    public VersionControlBaseDocument(VersionControlIF versionControl, StatusResult.Entry entry, FileNode fileNode
+            , File file) {
+        this.versionControl = versionControl;
+        this.entry = entry;
+        this.fileNode = fileNode;
+        this.file = file;
+
+        try {
+            setName(file.getCanonicalPath());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            setName(file.getName());
+        }
+
+        setShortName(file.getName());
     }
 
-    setShortName(file.getName());
-  }
-
-  @Override
-  public int getBufferSize()
-  {
-    if (useBaseFile())
-    {
-      initBaseFile();
-      return baseFile == null ? -1 : baseFile.getLength();
+    @Override
+    public int getBufferSize() {
+        if (useBaseFile()) {
+            BaseFile baseFile = getBaseFile();
+            return baseFile == null ? -1 : baseFile.getLength();
+        } else {
+            return fileNode.getDocument().getBufferSize();
+        }
     }
-    else
-    {
-      return fileNode.getDocument().getBufferSize();
+
+    @Override
+    public Reader getReader() throws JMeldException {
+        BufferedInputStream bais;
+
+        if (useBaseFile()) {
+            try {
+                BaseFile baseFile = getBaseFile();
+                bais = new BufferedInputStream(new ByteArrayInputStream(baseFile .getByteArray()));
+                Charset charset = CharsetDetector.getInstance().getCharset(bais);
+                return new BufferedReader(new InputStreamReader(bais, charset));
+            } catch (Exception ex) {
+                throw new JMeldException("Could not create FileReader for : " + file.getName(), ex);
+            }
+        } else if (entry.getStatus() == StatusResult.Status.unversioned
+                || entry.getStatus() == StatusResult.Status.added) {
+            return new StringReader("");
+        } else {
+            return fileNode.getDocument().getReader();
+        }
     }
-  }
 
-  @Override
-  public Reader getReader()
-      throws JMeldException
-  {
-    BufferedInputStream bais;
-
-    if (useBaseFile())
-    {
-      try
-      {
-        initBaseFile();
-        bais = new BufferedInputStream(new ByteArrayInputStream(baseFile .getByteArray()));
-        charset = CharsetDetector.getInstance().getCharset(bais);
-        return new BufferedReader(new InputStreamReader(bais, charset));
-      }
-      catch (Exception ex)
-      {
-        throw new JMeldException("Could not create FileReader for : "
-                                 + file.getName(), ex);
-      }
-    } else if (entry.getStatus() == StatusResult.Status.unversioned || entry.getStatus() == StatusResult.Status.added) {
-        return new StringReader("");
-    } else {
-      return fileNode.getDocument().getReader();
+    @Override
+    protected Writer getWriter() throws JMeldException {
+        return null;
     }
-  }
 
-  @Override
-  protected Writer getWriter()
-      throws JMeldException
-  {
-    return null;
-  }
+    private boolean useBaseFile() {
+        switch (entry.getStatus()) {
+            case modified:
+            case removed:
+            case missing:
+            case index_modified:
+            case index_removed:
+                return true;
+            default:
+                return false;
+        }
+    }
 
-  private boolean useBaseFile()
-  {
-    switch (entry.getStatus())
-    {
-      case modified:
-      case removed:
-      case missing:
+    private BaseFile getBaseFile() {
+        if (!baseFileInitialized) {
+            baseFile = versionControl.getBaseFile(file);
+            baseFileInitialized = true;
+        }
+        return baseFile;
+    }
+
+    @Override
+    public boolean isReadonly() {
         return true;
-
-      default:
-        return false;
     }
-  }
-
-  private void initBaseFile()
-  {
-    if (!baseFileInitialized)
-    {
-      baseFile = versionControl.getBaseFile(file);
-      baseFileInitialized = true;
-    }
-  }
-
-  @Override
-  public boolean isReadonly()
-  {
-    return true;
-  }
 }

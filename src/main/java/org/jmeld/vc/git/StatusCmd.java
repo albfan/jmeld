@@ -54,6 +54,44 @@ public class StatusCmd
         return _execute("git", "status", "--porcelain", actualfile.getAbsolutePath());
     }
 
+    /*
+     This parse is far from perfect. Comes from this documentation of git status
+
+          For paths with merge conflicts, X and Y show the modification states of each side of the merge. For
+       paths that do not have merge conflicts, X shows the status of the index, and Y shows the status of the work
+       tree. For untracked paths, XY are ??. Other status codes can be interpreted as follows:
+
+       ·   ' ' = unmodified
+       ·   M = modified
+       ·   A = added
+       ·   D = deleted
+       ·   R = renamed
+       ·   C = copied
+       ·   U = updated but unmerged
+
+       Ignored files are not listed, unless --ignored option is in effect, in which case XY are !!.
+
+           X          Y     Meaning
+           -------------------------------------------------
+                     [MD]   not updated
+           M        [ MD]   updated in index
+           A        [ MD]   added to index
+           D         [ M]   deleted from index
+           R        [ MD]   renamed in index
+           C        [ MD]   copied in index
+           [MARC]           index and work tree matches
+           [ MARC]     M    work tree changed since index
+           [ MARC]     D    deleted in work tree
+           -------------------------------------------------
+           D           D    unmerged, both deleted
+           A           U    unmerged, added by us
+           U           D    unmerged, deleted by them
+           U           A    unmerged, added by them
+           D           U    unmerged, deleted by us
+           A           A    unmerged, both added
+           U           U    unmerged, both modified
+           -------------------------------------------------
+     */
     protected void build(byte[] data) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data)));
         try {
@@ -69,17 +107,16 @@ public class StatusCmd
                         statusResult.addEntry(actualfile.getName(), status);
                     } else {
                         char indextree = text.charAt(0);
-                        //TODO: interpret worktree status
                         char worktree = text.charAt(1);
                         switch (indextree) {
                             case 'M':
-                                status = StatusResult.Status.modified;
+                                status = StatusResult.Status.index_modified;
                                 break;
                             case 'A':
-                                status = StatusResult.Status.added;
+                                status = StatusResult.Status.index_added;
                                 break;
                             case 'D':
-                                status = StatusResult.Status.removed;
+                                status = StatusResult.Status.index_removed;
                                 break;
                             case 'R':
                                 status = StatusResult.Status.renamed;
@@ -95,6 +132,17 @@ public class StatusCmd
                                 break;
                             case '?':
                                 status = StatusResult.Status.unversioned;
+                                break;
+                            case ' ':
+                                status = StatusResult.Status.unversioned;
+                                switch (worktree) {
+                                    case 'M':
+                                        status = StatusResult.Status.modified;
+                                        break;
+                                    case 'D':
+                                        status = StatusResult.Status.removed;
+                                        break;
+                                }
                                 break;
                             default:
                                 status = StatusResult.Status.unmodified;

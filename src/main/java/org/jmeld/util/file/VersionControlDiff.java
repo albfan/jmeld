@@ -33,16 +33,16 @@ public class VersionControlDiff
     private JMDiffNode rootNode;
     private Map<String, JMDiffNode> nodes;
 
-    public VersionControlDiff(File directory, Mode mode)
+    public VersionControlDiff(File file, Mode mode)
     {
         super(mode);
 
-        this.file = directory;
+        setFile(file);
 
         try {
-            setLeftFolderShortName(directory.getName());
+            setLeftFolderShortName(file.getName());
             setRightFolderShortName("");
-            setLeftFolderName(directory.getCanonicalPath());
+            setLeftFolderName(file.getCanonicalPath());
             setRightFolderName("");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -53,23 +53,24 @@ public class VersionControlDiff
         return rootNode;
     }
 
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
     public Collection<JMDiffNode> getNodes() {
         return nodes.values();
     }
 
     public void diff() {
-        DirectoryScanner ds;
-        JMDiffNode node;
-        StopWatch stopWatch;
-        int numberOfNodes;
-        int currentNumber;
 
-        List<VersionControlIF> versionControlList;
-        VersionControlIF versionControl;
         StatusResult statusResult;
         FileNode fileNode;
 
-        stopWatch = new StopWatch();
+        StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
         StatusBar.getInstance().start();
@@ -78,25 +79,17 @@ public class VersionControlDiff
         rootNode = new JMDiffNode("<root>", false);
         nodes = new HashMap<String, JMDiffNode>();
 
-        versionControlList = VersionControlUtil.getVersionControl(file);
-        if (versionControlList.isEmpty()) {
-            return;
-        }
-
-        // TODO: versioncontrol should be a parameter in the constructor.
-        //       The user has to decide which vc is used (popup)
-        versionControl = versionControlList.get(0);
+        VersionControlIF versionControl = VersionControlUtil.getFirstVersionControl(file);
 
         statusResult = versionControl.executeStatus(file);
 
         for (StatusResult.Entry entry : statusResult.getEntryList()) {
             File file = new File(statusResult.getPath(), entry.getName());
 
-            node = addNode(entry.getName(), !file.isDirectory());
+            JMDiffNode node = buildNode(entry.getName(), file.isFile());
 
             fileNode = new FileNode(entry.getName(), file);
-            node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry,
-                    fileNode, file));
+            node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry, fileNode, file));
             node.setBufferNodeRight(fileNode);
 
             switch (entry.getStatus()) {
@@ -104,6 +97,7 @@ public class VersionControlDiff
                     node.setCompareState(JMDiffNode.Compare.Equal);
                     break;
                 case modified:
+                case index_modified:
                 case conflicted:
                 case missing:
                 case dontknow:
@@ -111,9 +105,11 @@ public class VersionControlDiff
                     break;
                 case unversioned:
                 case added:
+                case index_added:
                     node.setCompareState(JMDiffNode.Compare.LeftMissing);
                     break;
                 case removed:
+                case index_removed:
                     node.setCompareState(JMDiffNode.Compare.RightMissing);
                     break;
                 case clean:
@@ -129,40 +125,36 @@ public class VersionControlDiff
         StatusBar.getInstance().stop();
     }
 
-    private JMDiffNode addNode(String name, boolean leaf) {
-        JMDiffNode node;
-
-        node = nodes.get(name);
+    private JMDiffNode buildNode(String name, boolean leaf) {
+        JMDiffNode node = nodes.get(name);
         if (node == null) {
-            node = addNode(new JMDiffNode(name, leaf));
+            node = addNode(name, leaf);
         }
-
         return node;
     }
 
-    private JMDiffNode addNode(JMDiffNode node) {
-        String parentName;
-        JMDiffNode parent;
-        File file;
-        FileNode fn;
+    private JMDiffNode addNode(String name, boolean leaf) {
+        JMDiffNode node = new JMDiffNode(name, leaf);
+        nodes.put(name, node);
+        buildParentNode(node);
+        return node;
+    }
 
-        nodes.put(node.getName(), node);
-
-        parentName = node.getParentName();
+    private void buildParentNode(JMDiffNode node) {
+        String parentName = node.getParentName();
+        JMDiffNode parentnode;
         if (StringUtil.isEmpty(parentName)) {
-            parent = rootNode;
+            parentnode = rootNode;
         } else {
-            parent = nodes.get(parentName);
-            if (parent == null) {
-                parent = addNode(new JMDiffNode(parentName, false));
-                fn = new FileNode(parentName, new File(this.file, parentName));
-                parent.setBufferNodeRight(fn);
-                parent.setBufferNodeLeft(fn);
+            parentnode = nodes.get(parentName);
+            if (parentnode == null) {
+                parentnode = addNode(parentName, false);
+                FileNode fn = new FileNode(parentName, new File(file, parentName));
+                parentnode.setBufferNodeRight(fn);
+                parentnode.setBufferNodeLeft(fn);
             }
         }
-
-        parent.addChild(node);
-        return node;
+        parentnode.addChild(node);
     }
 
     public void print() {
@@ -178,12 +170,11 @@ public class VersionControlDiff
             return;
         }
 
-        diff = new VersionControlDiff(file,
-                VersionControlDiff.Mode.TWO_WAY);
+        diff = new VersionControlDiff(file, VersionControlDiff.Mode.TWO_WAY);
         stopWatch = new StopWatch();
         stopWatch.start();
         diff.diff();
-        System.out.println("diff took " + stopWatch.getElapsedTime() + " msec.");
+        System.err.println("diff took " + stopWatch.getElapsedTime() + " msec.");
         diff.print();
     }
 }
