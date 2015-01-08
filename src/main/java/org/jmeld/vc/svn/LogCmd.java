@@ -24,11 +24,6 @@ public class LogCmd
     return getResult();
   }
 
-  public LogData getLogData()
-  {
-    return getResultData();
-  }
-
   public static void main(String[] args)
   {
     LogCmd cmd;
@@ -40,7 +35,7 @@ public class LogCmd
     cmd = new LogCmd(file);
     if (cmd.execute().isTrue())
     {
-      for (LogData.Entry entry : cmd.getLogData().getEntryList())
+      for (LogData.Entry entry : cmd.getResultData().getEntryList())
       {
         System.out.println(entry.getRevision() + " : " + entry.getDate());
         for (LogData.Path path : entry.getPathList())
