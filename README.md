@@ -43,3 +43,7 @@ or use [mvnexec](https://github.com/albfan/mvnexec)
 
 This license of this program is the LGPL.
 
+## Credits
+
+> Nice to see JMeld survive. I hope you get as much pleasure (and knowledge) as I got from working with JMeld.
+> Kees Kuip
