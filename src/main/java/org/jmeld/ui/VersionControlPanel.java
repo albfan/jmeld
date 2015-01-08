@@ -16,55 +16,48 @@
  */
 package org.jmeld.ui;
 
-import org.jmeld.ui.action.ActionHandler;
-import org.jmeld.ui.swing.table.JMTreeTableModel;
+import org.jmeld.JMeldException;
 import org.jmeld.util.conf.ConfigurationListenerIF;
-import org.jmeld.util.file.FolderDiff;
+import org.jmeld.util.file.VersionControlDiff;
+import org.jmeld.util.node.JMDiffNode;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class VersionControlPanel
-    extends AbstractContentPanel
-    implements ConfigurationListenerIF
-{
-  private JMeldPanel mainPanel;
-  private FolderDiff diff;
-  private ActionHandler actionHandler;
-  private JPanel bufferDiffPanelHolder;
+public class VersionControlPanel extends AbstractContentPanel implements ConfigurationListenerIF {
+    private JMeldPanel mainPanel;
+    private VersionControlDiff diff;
 
-  VersionControlPanel(JMeldPanel mainPanel, FolderDiff diff)
-  {
-    this.mainPanel = mainPanel;
-    this.diff = diff;
+    public VersionControlPanel(JMeldPanel mainPanel, VersionControlDiff diff) {
+        this.mainPanel = mainPanel;
+        this.diff = diff;
 
-    init();
-  }
+        init();
+    }
 
-  private void init()
-  {
-    FolderDiffPanel folderDiffPanel;
-    JSplitPane splitPane;
+    private void init() {
 
-    folderDiffPanel = new FolderDiffPanel(mainPanel, diff)
-    {
-      @Override
-      protected JMTreeTableModel createTreeTableModel()
-      {
-        return new VersionControlTreeTableModel();
-      }
-    };
-    bufferDiffPanelHolder = new JPanel();
-    bufferDiffPanelHolder.setLayout(new BorderLayout());
+        final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        VersionControlDiffPanel versionControlDiffPanel = new VersionControlDiffPanel(mainPanel, diff) {
+            @Override
+            protected void openInContext(JMDiffNode diffNode) throws JMeldException {
+                BufferDiffPanel panel = new BufferDiffPanel(mainPanel, false, false);
+                panel.setId("context diff");
+                diffNode.diff();
+                panel.setDiffNode(diffNode);
+                panel.doGoToFirst();
+                splitPane.setBottomComponent(panel);
+                splitPane.setDividerLocation(.5);
+                splitPane.updateUI();
+            }
+        };
 
-    splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, folderDiffPanel,
-        bufferDiffPanelHolder);
+        splitPane.setTopComponent(versionControlDiffPanel);
+        splitPane.updateUI();
 
-    setLayout(new BorderLayout());
-    add(BorderLayout.CENTER, splitPane);
-  }
+        setLayout(new BorderLayout());
+        add(BorderLayout.CENTER, splitPane);
+    }
 
-  public void configurationChanged()
-  {
-  }
+    public void configurationChanged() { }
 }
