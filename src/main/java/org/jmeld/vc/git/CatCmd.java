@@ -7,7 +7,6 @@ import org.jmeld.vc.util.VcCmd;
 import java.io.File;
 
 public class CatCmd extends VcCmd<BaseFile> {
-    // Instance variables:
     private File file;
 
     public CatCmd(File file) {
@@ -17,7 +16,9 @@ public class CatCmd extends VcCmd<BaseFile> {
     }
 
     public Result execute() {
-        super.execute("git", "cat-file", file.getAbsolutePath());
+        //TODO: Access to selected base on combo
+        //super.execute("git", "show", "HEAD", file.getAbsolutePath());
+        super.execute("git", "show", "HEAD:"+file.getName());
 
         return getResult();
     }
