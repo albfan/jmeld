@@ -18,71 +18,55 @@ package org.jmeld.util.node;
 
 import org.jmeld.vc.*;
 import org.jmeld.ui.text.*;
-import org.jmeld.vc.*;
 
 import java.io.*;
 
-public class VersionControlBaseNode
-    extends JMeldNode
-    implements BufferNode
-{
-  private VersionControlIF versionControl;
-  private StatusResult.Entry entry;
-  private FileNode fileNode;
-  private File file;
-  private VersionControlBaseDocument document;
+public class VersionControlBaseNode extends JMeldNode implements BufferNode {
+    private VersionControlIF versionControl;
+    private StatusResult.Entry entry;
+    private FileNode fileNode;
+    private File file;
+    private VersionControlBaseDocument document;
 
-  public VersionControlBaseNode(VersionControlIF versionControl,
-      StatusResult.Entry entry, FileNode fileNode, File file)
-  {
-    super(entry.getName(), !file.isDirectory());
+    public VersionControlBaseNode(VersionControlIF versionControl, StatusResult.Entry entry, FileNode fileNode
+            , File file) {
+        super(entry.getName(), !file.isDirectory());
 
-    this.versionControl = versionControl;
-    this.entry = entry;
-    this.file = file;
-    this.fileNode = fileNode;
-  }
-
-  public File getFile()
-  {
-    return file;
-  }
-
-  public StatusResult.Entry getEntry()
-  {
-    return entry;
-  }
-
-  @Override
-  public void resetContent()
-  {
-    document = null;
-    initialize();
-  }
-
-  public boolean exists()
-  {
-    return true;
-  }
-
-  public VersionControlBaseDocument getDocument()
-  {
-    if (document == null)
-    {
-      document = new VersionControlBaseDocument(versionControl, entry,
-          fileNode, file);
+        this.versionControl = versionControl;
+        this.entry = entry;
+        this.file = file;
+        this.fileNode = fileNode;
     }
 
-    return document;
-  }
+    public File getFile() {
+        return file;
+    }
 
-  @Override
-  public long getSize()
-  {
-    return getDocument().getBufferSize();
-  }
+    public StatusResult.Entry getEntry() {
+        return entry;
+    }
 
-  private void initialize()
-  {
-  }
+    @Override
+    public void resetContent() {
+        document = null;
+        initialize();
+    }
+
+    public boolean exists() {
+        return true;
+    }
+
+    public VersionControlBaseDocument getDocument() {
+        if (document == null) {
+            document = new VersionControlBaseDocument(versionControl, entry, fileNode, file);
+        }
+        return document;
+    }
+
+    @Override
+    public long getSize() {
+        return getDocument().getBufferSize();
+    }
+
+    private void initialize() { }
 }

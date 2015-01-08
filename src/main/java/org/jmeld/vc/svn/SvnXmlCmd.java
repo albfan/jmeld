@@ -8,29 +8,21 @@ import java.util.*;
 
 public class SvnXmlCmd<T> extends VcCmd<T>
 {
-  private Class<T> clazz;
+    private Class<T> clazz;
 
-  public SvnXmlCmd(Class<T> clazz)
-  {
-    this.clazz = clazz;
-  }
-
-  public void build(byte[] data)
-  {
-    Result result;
-    InputStream is;
-    ByteArrayOutputStream baos;
-
-    try
-    {
-      is = new ByteArrayInputStream(data);
-      setResultData(JaxbPersister.getInstance().load(clazz, is));
-      is.close();
-      setResult(Result.TRUE());
+    public SvnXmlCmd(Class<T> clazz) {
+        this.clazz = clazz;
     }
-    catch (Exception ex)
+
+    public void build(byte[] data)
     {
-      setResult(Result.FALSE(ex.getMessage(), ex));
+        try {
+            InputStream is = new ByteArrayInputStream(data);
+            setResultData(JaxbPersister.getInstance().load(clazz, is));
+            is.close();
+            setResult(Result.TRUE());
+        } catch (Exception ex) {
+            setResult(Result.FALSE(ex.getMessage(), ex));
+        }
     }
-  }
 }

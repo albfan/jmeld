@@ -30,8 +30,6 @@ public class JMTreeTable extends JXTreeTable {
 
     public JMTreeTable() {
         charWidth = getFontMetrics(getFont()).charWidth('W');
-
-//    setAutoResizeMode(AUTO_RESIZE_NEXT_COLUMN);
   }
 
     public void setTreeTableModel(JMTreeTableModel tableModel) {
@@ -44,14 +42,7 @@ public class JMTreeTable extends JXTreeTable {
         super.setTreeTableModel(tableModel);
 
         setColumnControlVisible(true);
-        /*
-          ((DefaultCellEditor) getDefaultEditor(AbstractTreeTableModel.hierarchicalColumnClass))
-            .setClickCountToStart(1);
-        */
         if (tableModel != null) {
-            //TODO[KKU]: Dit werkt niet meer. Zowel JXTable als JTable proberen
-            //           de preferred size te berekenen. ouch.
-
             // Make sure the icons fit well.
             if (getRowHeight() < 22) {
                 setRowHeight(22);

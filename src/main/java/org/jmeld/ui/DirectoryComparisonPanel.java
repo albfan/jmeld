@@ -76,15 +76,10 @@ public class DirectoryComparisonPanel extends SwingWorker<String, Object> {
     @Override
     protected void done() {
         try {
-            String result;
-            FolderDiffPanel panel;
-
-            result = get();
+            String result = get();
 
             if (result != null) {
-                JOptionPane.showMessageDialog(mainPanel, result,
-                        "Error opening file",
-                        JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(mainPanel, result, "Error opening file", JOptionPane.ERROR_MESSAGE);
             } else {
                 JideTabbedPane tabbedPane = mainPanel.getTabbedPane();
                 if (tabbedPane != null) {
@@ -92,11 +87,10 @@ public class DirectoryComparisonPanel extends SwingWorker<String, Object> {
                         // Already opened!
                         tabbedPane.setSelectedComponent(contentPanel);
                     } else {
-                        panel = new FolderDiffPanel(mainPanel, diff);
+                        FolderDiffPanel panel = new FolderDiffPanel(mainPanel, diff);
                         panel.setId(contentId);
 
-                        tabbedPane.addTab(panel.getTitle(), ImageUtil
-                                .getSmallImageIcon("stock_folder"), panel);
+                        tabbedPane.addTab(panel.getTitle(), ImageUtil.getSmallImageIcon("stock_folder"), panel);
                         tabbedPane.setSelectedComponent(panel);
                     }
                 }

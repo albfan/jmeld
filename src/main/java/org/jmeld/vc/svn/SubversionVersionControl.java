@@ -101,6 +101,13 @@ public class SubversionVersionControl
         return cmd.getResultData();
     }
 
+    @Override
+    public Vector getRevisions(File file) {
+        Vector<String> revisions = new Vector<>();
+        revisions.add("HEAD");
+        return revisions;
+    }
+
     public String toString()
     {
         return getName();
