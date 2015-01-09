@@ -349,13 +349,7 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
                 return;
             }
 
-            boolean isLastNewLine = false;
-            try {
-                PlainDocument document = bufferDocument.getDocument();
-                isLastNewLine = "\n".equals(document.getText(toOffset - 1, 1));
-            } catch (BadLocationException e) {
-                e.printStackTrace();
-            }
+            boolean isEndAndIsLastNewLine = isEndAndIsLastNewLine(toOffset);
 
             JMHighlightPainter highlight = null;
             if (delta.isChange()) {
@@ -378,18 +372,44 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
                     }
                 }
 
-                highlight = JMHighlightPainter.CHANGED;
+                highlight = isEndAndIsLastNewLine ? JMHighlightPainter.CHANGED_NEWLINE : JMHighlightPainter.CHANGED;
             } else {
                 if (isEmptyLine()) {
                     toOffset = fromOffset + 1;
                 }
                 if (delta.isAdd()) {
-                    highlight = getAddedHighlightPainter(isOriginal(), isLastNewLine);
+                    highlight = getAddedHighlightPainter(isOriginal(), isEndAndIsLastNewLine);
                 } else if (delta.isDelete()) {
-                    highlight = getDeleteHighlightPainter(!isOriginal(), isLastNewLine);
+                    highlight = getDeleteHighlightPainter(!isOriginal(), isEndAndIsLastNewLine);
                 }
             }
             setHighlight(fromOffset, toOffset, highlight);
+        }
+
+        /**
+         * If last change reach the end and has a newline as final char, final line is
+         * virtual. Document has no line for it, since newline stars that line but it
+         * contains nothing yet.
+         *
+         * @param toOffset last offset of change
+         *
+         * @see org.jmeld.ui.swing.JMHighlightPainter#ADDED_NEWLINE
+         * @see org.jmeld.ui.swing.JMHighlightPainter#CHANGED_NEWLINE
+         * @see org.jmeld.ui.swing.JMHighlightPainter#DELETED_NEWLINE
+         * @return
+         */
+        private boolean isEndAndIsLastNewLine(int toOffset) {
+            boolean isEndAndIsLastNewLine = false;
+            try {
+                PlainDocument document = bufferDocument.getDocument();
+                int endOffset = toOffset - 1;
+                boolean changeReachEnd = endOffset == document.getLength();
+                boolean lastCharIsNewLine = "\n".equals(document.getText(endOffset, 1));
+                isEndAndIsLastNewLine = changeReachEnd && lastCharIsNewLine;
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+            return isEndAndIsLastNewLine;
         }
 
         private JMChunk getPrimaryChunk() {

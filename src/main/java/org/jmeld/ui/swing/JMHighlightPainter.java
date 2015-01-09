@@ -26,17 +26,18 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 
-public class JMHighlightPainter
-        extends DefaultHighlighter.DefaultHighlightPainter
-        implements ConfigurationListenerIF
-{
+public class JMHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter implements ConfigurationListenerIF {
     public static final JMHighlightPainter ADDED;
     public static final JMHighlightPainter ADDED_LINE;
+    /** Painter which adds a newline at end */
     public static final JMHighlightPainter ADDED_NEWLINE;
     public static final JMHighlightPainter CHANGED;
+    /** Painter which adds a newline at end */
+    public static final JMHighlightPainter CHANGED_NEWLINE;
     public static final JMHighlightPainter CHANGED_LIGHTER;
     public static final JMHighlightPainter DELETED;
     public static final JMHighlightPainter DELETED_LINE;
+    /** Painter which adds a newline at end */
     public static final JMHighlightPainter DELETED_NEWLINE;
     public static final JMHighlightPainter CURRENT_SEARCH;
     public static final JMHighlightPainter SEARCH;
@@ -46,10 +47,12 @@ public class JMHighlightPainter
         ADDED.initConfiguration();
         ADDED_LINE = new JMHighlightLinePainter(Colors.ADDED);
         ADDED_LINE.initConfiguration();
-        ADDED_NEWLINE = new JMHighlightPainter(Colors.ADDED);
+        ADDED_NEWLINE = new JMHighlightNewLinePainter(Colors.ADDED);
         ADDED_NEWLINE.initConfiguration();
         CHANGED = new JMHighlightPainter(Colors.CHANGED);
         CHANGED.initConfiguration();
+        CHANGED_NEWLINE = new JMHighlightNewLinePainter(Colors.CHANGED);
+        CHANGED_NEWLINE.initConfiguration();
         CHANGED_LIGHTER = new JMHighlightPainter(Colors.CHANGED_LIGHTER);
         CHANGED_LIGHTER.initConfiguration();
         DELETED = new JMHighlightPainter(Colors.DELETED);

@@ -4,6 +4,8 @@ function(bar) {
    echo bye
 }
 
+}
+
 function(bazz) {
    echo nothing
 }
