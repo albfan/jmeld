@@ -9,6 +9,19 @@ public class MercurialVersionControl
         implements VersionControlIF
 {
     private Boolean installed;
+    private String reference;
+
+    public MercurialVersionControl() {
+        setReference("HEAD");
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
     public String getName()
     {

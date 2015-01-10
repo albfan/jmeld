@@ -9,6 +9,19 @@ import java.util.Vector;
 
 public class GitVersionControl implements VersionControlIF {
     private Boolean installed;
+    private String reference;
+
+    public GitVersionControl() {
+        setReference("HEAD");
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
     public String getName() {
         return "git";

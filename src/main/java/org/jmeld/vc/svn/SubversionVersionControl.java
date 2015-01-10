@@ -7,6 +7,19 @@ import java.util.*;
 
 public class SubversionVersionControl implements VersionControlIF {
     private Boolean installed;
+    private String reference;
+
+    public SubversionVersionControl() {
+        setReference("HEAD");
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
 
     public String getName()
     {
