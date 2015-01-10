@@ -5,9 +5,7 @@ import org.jmeld.vc.*;
 import java.io.*;
 import java.util.*;
 
-public class SubversionVersionControl
-        implements VersionControlIF
-{
+public class SubversionVersionControl implements VersionControlIF {
     private Boolean installed;
 
     public String getName()
