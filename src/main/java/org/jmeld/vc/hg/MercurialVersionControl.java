@@ -5,9 +5,7 @@ import org.jmeld.vc.*;
 import java.io.*;
 import java.util.Vector;
 
-public class MercurialVersionControl
-        implements VersionControlIF
-{
+public class MercurialVersionControl implements VersionControlIF {
     private Boolean installed;
     private String reference;
 
