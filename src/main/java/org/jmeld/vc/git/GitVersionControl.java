@@ -49,9 +49,7 @@ public class GitVersionControl implements VersionControlIF {
     }
 
     public StatusResult executeStatus(File file) {
-        StatusCmd cmd;
-
-        cmd = new StatusCmd(file);
+        StatusCmd cmd = new StatusCmd(file, reference);
         cmd.execute();
         return cmd.getResultData();
     }
@@ -59,7 +57,7 @@ public class GitVersionControl implements VersionControlIF {
     public BaseFile getBaseFile(File file) {
         CatCmd cmd;
 
-        cmd = new CatCmd(file);
+        cmd = new CatCmd(file, getReference());
         cmd.execute();
         return cmd.getResultData();
     }
@@ -67,8 +65,9 @@ public class GitVersionControl implements VersionControlIF {
     public static final String SEPARATOR = "SEPARATOR";
 
     @Override
-    public Vector getRevisions(File file) {
+    public Vector<String> getRevisions(File file) {
         Vector<String> revisions = new Vector<>();
+        revisions.add("worktree");
         revisions.add("HEAD");
         revisions.add("index");
         revisions.add(SEPARATOR);

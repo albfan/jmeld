@@ -101,6 +101,7 @@ public class MeldAction
 
     try
     {
+      actionMethod.setAccessible(true);
       actionMethod.invoke(object, ae);
 
       actionHandler.checkActions();

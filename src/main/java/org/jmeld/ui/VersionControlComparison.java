@@ -50,10 +50,7 @@ public class VersionControlComparison extends SwingWorker<String, Object> {
     @Override
     protected void done() {
         try {
-            String result;
-            VersionControlPanel panel;
-
-            result = get();
+            String result = get();
 
             if (result != null) {
                 JOptionPane.showMessageDialog(mainPanel, result,
@@ -65,7 +62,7 @@ public class VersionControlComparison extends SwingWorker<String, Object> {
                     if (contentPanel != null) {
                         tabbedPane.setSelectedComponent(contentPanel);
                     } else {
-                        panel = new VersionControlPanel(mainPanel, diff);
+                        VersionControlPanel panel = new VersionControlPanel(mainPanel, diff);
                         panel.setId(contentId);
 
                         tabbedPane.addTab("VCS Comparation", ImageUtil.getSmallImageIcon("stock_folder"), panel);

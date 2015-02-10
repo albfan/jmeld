@@ -23,6 +23,7 @@ import org.jmeld.util.node.JMDiffNode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class VersionControlPanel extends AbstractContentPanel implements ConfigurationListenerIF {
     private JMeldPanel mainPanel;
@@ -49,6 +50,19 @@ public class VersionControlPanel extends AbstractContentPanel implements Configu
                 splitPane.setBottomComponent(panel);
                 splitPane.setDividerLocation(.5);
                 splitPane.updateUI();
+            }
+
+            @Override
+            public void doFilter(ActionEvent ae) {
+                super.doFilter(ae);
+                int row = folderDiffMouseAdapter.getRow();
+                if (row >= 0) {
+                    openFileOnRow(row, true, false);
+                } else {
+                    splitPane.setBottomComponent(new JPanel());
+                    splitPane.setDividerLocation(1f);
+                    splitPane.updateUI();
+                }
             }
         };
 

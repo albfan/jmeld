@@ -26,25 +26,43 @@ public class VersionControlFolderDiffPanel extends FolderDiffPanel {
 
     public static final String SEPARATOR = "SEPARATOR";
 
-    protected JComboBox revisionComboBox;
+    protected JComboBox<String> revisionComboBox;
 
     VersionControlFolderDiffPanel(JMeldPanel mainPanel, VersionControlDiff diff) {
         super(mainPanel, diff);
     }
 
+    public JComboBox<String> getRevisionComboBox() {
+        return revisionComboBox;
+    }
+
     @Override
     protected void init() {
-        File file = ((VersionControlDiff) diff).getFile();
-        VersionControlIF versionControl = VersionControlUtil.getFirstVersionControl(file);
-        revisionComboBox.setModel(new DefaultComboBoxModel(versionControl.getRevisions(file)));
+        VersionControlDiff versionControlDiff = (VersionControlDiff) diff;
+        File file = versionControlDiff.getFile();
+        VersionControlIF versionControl = versionControlDiff.getVersionControl();
+        revisionComboBox.setModel(new DefaultComboBoxModel<>(versionControl.getRevisions(file)));
         revisionComboBox.addActionListener(new BlockComboListener());
-        revisionComboBox.setSelectedIndex(0);
         revisionComboBox.setRenderer(new ComboBoxRenderer());
         revisionComboBox.setFocusable(false);
         super.init();
     }
 
-    class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+    @Override
+    protected void initActions() {
+        super.initActions();
+        MeldAction action = actionHandler.createAction(this, mainPanel.actions.FOLDER_FILTER);
+        revisionComboBox.setAction(action);
+    }
+
+    public void doFilter(ActionEvent ae) {
+        treeTableModel = null;
+        ((VersionControlDiff)diff).getVersionControl().setReference((String)getRevisionComboBox().getSelectedItem());
+        diff.diff();
+        super.doFilter(ae);
+    }
+
+    class ComboBoxRenderer extends JLabel implements ListCellRenderer<String> {
         JSeparator separator;
 
         public ComboBoxRenderer() {
@@ -52,9 +70,10 @@ public class VersionControlFolderDiffPanel extends FolderDiffPanel {
             separator = new JSeparator(JSeparator.HORIZONTAL);
         }
 
-        public Component getListCellRendererComponent(JList list, Object value,
-                                                      int index, boolean isSelected, boolean cellHasFocus) {
-            String str = (value == null) ? "" : value.toString();
+        @Override
+        public Component getListCellRendererComponent(JList<? extends String> list, String value
+                , int index, boolean isSelected, boolean cellHasFocus) {
+            String str = (value == null) ? "" : value;
             if (SEPARATOR.equals(str)) {
                 return separator;
             }
@@ -75,6 +94,7 @@ public class VersionControlFolderDiffPanel extends FolderDiffPanel {
         Object currentItem;
 
         BlockComboListener() {
+            currentItem = 0;
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -88,14 +108,6 @@ public class VersionControlFolderDiffPanel extends FolderDiffPanel {
                 currentItem = tempItem;
             }
         }
-    }
-
-    @Override
-    protected void initActions() {
-        super.initActions();
-        MeldAction action;
-        action = actionHandler.createAction(this, mainPanel.actions.FOLDER_FILTER);
-        revisionComboBox.setAction(action);
     }
 
     /**

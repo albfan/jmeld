@@ -8,19 +8,32 @@ import java.io.File;
 
 public class CatCmd extends VcCmd<BaseFile> {
     private File file;
+    private String reference;
 
     public CatCmd(File file) {
-        this.file = file;
+        this(file, "HEAD");
+    }
 
+    public CatCmd(File file, String reference) {
+        this.file = file;
+        this.reference = reference;
         initWorkingDirectory(file);
     }
 
     public Result execute() {
-        //TODO: Access to selected base on combo
-        //super.execute("git", "show", "HEAD", file.getAbsolutePath());
-        super.execute("git", "show", "HEAD:"+file.getName());
+        super.execute("git", "show", getReferencePoint() +":"+file.getName());
 
         return getResult();
+    }
+
+    private String getReferencePoint() {
+        if (reference.equals("index")) {
+            return "";
+        } else if (reference.equals("worktree")) {
+            return "";
+        } else {
+            return reference;
+        }
     }
 
     protected void build(byte[] data) {

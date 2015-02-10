@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Actions
-{
+public class Actions {
   public final Action NEW = new Action("New");
   public final Action SAVE = new Action("Save");
   public final Action UNDO = new Action("Undo");
@@ -48,8 +47,7 @@ public class Actions
 
   private final List<Action> actionList = new ArrayList<Action>();
 
-  public class Action
-  {
+  public class Action {
     // Instance variables:
     public Option  option = new Option(true);
     private String name;

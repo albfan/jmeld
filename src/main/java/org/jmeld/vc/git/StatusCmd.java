@@ -6,11 +6,10 @@ import org.jmeld.vc.util.VcCmd;
 
 import java.io.*;
 
-public class StatusCmd
-        extends VcCmd<StatusResult>
-{
+public class StatusCmd extends VcCmd<StatusResult> {
 
-    StatusResult statusResult;
+    private StatusResult statusResult;
+    private String reference;
 
     private enum Phase {
         state
@@ -20,8 +19,9 @@ public class StatusCmd
     private Phase phase;
     private File actualfile;
 
-    public StatusCmd(File file) {
+    public StatusCmd(File file, String reference) {
         this.file = file;
+        this.reference = reference;
 
         initWorkingDirectory(file);
     }
@@ -37,7 +37,12 @@ public class StatusCmd
 
         File[] files;
         if (file.isDirectory()) {
-            files = file.listFiles();
+            files = file.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return !(pathname.isDirectory() && pathname.getName().equals(".git"));
+                }
+            });
         } else {
             files = new File[]{file};
         }
@@ -51,46 +56,34 @@ public class StatusCmd
     }
 
     private Result processFile() {
-        return _execute("git", "status", "--porcelain", actualfile.getAbsolutePath());
+        return _execute("git", "diff", getReferencePoint(), "--name-status", actualfile.getAbsolutePath());
+    }
+
+    private String getReferencePoint() {
+        if ("index".equals(reference)) {
+            return "--cached";
+        } else if ("worktree".equals(reference)) {
+            return "";
+        } else {
+            return reference;
+        }
     }
 
     /*
-     This parse is far from perfect. Comes from this documentation of git status
+     Format:
 
-          For paths with merge conflicts, X and Y show the modification states of each side of the merge. For
-       paths that do not have merge conflicts, X shows the status of the index, and Y shows the status of the work
-       tree. For untracked paths, XY are ??. Other status codes can be interpreted as follows:
+     <S><tab>file
 
-       ·   ' ' = unmodified
-       ·   M = modified
-       ·   A = added
-       ·   D = deleted
-       ·   R = renamed
-       ·   C = copied
-       ·   U = updated but unmerged
-
-       Ignored files are not listed, unless --ignored option is in effect, in which case XY are !!.
-
-           X          Y     Meaning
-           -------------------------------------------------
-                     [MD]   not updated
-           M        [ MD]   updated in index
-           A        [ MD]   added to index
-           D         [ M]   deleted from index
-           R        [ MD]   renamed in index
-           C        [ MD]   copied in index
-           [MARC]           index and work tree matches
-           [ MARC]     M    work tree changed since index
-           [ MARC]     D    deleted in work tree
-           -------------------------------------------------
-           D           D    unmerged, both deleted
-           A           U    unmerged, added by us
-           U           D    unmerged, deleted by them
-           U           A    unmerged, added by them
-           D           U    unmerged, deleted by us
-           A           A    unmerged, both added
-           U           U    unmerged, both modified
-           -------------------------------------------------
+     <S>:
+        Added (A)
+        Copied (C)
+        Deleted (D)
+        Modified (M)
+        Renamed (R)
+        Changed (T)
+        Unmerged (U)
+        Unknown (X)
+        Broken (B)
      */
     protected void build(byte[] data) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data)));
@@ -106,17 +99,16 @@ public class StatusCmd
                         status = StatusResult.Status.unmodified;
                         statusResult.addEntry(actualfile.getName(), status);
                     } else {
-                        char indextree = text.charAt(0);
-                        char worktree = text.charAt(1);
-                        switch (indextree) {
+                        char statusChar = text.charAt(0);
+                        switch (statusChar) {
                             case 'M':
-                                status = StatusResult.Status.index_modified;
+                                status = StatusResult.Status.modified;
                                 break;
                             case 'A':
-                                status = StatusResult.Status.index_added;
+                                status = StatusResult.Status.added;
                                 break;
                             case 'D':
-                                status = StatusResult.Status.index_removed;
+                                status = StatusResult.Status.removed;
                                 break;
                             case 'R':
                                 status = StatusResult.Status.renamed;
@@ -135,20 +127,12 @@ public class StatusCmd
                                 break;
                             case ' ':
                                 status = StatusResult.Status.unversioned;
-                                switch (worktree) {
-                                    case 'M':
-                                        status = StatusResult.Status.modified;
-                                        break;
-                                    case 'D':
-                                        status = StatusResult.Status.removed;
-                                        break;
-                                }
                                 break;
                             default:
                                 status = StatusResult.Status.unmodified;
                                 break;
                         }
-                        statusResult.addEntry(text.substring(3), status);
+                        statusResult.addEntry(text.substring(2), status);
                     }
 
                 }
@@ -164,7 +148,6 @@ public class StatusCmd
     }
 
     public static void main(String[] args) {
-        StatusCmd cmd;
         StatusResult result;
 
         File file = parseFile(args);
@@ -175,8 +158,7 @@ public class StatusCmd
         result = new GitVersionControl().executeStatus(file);
         if (result != null) {
             for (StatusResult.Entry entry : result.getEntryList()) {
-                System.out.println(entry.getStatus().getShortText() + " "
-                        + entry.getName());
+                System.out.println(entry.getStatus().getShortText() + " " + entry.getName());
             }
         }
     }

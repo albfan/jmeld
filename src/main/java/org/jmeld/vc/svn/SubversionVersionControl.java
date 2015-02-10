@@ -113,7 +113,7 @@ public class SubversionVersionControl implements VersionControlIF {
     }
 
     @Override
-    public Vector getRevisions(File file) {
+    public Vector<String> getRevisions(File file) {
         Vector<String> revisions = new Vector<>();
         revisions.add("HEAD");
         return revisions;

@@ -19,5 +19,7 @@ public interface VersionControlIF
 
   public BaseFile getBaseFile(File dir);
 
-  public Vector getRevisions(File file);
+  public Vector<String> getRevisions(File file);
+
+  public void setReference(String reference);
 }

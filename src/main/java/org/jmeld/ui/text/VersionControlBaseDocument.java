@@ -52,6 +52,14 @@ public class VersionControlBaseDocument extends AbstractBufferDocument {
         setShortName(file.getName());
     }
 
+    public boolean isBaseFileInitialized() {
+        return baseFileInitialized;
+    }
+
+    public void setBaseFileInitialized(boolean baseFileInitialized) {
+        this.baseFileInitialized = baseFileInitialized;
+    }
+
     @Override
     public int getBufferSize() {
         if (useBaseFile()) {
@@ -69,7 +77,7 @@ public class VersionControlBaseDocument extends AbstractBufferDocument {
         if (useBaseFile()) {
             try {
                 BaseFile baseFile = getBaseFile();
-                bais = new BufferedInputStream(new ByteArrayInputStream(baseFile .getByteArray()));
+                bais = new BufferedInputStream(new ByteArrayInputStream(baseFile.getByteArray()));
                 Charset charset = CharsetDetector.getInstance().getCharset(bais);
                 return new BufferedReader(new InputStreamReader(bais, charset));
             } catch (Exception ex) {
@@ -102,10 +110,10 @@ public class VersionControlBaseDocument extends AbstractBufferDocument {
     }
 
     private BaseFile getBaseFile() {
-        if (!baseFileInitialized) {
+        //if (!isBaseFileInitialized()) {
             baseFile = versionControl.getBaseFile(file);
-            baseFileInitialized = true;
-        }
+            setBaseFileInitialized(true);
+        //}
         return baseFile;
     }
 

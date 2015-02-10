@@ -16,7 +16,6 @@
  */
 package org.jmeld.util.file;
 
-import org.apache.jmeld.tools.ant.*;
 import org.jmeld.ui.*;
 import org.jmeld.util.*;
 import org.jmeld.util.node.*;
@@ -26,18 +25,18 @@ import org.jmeld.vc.util.VcCmd;
 import java.io.*;
 import java.util.*;
 
-public class VersionControlDiff
-        extends FolderDiff
-{
+public class VersionControlDiff extends FolderDiff {
     private File file;
     private JMDiffNode rootNode;
     private Map<String, JMDiffNode> nodes;
+    private VersionControlIF versionControl;
 
-    public VersionControlDiff(File file, Mode mode)
-    {
+    public VersionControlDiff(File file, Mode mode) {
         super(mode);
 
         setFile(file);
+
+        setVersionControl(VersionControlUtil.getFirstVersionControl(getFile()));
 
         try {
             setLeftFolderShortName(file.getName());
@@ -61,14 +60,19 @@ public class VersionControlDiff
         this.file = file;
     }
 
+    public VersionControlIF getVersionControl() {
+        return versionControl;
+    }
+
+    public void setVersionControl(VersionControlIF versionControl) {
+        this.versionControl = versionControl;
+    }
+
     public Collection<JMDiffNode> getNodes() {
         return nodes.values();
     }
 
     public void diff() {
-
-        StatusResult statusResult;
-        FileNode fileNode;
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -79,17 +83,15 @@ public class VersionControlDiff
         rootNode = new JMDiffNode("<root>", false);
         nodes = new HashMap<String, JMDiffNode>();
 
-        VersionControlIF versionControl = VersionControlUtil.getFirstVersionControl(file);
-
-        statusResult = versionControl.executeStatus(file);
+        StatusResult statusResult = getVersionControl().executeStatus(getFile());
 
         for (StatusResult.Entry entry : statusResult.getEntryList()) {
             File file = new File(statusResult.getPath(), entry.getName());
 
             JMDiffNode node = buildNode(entry.getName(), file.isFile());
 
-            fileNode = new FileNode(entry.getName(), file);
-            node.setBufferNodeLeft(new VersionControlBaseNode(versionControl, entry, fileNode, file));
+            FileNode fileNode = new FileNode(entry.getName(), file);
+            node.setBufferNodeLeft(new VersionControlBaseNode(getVersionControl(), entry, fileNode, file));
             node.setBufferNodeRight(fileNode);
 
             switch (entry.getStatus()) {

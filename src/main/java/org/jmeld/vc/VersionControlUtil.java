@@ -54,7 +54,7 @@ public class VersionControlUtil {
         }
 
         // TODO: versioncontrol should be a parameter in the constructor.
-        //       The user has to decide which vc is used (popup)
+        //       The user has to decide which vc is used (popup) if there is more than one
         return versionControlList.get(0);
     }
 }
