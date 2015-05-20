@@ -14,7 +14,7 @@ import java.io.File;
 * Date: 16/03/12
 * Time: 0:23
 */
-public class FileComparisonPanel extends SwingWorker<String, Object> {
+public class FileComparison extends SwingWorker<String, Object> {
     private JMeldPanel mainPanel;
     private JMDiffNode diffNode;
     private File leftFile;
@@ -27,12 +27,12 @@ public class FileComparisonPanel extends SwingWorker<String, Object> {
     private boolean showLevenstein;
     private boolean showTree;
 
-    public FileComparisonPanel(JMeldPanel mainPanel, JMDiffNode diffNode) {
+    public FileComparison(JMeldPanel mainPanel, JMDiffNode diffNode) {
         this.mainPanel = mainPanel;
         this.diffNode = diffNode;
     }
 
-    public FileComparisonPanel(JMeldPanel mainPanel, File leftFile, File rightFile) {
+    public FileComparison(JMeldPanel mainPanel, File leftFile, File rightFile) {
         this.mainPanel = mainPanel;
         this.leftFile = leftFile;
         this.rightFile = rightFile;

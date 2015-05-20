@@ -375,9 +375,9 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
 
     private void doOpenFileComparison(ActionEvent ae, boolean background) {
         for (UINode uiNode : getSelectedUINodes()) {
-            FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(mainPanel, uiNode.getDiffNode());
-            fileComparisonPanel.setOpenInBackground(background);
-            fileComparisonPanel.execute();
+            FileComparison fileComparison = new FileComparison(mainPanel, uiNode.getDiffNode());
+            fileComparison.setOpenInBackground(background);
+            fileComparison.execute();
         }
     }
 
@@ -632,9 +632,9 @@ public class FolderDiffPanel extends FolderDiffForm implements ConfigurationList
                             break;
                         }
 
-                        FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(mainPanel, diffNode);
-                        fileComparisonPanel.setOpenInBackground(background);
-                        fileComparisonPanel.execute();
+                        FileComparison fileComparison = new FileComparison(mainPanel, diffNode);
+                        fileComparison.setOpenInBackground(background);
+                        fileComparison.execute();
                     }
 
                     // Hack to make it possible to select with the MIDDLE

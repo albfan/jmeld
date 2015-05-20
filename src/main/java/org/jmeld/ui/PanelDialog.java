@@ -164,7 +164,7 @@ public class PanelDialog
     JPanel panel;
 
     tabbedPane = new JTabbedPane();
-    tabbedPane.add("File Comparison", getFileComparisonPanel());
+    tabbedPane.add("File Comparison", getFileComparison());
     tabbedPane.add("Directory Comparison", getDirectoryComparisonPanel());
     //tabbedPane.add("Version control", getVersionControlPanel());
 
@@ -176,7 +176,7 @@ public class PanelDialog
     return panel;
   }
 
-  private JComponent getFileComparisonPanel()
+  private JComponent getFileComparison()
   {
     JPanel panel;
     String columns;

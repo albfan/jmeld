@@ -15,7 +15,7 @@ import java.io.File;
 * Date: 16/03/12
 * Time: 0:25
 */
-public class DirectoryComparisonPanel extends SwingWorker<String, Object> {
+public class DirectoryComparison extends SwingWorker<String, Object> {
     private File leftFile;
     private File rightFile;
     private Filter filter;
@@ -24,7 +24,7 @@ public class DirectoryComparisonPanel extends SwingWorker<String, Object> {
     private String contentId;
     private JMeldPanel mainPanel;
 
-    public DirectoryComparisonPanel(JMeldPanel mainPanel, File leftFile, File rightFile, Filter filter) {
+    public DirectoryComparison(JMeldPanel mainPanel, File leftFile, File rightFile, Filter filter) {
         this.mainPanel = mainPanel;
         this.leftFile = leftFile;
         this.rightFile = rightFile;

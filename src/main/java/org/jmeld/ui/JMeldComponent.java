@@ -42,10 +42,10 @@ public class JMeldComponent extends Container {
     }
 
     private void openComparison(File file, File file2) {
-        FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(meldPanel, file, file2);
-        fileComparisonPanel.setOpenInBackground(false);
-        fileComparisonPanel.setShowTree(true);
-        fileComparisonPanel.execute();
+        FileComparison fileComparison = new FileComparison(meldPanel, file, file2);
+        fileComparison.setOpenInBackground(false);
+        fileComparison.setShowTree(true);
+        fileComparison.execute();
     }
 
     static public void main(String args[]) {

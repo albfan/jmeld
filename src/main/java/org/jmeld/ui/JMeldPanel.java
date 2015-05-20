@@ -193,23 +193,23 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
             rightFile = new File(rightName);
             if (leftFile.isDirectory()) {
                 if (rightFile.isDirectory()) {
-                    new DirectoryComparisonPanel(this, leftFile, rightFile, JMeldSettings
+                    new DirectoryComparison(this, leftFile, rightFile, JMeldSettings
                                         .getInstance().getFilter().getFilter("default")).execute();
                 } else {
-                    FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(this, new File(leftFile, rightName), rightFile);
-                    fileComparisonPanel.setOpenInBackground(false);
-                    fileComparisonPanel.execute();
+                    FileComparison fileComparison = new FileComparison(this, new File(leftFile, rightName), rightFile);
+                    fileComparison.setOpenInBackground(false);
+                    fileComparison.execute();
                 }
             } else {
-                FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(this, leftFile, rightFile);
-                fileComparisonPanel.setOpenInBackground(false);
-                fileComparisonPanel.execute();
+                FileComparison fileComparison = new FileComparison(this, leftFile, rightFile);
+                fileComparison.setOpenInBackground(false);
+                fileComparison.execute();
             }
         } else {
             if (!StringUtil.isEmpty(leftName)) {
                 file = new File(leftName);
                 if (file.exists() && VersionControlUtil.isVersionControlled(file)) {
-                    new VersionControlComparisonPanel(this, file).execute();
+                    new VersionControlComparison(this, file).execute();
                 }
             }
         }
@@ -412,15 +412,15 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
         dialog.show();
 
         if (dialog.getFunction() == PanelDialog.Function.FILE_COMPARISON) {
-            FileComparisonPanel fileComparisonPanel = new FileComparisonPanel(this, new File(dialog.getLeftFileName()), new File(dialog
+            FileComparison fileComparison = new FileComparison(this, new File(dialog.getLeftFileName()), new File(dialog
                         .getRightFileName()));
-            fileComparisonPanel.setOpenInBackground(false);
-            fileComparisonPanel.execute();
+            fileComparison.setOpenInBackground(false);
+            fileComparison.execute();
         } else if (dialog.getFunction() == PanelDialog.Function.DIRECTORY_COMPARISON) {
-            new DirectoryComparisonPanel(this, new File(dialog.getLeftDirectoryName()), new File(dialog.getRightDirectoryName()), dialog
+            new DirectoryComparison(this, new File(dialog.getLeftDirectoryName()), new File(dialog.getRightDirectoryName()), dialog
                         .getFilter()).execute();
         } else if (dialog.getFunction() == PanelDialog.Function.VERSION_CONTROL) {
-            new VersionControlComparisonPanel(this, new File(dialog
+            new VersionControlComparison(this, new File(dialog
                         .getVersionControlDirectoryName())).execute();
         }
     }
