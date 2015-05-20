@@ -22,13 +22,13 @@ import java.io.File;
 /**
  * Created by alberto on 7/01/15.
  */
-public class VersionControlDiffPanel extends FolderDiffPanel {
+public class VersionControlFolderDiffPanel extends FolderDiffPanel {
 
     public static final String SEPARATOR = "SEPARATOR";
 
     protected JComboBox revisionComboBox;
 
-    VersionControlDiffPanel(JMeldPanel mainPanel, VersionControlDiff diff) {
+    VersionControlFolderDiffPanel(JMeldPanel mainPanel, VersionControlDiff diff) {
         super(mainPanel, diff);
     }
 

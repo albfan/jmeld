@@ -38,7 +38,7 @@ public class VersionControlPanel extends AbstractContentPanel implements Configu
     private void init() {
 
         final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        VersionControlDiffPanel versionControlDiffPanel = new VersionControlDiffPanel(mainPanel, diff) {
+        VersionControlFolderDiffPanel versionControlFolderDiffPanel = new VersionControlFolderDiffPanel(mainPanel, diff) {
             @Override
             protected void openInContext(JMDiffNode diffNode) throws JMeldException {
                 BufferDiffPanel panel = new BufferDiffPanel(mainPanel, false, false);
@@ -52,7 +52,7 @@ public class VersionControlPanel extends AbstractContentPanel implements Configu
             }
         };
 
-        splitPane.setTopComponent(versionControlDiffPanel);
+        splitPane.setTopComponent(versionControlFolderDiffPanel);
         splitPane.updateUI();
 
         setLayout(new BorderLayout());
