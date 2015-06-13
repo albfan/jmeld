@@ -64,6 +64,10 @@ public class EditorSettings
   private ToolbarButtonIcon toolbarButtonIcon;
   @XmlElement
   private boolean toolbarButtonTextEnabled;
+  @XmlElement
+  private boolean showLevenstheinEditor;
+  @XmlElement
+  private boolean showTreeChunks;
 
   public EditorSettings()
   {
@@ -90,6 +94,24 @@ public class EditorSettings
   public void setShowLineNumbers(boolean showLineNumbers)
   {
     this.showLineNumbers = showLineNumbers;
+    fireChanged();
+  }
+
+  public boolean isShowLevenstheinEditor() {
+    return showLevenstheinEditor;
+  }
+
+  public void setShowLevenstheinEditor(boolean showLevenstheinEditor) {
+    this.showLevenstheinEditor = showLevenstheinEditor;
+    fireChanged();
+  }
+
+  public boolean isShowTreeChunks() {
+    return showTreeChunks;
+  }
+
+  public void setShowTreeChunks(boolean showTreeChunks) {
+    this.showTreeChunks = showTreeChunks;
     fireChanged();
   }
 

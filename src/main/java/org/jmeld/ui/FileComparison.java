@@ -116,7 +116,7 @@ public class FileComparison extends SwingWorker<String, Object> {
                     // Already opened!
                     mainPanel.getTabbedPane().setSelectedComponent(contentPanel);
                 } else {
-                    panel = new BufferDiffPanel(mainPanel, showTree, showLevenstein);
+                    panel = new BufferDiffPanel(mainPanel);
                     panel.setId(contentId);
                     panel.setDiffNode(diffNode);
                     mainPanel.getTabbedPane().addTab(panel.getTitle(), ImageUtil.getSmallImageIcon("stock_new"), panel);

@@ -19,6 +19,8 @@ package org.jmeld.ui;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideTabbedPane;
+import org.jdesktop.swingworker.*;
+import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.Version;
 import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.action.ActionHandler;
@@ -209,7 +211,8 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
             if (!StringUtil.isEmpty(leftName)) {
                 file = new File(leftName);
                 if (file.exists() && VersionControlUtil.isVersionControlled(file)) {
-                    new VersionControlComparison(this, file).execute();
+                    VersionControlComparison versionControlComparison = new VersionControlComparison(this, file);
+                    versionControlComparison.execute();
                 }
             }
         }
@@ -411,6 +414,9 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
         dialog = new PanelDialog(this);
         dialog.show();
 
+
+        //TODO Son todo SwingWorker<String, Object>;
+        //Agregar una interfaz común
         if (dialog.getFunction() == PanelDialog.Function.FILE_COMPARISON) {
             FileComparison fileComparison = new FileComparison(this, new File(dialog.getLeftFileName()), new File(dialog
                         .getRightFileName()));
@@ -420,8 +426,10 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
             new DirectoryComparison(this, new File(dialog.getLeftDirectoryName()), new File(dialog.getRightDirectoryName()), dialog
                         .getFilter()).execute();
         } else if (dialog.getFunction() == PanelDialog.Function.VERSION_CONTROL) {
-            new VersionControlComparison(this, new File(dialog
-                        .getVersionControlDirectoryName())).execute();
+            VersionControlComparison versionControlComparison = new VersionControlComparison(this, new File(dialog
+                    .getVersionControlDirectoryName()));
+            versionControlComparison.execute();
+
         }
     }
 

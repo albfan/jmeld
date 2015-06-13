@@ -42,7 +42,7 @@ public class VersionControlPanel extends AbstractContentPanel implements Configu
         VersionControlFolderDiffPanel versionControlFolderDiffPanel = new VersionControlFolderDiffPanel(mainPanel, diff) {
             @Override
             protected void openInContext(JMDiffNode diffNode) throws JMeldException {
-                BufferDiffPanel panel = new BufferDiffPanel(mainPanel, false, false);
+                BufferDiffPanel panel = new BufferDiffPanel(mainPanel);
                 panel.setId("context diff");
                 diffNode.diff();
                 panel.setDiffNode(diffNode);

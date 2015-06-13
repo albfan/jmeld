@@ -44,7 +44,7 @@ class DiffTreeCellRenderer extends DefaultTreeCellRenderer {
             setIcon(new TreeColorIcon(COLOR_CHUNK));
             JMChunkNode chunkNode = (JMChunkNode) value;
             JMChunk chunk = chunkNode.getChunk();
-            setText(String.format("%d, %d: %s", chunk.getAnchor(), chunk.getSize(), chunkNode.getString()));
+            setText(String.format("%d, %d: \"%s\"", chunk.getAnchor(), chunk.getSize(), chunkNode.getString()));
         }
         return this;
     }

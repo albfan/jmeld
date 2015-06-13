@@ -24,6 +24,7 @@ import org.jmeld.diff.JMDelta;
 import org.jmeld.diff.JMDiff;
 import org.jmeld.diff.JMRevision;
 import org.jmeld.model.LevenshteinTableModel;
+import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.diffbar.DiffScrollComponent;
 import org.jmeld.ui.search.SearchCommand;
 import org.jmeld.ui.search.SearchHit;
@@ -33,6 +34,7 @@ import org.jmeld.ui.text.BufferDocumentIF;
 import org.jmeld.ui.text.JMDocumentEvent;
 import org.jmeld.ui.tree.DiffTree;
 import org.jmeld.util.StringUtil;
+import org.jmeld.util.conf.ConfigurationListenerIF;
 import org.jmeld.util.node.BufferNode;
 import org.jmeld.util.node.JMDiffNode;
 
@@ -48,7 +50,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BufferDiffPanel extends AbstractContentPanel {
+public class BufferDiffPanel extends AbstractContentPanel implements ConfigurationListenerIF {
     public static final int LEFT = 0;
     public static final int MIDDLE = 1; //TODO: Usar el comparador del medio con dos JDiff
     public static final int RIGHT = 2;
@@ -64,22 +66,37 @@ public class BufferDiffPanel extends AbstractContentPanel {
     private JMDiff diff;
     private JTable levensteinGraphTable;
     private DiffTree diffTree;
+
     private boolean showTree;
     private boolean showLevenstein;
+    private JSplitPane splitPane;
+
 
     BufferDiffPanel(JMeldPanel mainPanel) {
-        this(mainPanel, false, false);
-    }
-
-    BufferDiffPanel(JMeldPanel mainPanel, boolean showTree, boolean showLevenstein) {
         this.mainPanel = mainPanel;
-        this.showTree = showTree;
-        this.showLevenstein = showLevenstein;
+        readConfig();
+        JMeldSettings.getInstance().addConfigurationListener(this);
         diff = new JMDiff();
 
         init();
 
         setFocusable(true);
+    }
+
+    public boolean isShowTree() {
+        return showTree;
+    }
+
+    public void setShowTree(boolean showTree) {
+        this.showTree = showTree;
+    }
+
+    public boolean isShowLevenstein() {
+        return showLevenstein;
+    }
+
+    public void setShowLevenstein(boolean showLevenstein) {
+        this.showLevenstein = showLevenstein;
     }
 
     public void setDiffNode(JMDiffNode diffNode) {
@@ -134,7 +151,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
     }
 
     private void refreshTreeModel() {
-        if (showTree) {
+        if (isShowTree()) {
             diffTree.setRevision(getCurrentRevision());
         }
     }
@@ -251,7 +268,10 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
         setLayout(new BorderLayout());
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, buildFilePanel(columns, rows), buildBottonSplit());
+        if (splitPane != null) {
+            remove(splitPane);
+        }
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, buildFilePanel(columns, rows), buildBottonSplit());
         add(splitPane);
 
         scrollSynchronizer = new ScrollSynchronizer(this, filePanels[LEFT], filePanels[RIGHT]);
@@ -326,7 +346,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
     private JScrollPane buildTreePane() {
         JScrollPane scrollTreePane = null;
-        if (showTree) {
+        if (isShowTree()) {
             scrollTreePane = new JScrollPane();
             diffTree = new DiffTree();
             scrollTreePane.setViewportView(diffTree);
@@ -336,7 +356,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
     private JComponent buildLevenstheinTable() {
 
-        if (!showLevenstein) {
+        if (!isShowLevenstein()) {
             return null;
         }
 
@@ -397,7 +417,7 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
     private void refreshLevensteinModel() {
 
-        if (showLevenstein) {
+        if (isShowLevenstein()) {
             try {
                 PlainDocument orgDoc = filePanels[LEFT].getBufferDocument().getDocument();
                 PlainDocument revDoc = filePanels[RIGHT].getBufferDocument().getDocument();
@@ -985,6 +1005,18 @@ public class BufferDiffPanel extends AbstractContentPanel {
 
         scrollSynchronizer.scrollToLine(fp, line);
         setSelectedLine(line);
+    }
+
+    @Override
+    public void configurationChanged() {
+        readConfig();
+        init();
+        reDisplay();
+    }
+
+    private void readConfig() {
+        setShowTree(JMeldSettings.getInstance().getEditor().isShowTreeChunks());
+        setShowLevenstein(JMeldSettings.getInstance().getEditor().isShowLevenstheinEditor());
     }
 
     class Zoom {

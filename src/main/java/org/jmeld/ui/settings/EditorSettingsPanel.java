@@ -103,6 +103,26 @@ public class EditorSettingsPanel
     toolbarButtonIconComboBox.addActionListener(getToolbarButtonIconAction());
     toolbarButtonTextEnabledCheckBox
         .addActionListener(getToolbarButtonTextEnabledAction());
+    showLevensteinCheckBox.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setShowLevenstheinEditor(
+                showLevensteinCheckBox.isSelected());
+        //TODO: Refresh diff panels
+        // JMeld.getJMeldPanel().addToolBar();
+      }
+    });
+    showTreeChunksCheckBox.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setShowTreeChunks(
+                showTreeChunksCheckBox.isSelected());
+        //TODO: Refresh diff panels
+        // JMeld.getJMeldPanel().addToolBar();
+      }
+    });
   }
 
   private ChangeListener getTabSizeChangeListener()
@@ -497,6 +517,8 @@ public class EditorSettingsPanel
     ignoreCaseCheckBox.setSelected(ignore.ignoreCase);
     leftsideReadonlyCheckBox.setSelected(settings.getLeftsideReadonly());
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
+    showLevensteinCheckBox.setSelected(settings.isShowLevenstheinEditor());
+    showTreeChunksCheckBox.setSelected(settings.isShowTreeChunks());
     antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
     if (originalAntialias != settings.isAntialiasEnabled())
     {
