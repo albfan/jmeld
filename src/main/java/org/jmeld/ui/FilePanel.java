@@ -40,6 +40,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
 import javax.swing.text.PlainDocument;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -77,6 +78,9 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
 
         editor.addFocusListener(getFocusListener());
         editor.addCaretListener(getCaretListener());
+        DefaultContextMenu contextMenu = new DefaultContextMenu();
+        contextMenu.add(editor);
+
 
         scrollPane = new JScrollPane(editor);
 //        scrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
