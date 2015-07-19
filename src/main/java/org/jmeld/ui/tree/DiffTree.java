@@ -5,6 +5,7 @@ import org.jmeld.diff.JMChunk;
 import org.jmeld.diff.JMDelta;
 import org.jmeld.diff.JMDiff;
 import org.jmeld.diff.JMRevision;
+import org.jmeld.settings.JMeldSettings;
 import org.jmeld.util.Ignore;
 import org.jmeld.vc.util.VcCmd;
 
@@ -42,8 +43,11 @@ public class DiffTree extends JTree {
 
     private static DefaultTreeModel buildTreemodel(JMRevision revision) {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode(revision);
-        //addNodes(revision, root);
-        addRawNodes(revision, root);
+        if (JMeldSettings.getInstance().getEditor().isShowTreeRaw()) {
+            addRawNodes(revision, root);
+        } else {
+            addNodes(revision, root);
+        }
         return new DefaultTreeModel(root);
     }
 
@@ -53,20 +57,22 @@ public class DiffTree extends JTree {
                 int initLine = delta.getOriginal().getAnchor();
                 int numLines = delta.getRevised().getSize();
                 JMRevision changeRevision = delta.getChangeRevision();
-                JMDelta changeDelta = changeRevision.getDeltas().get(0);
-                JMChunk orgChunk = changeDelta.getOriginal();
-                JMChunk revChunk = changeDelta.getRevised();
-                int startCol = orgChunk.getSize();
-                int endCol = revChunk.getSize();
-                JMChunkNode orgNode = new JMChunkNode(orgChunk, changeRevision.getOriginalString(orgChunk));
-                JMChunkNode revNode = new JMChunkNode(revChunk, changeRevision.getRevisedString(revChunk));
-                DefaultMutableTreeNode childDelta = new DefaultMutableTreeNode(changeDelta);
-                childDelta.add(orgNode);
-                childDelta.add(revNode);
-                JMChange change = new JMChange(initLine, numLines, startCol, endCol);
-                DefaultMutableTreeNode changeNode = new DefaultMutableTreeNode(change);
-                changeNode.add(childDelta);
-                root.add(changeNode);
+                for (JMDelta changeDelta : changeRevision.getDeltas()) {
+                    JMChunk orgChunk = changeDelta.getOriginal();
+                    JMChunk revChunk = changeDelta. getRevised();
+                    int startCol = orgChunk.getAnchor();
+                    int endCol = revChunk.getAnchor();
+                    int modifiedchars = revChunk.getSize() - orgChunk.getSize();
+                    JMChunkNode orgNode = new JMChunkNode(orgChunk, changeRevision.getOriginalString(orgChunk));
+                    JMChunkNode revNode = new JMChunkNode(revChunk, changeRevision.getRevisedString(revChunk));
+                    DefaultMutableTreeNode childDelta = new DefaultMutableTreeNode(changeDelta);
+                    childDelta.add(orgNode);
+                    childDelta.add(revNode);
+                    JMChange change = new JMChange(initLine, numLines, startCol, endCol, modifiedchars);
+                    DefaultMutableTreeNode changeNode = new DefaultMutableTreeNode(change);
+                    changeNode.add(childDelta);
+                    root.add(changeNode);
+                }
             }
         }
     }

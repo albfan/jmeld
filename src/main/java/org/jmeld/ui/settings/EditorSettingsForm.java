@@ -70,6 +70,7 @@ public class EditorSettingsForm
         detailHeader7 = new org.jmeld.ui.swing.DetailHeader();
         showTreeChunksCheckBox = new javax.swing.JCheckBox();
         showLevensteinCheckBox = new javax.swing.JCheckBox();
+        showTreeRawCheckBox = new javax.swing.JCheckBox();
         gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
 
         buttonGroup1.add(defaultFontRadioButton);
@@ -264,6 +265,14 @@ public class EditorSettingsForm
         showLevensteinCheckBox.setToolTipText("");
         showLevensteinCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
+        showTreeRawCheckBox.setText("Show Tree Nodes Raw");
+        showTreeRawCheckBox.setBorder(null);
+        showTreeRawCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showTreeRawCheckBoxActionPerformed(evt);
+            }
+        });
+
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -272,44 +281,41 @@ public class EditorSettingsForm
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel2Layout.createSequentialGroup()
-                        .add(12, 12, 12)
                         .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(showLevensteinCheckBox)
-                            .add(showTreeChunksCheckBox))
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .add(jPanel2Layout.createSequentialGroup()
-                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(detailHeader4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(detailHeader6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .add(jPanel2Layout.createSequentialGroup()
                                 .add(12, 12, 12)
                                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(ignoreEOLCheckBox)
-                                    .add(ignoreWhitespaceAtBeginCheckBox)
-                                    .add(ignoreBlankLinesCheckBox)
-                                    .add(ignoreCaseCheckBox)
-                                    .add(ignoreWhitespaceAtEndCheckBox)
-                                    .add(ignoreWhitespaceInBetweenCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .add(jPanel2Layout.createSequentialGroup()
-                                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(detailHeader4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                    .add(detailHeader6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                    .add(detectEncodingRadioButton)
                                     .add(jPanel2Layout.createSequentialGroup()
-                                        .add(12, 12, 12)
-                                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                            .add(detectEncodingRadioButton)
-                                            .add(jPanel2Layout.createSequentialGroup()
-                                                .add(specificEncodingRadioButton)
-                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                                .add(specificEncodingComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                            .add(defaultEncodingRadioButton)
-                                            .add(toolbarButtonTextEnabledCheckBox)
-                                            .add(jPanel2Layout.createSequentialGroup()
-                                                .add(jLabel6)
-                                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                                .add(toolbarButtonIconComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                                    .add(detailHeader7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                .add(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                        .add(specificEncodingRadioButton)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(specificEncodingComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                    .add(defaultEncodingRadioButton)
+                                    .add(toolbarButtonTextEnabledCheckBox)
+                                    .add(jPanel2Layout.createSequentialGroup()
+                                        .add(jLabel6)
+                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                        .add(toolbarButtonIconComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                            .add(detailHeader7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(0, 0, Short.MAX_VALUE))
+                    .add(jPanel2Layout.createSequentialGroup()
+                        .add(12, 12, 12)
+                        .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(showLevensteinCheckBox)
+                            .add(jPanel2Layout.createSequentialGroup()
+                                .add(showTreeChunksCheckBox)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .add(showTreeRawCheckBox))
+                            .add(ignoreEOLCheckBox)
+                            .add(ignoreWhitespaceAtBeginCheckBox)
+                            .add(ignoreBlankLinesCheckBox)
+                            .add(ignoreCaseCheckBox)
+                            .add(ignoreWhitespaceAtEndCheckBox)
+                            .add(ignoreWhitespaceInBetweenCheckBox, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -333,7 +339,9 @@ public class EditorSettingsForm
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(showLevensteinCheckBox)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(showTreeChunksCheckBox)
+                .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(showTreeChunksCheckBox)
+                    .add(showTreeRawCheckBox))
                 .add(14, 14, 14)
                 .add(detailHeader5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -383,6 +391,10 @@ public class EditorSettingsForm
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void showTreeRawCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showTreeRawCheckBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_showTreeRawCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected javax.swing.JCheckBox antialiasCheckBox;
@@ -424,6 +436,7 @@ public class EditorSettingsForm
     protected javax.swing.JCheckBox showLevensteinCheckBox;
     protected javax.swing.JCheckBox showLineNumbersCheckBox;
     protected javax.swing.JCheckBox showTreeChunksCheckBox;
+    protected javax.swing.JCheckBox showTreeRawCheckBox;
     protected javax.swing.JComboBox specificEncodingComboBox;
     protected javax.swing.JRadioButton specificEncodingRadioButton;
     protected javax.swing.JSpinner tabSizeSpinner;

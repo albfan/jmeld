@@ -68,6 +68,8 @@ public class EditorSettings
   private boolean showLevenstheinEditor;
   @XmlElement
   private boolean showTreeChunks;
+  @XmlElement
+  private boolean showTreeRaw;
 
   public EditorSettings()
   {
@@ -451,6 +453,15 @@ public class EditorSettings
     }
 
     return c;
+  }
+
+  public boolean isShowTreeRaw() {
+    return showTreeRaw;
+  }
+
+  public void setShowTreeRaw(boolean showTreeRaw) {
+    this.showTreeRaw = showTreeRaw;
+    fireChanged();
   }
 
   public enum ToolbarButtonIcon

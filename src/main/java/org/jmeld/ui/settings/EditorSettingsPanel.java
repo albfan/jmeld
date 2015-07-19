@@ -109,8 +109,6 @@ public class EditorSettingsPanel
       {
         getEditorSettings().setShowLevenstheinEditor(
                 showLevensteinCheckBox.isSelected());
-        //TODO: Refresh diff panels
-        // JMeld.getJMeldPanel().addToolBar();
       }
     });
     showTreeChunksCheckBox.addActionListener(new ActionListener()
@@ -119,10 +117,17 @@ public class EditorSettingsPanel
       {
         getEditorSettings().setShowTreeChunks(
                 showTreeChunksCheckBox.isSelected());
-        //TODO: Refresh diff panels
-        // JMeld.getJMeldPanel().addToolBar();
       }
     });
+    showTreeRawCheckBox.addActionListener(new ActionListener()
+    {
+      public void actionPerformed(ActionEvent evt)
+      {
+        getEditorSettings().setShowTreeRaw(
+                showTreeRawCheckBox.isSelected());
+      }
+    });
+
   }
 
   private ChangeListener getTabSizeChangeListener()
@@ -519,6 +524,7 @@ public class EditorSettingsPanel
     rightsideReadonlyCheckBox.setSelected(settings.getRightsideReadonly());
     showLevensteinCheckBox.setSelected(settings.isShowLevenstheinEditor());
     showTreeChunksCheckBox.setSelected(settings.isShowTreeChunks());
+    showTreeRawCheckBox.setSelected(settings.isShowTreeRaw());
     antialiasCheckBox.setSelected(settings.isAntialiasEnabled());
     if (originalAntialias != settings.isAntialiasEnabled())
     {
