@@ -100,17 +100,22 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
     }
 
     public void setDiffNode(JMDiffNode diffNode) {
-        BufferNode bnLeft;
-        BufferNode bnRight;
+       this.diffNode = diffNode;
+       refreshDiffNode();
+    }
 
-        this.diffNode = diffNode;
+    public JMDiffNode getDiffNode() {
+        return diffNode;
+    }
 
-        bnLeft = diffNode.getBufferNodeLeft();
-        bnRight = diffNode.getBufferNodeRight();
+    private void refreshDiffNode() {
+        BufferNode bnLeft = getDiffNode().getBufferNodeLeft();
+        BufferNode bnRight = getDiffNode().getBufferNodeRight();
 
-        setBufferDocuments(bnLeft == null ? null : bnLeft.getDocument(),
-                bnRight == null ? null : bnRight.getDocument(), diffNode.getDiff(),
-                diffNode.getRevision());
+        BufferDocumentIF leftDocument = bnLeft == null ? null : bnLeft.getDocument();
+        BufferDocumentIF rightDocument = bnRight == null ? null : bnRight.getDocument();
+
+        setBufferDocuments(leftDocument, rightDocument, getDiffNode().getDiff(), getDiffNode().getRevision());
     }
 
     private void setBufferDocuments(BufferDocumentIF bd1, BufferDocumentIF bd2,
@@ -248,7 +253,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         if (bd1 != null && bd2 != null) {
             try {
                 currentRevision = diff.diff(bd1.getLines(), bd2.getLines()
-                        , diffNode.getIgnore());
+                        , getDiffNode().getIgnore());
 
                 reDisplay();
             } catch (Exception ex) {
@@ -1011,6 +1016,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
     public void configurationChanged() {
         readConfig();
         init();
+        refreshDiffNode();
         reDisplay();
     }
 
