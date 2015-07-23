@@ -40,6 +40,9 @@ public class JMeld
     }
 
     public static JMeldPanel getJMeldPanel() {
+        if (jmeldPanel == null) {
+            jmeldPanel = new JMeldPanel();
+        }
         return jmeldPanel;
     }
 
@@ -49,17 +52,16 @@ public class JMeld
         LookAndFeelManager.getInstance().install();
 
         frame = new JFrame("JMeld");
-        jmeldPanel = new JMeldPanel();
-        frame.add(jmeldPanel);
+        frame.add(getJMeldPanel());
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setIconImage(ImageUtil.getImageIcon("jmeld-small").getImage());
         new WindowPreference(frame.getTitle(), frame);
-        frame.addWindowListener(jmeldPanel.getWindowListener());
+        frame.addWindowListener(getJMeldPanel().getWindowListener());
         frame.setVisible(true);
 
         frame.toFront();
 
-        jmeldPanel.openComparison(fileNameList);
+        getJMeldPanel().openComparison(fileNameList);
     }
 
     public static void main(String[] args) {

@@ -341,6 +341,7 @@ public class JMRevision
 
         sb = new StringBuffer();
         end = chunk.getAnchor() + chunk.getSize();
+        end = objects.length < end ? objects.length : end;
         for (int offset = chunk.getAnchor(); offset < end; offset++)
         {
             sb.append(objects[offset].toString());

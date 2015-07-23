@@ -34,6 +34,11 @@ public class LevenshteinTableModel extends DefaultTableModel {
     private HashMap<Point, MatteBorder> borderSelections;
     private boolean showSelectionPath;
 
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
     public void buildModel() {
         if (!isAllDataAvaliable()) {
             return;

@@ -1,13 +1,7 @@
-abc
-
-function(foo) {
-   echo hi
-}
-werwer
-
-sdfasd
+function foo() {
+   print hello;
 }
 
-
-
-1234
+function hoge() {
+   throw new Exception();
+}

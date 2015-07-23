@@ -18,6 +18,7 @@ package org.jmeld.ui;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import org.jmeld.JMeld;
 import org.jmeld.JMeldException;
 import org.jmeld.diff.JMChunk;
 import org.jmeld.diff.JMDelta;
@@ -49,10 +50,7 @@ import javax.swing.text.PlainDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,6 +76,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
     private boolean showLevenstein;
     private JSplitPane splitPane;
     private JCheckBox checkSolutionPath;
+    private LinkerGlassPane<Cell> linker;
 
     static Color selectionColor = Color.BLUE;
     static Color newColor = Color.CYAN;
@@ -158,6 +157,94 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         }
     }
 
+    private void printLinks(JMRevision revision) {
+        linker.clearLinks();
+        linker.setAllowEdit(false);
+        if (revision != null) {
+            int col = 0;
+            int row = 0;
+            BufferDocumentIF bd1 = filePanels[LEFT].getBufferDocument();
+            BufferDocumentIF bd2 = filePanels[RIGHT].getBufferDocument();
+            int length = getBufferLength(bd1);
+            int length2 = getBufferLength(bd2);
+            for (JMDelta delta : revision.getDeltas()) {
+                int initLine = delta.getOriginal().getAnchor();
+                int numLines = delta.getRevised().getSize();
+                JMRevision changeRevision = delta.getChangeRevision();
+                for (JMDelta changeDelta : changeRevision.getDeltas()) {
+                    JMChunk orgChunk = changeDelta.getOriginal();
+                    JMChunk revChunk = changeDelta.getRevised();
+                    int startCol = orgChunk.getAnchor();
+                    int endCol = revChunk.getAnchor();
+                    int origSize = orgChunk.getSize();
+                    int revSize = revChunk.getSize();
+                    for (; row < startCol; col++, row++) {
+                        linker.link(new Cell(row + 1, col + 1));
+                    }
+                    if (changeDelta.isAdd()) {
+                        for (; col < startCol + origSize; col++) {
+                            linker.link(new Cell(row + 1, col + 1));
+                        }
+                    } else if (changeDelta.isDelete()) {
+                        for (; row < startCol + origSize; row++) {
+                            linker.link(new Cell(row + 1, col + 1));
+                        }
+                    } else if (changeDelta.isChange()) {
+                        for (; row < startCol + origSize; row++) {
+                            linker.link(new Cell(row + 1, col + 1));
+                        }
+                        if (row > length) {
+                            row = length;
+                        }
+                        for (; col < endCol + revSize; col++) {
+                            linker.link(new Cell(row + 1, col + 1));
+                        }
+                        if (col > length2) {
+                            col = length2;
+                        }
+                    }
+                }
+            }
+            while (!(row >= length) || !(col >= length2)) {
+                if (length > 0 && row <= length) {
+                    if (length2 > 0 && col <= length2) {
+                        linker.link(new Cell(row + 1, col + 1));
+                        if (row < length) {
+                            row++;
+                        }
+                        if (col < length2) {
+                            col++;
+                        }
+                    } else {
+                        linker.link(new Cell(row + 1, col + 1));
+                        if (row < length) {
+                            row++;
+                        }
+                    }
+                } else {
+                    if (length2 > 0 && col <= length2) {
+                        linker.link(new Cell(row + 1, col + 1));
+                        if (col < length2) {
+                            col++;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            linker.link(new Cell(length + 1, length2 + 1));
+        }
+        linker.setAllowEdit(true);
+    }
+
+    private int getBufferLength(BufferDocumentIF bd) {
+        int numberOfLines = bd.getNumberOfLines() -1;
+        int offsetForLine = bd.getOffsetForLine(numberOfLines);
+        int length = bd.getLineText(numberOfLines).length();
+
+        return offsetForLine + length - (numberOfLines + 1);
+    }
+
     private void reDisplay() {
         for (FilePanel fp : filePanels) {
             if (fp != null) {
@@ -167,6 +254,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
 
         refreshTreeModel();
         refreshLevensteinModel();
+        printLinks(currentRevision);
 
         mainPanel.repaint();
     }
@@ -664,6 +752,146 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         });
 
         levensteinGraphTable.setTableHeader(null);
+
+        linker = new LinkerGlassPane<Cell>() {
+            @Override
+            protected Point getPointFrom(Cell c) {
+                JTable table = BufferDiffPanel.this.levensteinGraphTable;
+                if (!(table.getParent() instanceof JViewport)) {
+                    return null;
+                }
+                Rectangle rect = table.getCellRect(c.getRow(), c.getColumn(), true);
+
+                Point curLocation = getLocationOnWindow(table);
+
+                rect.setLocation(curLocation.x + rect.x, curLocation.y + rect.y);
+                return new Point(rect.x + rect.width / 2 , rect.y + rect.height / 2);
+            }
+
+            private Point getLocationOnWindow(JComponent component) {
+                Point curLocation = component.getLocation();
+
+                for (Container parent = component.getParent();
+                     parent != null && !(parent instanceof Window) && !(parent instanceof JRootPane);
+                     parent = parent.getParent())
+                {
+                    curLocation.x += parent.getX();
+                    curLocation.y += parent.getY();
+                }
+                return curLocation;
+            }
+
+            @Override
+            protected boolean wrongChange(Cell c1, Cell c2) {
+                return c1.isDiagonal(c2) && getValueAt(c1) != getValueAt(c2);
+            }
+
+            private Object getValueAt(Cell c1) {
+                return levensteinGraphTable.getModel().getValueAt(c1.getRow(), c1.getColumn());
+            }
+
+            @Override
+            protected boolean canBeMoved(Cell cell) {
+                return super.canBeMoved(cell) && isAroundCurrent(cell) && isAroundLinked(cell) && isBehindPrev(cell);
+            }
+
+            private boolean isBehindPrev(Cell cell) {
+                if (hasCurrent()) {
+                    int prev = getPrev();
+                    Cell cellPrev = linked.get(prev);
+                    return prev != NO_SELECTION && cell.getRow() >= cellPrev.getRow() && cell.getColumn() >= cellPrev.getColumn();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean removeCurrent() {
+                if (hasCurrent()) {
+                    int prev = getPrev();
+                    int next = getNext();
+                    if (prev != NO_SELECTION && next != NO_SELECTION && isAround(linked.get(prev), linked.get(next))) {
+                        linked.remove(current);
+                        current = NO_SELECTION;
+                        repaint();
+                    }
+                }
+                return false;
+            }
+
+            private boolean isAroundCurrent(Cell cell) {
+                return isAround (cell, getCurrent());
+            }
+
+            private boolean isAround(Cell cell1, Cell cell2) {
+                return Math.abs(cell1.getRow() - cell2.getRow()) <= 1
+                        && Math.abs(cell1.getColumn() - cell2.getColumn()) <= 1;
+            }
+
+            /**
+             * Check if linked nodes to current will be around new current
+             * @param cell
+             * @return
+             */
+            private boolean isAroundLinked(Cell cell) {
+                if (hasCurrent()) {
+                    int prev = getPrev();
+                    int next = getNext();
+                    return (prev == NO_SELECTION || isAround(cell, linked.get(prev)))
+                            && (next == NO_SELECTION || isAround(cell, linked.get(next)));
+                }
+                return false;
+            }
+
+            private int getNext() {
+                int max = linked.size() - 1;
+                int next = NO_SELECTION;
+                if (current < max) {
+                    next = current + 1;
+                }
+                return next;
+            }
+
+            private int getPrev() {
+                int prev = NO_SELECTION;
+                if (current > 0) {
+                    prev = current - 1;
+                }
+                return prev;
+            }
+        };
+        JFrame frame = (JFrame) SwingUtilities.getRoot(JMeld.getJMeldPanel());
+        frame.setGlassPane(linker);
+        linker.setAllowEdit(true);
+        linker.setVisible(true);
+
+        levensteinGraphTable.addMouseListener(new MouseAdapter() {
+            private Cell last = null;
+
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable) e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                Cell cell = new Cell(row, column);
+                if (!cell.equals(last)) {
+                    linker.link(cell);
+                }
+                last = cell;
+                linker.setCurrent(cell);
+            }
+
+        });
+        levensteinGraphTable.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    if (linker.hasCurrent()) {
+                        linker.removeCurrent();
+                    }
+                    e.consume();
+                }
+            }
+        });
+
         levensteinGraphTable.setFillsViewportHeight(true);
 
         JPanel panelGraph = new JPanel(new BorderLayout());
@@ -757,6 +985,49 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         });
         panelGraph.add(box, BorderLayout.SOUTH);
         return panelGraph;
+    }
+
+    class Cell {
+        int row;
+        int column;
+
+        public Cell(int row, int column) {
+            this.row = row;
+            this.column = column;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Cell) {
+                Cell cell = (Cell) obj;
+                return row == cell.row && column == cell.column;
+            }
+            return false;
+        }
+
+        public boolean isDiagonal(Object obj) {
+            if (obj instanceof Cell) {
+                Cell cell = (Cell) obj;
+                return row + 1 == cell.row && column + 1 == cell.column;
+            }
+            return false;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public int getColumn() {
+            return column;
+        }
+
+        public void setColumn(int column) {
+            this.column = column;
+        }
     }
 
     private HashMap<Point, MatteBorder> createRowLineSelection(int row) {
