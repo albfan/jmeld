@@ -51,14 +51,9 @@ public class JMDiff
     myersDiff.checkMaxTime(true);
 
     // MyersDiff is the fastest but can be very slow when 2 files
-    //   are very different.
+    // are very different.
     algorithms = new ArrayList<JMDiffAlgorithmIF>();
     //algorithms.add(myersDiff);
-
-    // GNUDiff is a little bit slower than Myersdiff but performs way
-    //   better if the files are very different.
-    // Don't use it for now because of GPL
-    //algorithms.add(new GNUDiff());
 
     // EclipseDiff looks like Myersdiff but is slower.
     // It performs much better if the files are totally different

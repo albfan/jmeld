@@ -17,7 +17,6 @@
 package org.jmeld.diff;
 
 import org.apache.commons.jrcs.diff.*;
-import org.gnu.diff.*;
 import org.jmeld.*;
 
 public class MyersDiff

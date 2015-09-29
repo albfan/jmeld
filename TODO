@@ -89,15 +89,16 @@ Release 2.3:
          (Change it to OutLine of the netbeans project!)
 
 Release 3.0:
--        Ability to use external gnu diff
+- VCS support
+- Improved diff highlight
+- Mavenization
+
+Todo:
 -        Create manual
 -        Diff images
 -        Diff binaries
-
-Release 3.5:
+-        Ability to use external gnu diff
 -        Implement 3-way diff.
-
-Release 4.0:
 -        Implement directory/file diff with ftp, sftp etc.
 -        Optimize memory usage of JTextArea.
 
