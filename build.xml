@@ -33,9 +33,10 @@
     <javac srcdir="src/main/java"
            destdir="target/classes"
            debug="on" 
-           source="1.5"
-           target="1.5" 
-           excludes="**/bak/**" 
+           source="8"
+           target="8"
+           excludes="**/bak/**"
+           includeantruntime="false"
            optimize="on">
       <classpath refid="compile.classpath" />
     </javac>
@@ -55,8 +56,11 @@
       <zipfileset src="lib/jhall.jar" />
       <zipfileset src="lib/jsr173_1.0_api.jar" />
       <zipfileset src="lib/swing-layout-1.0.3.jar" />
-      <zipfileset src="lib/icu4j-4_0.jar" />
+      <zipfileset src="lib/icu4j-4_0.jar">
+        <exclude name="META-INF/**" />
+      </zipfileset>
       <zipfileset src="lib/l2fprod-common-all.jar" />
+      <zipfileset src="lib/jaxb-core.jar" />
       <zipfileset src="lib/jaxb-api.jar" />
       <zipfileset src="lib/jaxb-impl.jar" />
       <zipfileset src="lib/activation.jar">
