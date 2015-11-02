@@ -380,6 +380,9 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
 
         action = actionHandler.createAction(this, actions.MERGEMODE);
         installKey("F9", action);
+        
+        action = actionHandler.createAction(this, actions.QUIT);
+        installKey("control Q", action);
 
         if (!STANDALONE_INSTALLKEY_OPTION.isEnabled()) {
             action = actionHandler.createAction(this, actions.HELP);
@@ -395,9 +398,8 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
 
             action = actionHandler.createAction(this, actions.EXIT);
             installKey("ESCAPE", action);
+            installKey("control W", action);
         }
-         action = actionHandler.createAction(this, actions.EXIT);
-         installKey("control W", action);
     }
 
     public ActionHandler getActionHandler() {
@@ -721,6 +723,23 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
         // Exit a tab!
         doExitTab((Component) getCurrentContentPanel());
     }
+    
+   public void doQuit(ActionEvent ae) {
+      JMeldContentPanelIF cp;
+      // Stop the searchBarDialog if it is showing.
+      if (currentBarDialog == getSearchBarDialog()) {
+         doStopSearch(ae);
+      }
+      if (currentBarDialog != null) {
+         deactivateBarDialog();
+      }
+      cp = getCurrentContentPanel();
+      while (cp != null) {
+         doExitTab((Component) cp);
+         cp = getCurrentContentPanel();
+      }
+      System.exit(0); 
+   }
 
     public void doSettings(ActionEvent ae) {
         AbstractContentPanel content;
