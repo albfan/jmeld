@@ -396,6 +396,8 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
             action = actionHandler.createAction(this, actions.EXIT);
             installKey("ESCAPE", action);
         }
+         action = actionHandler.createAction(this, actions.EXIT);
+         installKey("control W", action);
     }
 
     public ActionHandler getActionHandler() {
