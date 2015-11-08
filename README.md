@@ -1,4 +1,5 @@
 # JMeld
+[![Stories in Ready](https://badge.waffle.io/albfan/jmeld.png?label=ready&title=Ready)](https://waffle.io/albfan/jmeld)
 
 A visual diff and merge tool. It is build to be fast with large files and runs on any operating system.
 
