@@ -39,8 +39,7 @@ import org.jmeld.util.node.BufferNode;
 import org.jmeld.util.node.JMDiffNode;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.event.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.BadLocationException;
@@ -70,6 +69,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
     private boolean showTree;
     private boolean showLevenstein;
     private JSplitPane splitPane;
+    private JCheckBox checkSolutionPath;
 
 
     BufferDiffPanel(JMeldPanel mainPanel) {
@@ -251,8 +251,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         bd2 = filePanels[RIGHT].getBufferDocument();
 
         if (bd1 != null && bd2 != null) {
-            try {
-                currentRevision = diff.diff(bd1.getLines(), bd2.getLines()
+            try {currentRevision = diff.diff(bd1.getLines(), bd2.getLines()
                         , getDiffNode().getIgnore());
 
                 reDisplay();
@@ -414,9 +413,58 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         JPanel panelGraph = new JPanel(new BorderLayout());
         panelGraph.add(new JScrollPane(levensteinGraphTable));
         JPanel bPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+
+        Box box = Box.createHorizontalBox();
         bPanel.add(new JLabel("Min Column Width"));
         bPanel.add(spinner);
-        panelGraph.add(bPanel, BorderLayout.SOUTH);
+        box.add(bPanel);
+        box.add(Box.createHorizontalGlue());
+        checkSolutionPath = new JCheckBox("Show solution path");
+        checkSolutionPath.setSelected(true);
+        checkSolutionPath.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                ((LevenshteinTableModel) levensteinGraphTable.getModel())
+                        .setShowSelectionPath(checkSolutionPath.isSelected());
+                levensteinGraphTable.repaint();
+            }
+        });
+        box.add(checkSolutionPath);
+        box.add(Box.createHorizontalGlue());
+
+        final JLabel cellSelected = new JLabel("(,)");
+        box.add(cellSelected);
+        ListSelectionListener listSelectionListener = new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int originOffset = levensteinGraphTable.getSelectedRow() - 2;
+                int revisedOffset = levensteinGraphTable.getSelectedColumn() - 2;
+                cellSelected.setText("(" + originOffset + "," + revisedOffset + ")");
+                //TODO: Highlight position.
+                levensteinGraphTable.repaint();
+            }
+        };
+        levensteinGraphTable.getColumnModel().getSelectionModel()
+                .addListSelectionListener(listSelectionListener);
+        levensteinGraphTable.getSelectionModel()
+                .addListSelectionListener(listSelectionListener);
+        filePanels[LEFT].getEditor().addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                levensteinGraphTable.changeSelection(e.getDot() + 2, levensteinGraphTable.getSelectedColumn(), false, false);
+                levensteinGraphTable.changeSelection(e.getMark() + 2, levensteinGraphTable.getSelectedColumn(), false, true);
+                levensteinGraphTable.repaint();
+            }
+        });
+        filePanels[RIGHT].getEditor().addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getDot() + 2, false, false);
+                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getMark() + 2, false, true);
+                levensteinGraphTable.repaint();
+            }
+        });
+        panelGraph.add(box, BorderLayout.SOUTH);
         return panelGraph;
     }
 
@@ -426,7 +474,14 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
             try {
                 PlainDocument orgDoc = filePanels[LEFT].getBufferDocument().getDocument();
                 PlainDocument revDoc = filePanels[RIGHT].getBufferDocument().getDocument();
-                LevenshteinTableModel model = new LevenshteinTableModel(orgDoc.getText(0, orgDoc.getLength()), revDoc.getText(0, revDoc.getLength()));
+                LevenshteinTableModel model = new LevenshteinTableModel();
+                model.setOrigin(orgDoc.getText(0, orgDoc.getLength()));
+                model.setDestiny(revDoc.getText(0, revDoc.getLength()));
+                //Add to renderer instead
+                model.setCurrentRevision(currentRevision);
+                model.setFilePanels(filePanels);
+                model.setShowSelectionPath(checkSolutionPath.isSelected());
+                model.buildModel();
 
                 levensteinGraphTable.setModel(model);
                 levensteinGraphTable.setDefaultRenderer(Object.class, model.getCellRenderer());
