@@ -14,21 +14,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>lib</id>
-            <name>lib</name>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>file://${project.basedir}/lib</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -59,10 +44,10 @@
             <version>4.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>jhall</artifactId>
-            <version>2.0</version>
-        </dependency> <!--java help-->
+            <groupId>javax.help</groupId>
+            <artifactId>javahelp</artifactId>
+            <version>2.0.05</version>
+        </dependency>
         <dependency>
             <!--detect file type. Didn't know version, so use last -->
             <groupId>eu.medsea.mimeutil</groupId>
@@ -70,9 +55,9 @@
             <version>2.1.3</version>
         </dependency>
         <dependency>
-            <groupId>com.l2fprod</groupId>
-            <artifactId>common</artifactId>
-            <version>7.3</version>
+            <groupId>com.l2fprod.common</groupId>
+            <artifactId>l2fprod-common-fontchooser</artifactId>
+            <version>6.9.1</version>
         </dependency>
         <dependency>
             <!--some need for xml, didn't find exact version -->
