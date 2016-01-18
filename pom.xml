@@ -22,11 +22,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
             <!-- Must be version 1.0.7, but it's not in maven repos -->
             <groupId>jgoodies</groupId>
             <artifactId>forms</artifactId>
