@@ -10,6 +10,7 @@ import org.jmeld.ui.util.Colors;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -28,7 +29,7 @@ public class LevenshteinTableModel extends DefaultTableModel {
     private JMRevision currentRevision;
     private FilePanel[] filePanels;
     private HashMap<Point,Color> routeDiff;
-    private HashMap<Point, Border> borderChunks;
+    private HashMap<Point, MatteBorder> borderChunks;
     private boolean showSelectionPath;
 
     public void buildModel() {
@@ -120,7 +121,7 @@ public class LevenshteinTableModel extends DefaultTableModel {
                 int yOffsetForLineEnd = revisedBufferDocument.getOffsetForLine(lineNumber) +
                         + revisedBufferDocument.getLineText(lineNumber).length();
                 for (int i = 0; i < yOffsetForLineEnd - yOffsetForLine; i++) {
-                    Border border;
+                    MatteBorder border;
                     if (i == 0) {
                         border = BorderFactory.createMatteBorder(2, 2, 2, 0, Color.BLACK);
                     } else if (i == yOffsetForLineEnd - yOffsetForLine - 1) {
@@ -129,7 +130,7 @@ public class LevenshteinTableModel extends DefaultTableModel {
                         border = BorderFactory.createMatteBorder(2, 0, 2, 0, Color.BLACK);
                     }
                     Point point = new Point(offsetForLineOriginal - 1, i + yOffsetForLine);
-                    borderChunks.put(point, border);
+                    addBorderChunks(point, border);
                     routeDiff.put(point, Colors.ADDED);
                 }
                 xOffset = offsetForLineOriginal;
@@ -141,7 +142,7 @@ public class LevenshteinTableModel extends DefaultTableModel {
                 for (int i = 0; i < xOffsetForLine - offsetForLineOriginal; i++) {
                     Point point = new Point(i + offsetForLineOriginal, offsetForLineRevised - 1);
                     routeDiff.put(point, Colors.DELETED);
-                    Border border;
+                    MatteBorder border;
                     if (i == 0) {
                         border = BorderFactory.createMatteBorder(2, 2, 0, 2, Color.BLACK);
                     } else if (i == xOffsetForLine - offsetForLineOriginal - 1) {
@@ -149,7 +150,7 @@ public class LevenshteinTableModel extends DefaultTableModel {
                     } else {
                         border = BorderFactory.createMatteBorder(0, 2, 0, 2, Color.BLACK);
                     }
-                    borderChunks.put(point, border);
+                    addBorderChunks(point, border);
                 }
                 xOffset = xOffsetForLine;
                 yOffset = offsetForLineRevised;
@@ -175,7 +176,7 @@ public class LevenshteinTableModel extends DefaultTableModel {
                     for (int i = 0; i < removeFromOrigin; i++) {
                         Point point = new Point(i + xOffset, yOffset - 1);
                         routeDiff.put(point, Colors.DELETED);
-                        Border border;
+                        MatteBorder border;
                         if (i == 0) {
                             for (int j = 0; j < addFromRevised; j++) {
                                 if (j == addFromRevised - 1) {
@@ -183,35 +184,50 @@ public class LevenshteinTableModel extends DefaultTableModel {
                                 } else {
                                     border = BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK);
                                 }
-                                borderChunks.put(new Point(i + xOffset, yOffset + j), border);
+                                addBorderChunks(new Point(i + xOffset, yOffset + j), border);
                             }
                             border = BorderFactory.createMatteBorder(2, 2, 0, 0, Color.BLACK);
-                        } else if (i == removeFromOrigin - 1) {
+                            addBorderChunks(point, border);
+                        }
+                        if (i == removeFromOrigin - 1) {
                             border = BorderFactory.createMatteBorder(0, 2, 2, 0, Color.BLACK);
                         } else {
                             border = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK);
-                            borderChunks.put(new Point(i + xOffset, yOffset - 1 + addFromRevised), border);
+                            addBorderChunks(new Point(i + xOffset, yOffset - 1 + addFromRevised), border);
                             border = BorderFactory.createMatteBorder(0, 2, 0, 0, Color.BLACK);
                         }
-                        borderChunks.put(point, border);
+                        addBorderChunks(point, border);
                     }
                     xOffset += removeFromOrigin;
+                    if (addFromRevised == 0) {
+                        Point point = new Point(xOffset - 1, yOffset - 1);
+                        MatteBorder border = BorderFactory.createMatteBorder(0, 0, 0, 2, Color.BLACK);
+                        addBorderChunks(point, border);
+                    }
                     for (int i = 0; i < addFromRevised; i++) {
                         Point point = new Point(xOffset - 1, i + yOffset);
                         routeDiff.put(point, Colors.ADDED);
-                        Border border;
-                        /*if (i == 0) {
+                        MatteBorder border;
+                        if (i == 0 && removeFromOrigin == 0) {
+                            for (int j = 0; j < addFromRevised; j++) {
+                                if (j == addFromRevised - 1) {
+                                    border = BorderFactory.createMatteBorder(2, 0, 0, 2, Color.BLACK);
+                                } else {
+                                    border = BorderFactory.createMatteBorder(2, 0, 0, 0, Color.BLACK);
+                                }
+                                addBorderChunks(new Point(i-1 + xOffset, yOffset + j), border);
+                            }
                             border = BorderFactory.createMatteBorder(2, 2, 0, 0, Color.BLACK);
-                        } else */
+                            addBorderChunks(point, border);
+                        }
                         if (i == addFromRevised - 1) {
                             border = BorderFactory.createMatteBorder(0, 0, 2, 2, Color.BLACK);
                         } else {
                             border = BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK);
                         }
-                        borderChunks.put(point, border);
+                        addBorderChunks(point, border);
                     }
                     yOffset+=addFromRevised;
-                    //offsetForLineRevised++;
                 }
             }
         }
@@ -219,6 +235,33 @@ public class LevenshteinTableModel extends DefaultTableModel {
         for (int i = 0; i < xSize - xOffset; i++) {
             routeDiff.put(new Point(i + xOffset, i + yOffset), Color.GRAY);
         }
+    }
+
+    private void addBorderChunks(Point point, MatteBorder border) {
+        MatteBorder oldborder = borderChunks.get(point);
+        if (oldborder !=null) {
+            Insets oldborderInsets = oldborder.getBorderInsets();
+            Insets borderInsets = border.getBorderInsets();
+            if (oldborderInsets.top == 0 && borderInsets.top > 0) {
+                oldborderInsets.top = borderInsets.top;
+            }
+            if (oldborderInsets.left == 0 && borderInsets.left > 0) {
+                oldborderInsets.left = borderInsets.left;
+            }
+            if (oldborderInsets.right == 0 && borderInsets.right > 0) {
+                oldborderInsets.right = borderInsets.right;
+            }
+            if (oldborderInsets.bottom == 0 && borderInsets.bottom > 0) {
+                oldborderInsets.bottom = borderInsets.bottom;
+            }
+            border = BorderFactory.createMatteBorder(
+                    oldborderInsets.top,
+                    oldborderInsets.left,
+                    oldborderInsets.bottom,
+                    oldborderInsets.right,
+                    border.getMatteColor());
+        }
+        borderChunks.put(point, border);
     }
 
     private Vector newVector(int size) {
