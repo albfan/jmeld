@@ -8,7 +8,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * Created by alberto on 16/11/14.
  */
-class JMChunkNode extends DefaultMutableTreeNode {
+public class JMChunkNode extends DefaultMutableTreeNode {
     private JMChunk chunk;
     private String string;
 

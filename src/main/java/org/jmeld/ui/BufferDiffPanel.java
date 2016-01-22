@@ -33,6 +33,8 @@ import org.jmeld.ui.text.AbstractBufferDocument;
 import org.jmeld.ui.text.BufferDocumentIF;
 import org.jmeld.ui.text.JMDocumentEvent;
 import org.jmeld.ui.tree.DiffTree;
+import org.jmeld.ui.tree.JMChange;
+import org.jmeld.ui.tree.JMChunkNode;
 import org.jmeld.util.StringUtil;
 import org.jmeld.util.conf.ConfigurationListenerIF;
 import org.jmeld.util.node.BufferNode;
@@ -40,12 +42,19 @@ import org.jmeld.util.node.JMDiffNode;
 
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.PlainDocument;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -353,6 +362,58 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         if (isShowTree()) {
             scrollTreePane = new JScrollPane();
             diffTree = new DiffTree();
+            diffTree.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent me) {
+                    TreePath tp = diffTree.getPathForLocation(me.getX(), me.getY());
+                    if (tp != null) {
+                        DefaultMutableTreeNode node = (DefaultMutableTreeNode)tp.getLastPathComponent();
+
+                        DefaultMutableTreeNode root = (DefaultMutableTreeNode)node.getRoot();
+                        Object userObject = null;
+                        while (node != root) {
+                            userObject = node.getUserObject();
+                            if (userObject instanceof JMDelta) {
+                                doSelection((JMDelta) userObject);
+                                break;
+                            }
+                            node = (DefaultMutableTreeNode)node.getParent();
+                        }
+                    }
+                }
+
+                private void doSelection(JMDelta userObject) {
+                    JMDelta delta = userObject;
+                    int firstLine = delta.getOriginal().getAnchor();
+                    int lines = delta.getOriginal().getSize();
+                    int firstCol = delta.getRevised().getAnchor();
+                    int cols = delta.getRevised().getSize();
+
+                    try {
+                        int lineStartOffset = filePanels[LEFT].getEditor().getLineStartOffset(firstLine);
+                        int lineEndOffset = filePanels[LEFT].getEditor().getLineEndOffset(firstLine + lines - 1);
+                        int colStartOffset = filePanels[RIGHT].getEditor().getLineStartOffset(firstCol);
+                        int colEndOffset = filePanels[RIGHT].getEditor().getLineEndOffset(firstCol + cols - 1);
+
+                        int lineOffset = 0;
+                        if (delta.isAdd()) {
+                            lineOffset++;
+                        }
+
+                        int colOffset = 0;
+                        if (delta.isDelete()) {
+                            colOffset++;
+                        }
+                        levensteinGraphTable.changeSelection(lineStartOffset + 2 -lineOffset, colStartOffset +2 -colOffset, false, false);
+                        levensteinGraphTable.changeSelection(lineEndOffset + 2 -1, colEndOffset +2 -1, false, true);
+
+                        levensteinGraphTable.repaint();
+                    } catch (BadLocationException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             scrollTreePane.setViewportView(diffTree);
         }
         return scrollTreePane;
@@ -437,9 +498,12 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         ListSelectionListener listSelectionListener = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                int originOffset = levensteinGraphTable.getSelectedRow() - 2;
-                int revisedOffset = levensteinGraphTable.getSelectedColumn() - 2;
-                cellSelected.setText("(" + originOffset + "," + revisedOffset + ")");
+                int rowOrigin = levensteinGraphTable.getSelectedRow() - 2;
+                int rowCount = levensteinGraphTable.getSelectedRowCount() +1 - 2;
+                int columnOrigin = levensteinGraphTable.getSelectedColumn() - 2;
+                int columnCount = levensteinGraphTable.getSelectedColumnCount() +1 - 2;
+                cellSelected.setText("(" + rowOrigin + "," + (rowOrigin + rowCount) + ")," +
+                        " (" + columnOrigin + "," + (columnOrigin + columnCount) + ")");
                 //TODO: Highlight position.
                 levensteinGraphTable.repaint();
             }
@@ -451,7 +515,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         filePanels[LEFT].getEditor().addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                levensteinGraphTable.changeSelection(e.getDot() + 2, levensteinGraphTable.getSelectedColumn(), false, false);
+                levensteinGraphTable.changeSelection(e.getDot() + 2 -1, levensteinGraphTable.getSelectedColumn(), false, false);
                 levensteinGraphTable.changeSelection(e.getMark() + 2, levensteinGraphTable.getSelectedColumn(), false, true);
                 levensteinGraphTable.repaint();
             }
@@ -459,7 +523,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         filePanels[RIGHT].getEditor().addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getDot() + 2, false, false);
+                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getDot() + 2 -1, false, false);
                 levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getMark() + 2, false, true);
                 levensteinGraphTable.repaint();
             }

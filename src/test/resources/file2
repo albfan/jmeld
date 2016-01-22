@@ -1,12 +1,11 @@
-abdefc
+eee abdefcc aaa 4545
+asdf asdfa aaa  23123
 
-function(bar) {
-   echo bye
-}
 
-}
-
+abdefcc
 function(bazz) {
    echo nothing
 }
-
+function(bazz) {
+   echo nothing
+}
