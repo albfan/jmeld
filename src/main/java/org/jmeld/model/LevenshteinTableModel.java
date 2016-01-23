@@ -156,19 +156,21 @@ public class LevenshteinTableModel extends DefaultTableModel {
                 yOffset = offsetForLineRevised;
             } else if (next.isChange()) {
                 List<JMDelta> changedDeltas = next.getChangeRevision().getDeltas();
-                int startOffset = 0;
+                int startOffsetOrg = 0;
+                int startOffsetRev = 0;
+                xOffset = offsetForLineOriginal;
+                yOffset = offsetForLineRevised;
                 for (Iterator<JMDelta> jmDeltaIterator = changedDeltas.iterator(); jmDeltaIterator.hasNext(); ) {
                     JMDelta changeDelta = jmDeltaIterator.next();
 
                     JMChunk originalChange = changeDelta.getOriginal();
                     JMChunk revisedChange = changeDelta.getRevised();
-                    int sameChars = originalChange.getAnchor();
-                    xOffset = offsetForLineOriginal;
-                    yOffset = offsetForLineRevised;
-                    for (int i = 0; i < sameChars - startOffset; i++) {
-                        routeDiff.put(new Point(i + xOffset + startOffset, i + yOffset + startOffset), Color.GRAY);
+                    int sameChars = originalChange.getAnchor() - xOffset;
+                    for (int i = 0; i < sameChars; i++) {
+                        routeDiff.put(new Point(i + xOffset, i + yOffset), Color.GRAY);
                     }
-                    startOffset = sameChars + originalChange.getSize();
+                    startOffsetOrg = sameChars + originalChange.getSize();
+                    startOffsetRev = sameChars + revisedChange.getSize();
                     xOffset += sameChars;
                     yOffset += sameChars;
                     int removeFromOrigin = originalChange.getSize();
