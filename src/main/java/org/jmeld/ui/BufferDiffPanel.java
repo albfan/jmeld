@@ -370,11 +370,17 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
                         DefaultMutableTreeNode node = (DefaultMutableTreeNode)tp.getLastPathComponent();
 
                         DefaultMutableTreeNode root = (DefaultMutableTreeNode)node.getRoot();
-                        Object userObject = null;
                         while (node != root) {
-                            userObject = node.getUserObject();
+                            Object userObject = node.getUserObject();
                             if (userObject instanceof JMDelta) {
-                                doSelection((JMDelta) userObject);
+                                Object parentUserObject = ((DefaultMutableTreeNode) node.getParent()).getUserObject();
+                                JMDelta lineDelta = (JMDelta) userObject;
+                                JMDelta wordDelta = null;
+                                if (parentUserObject instanceof JMDelta) {
+                                    wordDelta = lineDelta;
+                                    lineDelta = (JMDelta) parentUserObject;
+                                }
+                                doSelection(lineDelta, wordDelta);
                                 break;
                             }
                             node = (DefaultMutableTreeNode)node.getParent();
@@ -382,33 +388,59 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
                     }
                 }
 
-                private void doSelection(JMDelta userObject) {
-                    JMDelta delta = userObject;
-                    int firstLine = delta.getOriginal().getAnchor();
-                    int lines = delta.getOriginal().getSize();
-                    int firstCol = delta.getRevised().getAnchor();
-                    int cols = delta.getRevised().getSize();
+                private void doSelection(JMDelta lineDelta, JMDelta wordDelta) {
+                    int firstLine = lineDelta.getOriginal().getAnchor();
+                    int lines = lineDelta.getOriginal().getSize();
+                    int firstCol = lineDelta.getRevised().getAnchor();
+                    int cols = lineDelta.getRevised().getSize();
 
+                    int lineStartOffset = 0;
+                    int lineEndOffset = 0;
+                    int colStartOffset = 0;
+                    int colEndOffset = 0;
                     try {
-                        int lineStartOffset = filePanels[LEFT].getEditor().getLineStartOffset(firstLine);
-                        int lineEndOffset = filePanels[LEFT].getEditor().getLineEndOffset(firstLine + lines - 1);
-                        int colStartOffset = filePanels[RIGHT].getEditor().getLineStartOffset(firstCol);
-                        int colEndOffset = filePanels[RIGHT].getEditor().getLineEndOffset(firstCol + cols - 1);
+                        FilePanel leftFilePanel = filePanels[LEFT];
+                        FilePanel rightFilePanel = filePanels[RIGHT];
+                        lineStartOffset = leftFilePanel.getEditor().getLineStartOffset(firstLine);
+                        lineEndOffset = leftFilePanel.getEditor().getLineEndOffset(firstLine + lines - 1);
+                        colStartOffset = rightFilePanel.getEditor().getLineStartOffset(firstCol);
+                        colEndOffset = rightFilePanel.getEditor().getLineEndOffset(firstCol + cols - 1);
 
                         int lineOffset = 0;
-                        if (delta.isAdd()) {
-                            lineOffset++;
+                        if (lineDelta.isAdd()) {
+                            lineOffset--;
                         }
 
                         int colOffset = 0;
-                        if (delta.isDelete()) {
-                            colOffset++;
+                        if (lineDelta.isDelete()) {
+                            colOffset--;
                         }
-                        levensteinGraphTable.changeSelection(lineStartOffset + 2 -lineOffset, colStartOffset +2 -colOffset, false, false);
-                        levensteinGraphTable.changeSelection(lineEndOffset + 2 -1, colEndOffset +2 -1, false, true);
+
+                        int startRow = lineStartOffset + 2 + lineOffset;
+                        int endRow = lineEndOffset + 2 - 1;
+                        int startCol = colStartOffset + 2 + colOffset;
+                        int endCol = colEndOffset + 2 - 1;
+                        if (wordDelta != null) {
+                            int offsetLine = 0;
+                            if (wordDelta.isChange() || wordDelta.isDelete()) {
+                                offsetLine--;
+                            }
+                            int offsetCol = 0;
+                            if (wordDelta.isChange() || wordDelta.isAdd()) {
+                                offsetCol--;
+                            }
+                            startRow += wordDelta.getOriginal().getAnchor();
+                            endRow = startRow + wordDelta.getOriginal().getSize() +offsetLine;
+                            startCol += wordDelta.getRevised().getAnchor();
+                            endCol = startCol + wordDelta.getRevised().getSize() +offsetCol;
+                        }
+                        levensteinGraphTable.changeSelection(startRow, startCol, false, false);
+                        levensteinGraphTable.changeSelection(endRow, endCol, false, true);
 
                         levensteinGraphTable.repaint();
                     } catch (BadLocationException e) {
+                        System.err.printf("(%d, %d, %d, %d)%n", lineStartOffset, lineEndOffset, colStartOffset, colEndOffset);
+                        System.err.printf("(%d, %d, %d, %d)%n", firstLine, lines, firstCol, cols);
                         e.printStackTrace();
                     }
                 }
