@@ -33,8 +33,6 @@ import org.jmeld.ui.text.AbstractBufferDocument;
 import org.jmeld.ui.text.BufferDocumentIF;
 import org.jmeld.ui.text.JMDocumentEvent;
 import org.jmeld.ui.tree.DiffTree;
-import org.jmeld.ui.tree.JMChange;
-import org.jmeld.ui.tree.JMChunkNode;
 import org.jmeld.util.StringUtil;
 import org.jmeld.util.conf.ConfigurationListenerIF;
 import org.jmeld.util.node.BufferNode;
@@ -42,17 +40,16 @@ import org.jmeld.util.node.JMDiffNode;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.PlainDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -363,6 +360,138 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
             scrollTreePane = new JScrollPane();
             diffTree = new DiffTree();
             diffTree.addMouseListener(new MouseAdapter() {
+
+                private void showPopup(MouseEvent e) {
+                    int x = e.getX();
+                    int y = e.getY();
+                    JTree tree = (JTree)e.getSource();
+                    TreePath path = tree.getPathForLocation(x, y);
+                    if (path == null) {
+                        return;
+                    }
+
+                    tree.setSelectionPath(path);
+
+                    DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+
+                    final Object userObject = node.getUserObject();
+
+                    JPopupMenu popup = new JPopupMenu();
+                    if (userObject instanceof JMDelta) {
+                        JMenuItem menuItem = buildDeleteItem(userObject);
+                        menuItem.setEnabled(enableDeleteAction(node));
+                        popup.add(menuItem);
+                    }
+                    if (userObject instanceof JMRevision) {
+                        JMenuItem menuItem = buildInsertItem();
+                        menuItem.setEnabled(enableInsertAction(node));
+                        popup.add(menuItem);
+                    }
+
+                    popup.show(tree, x, y);
+                }
+
+                private boolean enableDeleteAction(DefaultMutableTreeNode node) {
+                    Object parentUserObject = ((DefaultMutableTreeNode) (node.getParent())).getUserObject();
+                    return parentUserObject instanceof JMRevision
+                            || (parentUserObject instanceof JMDelta && ((JMDelta)parentUserObject).isChange());
+                }
+
+                private JMenuItem buildDeleteItem(final Object userObject) {
+                    JMenuItem menuItem = new JMenuItem("Delete node");
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            List<JMDelta> deltas = currentRevision.getDeltas();
+                            for (JMDelta delta : deltas) {
+                                if (deleteDelta(deltas, delta)) {
+                                    return;
+                                }
+                                if (delta.isChange()){
+                                    List<JMDelta> changeDeltas = delta.getChangeRevision().getDeltas();
+                                    for (JMDelta changeDelta : changeDeltas) {
+                                        if (deleteDelta(changeDeltas, changeDelta)) {
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        private boolean deleteDelta(List<JMDelta> deltas, JMDelta delta) {
+                            if (delta.equals(userObject)) {
+                                deltas.remove(delta);
+                                reDisplay();
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                    return menuItem;
+                }
+
+                private JMenuItem buildInsertItem() {
+                    JMenuItem menuItem;
+                    menuItem = new JMenuItem("Insert node");
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            List<JMDelta> deltas = currentRevision.getDeltas();
+                            for (int i = 0; i < deltas.size(); i++) {
+                                JMDelta delta = deltas.get(i);
+                                //TODO: Locate position inside deltas
+                            }
+                            final int selectedRow = levensteinGraphTable.getSelectedRow();
+                            final int selectedColumn = levensteinGraphTable.getSelectedColumn();
+                            final int selectedRowCount = levensteinGraphTable.getSelectedRowCount();
+                            final int selectedColumnCount = levensteinGraphTable.getSelectedColumnCount();
+
+                            try {
+                                JTextArea leftEditor = filePanels[LEFT].getEditor();
+                                int firstLine = leftEditor.getLineOfOffset(selectedRow - 2);
+                                int endLine = leftEditor.getLineOfOffset(selectedRow - 2 + selectedRowCount - 1);
+                                JMChunk original = new JMChunk(firstLine, endLine - firstLine + 1);
+
+                                JTextArea rightEditor = filePanels[RIGHT].getEditor();
+                                int firstCol = rightEditor.getLineOfOffset(selectedColumn - 2);
+                                int endCol = rightEditor.getLineOfOffset(selectedColumn - 2 + selectedColumnCount - 1);
+                                JMChunk revised = new JMChunk(firstCol, endCol - firstCol + 1);
+                                JMDelta delta = new JMDelta(original, revised);
+                                delta.setRevision(currentRevision);
+                                JMRevision changeRevision = currentRevision.createChangeRevision(original, revised, false);
+                                List<JMDelta> changeDeltas = changeRevision.getDeltas();
+                                changeDeltas.add(new JMDelta(new JMChunk(selectedRow -2 - leftEditor.getLineStartOffset(firstLine), selectedRowCount)
+                                        , new JMChunk(selectedColumn -2 - leftEditor.getLineStartOffset(firstCol), selectedColumnCount)
+                                ));
+                                delta.setChangeRevision(changeRevision);
+                                deltas.add(delta);
+                                reDisplay();
+                            } catch (BadLocationException e1) {
+                                System.out.println("Error building delta: " + e1.getMessage());
+                                e1.printStackTrace();
+                            }
+                        }
+                    });
+                    return menuItem;
+                }
+
+                private boolean enableInsertAction(DefaultMutableTreeNode node) {
+                    int selectedRow = levensteinGraphTable.getSelectedRow();
+                    int selectedColumn = levensteinGraphTable.getSelectedColumn();
+                    int selectedRowCount = levensteinGraphTable.getSelectedRowCount();
+                    int selectedColumnCount = levensteinGraphTable.getSelectedColumnCount();
+                    //TODO: if selection is next to a unchanged path
+
+                    boolean deltaDefined = selectedColumnCount > 0 || selectedRowCount > 0;
+                    return deltaDefined;
+                }
+
+                public void mousePressed(MouseEvent e) {
+                    if (e.isPopupTrigger()) {
+                        showPopup(e);
+                    }
+                }
+
                 @Override
                 public void mouseClicked(MouseEvent me) {
                     TreePath tp = diffTree.getPathForLocation(me.getX(), me.getY());

@@ -25,6 +25,9 @@ public class JMRevision
     // Class variables:
     private static boolean incrementalUpdateActivated = false;
 
+    private static boolean debug = false;
+
+
     // Instance variables:
     private Object[] orgArray;
     private Object[] revArray;
@@ -344,5 +347,77 @@ public class JMRevision
         }
 
         return sb.toString();
+    }
+
+    public JMRevision createChangeRevision(JMChunk original, JMChunk revised, boolean calculateDeltas) {
+
+        String originalString = getOriginalString(original);
+        String revisedString = getRevisedString(revised);
+
+        try {
+            WordTokenizer t = TokenizerFactory.getInnerDiffTokenizer();
+            List<String> tokensOrg = t.getTokens(originalString);
+            List<String> tokensRev = t.getTokens(revisedString);
+
+            int[] tokensOrgIndex = createIndex(tokensOrg, "tokensOrgIndex");
+            int[] tokensRevIndex = createIndex(tokensRev, "tokensRevIndex");
+
+            JMRevision changeRevision = new JMRevision(cloneCharacters(originalString.toCharArray()),
+                    cloneCharacters(revisedString.toCharArray()));
+            changeRevision.setIgnore(Ignore.NULL_IGNORE);
+
+            if (calculateDeltas) {
+                JMRevision rev = new JMDiff().diff(tokensOrg, tokensRev, Ignore.NULL_IGNORE);
+                for (JMDelta d : rev.getDeltas()) {
+
+                    JMDelta d2 = new JMDelta(createChunk(tokensOrgIndex, d.getOriginal()),
+                            createChunk(tokensRevIndex, d.getRevised()));
+                    changeRevision.add(d2);
+
+                    debug("delta = " + d + " -> " + d2);
+                }
+            }
+
+            return changeRevision;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    private JMChunk createChunk(int[] index, JMChunk chunk) {
+        int anchor = chunk.getAnchor();
+        int size = chunk.getSize();
+        int oAnchor = anchor == 0 ? 0 : index[anchor - 1];
+        int oLength = size > 0 ? (index[anchor + size - 1] - oAnchor) : 0;
+        return new JMChunk(oAnchor, oLength);
+    }
+
+    private int[] createIndex(List<String> tokens, final String name) {
+        int[] index = new int[tokens.size()];
+        for (int i = 0; i < tokens.size(); i++) {
+            index[i] = tokens.get(i).length();
+            if (i > 0) {
+                index[i] += index[i - 1];
+            }
+            debug(name + "[" + i + "] = " + index[i] + " \"" + tokens.get(i) + "\"");
+        }
+        return index;
+    }
+
+    private Character[] cloneCharacters(char[] chars) {
+        Character[] chars2 = new Character[chars.length];
+        for (int j = 0; j < chars.length; j++) {
+            chars2[j] = chars[j];
+        }
+        return chars2;
+    }
+
+    private void debug(String s) {
+        if (debug) {
+            System.out.println(s);
+        }
     }
 }
