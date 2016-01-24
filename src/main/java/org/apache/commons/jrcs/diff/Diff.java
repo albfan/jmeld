@@ -134,18 +134,14 @@ public class Diff
     }
 
     this.orig = original;
-    if (algorithm != null)
-    {
-      this.algorithm = algorithm;
-    }
-    else
-    {
-      this.algorithm = defaultAlgorithm();
+    if (algorithm != null) {
+        this.algorithm = algorithm;
+    } else {
+        this.algorithm = defaultAlgorithm();
     }
   }
 
-  protected DiffAlgorithm defaultAlgorithm()
-  {
+  protected DiffAlgorithm defaultAlgorithm() {
     return new MyersDiff();
   }
 

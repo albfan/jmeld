@@ -36,31 +36,36 @@ public class JMDiff
 
   public JMDiff()
   {
-    MyersDiff myersDiff;
+      // Timing/Memory (msec/Mb):
+      //                                             Myers  Eclipse GNU Hunt
+      //  ================================================================================
+      //  2 Totally different files  (116448 lines)  31317  1510    340 195
+      //  2 Totally different files  (232896 lines)  170673 212     788 354
+      //  2 Medium different files  (1778583 lines)  41     55      140 24679
+      //  2 Medium different files (10673406 lines)  216    922     632 >300000
+      //  2 Equal files             (1778583 lines)  32     55      133 24632
+      //  2 Equal files            (10673406 lines)  121    227     581 >60000
+      MyersDiff myersDiff = new MyersDiff();
+      myersDiff.checkMaxTime(true);
 
-    // Timing/Memory (msec/Mb):
-    //                                             Myers  Eclipse GNU Hunt
-    //  ================================================================================
-    //  2 Totally different files  (116448 lines)  31317  1510    340 195
-    //  2 Totally different files  (232896 lines)  170673 212     788 354
-    //  2 Medium different files  (1778583 lines)  41     55      140 24679
-    //  2 Medium different files (10673406 lines)  216    922     632 >300000
-    //  2 Equal files             (1778583 lines)  32     55      133 24632
-    //  2 Equal files            (10673406 lines)  121    227     581 >60000
-    myersDiff = new MyersDiff();
-    myersDiff.checkMaxTime(true);
+      // MyersDiff is the fastest but can be very slow when 2 files
+      // are very different.
+      algorithms = new ArrayList<JMDiffAlgorithmIF>();
+      algorithms.add(myersDiff);
 
-    // MyersDiff is the fastest but can be very slow when 2 files
-    // are very different.
-    algorithms = new ArrayList<JMDiffAlgorithmIF>();
-    //algorithms.add(myersDiff);
+      // EclipseDiff looks like Myersdiff but is slower.
+      // It performs much better if the files are totally different
+      algorithms.add(new EclipseDiff());
 
-    // EclipseDiff looks like Myersdiff but is slower.
-    // It performs much better if the files are totally different
-    algorithms.add(new EclipseDiff());
+      // HuntDiff (from netbeans) is very, very slow
+      HuntDiff huntDiff = new HuntDiff();
+      huntDiff.checkMaxTime(true);
+      algorithms.add(huntDiff);
 
-    // HuntDiff (from netbeans) is very, very slow
-    //algorithms.add(new HuntDiff());
+      // GNUDiff is a little bit slower than Myersdiff but performs way
+      //   better if the files are very different.
+      // Don't use it for now because of GPL
+      algorithms.add(new GNUDiff());
   }
 
   public JMRevision diff(List<String> a, List<String> b, Ignore ignore)
