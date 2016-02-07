@@ -10,6 +10,7 @@ import org.jmeld.ui.util.Colors;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -30,12 +31,14 @@ public class LevenshteinTableModel extends DefaultTableModel {
     private FilePanel[] filePanels;
     private HashMap<Point,Color> routeDiff;
     private HashMap<Point, MatteBorder> borderChunks;
+    private HashMap<Point, MatteBorder> borderSelections;
     private boolean showSelectionPath;
 
     public void buildModel() {
         if (!isAllDataAvaliable()) {
             return;
         }
+        borderSelections = new HashMap<>();
         setDataVector(newVector(origin.length() + 2), newVector(destiny.length() + 2));
         buildSolutionPath();
         int rowCount = getRowCount();
@@ -110,26 +113,37 @@ public class LevenshteinTableModel extends DefaultTableModel {
             JMDelta next = iterator.next();
             JMChunk original = next.getOriginal();
             JMChunk revised = next.getRevised();
-            int offsetForLineOriginal = originalBufferDocument.getOffsetForLine(original.getAnchor());
-            int offsetForLineRevised = revisedBufferDocument.getOffsetForLine(revised.getAnchor());
+            int originalLines = originalBufferDocument.getNumberOfLines();
+            int revisedLines = revisedBufferDocument.getNumberOfLines();
+            int offsetForLineOriginal;
+            if (original.getAnchor() == originalLines) {
+                offsetForLineOriginal = originalBufferDocument.getOffsetForLine(original.getAnchor() - 1) + 1;
+            } else {
+                offsetForLineOriginal = originalBufferDocument.getOffsetForLine(original.getAnchor());
+            }
+            int offsetForLineRevised;
+            if (revised.getAnchor() == revisedLines) {
+                offsetForLineRevised = revisedBufferDocument.getOffsetForLine(revised.getAnchor() - 1) + 1;
+            } else {
+                offsetForLineRevised = revisedBufferDocument.getOffsetForLine(revised.getAnchor());
+            }
             for (int i = 0; i < offsetForLineOriginal - xOffset; i++) {
                 routeDiff.put(new Point(i + xOffset, i + yOffset), Color.GRAY);
             }
             if (next.isAdd()) {
-                int yOffsetForLine = revisedBufferDocument.getOffsetForLine(revised.getAnchor());
                 int lineNumber = revised.getAnchor() + revised.getSize() - 1;
                 int yOffsetForLineEnd = revisedBufferDocument.getOffsetForLine(lineNumber) +
                         + revisedBufferDocument.getLineText(lineNumber).length();
-                for (int i = 0; i < yOffsetForLineEnd - yOffsetForLine; i++) {
+                for (int i = 0; i < yOffsetForLineEnd - offsetForLineRevised; i++) {
                     MatteBorder border;
                     if (i == 0) {
                         border = BorderFactory.createMatteBorder(2, 2, 2, 0, Color.BLACK);
-                    } else if (i == yOffsetForLineEnd - yOffsetForLine - 1) {
+                    } else if (i == yOffsetForLineEnd - offsetForLineRevised - 1) {
                         border = BorderFactory.createMatteBorder(2, 0, 2, 2, Color.BLACK);
                     } else {
                         border = BorderFactory.createMatteBorder(2, 0, 2, 0, Color.BLACK);
                     }
-                    Point point = new Point(offsetForLineOriginal - 1, i + yOffsetForLine);
+                    Point point = new Point(offsetForLineOriginal - 1, i + offsetForLineRevised);
                     addBorderChunks(point, border);
                     routeDiff.put(point, Colors.ADDED);
                 }
@@ -332,6 +346,16 @@ public class LevenshteinTableModel extends DefaultTableModel {
                 }
 
                 Border border = borderChunks.get(point);
+                Border borderSelection = borderSelections.get(point);
+                if (border == null) {
+                    if (borderSelection != null) {
+                        border = borderSelection;
+                    }
+                } else {
+                    if (borderSelection != null) {
+                        border = new CompoundBorder(border, borderSelection);
+                    }
+                }
                 if (border != null) {
                     ((JLabel)tableCellRendererComponent).setBorder(border);
                 }
@@ -366,5 +390,13 @@ public class LevenshteinTableModel extends DefaultTableModel {
 
     public void setShowSelectionPath(boolean showSelectionPath) {
         this.showSelectionPath = showSelectionPath;
+    }
+
+    public HashMap<Point, MatteBorder> getBorderSelections() {
+        return borderSelections;
+    }
+
+    public void setBorderSelections(HashMap<Point, MatteBorder> borderSelection) {
+        this.borderSelections = borderSelection;
     }
 }

@@ -39,6 +39,7 @@ import org.jmeld.util.node.BufferNode;
 import org.jmeld.util.node.JMDiffNode;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -53,6 +54,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class BufferDiffPanel extends AbstractContentPanel implements ConfigurationListenerIF {
@@ -77,6 +79,14 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
     private JSplitPane splitPane;
     private JCheckBox checkSolutionPath;
 
+    static Color selectionColor = Color.BLUE;
+    static Color newColor = Color.CYAN;
+    static Color mixColor = Color.WHITE;
+    static {
+        selectionColor = new Color(selectionColor.getRed() * newColor.getRed()/mixColor.getRed()
+                ,selectionColor.getGreen() * newColor.getGreen()/mixColor.getGreen()
+                ,selectionColor.getBlue() * newColor.getBlue()/mixColor.getBlue());
+    }
 
     BufferDiffPanel(JMeldPanel mainPanel) {
         this.mainPanel = mainPanel;
@@ -530,9 +540,19 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
                     try {
                         FilePanel leftFilePanel = filePanels[LEFT];
                         FilePanel rightFilePanel = filePanels[RIGHT];
-                        lineStartOffset = leftFilePanel.getEditor().getLineStartOffset(firstLine);
+                        int leftLineCount = leftFilePanel.getEditor().getLineCount();
+                        int rightLineCount = rightFilePanel.getEditor().getLineCount();
+                        if (firstLine == leftLineCount) {
+                            lineStartOffset = leftFilePanel.getEditor().getLineEndOffset(firstLine - 1);
+                        } else {
+                            lineStartOffset = leftFilePanel.getEditor().getLineStartOffset(firstLine);
+                        }
                         lineEndOffset = leftFilePanel.getEditor().getLineEndOffset(firstLine + lines - 1);
-                        colStartOffset = rightFilePanel.getEditor().getLineStartOffset(firstCol);
+                        if (firstCol == rightLineCount) {
+                            colStartOffset = rightFilePanel.getEditor().getLineEndOffset(firstCol - 1);
+                        } else {
+                            colStartOffset = rightFilePanel.getEditor().getLineStartOffset(firstCol);
+                        }
                         colEndOffset = rightFilePanel.getEditor().getLineEndOffset(firstCol + cols - 1);
 
                         int lineOffset = 0;
@@ -558,14 +578,28 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
                             if (wordDelta.isChange() || wordDelta.isAdd()) {
                                 offsetCol--;
                             }
-                            startRow += wordDelta.getOriginal().getAnchor();
-                            endRow = startRow + wordDelta.getOriginal().getSize() +offsetLine;
-                            startCol += wordDelta.getRevised().getAnchor();
-                            endCol = startCol + wordDelta.getRevised().getSize() +offsetCol;
+                            JMChunk wordDeltaOriginal = wordDelta.getOriginal();
+                            JMChunk wordDeltaRevised = wordDelta.getRevised();
+                            startRow += wordDeltaOriginal.getAnchor();
+                            endRow = startRow + wordDeltaOriginal.getSize() +offsetLine;
+                            startCol += wordDeltaRevised.getAnchor();
+                            endCol = startCol + wordDeltaRevised.getSize() +offsetCol;
+                        }
+                        levensteinGraphTable.clearSelection();
+                        if (lineDelta.isAdd()) {
+                            HashMap<Point, MatteBorder> rowLineSelection = createRowLineSelection(startRow - 2);
+                            ((LevenshteinTableModel)levensteinGraphTable.getModel()).setBorderSelections(rowLineSelection);
+                            startRow = -1;
+                            endRow = -1;
+                        }
+                        if (lineDelta.isDelete()) {
+                            HashMap<Point, MatteBorder> columnLineSelection = createColumnLineSelection(startCol - 2);
+                            ((LevenshteinTableModel)levensteinGraphTable.getModel()).setBorderSelections(columnLineSelection);
+                            startCol = -1;
+                            endCol = -1;
                         }
                         levensteinGraphTable.changeSelection(startRow, startCol, false, false);
                         levensteinGraphTable.changeSelection(endRow, endCol, false, true);
-
                         levensteinGraphTable.repaint();
                     } catch (BadLocationException e) {
                         System.err.printf("(%d, %d, %d, %d)%n", lineStartOffset, lineEndOffset, colStartOffset, colEndOffset);
@@ -678,13 +712,22 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
             public void caretUpdate(CaretEvent e) {
                 int dot = e.getDot();
                 int mark = e.getMark();
-                if (mark > dot) {
-                    int temp = dot;
-                    dot = mark;
-                    mark = temp;
+                HashMap<Point, MatteBorder> borderSelection;
+                levensteinGraphTable.clearSelection();
+                if (dot == mark) {
+                    borderSelection = createRowLineSelection(dot);
+                    levensteinGraphTable.scrollRectToVisible(levensteinGraphTable.getCellRect(dot, 0, true));
+                } else {
+                    borderSelection = new HashMap<>();
+                    if (mark > dot) {
+                        int temp = dot;
+                        dot = mark;
+                        mark = temp;
+                    }
+                    levensteinGraphTable.changeSelection(dot + 2 - 1, levensteinGraphTable.getSelectedColumn(), false, false);
+                    levensteinGraphTable.changeSelection(mark + 2, levensteinGraphTable.getSelectedColumn(), false, true);
                 }
-                levensteinGraphTable.changeSelection(dot + 2 -1, levensteinGraphTable.getSelectedColumn(), false, false);
-                levensteinGraphTable.changeSelection(mark + 2, levensteinGraphTable.getSelectedColumn(), false, true);
+                ((LevenshteinTableModel) levensteinGraphTable.getModel()).setBorderSelections(borderSelection);
                 levensteinGraphTable.repaint();
             }
         });
@@ -693,18 +736,43 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
             public void caretUpdate(CaretEvent e) {
                 int dot = e.getDot();
                 int mark = e.getMark();
-                if (mark > dot) {
-                    int temp = dot;
-                    dot = mark;
-                    mark = temp;
+                HashMap<Point, MatteBorder> borderSelection;
+                levensteinGraphTable.clearSelection();
+                if (dot == mark) {
+                    borderSelection = createColumnLineSelection(dot);
+                    levensteinGraphTable.scrollRectToVisible(levensteinGraphTable.getCellRect(0, dot, true));
+                } else {
+                    borderSelection = new HashMap<>();
+                    if (mark > dot) {
+                        int temp = dot;
+                        dot = mark;
+                        mark = temp;
+                    }
+                    levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), dot + 2 - 1, false, false);
+                    levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), mark + 2, false, true);
                 }
-                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), dot + 2 - 1, false, false);
-                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), mark + 2, false, true);
+                ((LevenshteinTableModel) levensteinGraphTable.getModel()).setBorderSelections(borderSelection);
                 levensteinGraphTable.repaint();
             }
         });
         panelGraph.add(box, BorderLayout.SOUTH);
         return panelGraph;
+    }
+
+    private HashMap<Point, MatteBorder> createRowLineSelection(int row) {
+        HashMap<Point, MatteBorder> borderSelection = new HashMap<>();
+        for (int i = 0; i < filePanels[LEFT].getBufferDocument().getDocument().getLength(); i++) {
+            borderSelection.put(new Point(row, i), BorderFactory.createMatteBorder(2, 0, 0, 0, selectionColor));
+        }
+        return borderSelection;
+    }
+
+    private HashMap<Point, MatteBorder> createColumnLineSelection(int column) {
+        HashMap<Point, MatteBorder> borderSelection = new HashMap<>();
+        for (int i = 0; i < filePanels[LEFT].getBufferDocument().getDocument().getLength(); i++) {
+            borderSelection.put(new Point(i, column), BorderFactory.createMatteBorder(0, 2, 0, 0, selectionColor));
+        }
+        return borderSelection;
     }
 
     private void refreshLevensteinModel() {
