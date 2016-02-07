@@ -676,16 +676,30 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         filePanels[LEFT].getEditor().addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                levensteinGraphTable.changeSelection(e.getDot() + 2 -1, levensteinGraphTable.getSelectedColumn(), false, false);
-                levensteinGraphTable.changeSelection(e.getMark() + 2, levensteinGraphTable.getSelectedColumn(), false, true);
+                int dot = e.getDot();
+                int mark = e.getMark();
+                if (mark > dot) {
+                    int temp = dot;
+                    dot = mark;
+                    mark = temp;
+                }
+                levensteinGraphTable.changeSelection(dot + 2 -1, levensteinGraphTable.getSelectedColumn(), false, false);
+                levensteinGraphTable.changeSelection(mark + 2, levensteinGraphTable.getSelectedColumn(), false, true);
                 levensteinGraphTable.repaint();
             }
         });
         filePanels[RIGHT].getEditor().addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent e) {
-                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getDot() + 2 -1, false, false);
-                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), e.getMark() + 2, false, true);
+                int dot = e.getDot();
+                int mark = e.getMark();
+                if (mark > dot) {
+                    int temp = dot;
+                    dot = mark;
+                    mark = temp;
+                }
+                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), dot + 2 - 1, false, false);
+                levensteinGraphTable.changeSelection(levensteinGraphTable.getSelectedRow(), mark + 2, false, true);
                 levensteinGraphTable.repaint();
             }
         });
