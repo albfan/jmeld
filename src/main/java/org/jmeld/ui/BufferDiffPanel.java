@@ -1312,6 +1312,7 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
         init();
         refreshDiffNode();
         reDisplay();
+        diff();
     }
 
     private void readConfig() {

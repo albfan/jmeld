@@ -16,38 +16,66 @@
  */
 package org.jmeld.util;
 
-public class TokenizerFactory
-{
-  // class variables:
-  private static TokenizerFactory instance = new TokenizerFactory();
+import org.jmeld.settings.JMeldSettings;
+import org.jmeld.ui.util.TypeTokenizerManager;
+import org.jmeld.util.conf.ConfigurationListenerIF;
 
-  // instance variables:
-  private WordTokenizer innerDiffTokenizer;
-  private WordTokenizer fileNameTokenizer;
+public class TokenizerFactory implements ConfigurationListenerIF {
+    private static TokenizerFactory instance;
 
-  private TokenizerFactory()
-  {
-  }
+    private Tokenizer innerDiffTokenizer;
+    private Tokenizer fileNameTokenizer;
 
-  public static synchronized WordTokenizer getInnerDiffTokenizer()
-  {
-    if (instance.innerDiffTokenizer == null)
-    {
-      instance.innerDiffTokenizer = new WordTokenizer(
-          "\\s|;|:|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=<>`'\"|]+|\\.");
-      instance.innerDiffTokenizer = new WordTokenizer("\\b\\B*");
+    public static TokenizerFactory getInstance() {
+        if (instance == null) {
+            instance = new TokenizerFactory();
+        }
+        return instance;
     }
 
-    return instance.innerDiffTokenizer;
-  }
-
-  public static synchronized WordTokenizer getFileNameTokenizer()
-  {
-    if (instance.fileNameTokenizer == null)
-    {
-      instance.fileNameTokenizer = new WordTokenizer("[ /\\\\]+");
+    private TokenizerFactory() {
+        JMeldSettings.getInstance().addConfigurationListener(this);
     }
 
-    return instance.fileNameTokenizer;
-  }
+    public synchronized Tokenizer getInnerDiffTokenizer() {
+        if (innerDiffTokenizer == null) {
+            Tokenizer innerDiffTokenizer;
+            String tokenizerName = JMeldSettings.getInstance().getEditor().getTypeTokenizerName();
+            if (TypeTokenizerManager.CHAR_TOKENIZER.equals(tokenizerName)) {
+                innerDiffTokenizer = new WordTokenizer(".");
+            } else if (TypeTokenizerManager.WORD_TOKENIZER.equals(tokenizerName)) {
+                innerDiffTokenizer = new WordTokenizer("\\b\\B*");
+            } else if (TypeTokenizerManager.NONWORD_TOKENIZER.equals(tokenizerName)) {
+                innerDiffTokenizer = new WordTokenizer("\\s|;|:|\\(|\\)|\\[|\\]|[-+*&^%\\/}{=<>`'\"|]+|\\.");
+            } else {
+                //TODO: Unknown
+                innerDiffTokenizer = null;
+            }
+            setInnerDiffTokenizer(innerDiffTokenizer);
+        }
+
+        return innerDiffTokenizer;
+    }
+
+    public synchronized Tokenizer getFileNameTokenizer() {
+        if (fileNameTokenizer == null) {
+            setFileNameTokenizer(new WordTokenizer("[ /\\\\]+"));
+        }
+
+        return fileNameTokenizer;
+    }
+
+    private void setInnerDiffTokenizer(Tokenizer innerDiffTokenizer) {
+        this.innerDiffTokenizer = innerDiffTokenizer;
+    }
+
+    private void setFileNameTokenizer(Tokenizer fileNameTokenizer) {
+        this.fileNameTokenizer = fileNameTokenizer;
+    }
+
+    @Override
+    public void configurationChanged() {
+        setInnerDiffTokenizer(null);
+        setFileNameTokenizer(null);
+    }
 }

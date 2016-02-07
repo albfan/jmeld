@@ -21,8 +21,8 @@ import org.jmeld.diff.JMDelta;
 import org.jmeld.diff.JMDiff;
 import org.jmeld.diff.JMRevision;
 import org.jmeld.util.Ignore;
+import org.jmeld.util.Tokenizer;
 import org.jmeld.util.TokenizerFactory;
-import org.jmeld.util.WordTokenizer;
 
 import javax.swing.*;
 import javax.swing.text.Style;
@@ -66,7 +66,7 @@ public class DiffLabel
    */
   public void setText(String text, String otherText)
   {
-    WordTokenizer wt;
+    Tokenizer wt;
     List<String> textList;
     List<String> otherTextList;
     JMRevision revision;
@@ -78,7 +78,7 @@ public class DiffLabel
 
     try
     {
-      wt = TokenizerFactory.getFileNameTokenizer();
+      wt = TokenizerFactory.getInstance().getFileNameTokenizer();
       textList = wt.getTokens(text);
       otherTextList = wt.getTokens(otherText);
 

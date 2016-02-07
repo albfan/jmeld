@@ -19,7 +19,7 @@ package org.jmeld.util;
 import java.util.*;
 import java.util.regex.*;
 
-public class WordTokenizer
+public class WordTokenizer implements Tokenizer
 {
   private Pattern p;
 
@@ -33,6 +33,7 @@ public class WordTokenizer
    *   So that the length of the text is the same length as
    *   the length of all tokens.
    */
+  @Override
   public List<String> getTokens(String text)
   {
     Matcher m;

@@ -12,6 +12,7 @@ import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.util.EmptyIcon;
 import org.jmeld.ui.util.FontUtil;
 import org.jmeld.ui.util.LookAndFeelManager;
+import org.jmeld.ui.util.TypeTokenizerManager;
 import org.jmeld.util.CharsetDetector;
 import org.jmeld.util.Ignore;
 import org.jmeld.util.conf.ConfigurationListenerIF;
@@ -66,7 +67,7 @@ public class EditorSettingsPanel
     showLineNumbersCheckBox.addActionListener(getShowLineNumbersAction());
     lookAndFeelComboBox.setModel(getLookAndFeelModel());
     lookAndFeelComboBox.setSelectedItem(LookAndFeelManager.getInstance()
-        .getInstalledLookAndFeelName());
+            .getInstalledLookAndFeelName());
     lookAndFeelComboBox.addActionListener(getLookAndFeelAction());
 
     // Colors:
@@ -83,17 +84,17 @@ public class EditorSettingsPanel
 
     // File encoding:
     defaultEncodingRadioButton.setText(defaultEncodingRadioButton.getText()
-                                       + " ("
-                                       + CharsetDetector.getInstance()
-                                           .getDefaultCharset() + ")");
+            + " ("
+            + CharsetDetector.getInstance()
+            .getDefaultCharset() + ")");
 
     defaultEncodingRadioButton.addActionListener(getDefaultEncodingAction());
     detectEncodingRadioButton.addActionListener(getDetectEncodingAction());
     specificEncodingRadioButton.addActionListener(getSpecificEncodingAction());
     specificEncodingComboBox.setModel(new DefaultComboBoxModel(CharsetDetector
-        .getInstance().getCharsetNameList().toArray()));
+            .getInstance().getCharsetNameList().toArray()));
     specificEncodingComboBox.setSelectedItem(getEditorSettings()
-        .getSpecificFileEncodingName());
+            .getSpecificFileEncodingName());
     specificEncodingComboBox.addActionListener(getSpecificEncodingNameAction());
 
     // Toolbar appearance:
@@ -103,13 +104,11 @@ public class EditorSettingsPanel
     toolbarButtonIconComboBox.addActionListener(getToolbarButtonIconAction());
     toolbarButtonTextEnabledCheckBox
         .addActionListener(getToolbarButtonTextEnabledAction());
-    showLevensteinCheckBox.addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent evt)
-      {
-        getEditorSettings().setShowLevenstheinEditor(
-                showLevensteinCheckBox.isSelected());
-      }
+    showLevensteinCheckBox.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            getEditorSettings().setShowLevenstheinEditor(
+                    showLevensteinCheckBox.isSelected());
+        }
     });
     showTreeChunksCheckBox.addActionListener(new ActionListener()
     {
@@ -119,14 +118,18 @@ public class EditorSettingsPanel
                 showTreeChunksCheckBox.isSelected());
       }
     });
-    showTreeRawCheckBox.addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent evt)
-      {
-        getEditorSettings().setShowTreeRaw(
-                showTreeRawCheckBox.isSelected());
-      }
+    showTreeRawCheckBox.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent evt) {
+            getEditorSettings().setShowTreeRaw(
+                    showTreeRawCheckBox.isSelected());
+        }
     });
+
+    //Tokenizer Type
+      typeTokenizerComboBox.setModel(getTypeTokenizerModel());
+      typeTokenizerComboBox.setSelectedItem(getEditorSettings()
+              .getTypeTokenizerName());
+      typeTokenizerComboBox.addActionListener(getTypeTokenizerAction());
 
   }
 
@@ -211,7 +214,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreWhitespaceAtBegin(
-          ignoreWhitespaceAtBeginCheckBox.isSelected());
+                ignoreWhitespaceAtBeginCheckBox.isSelected());
       }
     };
   }
@@ -223,7 +226,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreWhitespaceInBetween(
-          ignoreWhitespaceInBetweenCheckBox.isSelected());
+                ignoreWhitespaceInBetweenCheckBox.isSelected());
       }
     };
   }
@@ -235,7 +238,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreWhitespaceAtEnd(
-          ignoreWhitespaceAtEndCheckBox.isSelected());
+                ignoreWhitespaceAtEndCheckBox.isSelected());
       }
     };
   }
@@ -258,7 +261,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setIgnoreBlankLines(
-          ignoreBlankLinesCheckBox.isSelected());
+                ignoreBlankLinesCheckBox.isSelected());
       }
     };
   }
@@ -281,7 +284,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setLeftsideReadonly(
-          leftsideReadonlyCheckBox.isSelected());
+                leftsideReadonlyCheckBox.isSelected());
       }
     };
   }
@@ -293,7 +296,7 @@ public class EditorSettingsPanel
       public void actionPerformed(java.awt.event.ActionEvent evt)
       {
         getEditorSettings().setRightsideReadonly(
-          rightsideReadonlyCheckBox.isSelected());
+                rightsideReadonlyCheckBox.isSelected());
       }
     };
   }
@@ -366,7 +369,7 @@ public class EditorSettingsPanel
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings().setSpecificFileEncodingName(
-          (String) specificEncodingComboBox.getSelectedItem());
+                (String) specificEncodingComboBox.getSelectedItem());
       }
     };
   }
@@ -384,6 +387,17 @@ public class EditorSettingsPanel
     };
   }
 
+    private ActionListener getTypeTokenizerAction()
+    {
+        return new ActionListener()
+        {
+            public void actionPerformed(ActionEvent evt)
+            {
+                getEditorSettings().setTypeTokenizerName((String)typeTokenizerComboBox.getSelectedItem());
+            }
+        };
+    }
+
   private ActionListener getToolbarButtonIconAction()
   {
     return new ActionListener()
@@ -391,8 +405,8 @@ public class EditorSettingsPanel
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings().setToolbarButtonIcon(
-          (EditorSettings.ToolbarButtonIcon) toolbarButtonIconComboBox
-              .getSelectedItem());
+                (EditorSettings.ToolbarButtonIcon) toolbarButtonIconComboBox
+                        .getSelectedItem());
         JMeld.getJMeldPanel().addToolBar();
       }
     };
@@ -405,7 +419,7 @@ public class EditorSettingsPanel
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings().setToolbarButtonTextEnabled(
-          toolbarButtonTextEnabledCheckBox.isSelected());
+                toolbarButtonTextEnabledCheckBox.isSelected());
         JMeld.getJMeldPanel().addToolBar();
       }
     };
@@ -418,7 +432,7 @@ public class EditorSettingsPanel
       public void actionPerformed(ActionEvent evt)
       {
         getEditorSettings().enableCustomFont(
-          !defaultFontRadioButton.isSelected());
+                !defaultFontRadioButton.isSelected());
       }
     };
   }
@@ -486,7 +500,12 @@ public class EditorSettingsPanel
         .getInstalledLookAndFeels().toArray());
   }
 
-  private ComboBoxModel getToolbarButtonIconModel()
+    private ComboBoxModel getTypeTokenizerModel() {
+        return new DefaultComboBoxModel<>(TypeTokenizerManager.getInstance()
+                .getTypeTokenizers());
+    }
+
+    private ComboBoxModel getToolbarButtonIconModel()
   {
     return new DefaultComboBoxModel(getEditorSettings().getToolbarButtonIcons());
   }

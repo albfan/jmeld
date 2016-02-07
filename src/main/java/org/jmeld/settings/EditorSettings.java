@@ -26,461 +26,418 @@ import java.awt.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class EditorSettings
-    extends AbstractConfigurationElement
-{
-  @XmlElement
-  private boolean showLineNumbers;
-  @XmlElement
-  private int tabSize;
-  @XmlElement
-  private Ignore ignore;
-  @XmlElement
-  private boolean leftsideReadonly;
-  @XmlElement
-  private boolean rightsideReadonly;
-  @XmlElement
-  private ColorSetting addedColor;
-  @XmlElement
-  private ColorSetting changedColor;
-  @XmlElement
-  private ColorSetting deletedColor;
-  @XmlElement
-  private boolean customFont;
-  @XmlElement
-  private FontSetting font;
-  @XmlElement
-  private boolean antialias;
-  @XmlElement
-  private boolean defaultFileEncodingEnabled;
-  @XmlElement
-  private boolean detectFileEncodingEnabled;
-  @XmlElement
-  private boolean specificFileEncodingEnabled;
-  @XmlElement
-  private String specificFileEncodingName;
-  @XmlElement
-  private String lookAndFeelName;
-  @XmlElement
-  private ToolbarButtonIcon toolbarButtonIcon;
-  @XmlElement
-  private boolean toolbarButtonTextEnabled;
-  @XmlElement
-  private boolean showLevenstheinEditor;
-  @XmlElement
-  private boolean showTreeChunks;
-  @XmlElement
-  private boolean showTreeRaw;
+        extends AbstractConfigurationElement {
+    @XmlElement
+    private boolean showLineNumbers;
+    @XmlElement
+    private int tabSize;
+    @XmlElement
+    private Ignore ignore;
+    @XmlElement
+    private boolean leftsideReadonly;
+    @XmlElement
+    private boolean rightsideReadonly;
+    @XmlElement
+    private ColorSetting addedColor;
+    @XmlElement
+    private ColorSetting changedColor;
+    @XmlElement
+    private ColorSetting deletedColor;
+    @XmlElement
+    private boolean customFont;
+    @XmlElement
+    private FontSetting font;
+    @XmlElement
+    private boolean antialias;
+    @XmlElement
+    private boolean defaultFileEncodingEnabled;
+    @XmlElement
+    private boolean detectFileEncodingEnabled;
+    @XmlElement
+    private boolean specificFileEncodingEnabled;
+    @XmlElement
+    private String specificFileEncodingName;
+    @XmlElement
+    private String lookAndFeelName;
+    @XmlElement
+    private ToolbarButtonIcon toolbarButtonIcon;
+    @XmlElement
+    private String typeTokenizerName;
+    @XmlElement
+    private boolean toolbarButtonTextEnabled;
+    @XmlElement
+    private boolean showLevenstheinEditor;
+    @XmlElement
+    private boolean showTreeChunks;
+    @XmlElement
+    private boolean showTreeRaw;
 
-  public EditorSettings()
-  {
-      tabSize = 4;
-      ignore = new Ignore();
-      toolbarButtonIcon = ToolbarButtonIcon.LARGE;
-      toolbarButtonTextEnabled = true;
-      defaultFileEncodingEnabled = true;
-  }
-
-  @Override
-  public void init(AbstractConfiguration configuration)
-  {
-    super.init(configuration);
-
-    ignore.init(configuration);
-  }
-
-  public boolean getShowLineNumbers()
-  {
-    return showLineNumbers;
-  }
-
-  public void setShowLineNumbers(boolean showLineNumbers)
-  {
-    this.showLineNumbers = showLineNumbers;
-    fireChanged();
-  }
-
-  public boolean isShowLevenstheinEditor() {
-    return showLevenstheinEditor;
-  }
-
-  public void setShowLevenstheinEditor(boolean showLevenstheinEditor) {
-    this.showLevenstheinEditor = showLevenstheinEditor;
-    fireChanged();
-  }
-
-  public boolean isShowTreeChunks() {
-    return showTreeChunks;
-  }
-
-  public void setShowTreeChunks(boolean showTreeChunks) {
-    this.showTreeChunks = showTreeChunks;
-    fireChanged();
-  }
-
-  public int getTabSize()
-  {
-    return tabSize;
-  }
-
-  public void setTabSize(int tabSize)
-  {
-    if (tabSize == this.tabSize)
-    {
-      return;
+    public EditorSettings() {
+        tabSize = 4;
+        ignore = new Ignore();
+        toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+        typeTokenizerName = TypeTokenizerManager.WORD_TOKENIZER;
+        toolbarButtonTextEnabled = true;
+        defaultFileEncodingEnabled = true;
     }
 
-    this.tabSize = tabSize;
-    fireChanged();
-  }
+    @Override
+    public void init(AbstractConfiguration configuration) {
+        super.init(configuration);
 
-  public Ignore getIgnore()
-  {
-    return ignore;
-  }
-
-  public void setIgnoreWhitespaceAtBegin(boolean ignoreWhitespaceAtBegin)
-  {
-    if (ignore.ignoreWhitespaceAtBegin == ignoreWhitespaceAtBegin)
-    {
-      return;
+        ignore.init(configuration);
     }
 
-    ignore.ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
-    fireChanged();
-  }
-
-  public void setIgnoreWhitespaceInBetween(boolean ignoreWhitespaceInBetween)
-  {
-    if (ignore.ignoreWhitespaceInBetween == ignoreWhitespaceInBetween)
-    {
-      return;
+    public boolean getShowLineNumbers() {
+        return showLineNumbers;
     }
 
-    ignore.ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
-    fireChanged();
-  }
-
-  public void setIgnoreWhitespaceAtEnd(boolean ignoreWhitespaceAtEnd)
-  {
-    if (ignore.ignoreWhitespaceAtEnd == ignoreWhitespaceAtEnd)
-    {
-      return;
+    public void setShowLineNumbers(boolean showLineNumbers) {
+        if (showLineNumbers == this.showLineNumbers) {
+            return;
+        }
+        this.showLineNumbers = showLineNumbers;
+        fireChanged();
     }
 
-    ignore.ignoreWhitespaceAtEnd = ignoreWhitespaceAtEnd;
-    fireChanged();
-  }
-
-  public void setIgnoreEOL(boolean ignoreEOL)
-  {
-    if (ignore.ignoreEOL == ignoreEOL)
-    {
-      return;
+    public boolean isShowLevenstheinEditor() {
+        return showLevenstheinEditor;
     }
 
-    ignore.ignoreEOL = ignoreEOL;
-    fireChanged();
-  }
-
-  public void setIgnoreBlankLines(boolean ignoreBlankLines)
-  {
-    if (ignore.ignoreBlankLines == ignoreBlankLines)
-    {
-      return;
+    public void setShowLevenstheinEditor(boolean showLevenstheinEditor) {
+        if (showLevenstheinEditor == this.showLevenstheinEditor) {
+            return;
+        }
+        this.showLevenstheinEditor = showLevenstheinEditor;
+        fireChanged();
     }
 
-    ignore.ignoreBlankLines = ignoreBlankLines;
-    fireChanged();
-  }
-
-  public void setIgnoreCase(boolean ignoreCase)
-  {
-    if (ignore.ignoreCase == ignoreCase)
-    {
-      return;
+    public boolean isShowTreeChunks() {
+        return showTreeChunks;
     }
 
-    ignore.ignoreCase = ignoreCase;
-    fireChanged();
-  }
-
-  public boolean getLeftsideReadonly()
-  {
-    return leftsideReadonly;
-  }
-
-  public void setLeftsideReadonly(boolean leftsideReadonly)
-  {
-    if (this.leftsideReadonly == leftsideReadonly)
-    {
-      return;
+    public void setShowTreeChunks(boolean showTreeChunks) {
+        if (showTreeChunks == this.showTreeChunks) {
+            return;
+        }
+        this.showTreeChunks = showTreeChunks;
+        fireChanged();
     }
 
-    this.leftsideReadonly = leftsideReadonly;
-    fireChanged();
-  }
-
-  public boolean getRightsideReadonly()
-  {
-    return rightsideReadonly;
-  }
-
-  public void setRightsideReadonly(boolean rightsideReadonly)
-  {
-    if (this.rightsideReadonly == rightsideReadonly)
-    {
-      return;
+    public int getTabSize() {
+        return tabSize;
     }
 
-    this.rightsideReadonly = rightsideReadonly;
-    fireChanged();
-  }
+    public void setTabSize(int tabSize) {
+        if (tabSize == this.tabSize) {
+            return;
+        }
 
-  public boolean getDefaultFileEncodingEnabled()
-  {
-    return defaultFileEncodingEnabled;
-  }
-
-  public void setDefaultFileEncodingEnabled(boolean encoding)
-  {
-    if (this.defaultFileEncodingEnabled == encoding)
-    {
-      return;
+        this.tabSize = tabSize;
+        fireChanged();
     }
 
-    this.defaultFileEncodingEnabled = encoding;
-    fireChanged();
-  }
-
-  public boolean getDetectFileEncodingEnabled()
-  {
-    return detectFileEncodingEnabled;
-  }
-
-  public void setDetectFileEncodingEnabled(boolean encoding)
-  {
-    if (this.detectFileEncodingEnabled == encoding)
-    {
-      return;
+    public Ignore getIgnore() {
+        return ignore;
     }
 
-    this.detectFileEncodingEnabled = encoding;
-    fireChanged();
-  }
+    public void setIgnoreWhitespaceAtBegin(boolean ignoreWhitespaceAtBegin) {
+        if (getIgnore().ignoreWhitespaceAtBegin == ignoreWhitespaceAtBegin) {
+            return;
+        }
 
-  public boolean getSpecificFileEncodingEnabled()
-  {
-    return specificFileEncodingEnabled;
-  }
-
-  public void setSpecificFileEncodingEnabled(boolean encoding)
-  {
-    if (this.specificFileEncodingEnabled == encoding)
-    {
-      return;
+        getIgnore().ignoreWhitespaceAtBegin = ignoreWhitespaceAtBegin;
+        fireChanged();
     }
 
-    this.specificFileEncodingEnabled = encoding;
-    fireChanged();
-  }
+    public void setIgnoreWhitespaceInBetween(boolean ignoreWhitespaceInBetween) {
+        if (getIgnore().ignoreWhitespaceInBetween == ignoreWhitespaceInBetween) {
+            return;
+        }
 
-  public String getSpecificFileEncodingName()
-  {
-    return specificFileEncodingName;
-  }
-
-  public void setSpecificFileEncodingName(String encodingName)
-  {
-    if (ObjectUtil.equals(this.specificFileEncodingName, encodingName))
-    {
-      return;
+        getIgnore().ignoreWhitespaceInBetween = ignoreWhitespaceInBetween;
+        fireChanged();
     }
 
-    this.specificFileEncodingName = encodingName;
-    fireChanged();
-  }
+    public void setIgnoreWhitespaceAtEnd(boolean ignoreWhitespaceAtEnd) {
+        if (getIgnore().ignoreWhitespaceAtEnd == ignoreWhitespaceAtEnd) {
+            return;
+        }
 
-  public void restoreColors()
-  {
-    addedColor = null;
-    changedColor = null;
-    deletedColor = null;
-    fireChanged();
-  }
-
-  public void setAddedColor(Color color)
-  {
-    addedColor = new ColorSetting(color);
-    fireChanged();
-  }
-
-  public Color getAddedColor()
-  {
-    return getColor(addedColor, Colors.ADDED);
-  }
-
-  public void setChangedColor(Color color)
-  {
-    changedColor = new ColorSetting(color);
-    fireChanged();
-  }
-
-  public Color getChangedColor()
-  {
-    return getColor(changedColor, Colors.CHANGED);
-  }
-
-  public void setDeletedColor(Color color)
-  {
-    deletedColor = new ColorSetting(color);
-    fireChanged();
-  }
-
-  public Color getDeletedColor()
-  {
-    return getColor(deletedColor, Colors.DELETED);
-  }
-
-  public void setLookAndFeelName(String lookAndFeelName)
-  {
-    this.lookAndFeelName = lookAndFeelName;
-    fireChanged();
-  }
-
-  public String getLookAndFeelName()
-  {
-    return lookAndFeelName;
-  }
-
-  public void setToolbarButtonIcon(ToolbarButtonIcon toolbarButtonIcon)
-  {
-    if (this.toolbarButtonIcon == toolbarButtonIcon)
-    {
-      return;
+        getIgnore().ignoreWhitespaceAtEnd = ignoreWhitespaceAtEnd;
+        fireChanged();
     }
 
-    this.toolbarButtonIcon = toolbarButtonIcon;
+    public void setIgnoreEOL(boolean ignoreEOL) {
+        if (getIgnore().ignoreEOL == ignoreEOL) {
+            return;
+        }
 
-    // Don't allow the buttons to disappear!
-    if (toolbarButtonIcon == ToolbarButtonIcon.NO)
-    {
-      toolbarButtonTextEnabled = true;
+        getIgnore().ignoreEOL = ignoreEOL;
+        fireChanged();
     }
 
+    public void setIgnoreBlankLines(boolean ignoreBlankLines) {
+        if (getIgnore().ignoreBlankLines == ignoreBlankLines) {
+            return;
+        }
 
-    fireChanged();
-  }
-
-  public ToolbarButtonIcon getToolbarButtonIcon()
-  {
-    return toolbarButtonIcon;
-  }
-
-  public void setToolbarButtonTextEnabled(boolean toolbarButtonTextEnabled)
-  {
-    if (this.toolbarButtonTextEnabled == toolbarButtonTextEnabled)
-    {
-      return;
+        getIgnore().ignoreBlankLines = ignoreBlankLines;
+        fireChanged();
     }
 
-    this.toolbarButtonTextEnabled = toolbarButtonTextEnabled;
+    public void setIgnoreCase(boolean ignoreCase) {
+        if (getIgnore().ignoreCase == ignoreCase) {
+            return;
+        }
 
-    // Don't allow the buttons to disappear!
-    if (!toolbarButtonTextEnabled && toolbarButtonIcon == ToolbarButtonIcon.NO)
-    {
-      toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+        getIgnore().ignoreCase = ignoreCase;
+        fireChanged();
     }
 
-    fireChanged();
-  }
-
-  public ToolbarButtonIcon[] getToolbarButtonIcons()
-  {
-    return ToolbarButtonIcon.values();
-  }
-
-  public boolean isToolbarButtonTextEnabled()
-  {
-    return toolbarButtonTextEnabled;
-  }
-
-  public void enableCustomFont(boolean customFont)
-  {
-    this.customFont = customFont;
-    fireChanged();
-  }
-
-  public boolean isCustomFontEnabled()
-  {
-    return customFont;
-  }
-
-  public void enableAntialias(boolean antialias)
-  {
-    this.antialias = antialias;
-    fireChanged();
-  }
-
-  public boolean isAntialiasEnabled()
-  {
-    return antialias;
-  }
-
-  public void setFont(Font f)
-  {
-    font = new FontSetting(f);
-    fireChanged();
-  }
-
-  public Font getFont()
-  {
-    return font == null ? null : font.getFont();
-  }
-
-  private Color getColor(ColorSetting cc, Color defaultColor)
-  {
-    Color c;
-
-    c = null;
-    if (cc != null)
-    {
-      c = cc.getColor();
+    public boolean getLeftsideReadonly() {
+        return leftsideReadonly;
     }
 
-    if (c == null)
-    {
-      c = defaultColor;
+    public void setLeftsideReadonly(boolean leftsideReadonly) {
+        if (this.leftsideReadonly == leftsideReadonly) {
+            return;
+        }
+
+        this.leftsideReadonly = leftsideReadonly;
+        fireChanged();
     }
 
-    return c;
-  }
-
-  public boolean isShowTreeRaw() {
-    return showTreeRaw;
-  }
-
-  public void setShowTreeRaw(boolean showTreeRaw) {
-    this.showTreeRaw = showTreeRaw;
-    fireChanged();
-  }
-
-  public enum ToolbarButtonIcon
-  {
-    NO("no icon"),
-    SMALL("small icon"),
-    LARGE("large icon");
-
-    // instance variables:
-    private String text;
-
-    private ToolbarButtonIcon(String text)
-    {
-      this.text = text;
+    public boolean getRightsideReadonly() {
+        return rightsideReadonly;
     }
 
-    public String toString()
-    {
-      return text;
+    public void setRightsideReadonly(boolean rightsideReadonly) {
+        if (this.rightsideReadonly == rightsideReadonly) {
+            return;
+        }
+
+        this.rightsideReadonly = rightsideReadonly;
+        fireChanged();
     }
-  }
+
+    public boolean getDefaultFileEncodingEnabled() {
+        return defaultFileEncodingEnabled;
+    }
+
+    public void setDefaultFileEncodingEnabled(boolean encoding) {
+        if (this.defaultFileEncodingEnabled == encoding) {
+            return;
+        }
+
+        this.defaultFileEncodingEnabled = encoding;
+        fireChanged();
+    }
+
+    public boolean getDetectFileEncodingEnabled() {
+        return detectFileEncodingEnabled;
+    }
+
+    public void setDetectFileEncodingEnabled(boolean encoding) {
+        if (this.detectFileEncodingEnabled == encoding) {
+            return;
+        }
+
+        this.detectFileEncodingEnabled = encoding;
+        fireChanged();
+    }
+
+    public boolean getSpecificFileEncodingEnabled() {
+        return specificFileEncodingEnabled;
+    }
+
+    public void setSpecificFileEncodingEnabled(boolean encoding) {
+        if (this.specificFileEncodingEnabled == encoding) {
+            return;
+        }
+
+        this.specificFileEncodingEnabled = encoding;
+        fireChanged();
+    }
+
+    public String getSpecificFileEncodingName() {
+        return specificFileEncodingName;
+    }
+
+    public void setSpecificFileEncodingName(String encodingName) {
+        if (ObjectUtil.equals(this.specificFileEncodingName, encodingName)) {
+            return;
+        }
+
+        this.specificFileEncodingName = encodingName;
+        fireChanged();
+    }
+
+    public void restoreColors() {
+        addedColor = null;
+        changedColor = null;
+        deletedColor = null;
+        fireChanged();
+    }
+
+    public void setAddedColor(Color color) {
+        addedColor = new ColorSetting(color);
+        fireChanged();
+    }
+
+    public Color getAddedColor() {
+        return getColor(addedColor, Colors.ADDED);
+    }
+
+    public void setChangedColor(Color color) {
+        changedColor = new ColorSetting(color);
+        fireChanged();
+    }
+
+    public Color getChangedColor() {
+        return getColor(changedColor, Colors.CHANGED);
+    }
+
+    public void setDeletedColor(Color color) {
+        deletedColor = new ColorSetting(color);
+        fireChanged();
+    }
+
+    public Color getDeletedColor() {
+        return getColor(deletedColor, Colors.DELETED);
+    }
+
+    public void setLookAndFeelName(String lookAndFeelName) {
+        this.lookAndFeelName = lookAndFeelName;
+        fireChanged();
+    }
+
+    public String getLookAndFeelName() {
+        return lookAndFeelName;
+    }
+
+    public void setToolbarButtonIcon(ToolbarButtonIcon toolbarButtonIcon) {
+        if (this.toolbarButtonIcon == toolbarButtonIcon) {
+            return;
+        }
+
+        this.toolbarButtonIcon = toolbarButtonIcon;
+
+        // Don't allow the buttons to disappear!
+        if (toolbarButtonIcon == ToolbarButtonIcon.NO) {
+            toolbarButtonTextEnabled = true;
+        }
+
+
+        fireChanged();
+    }
+
+    public void setTypeTokenizerName(String typeTokenizerName) {
+        if (this.typeTokenizerName.equals(typeTokenizerName)) {
+            return;
+        }
+
+        this.typeTokenizerName = typeTokenizerName;
+
+        fireChanged();
+    }
+
+    public ToolbarButtonIcon getToolbarButtonIcon() {
+        return toolbarButtonIcon;
+    }
+
+    public String getTypeTokenizerName() {
+        return typeTokenizerName;
+    }
+
+    public void setToolbarButtonTextEnabled(boolean toolbarButtonTextEnabled) {
+        if (this.toolbarButtonTextEnabled == toolbarButtonTextEnabled) {
+            return;
+        }
+
+        this.toolbarButtonTextEnabled = toolbarButtonTextEnabled;
+
+        // Don't allow the buttons to disappear!
+        if (!toolbarButtonTextEnabled && toolbarButtonIcon == ToolbarButtonIcon.NO) {
+            toolbarButtonIcon = ToolbarButtonIcon.LARGE;
+        }
+
+        fireChanged();
+    }
+
+    public ToolbarButtonIcon[] getToolbarButtonIcons() {
+        return ToolbarButtonIcon.values();
+    }
+
+    public boolean isToolbarButtonTextEnabled() {
+        return toolbarButtonTextEnabled;
+    }
+
+    public void enableCustomFont(boolean customFont) {
+        this.customFont = customFont;
+        fireChanged();
+    }
+
+    public boolean isCustomFontEnabled() {
+        return customFont;
+    }
+
+    public void enableAntialias(boolean antialias) {
+        this.antialias = antialias;
+        fireChanged();
+    }
+
+    public boolean isAntialiasEnabled() {
+        return antialias;
+    }
+
+    public void setFont(Font f) {
+        font = new FontSetting(f);
+        fireChanged();
+    }
+
+    public Font getFont() {
+        return font == null ? null : font.getFont();
+    }
+
+    private Color getColor(ColorSetting cc, Color defaultColor) {
+        Color c;
+
+        c = null;
+        if (cc != null) {
+            c = cc.getColor();
+        }
+
+        if (c == null) {
+            c = defaultColor;
+        }
+
+        return c;
+    }
+
+    public boolean isShowTreeRaw() {
+        return showTreeRaw;
+    }
+
+    public void setShowTreeRaw(boolean showTreeRaw) {
+        this.showTreeRaw = showTreeRaw;
+        fireChanged();
+    }
+
+    public enum ToolbarButtonIcon {
+        NO("no icon"),
+        SMALL("small icon"),
+        LARGE("large icon");
+
+        // instance variables:
+        private String text;
+
+        private ToolbarButtonIcon(String text) {
+            this.text = text;
+        }
+
+        public String toString() {
+            return text;
+        }
+    }
 }

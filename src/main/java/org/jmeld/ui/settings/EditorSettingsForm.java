@@ -72,6 +72,10 @@ public class EditorSettingsForm
         showLevensteinCheckBox = new javax.swing.JCheckBox();
         showTreeRawCheckBox = new javax.swing.JCheckBox();
         gradientLabel1 = new org.jmeld.ui.swing.GradientLabel();
+        jPanel3 = new javax.swing.JPanel();
+        detailHeader8 = new org.jmeld.ui.swing.DetailHeader();
+        jLabel7 = new javax.swing.JLabel();
+        typeTokenizerComboBox = new javax.swing.JComboBox();
 
         buttonGroup1.add(defaultFontRadioButton);
         defaultFontRadioButton.setText("Use default font");
@@ -367,6 +371,38 @@ public class EditorSettingsForm
         gradientLabel1.setText("Editor settings");
         gradientLabel1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
 
+        detailHeader8.setText("Tokenizers");
+
+        jLabel7.setText("Type");
+
+        typeTokenizerComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .add(detailHeader8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(0, 189, Short.MAX_VALUE))
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(jLabel7)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(typeTokenizerComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .add(detailHeader8, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(typeTokenizerComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel7))
+                .addContainerGap(236, Short.MAX_VALUE))
+        );
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -375,8 +411,10 @@ public class EditorSettingsForm
                 .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-            .add(gradientLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .add(gradientLabel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 950, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -386,7 +424,9 @@ public class EditorSettingsForm
                     .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(layout.createSequentialGroup()
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -412,6 +452,7 @@ public class EditorSettingsForm
     protected org.jmeld.ui.swing.DetailHeader detailHeader5;
     protected org.jmeld.ui.swing.DetailHeader detailHeader6;
     protected org.jmeld.ui.swing.DetailHeader detailHeader7;
+    protected org.jmeld.ui.swing.DetailHeader detailHeader8;
     protected javax.swing.JRadioButton detectEncodingRadioButton;
     protected javax.swing.JButton fontChooserButton;
     protected org.jmeld.ui.swing.GradientLabel gradientLabel1;
@@ -427,8 +468,10 @@ public class EditorSettingsForm
     protected javax.swing.JLabel jLabel4;
     protected javax.swing.JLabel jLabel5;
     protected javax.swing.JLabel jLabel6;
+    protected javax.swing.JLabel jLabel7;
     protected javax.swing.JPanel jPanel1;
     protected javax.swing.JPanel jPanel2;
+    protected javax.swing.JPanel jPanel3;
     protected javax.swing.JCheckBox leftsideReadonlyCheckBox;
     protected javax.swing.JComboBox lookAndFeelComboBox;
     protected javax.swing.JButton restoreOriginalColorsButton;
@@ -442,6 +485,7 @@ public class EditorSettingsForm
     protected javax.swing.JSpinner tabSizeSpinner;
     protected javax.swing.JComboBox toolbarButtonIconComboBox;
     protected javax.swing.JCheckBox toolbarButtonTextEnabledCheckBox;
+    protected javax.swing.JComboBox typeTokenizerComboBox;
     // End of variables declaration//GEN-END:variables
 
 }

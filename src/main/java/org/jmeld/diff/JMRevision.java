@@ -355,7 +355,7 @@ public class JMRevision
         String revisedString = getRevisedString(revised);
 
         try {
-            WordTokenizer t = TokenizerFactory.getInnerDiffTokenizer();
+            Tokenizer t = TokenizerFactory.getInstance().getInnerDiffTokenizer();
             List<String> tokensOrg = t.getTokens(originalString);
             List<String> tokensRev = t.getTokens(revisedString);
 
