@@ -24,7 +24,6 @@ public class JMDelta {
 
     private static boolean debug = false;
 
-    // Instance variables:
     private JMChunk original;
     private JMChunk revised;
     private TypeDiff type;

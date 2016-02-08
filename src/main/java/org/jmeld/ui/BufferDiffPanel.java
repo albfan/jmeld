@@ -446,15 +446,17 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
                     menuItem.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            List<JMDelta> deltas = currentRevision.getDeltas();
-                            for (int i = 0; i < deltas.size(); i++) {
-                                JMDelta delta = deltas.get(i);
-                                //TODO: Locate position inside deltas
+                            int selectedRow = levensteinGraphTable.getSelectedRow();
+                            int selectedColumn = levensteinGraphTable.getSelectedColumn();
+                            int selectedRowCount = levensteinGraphTable.getSelectedRowCount();
+                            int selectedColumnCount = levensteinGraphTable.getSelectedColumnCount();
+
+                            if (selectedRowCount == 1) {
+                                selectedRowCount = 0;
                             }
-                            final int selectedRow = levensteinGraphTable.getSelectedRow();
-                            final int selectedColumn = levensteinGraphTable.getSelectedColumn();
-                            final int selectedRowCount = levensteinGraphTable.getSelectedRowCount();
-                            final int selectedColumnCount = levensteinGraphTable.getSelectedColumnCount();
+                            if (selectedColumnCount == 1) {
+                                selectedColumnCount = 0;
+                            }
 
                             try {
                                 JTextArea leftEditor = filePanels[LEFT].getEditor();
@@ -466,15 +468,31 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
                                 int firstCol = rightEditor.getLineOfOffset(selectedColumn - 2);
                                 int endCol = rightEditor.getLineOfOffset(selectedColumn - 2 + selectedColumnCount - 1);
                                 JMChunk revised = new JMChunk(firstCol, endCol - firstCol + 1);
-                                JMDelta delta = new JMDelta(original, revised);
-                                delta.setRevision(currentRevision);
-                                JMRevision changeRevision = currentRevision.createChangeRevision(original, revised, false);
+
+                                JMDelta newDdelta = new JMDelta(original, revised);
+                                newDdelta.setRevision(currentRevision);
+                                boolean createNew  = true;
+                                List<JMDelta> deltas = currentRevision.getDeltas();
+                                for (int i = 0; i < deltas.size(); i++) {
+                                    JMDelta delta = deltas.get(i);
+                                    if (delta.equals(newDdelta)) {
+                                        newDdelta = delta;
+                                        createNew = false;
+                                    }
+                                }
+                                JMRevision changeRevision;
+                                if (createNew) {
+                                    changeRevision = currentRevision.createChangeRevision(original, revised, false);
+                                    newDdelta.setChangeRevision(changeRevision);
+                                    deltas.add(newDdelta);
+                                } else {
+                                    changeRevision = newDdelta.getChangeRevision();
+                                }
+
                                 List<JMDelta> changeDeltas = changeRevision.getDeltas();
-                                changeDeltas.add(new JMDelta(new JMChunk(selectedRow -2 - leftEditor.getLineStartOffset(firstLine), selectedRowCount)
-                                        , new JMChunk(selectedColumn -2 - leftEditor.getLineStartOffset(firstCol), selectedColumnCount)
+                                changeDeltas.add(new JMDelta(new JMChunk(selectedRow - 2 - leftEditor.getLineStartOffset(firstLine), selectedRowCount)
+                                        , new JMChunk(selectedColumn - 2 - leftEditor.getLineStartOffset(firstCol), selectedColumnCount)
                                 ));
-                                delta.setChangeRevision(changeRevision);
-                                deltas.add(delta);
                                 reDisplay();
                             } catch (BadLocationException e1) {
                                 System.out.println("Error building delta: " + e1.getMessage());
