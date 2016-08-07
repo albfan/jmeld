@@ -1,11 +1,19 @@
+#maven
 target
 
-bin
+#eclipse
+bin/
 .classpath
 .project
 .settings/
 
+#intellij
 .idea/
 *.iml
+
+#gradle
 .gradle/
 build/
+
+#ant
+lib/
