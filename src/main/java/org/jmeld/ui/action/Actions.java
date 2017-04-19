@@ -30,6 +30,7 @@ public class Actions {
   public final Action ABOUT = new Action("About");
   public final Action SETTINGS = new Action("Settings");
   public final Action EXIT = new Action("Exit");
+  public final Action QUIT = new Action("Quit");
   public final Action FOLDER_SELECT_NEXT_ROW = new Action("SelectNextRow");
   public final Action FOLDER_SELECT_PREVIOUS_ROW = new Action("SelectPreviousRow");
   public final Action FOLDER_NEXT_NODE = new Action("NextNode");

@@ -29,45 +29,63 @@
     <delete dir="target/**" quiet="true" />
   </target>
 
+  <target name="getDeps">
+    <get src="https://repo.maven.apache.org/maven2/com/jidesoft/jide-oss/3.6.11/jide-oss-3.6.11.jar" dest="lib/jide-oss-3.6.11.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo1.maven.org/maven2/com/jgoodies/forms/1.0.7/forms-1.0.7.jar" dest="lib/forms-1.0.7.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/com/jgoodies/looks/2.2.2/looks-2.2.2.jar" dest="lib/looks-2.2.2.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/org/swinglabs/swingx/1.6.1/swingx-1.6.1.jar" dest="lib/swingx-1.6.1.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/javax/xml/jsr173/1.0/jsr173-1.0.jar" dest="lib/jsr173-1.0.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/org/swinglabs/swing-layout/1.0.3/swing-layout-1.0.3.jar" dest="lib/swing-layout-1.0.3.jar" quiet="true" skipexisting="true" />
+    <get src="http://download.icu-project.org/files/icu4j/56.1/icu4j-56_1.jar" dest="lib/icu4j-56.1.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/javax/xml/bind/jaxb-api/2.2.12/jaxb-api-2.2.12.jar" dest="lib/jaxb-api-2.2.12.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/com/sun/xml/bind/jaxb-core/2.2.11/jaxb-core-2.2.11.jar" dest="lib/jaxb-core-2.2.11.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo1.maven.org/maven2/com/sun/xml/bind/jaxb-impl/2.2.11/jaxb-impl-2.2.11.jar" dest="lib/jaxb-impl-2.2.11.jar" quiet="true" skipexisting="true" />
+    <get src="https://repo.maven.apache.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar" dest="lib/activation-1.1.1.jar" quiet="true" skipexisting="true" />
+  </target>
+
   <target name="compile" depends="prepare">
     <javac srcdir="src/main/java"
            destdir="target/classes"
            debug="on" 
-           source="1.5"
-           target="1.5" 
-           excludes="**/bak/**" 
+           source="7"
+           target="7" 
+           excludes="**/bak/**"
+           includeantruntime="false"
            optimize="on">
       <classpath refid="compile.classpath" />
     </javac>
   </target>
 
-  <target name="jmeld" depends="clean,compile,createExecutable" />
+  <target name="jmeld" depends="clean,getDeps,compile,createExecutable" />
 
   <target name="createExecutable">
-    <jar destfile="JMeld.jar" manifest="src/main/resources/manifest.mf" update="false">
+    <jar destfile="target/jmeld.jar" manifest="src/main/resources/manifest.mf" update="false">
       <fileset dir="src/main/resources" />
       <fileset dir="target/classes" />
       <fileset dir="src/main/javahelp" />
-      <zipfileset src="lib/jide.jar" />
+      <zipfileset src="lib/jide-oss-3.6.11.jar" />
       <zipfileset src="lib/forms-1.0.7.jar" />
-      <zipfileset src="lib/looks-2.2.1.jar" />
-      <zipfileset src="lib/swingx-0.9.4.jar" />
+      <zipfileset src="lib/looks-2.2.2.jar" />
+      <zipfileset src="lib/swingx-1.6.1.jar" />
       <zipfileset src="lib/jhall.jar" />
-      <zipfileset src="lib/jsr173_1.0_api.jar" />
+      <zipfileset src="lib/jsr173-1.0.jar" />
       <zipfileset src="lib/swing-layout-1.0.3.jar" />
-      <zipfileset src="lib/icu4j-4_0.jar" />
-      <zipfileset src="lib/l2fprod-common-all.jar" />
-      <zipfileset src="lib/jaxb-api.jar" />
-      <zipfileset src="lib/jaxb-impl.jar" />
-      <zipfileset src="lib/activation.jar">
+      <zipfileset src="lib/icu4j-56.1.jar">
+        <exclude name="META-INF/**" />
+      </zipfileset>
+      <zipfileset src="lib/com/l2fprod/common/7.3/common-7.3.jar" />
+      <zipfileset src="lib/jaxb-api-2.2.12.jar" />
+      <zipfileset src="lib/jaxb-impl-2.2.11.jar" />
+      <zipfileset src="lib/jaxb-core-2.2.11.jar" />
+      <zipfileset src="lib/activation-1.1.1.jar">
         <exclude name="META-INF/**" />
       </zipfileset>
     </jar>
   </target>
 
   <target name="gzip">
-    <delete file="JMeld.tgz" quiet="true" />
-    <tar destfile="JMeld.tgz" compression="gzip">
+    <delete file="jmeld.tgz" quiet="true" />
+    <tar destfile="jmeld.tgz" compression="gzip">
       <tarfileset dir="." prefix="jmeld" defaultexcludes="yes">
         <include name="src/main/java/**" />
         <include name="lib/**" />
