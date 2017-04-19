@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/albfan/jmeld.png?label=ready&title=Ready)](https://waffle.io/albfan/jmeld)
 # JMeld
 [![Stories in Ready](https://badge.waffle.io/albfan/jmeld.png?label=ready&title=Ready)](https://waffle.io/albfan/jmeld)
 [![Build Status](https://travis-ci.org/albfan/jmeld.svg?branch=master)](https://travis-ci.org/albfan/jmeld)
