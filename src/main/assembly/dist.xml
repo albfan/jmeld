@@ -8,18 +8,18 @@
     </formats>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>lib</outputDirectory>
+            <outputDirectory>${classpath.prefix}</outputDirectory>
             <scope>runtime</scope>
         </dependencySet>
     </dependencySets>
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/src/main/scripts</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>${executable.prefix}</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>${mainjar.prefix}</outputDirectory>
             <includes>
                 <include>jmeld*.jar</include>
             </includes>

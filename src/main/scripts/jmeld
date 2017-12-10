@@ -1,4 +1,11 @@
 #!/bin/sh
 JMELD_DIR=$(dirname "$(readlink -f "$0")")
-java -Xmx400m -jar $JMELD_DIR/jmeld.jar $@
+
+if [ -f $JMELD_DIR/jmeld.jar ]; then
+  MAINJAR=$JMELD_DIR/jmeld.jar
+else
+  MAINJAR=/usr/share/java/jmeld/jmeld.jar
+fi
+
+java -Xmx400m -jar $MAINJAR $@
 

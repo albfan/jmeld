@@ -12,6 +12,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <classpath.prefix>lib/</classpath.prefix>
+        <executable.prefix>/</executable.prefix>
+        <mainjar.prefix>/</mainjar.prefix>
     </properties>
 
     <dependencies>
@@ -99,7 +102,7 @@
                    <archive>
                        <manifest>
                            <addClasspath>true</addClasspath>
-                           <classpathPrefix>lib/</classpathPrefix>
+                           <classpathPrefix>${classpath.prefix}</classpathPrefix>
                            <mainClass>org.jmeld.JMeld</mainClass>
                        </manifest>
                    </archive>
@@ -126,4 +129,15 @@
            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>linux-dist</id>
+            <properties>
+                <classpath.prefix>/usr/share/java/jmeld</classpath.prefix>
+                <executable.prefix>/usr/bin</executable.prefix>
+                <mainjar.prefix>/usr/share/java/jmeld</mainjar.prefix>
+            </properties>
+        </profile>
+    </profiles>
 </project>
