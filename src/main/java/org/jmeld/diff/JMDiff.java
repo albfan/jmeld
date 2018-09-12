@@ -26,11 +26,12 @@ import java.nio.*;
 
 public class JMDiff
 {
+  public static int BUFFER_SIZE=100000;
   // Class variables:
   // Allocate a charBuffer once for performance. The charbuffer is used to
   //   store a 'line' without it's ignored characters. 
-  static final private CharBuffer inputLine = CharBuffer.allocate(10000);
-  static final private CharBuffer outputLine = CharBuffer.allocate(10000);
+  static final private CharBuffer inputLine = CharBuffer.allocate(BUFFER_SIZE);
+  static final private CharBuffer outputLine = CharBuffer.allocate(BUFFER_SIZE);
   // Instance variables:
   private List<JMDiffAlgorithmIF> algorithms;
 
