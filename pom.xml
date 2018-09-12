@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.jidesoft</groupId>
             <artifactId>jide-oss</artifactId>
-            <version>3.6.9</version>
+            <version>3.6.18</version>
         </dependency>
         <dependency>
             <groupId>org.swinglabs</groupId>
