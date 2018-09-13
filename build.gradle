@@ -38,6 +38,8 @@ dependencies {
     compile 'com.jidesoft:jide-oss:3.6.18'
     compile 'org.swinglabs:swing-layout:1.0.3'
     compile 'org.swinglabs:swingx:1.6.1'
+    testCompile 'junit:junit:4.8.2'
+    testCompile 'org.netbeans:jemmy:2.2.7.5'
 }
 
 jacocoTestReport {
