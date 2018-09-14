@@ -19,8 +19,6 @@ package org.jmeld.ui;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jidesoft.swing.JideTabbedPane;
-import org.jdesktop.swingworker.*;
-import org.jdesktop.swingworker.SwingWorker;
 import org.jmeld.Version;
 import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.action.ActionHandler;
@@ -76,7 +74,18 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
     public JMeldPanel() {
         setFocusable(true);
 
-        addAncestorListener(getAncestorListener());
+        tabbedPane = new JideTabbedPane();
+        addAncestorListener(new AncestorListener() {
+            public void ancestorAdded(AncestorEvent event) {
+                start();
+            }
+
+            public void ancestorMoved(AncestorEvent event) {
+            }
+
+            public void ancestorRemoved(AncestorEvent event) {
+            }
+        });
         SHOW_TOOLBAR_OPTION = new Option(this, true);
         SHOW_STATUSBAR_OPTION = new Option(this, true);
         SHOW_TABBEDPANE_OPTION = new Option(this, true);
@@ -97,7 +106,6 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
 
         started = true;
 
-        tabbedPane = new JideTabbedPane();
         getTabbedPane().setFocusable(false);
         getTabbedPane().setShowCloseButtonOnTab(true);
         getTabbedPane().setShowCloseButtonOnSelectedTab(true);
@@ -927,17 +935,4 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
         return started;
     }
 
-    private AncestorListener getAncestorListener() {
-        return new AncestorListener() {
-            public void ancestorAdded(AncestorEvent event) {
-                start();
-            }
-
-            public void ancestorMoved(AncestorEvent event) {
-            }
-
-            public void ancestorRemoved(AncestorEvent event) {
-            }
-        };
-    }
 }
