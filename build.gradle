@@ -3,7 +3,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.github.johnrengelman.shadow'
 
-version = '3.2'
+version = '3.3'
 
 repositories {
   mavenCentral() 

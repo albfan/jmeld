@@ -4,7 +4,7 @@
 
     <groupId>org.jmeld</groupId>
     <artifactId>jmeld</artifactId>
-    <version>3.2</version>
+    <version>3.3</version>
     <packaging>jar</packaging>
 
     <name>jmeld</name>
