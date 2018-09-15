@@ -1,12 +1,13 @@
 package org.jmeld;
 
-import javafx.scene.input.KeyCode;
 import junit.framework.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.netbeans.jemmy.ClassReference;
 import org.netbeans.jemmy.operators.JFrameOperator;
+
+import java.awt.event.KeyEvent;
 
 public class JMeldTest {
 
@@ -25,7 +26,7 @@ public class JMeldTest {
             new ClassReference("org.jmeld.JMeld").startApplication();
 
             JFrameOperator frameOperator = new JFrameOperator("JMeld");
-            frameOperator.pushKey(KeyCode.F4.ordinal(), KeyCode.ALT.ordinal());
+            frameOperator.pushKey(KeyEvent.VK_F4, KeyEvent.ALT_DOWN_MASK);
         } catch (Exception e) {
             Assert.fail(e.getMessage());
         }
