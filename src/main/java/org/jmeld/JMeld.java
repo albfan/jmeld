@@ -23,6 +23,8 @@ import org.jmeld.ui.util.LookAndFeelManager;
 import org.jmeld.util.prefs.WindowPreference;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +53,7 @@ public class JMeld
         frame = new JFrame("JMeld");
         jmeldPanel = new JMeldPanel();
         frame.add(jmeldPanel);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setIconImage(ImageUtil.getImageIcon("jmeld-small").getImage());
         new WindowPreference(frame.getTitle(), frame);
         frame.addWindowListener(jmeldPanel.getWindowListener());
