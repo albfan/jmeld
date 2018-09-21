@@ -1,149 +1,234 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.jmeld</groupId>
-    <artifactId>jmeld</artifactId>
-    <version>3.2</version>
-    <packaging>jar</packaging>
+	<groupId>org.jmeld</groupId>
+	<artifactId>jmeld</artifactId>
+	<version>3.2</version>
+	<packaging>jar</packaging>
 
-    <name>jmeld</name>
-    <url>https://github.com/albfan/jmeld</url>
+	<name>jmeld</name>
+	<url>https://github.com/albfan/jmeld</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <classpath.prefix>lib/</classpath.prefix>
-        <executable.prefix>/</executable.prefix>
-        <mainjar.prefix>/</mainjar.prefix>
-    </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<classpath.prefix>lib/</classpath.prefix>
+		<executable.prefix>/</executable.prefix>
+		<mainjar.prefix>/</mainjar.prefix>
+		<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-assembly-plugin -->
+		<maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+		<assemblyMainClass>org.jmeld.JMeld</assemblyMainClass>
+	</properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans</groupId>
-            <artifactId>jemmy</artifactId>
-            <version>2.2.7.5</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- Must be version 1.0.7, but it's not in maven repos -->
-            <groupId>jgoodies</groupId>
-            <artifactId>forms</artifactId>
-            <version>1.0.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>looks</artifactId>
-            <version>2.2.1</version>
-        </dependency>
-        <dependency>
-            <!-- Must be version 4.0, but it's not in maven repos -->
-            <groupId>org.mod4j.com.ibm</groupId>
-            <artifactId>icu</artifactId>
-            <version>4.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.help</groupId>
-            <artifactId>javahelp</artifactId>
-            <version>2.0.05</version>
-        </dependency>
-        <dependency>
-            <!--detect file type. Didn't know version, so use last -->
-            <groupId>eu.medsea.mimeutil</groupId>
-            <artifactId>mime-util</artifactId>
-            <version>2.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.l2fprod.common</groupId>
-            <artifactId>l2fprod-common-fontchooser</artifactId>
-            <version>6.9.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jidesoft</groupId>
-            <artifactId>jide-oss</artifactId>
-            <version>3.6.18</version>
-        </dependency>
-        <dependency>
-            <groupId>org.swinglabs</groupId>
-            <artifactId>swing-layout</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.swinglabs</groupId>
-            <artifactId>swingx</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.netbeans</groupId>
+			<artifactId>jemmy</artifactId>
+			<version>2.2.7.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- Must be version 1.0.7, but it's not in maven repos -->
+			<groupId>jgoodies</groupId>
+			<artifactId>forms</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>looks</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<!-- Must be version 4.0, but it's not in maven repos -->
+			<groupId>org.mod4j.com.ibm</groupId>
+			<artifactId>icu</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.help</groupId>
+			<artifactId>javahelp</artifactId>
+			<version>2.0.05</version>
+		</dependency>
+		<dependency>
+			<!--detect file type. Didn't know version, so use last -->
+			<groupId>eu.medsea.mimeutil</groupId>
+			<artifactId>mime-util</artifactId>
+			<version>2.1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.l2fprod.common</groupId>
+			<artifactId>l2fprod-common-fontchooser</artifactId>
+			<version>6.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jidesoft</groupId>
+			<artifactId>jide-oss</artifactId>
+			<version>3.6.18</version>
+		</dependency>
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swing-layout</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.swinglabs</groupId>
+			<artifactId>swingx</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+	</dependencies>
 
-    <build>
-       <resources>
-           <resource>
-               <directory>src/main/resources</directory>
-           </resource>
-           <resource>
-               <directory>src/main/javahelp</directory>
-           </resource>
-       </resources>
-       <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-           <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-jar-plugin</artifactId>
-               <version>2.6</version>
-               <configuration>
-                   <finalName>jmeld</finalName>
-                   <archive>
-                       <manifest>
-                           <addClasspath>true</addClasspath>
-                           <classpathPrefix>${classpath.prefix}</classpathPrefix>
-                           <mainClass>org.jmeld.JMeld</mainClass>
-                       </manifest>
-                   </archive>
-               </configuration>
-           </plugin>
-           <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-assembly-plugin</artifactId>
-               <version>2.6</version>
-               <configuration>
-                   <descriptors>
-                       <descriptor>src/main/assembly/dist.xml</descriptor>
-                   </descriptors>
-               </configuration>
-               <executions>
-                   <execution>
-                       <id>create-assembly</id>
-                       <phase>package</phase>
-                       <goals>
-                           <goal>single</goal>
-                       </goals>
-                   </execution>
-               </executions>
-           </plugin>
-        </plugins>
-    </build>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/javahelp</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<finalName>jmeld</finalName>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>${classpath.prefix}</classpathPrefix>
+							<mainClass>org.jmeld.JMeld</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- executable jar with dependencies see http://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven 
+				run with mvn clean compile assembly:single -->
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven-assembly-plugin.version}</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>${assemblyMainClass}</mainClass>
+						</manifest>
+					</archive>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id> <!-- this is used for inheritance merges -->
+						<phase>package</phase> <!-- bind to the packaging phase -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Launch4 J plugin to create cross plattform java app -->
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>1.7.22</version>
+				<executions>
+					<execution>
+						<id>l4j-gui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<dontWrapJar>false</dontWrapJar>
+							<headerType>console</headerType>
+							<jar>target/jmeld-${project.version}-jar-with-dependencies.jar</jar>
+							<outfile>${project.build.directory}/jmeld.exe</outfile>
+							<errTitle />
+							<cmdLine />
+							<chdir />
+							<priority>normal</priority>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<supportUrl>https://github.com/albfan/jmeld/issues</supportUrl>
+							<customProcName>false</customProcName>
+							<stayAlive>false</stayAlive>
+							<manifest />
+							<icon />
+							<jre>
+								<path />
+								<minVersion>1.8.0</minVersion>
+								<maxVersion />
+								<jdkPreference>preferJre</jdkPreference>
+								<initialHeapSize>256</initialHeapSize>
+								<maxHeapSize>3000</maxHeapSize>
+							</jre>
+							<!-- <splash> <file>${project.basedir}/src/main/build/Sunflower.bmp</file> 
+								<waitForWindow>true</waitForWindow> <timeout>60</timeout> <timeoutErr>true</timeoutErr> 
+								</splash> -->
+							<versionInfo>
+								<fileVersion>0.0.${project.version}</fileVersion>
+								<txtFileVersion>${project.version}</txtFileVersion>
+								<fileDescription>JMeld</fileDescription>
+								<copyright>albfan</copyright>
+								<productVersion>0.0.1.0</productVersion>
+								<txtProductVersion>${project.version}</txtProductVersion>
+								<productName>JMeld</productName>
+								<companyName>albfan</companyName>
+								<internalName>jmeld</internalName>
+								<originalFilename>jmeld.exe</originalFilename>
+							</versionInfo>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- http://kosalads.blogspot.de/2013/04/maven-copy-artifact-in-to-separate.html 
+				https://stackoverflow.com/a/16862404/1497139 -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<configuration>
+					<tasks>
+						<copy
+							file="target/jmeld-${project.version}-jar-with-dependencies.jar"
+							tofile="release/jmeld.jar" />
+						<copy file="target/jmeld.exe" tofile="release/jmeld.exe" />
+					</tasks>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 
-    <profiles>
-        <profile>
-            <id>linux-dist</id>
-            <properties>
-                <classpath.prefix>/usr/share/java/jmeld</classpath.prefix>
-                <executable.prefix>/usr/bin</executable.prefix>
-                <mainjar.prefix>/usr/share/java/jmeld</mainjar.prefix>
-            </properties>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>linux-dist</id>
+			<properties>
+				<classpath.prefix>/usr/share/java/jmeld</classpath.prefix>
+				<executable.prefix>/usr/bin</executable.prefix>
+				<mainjar.prefix>/usr/share/java/jmeld</mainjar.prefix>
+			</properties>
+		</profile>
+	</profiles>
 </project>
