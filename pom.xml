@@ -4,7 +4,7 @@
 
     <groupId>org.jmeld</groupId>
     <artifactId>jmeld</artifactId>
-    <version>3.3</version>
+    <version>3.4.0</version>
     <packaging>jar</packaging>
 
     <name>jmeld</name>
@@ -175,7 +175,7 @@
                                 <maxHeapSize>3000</maxHeapSize>
                             </jre>
                             <versionInfo>
-                                <fileVersion>0.0.${project.version}</fileVersion>
+                                <fileVersion>0.${project.version}</fileVersion>
                                 <txtFileVersion>${project.version}</txtFileVersion>
                                 <fileDescription>JMeld</fileDescription>
                                 <copyright>albfan</copyright>
