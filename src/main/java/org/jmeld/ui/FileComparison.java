@@ -91,7 +91,11 @@ public class FileComparison extends SwingWorker<String, Object> {
             contentId = "BufferDiffPanel:" + diffNode.getId();
             contentPanel = JMeldPanel.getAlreadyOpen(mainPanel.getTabbedPane(), contentId);
             if (contentPanel == null) {
-                diffNode.diff();
+              SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                  diffNode.diff();
+                }
+              });
             }
         } catch (Exception ex) {
             ex.printStackTrace();

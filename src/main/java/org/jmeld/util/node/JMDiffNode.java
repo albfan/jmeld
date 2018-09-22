@@ -254,45 +254,45 @@ public class JMDiffNode
   }
 
   public void diff()
-      throws JMeldException
   {
     BufferDocumentIF documentLeft;
     BufferDocumentIF documentRight;
     Object[] left, right;
+    StatusBar statusBar = StatusBar.getInstance();
 
-    StatusBar.getInstance().start();
+    statusBar.start();
+    try {
+      documentLeft = null;
+      documentRight = null;
 
-    documentLeft = null;
-    documentRight = null;
-
-    if (nodeLeft != null)
-    {
-      documentLeft = nodeLeft.getDocument();
-      StatusBar.getInstance().setState("Reading left : %s", nodeLeft.getName());
-      if (documentLeft != null)
-      {
-        documentLeft.read();
+      if (nodeLeft != null) {
+        documentLeft = nodeLeft.getDocument();
+        statusBar.setState("Reading left : %s",
+            nodeLeft.getName());
+        if (documentLeft != null) {
+          documentLeft.read();
+        }
       }
-    }
 
-    if (nodeRight != null)
-    {
-      documentRight = nodeRight.getDocument();
-      StatusBar.getInstance()
-          .setState("Reading right: %s", nodeRight.getName());
-      if (documentRight != null)
-      {
-        documentRight.read();
+      if (nodeRight != null) {
+        documentRight = nodeRight.getDocument();
+        statusBar.setState("Reading right: %s",
+            nodeRight.getName());
+        if (documentRight != null) {
+          documentRight.read();
+        }
       }
+
+      statusBar.setState("Calculating differences");
+      diff = new JMDiff();
+      left = documentLeft == null ? null : documentLeft.getLines();
+      right = documentRight == null ? null : documentRight.getLines();
+
+      revision = diff.diff(left, right, ignore);
+      statusBar.setState("Ready calculating differences");
+    } catch (Exception ex) {
+      statusBar.setState(String.format("Exception: %s -%s"+ex.getClass().getName(),ex.getMessage()));
     }
-
-    StatusBar.getInstance().setState("Calculating differences");
-    diff = new JMDiff();
-    left = documentLeft == null ? null : documentLeft.getLines();
-    right = documentRight == null ? null : documentRight.getLines();
-
-    revision = diff.diff(left, right, ignore);
-    StatusBar.getInstance().setState("Ready calculating differences");
     StatusBar.getInstance().stop();
   }
 
