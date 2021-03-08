@@ -31,7 +31,7 @@ or with maven
 
 Start jmeld with the command:
 
-    $ java -jar JMeld.jar <file1> <file2>
+    $ java -jar release/jmeld.jar <file1> <file2>
 
 or use [mvnexec](https://github.com/albfan/mvnexec)
 
