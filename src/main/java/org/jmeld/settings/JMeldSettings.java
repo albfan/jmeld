@@ -18,7 +18,7 @@ package org.jmeld.settings;
 
 import org.jmeld.util.conf.*;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement(name = "jmeld")

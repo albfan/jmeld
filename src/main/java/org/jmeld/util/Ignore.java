@@ -1,6 +1,6 @@
 package org.jmeld.util;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 import org.jmeld.util.conf.*;
 

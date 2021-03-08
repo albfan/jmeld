@@ -5,7 +5,7 @@ import org.jmeld.util.*;
 import java.io.*;
 import java.util.*;
 
-import javax.xml.bind.*;
+import jakarta.xml.bind.*;
 
 public class ConfigurationPersister
 {

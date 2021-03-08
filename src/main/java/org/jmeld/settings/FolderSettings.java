@@ -19,7 +19,7 @@ package org.jmeld.settings;
 import org.jmeld.ui.util.*;
 import org.jmeld.util.conf.*;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 import java.awt.*;
 

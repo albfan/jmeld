@@ -18,7 +18,7 @@ package org.jmeld.vc.svn;
 
 import org.jmeld.vc.*;
 
-import javax.xml.bind.annotation.*;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.*;
 
