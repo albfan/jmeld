@@ -59,11 +59,8 @@ public class FileNode
     if (document == null || isDocumentOutOfDate())
     {
       initialize();
-      if (exists())
-      {
-        document = new FileDocument(file);
-        fileLastModified = file.lastModified();
-      }
+      document = new FileDocument(file);
+      fileLastModified = file.lastModified();
     }
 
     return document;
@@ -79,7 +76,7 @@ public class FileNode
   {
     boolean outOfDate;
 
-    if (file == null || !exists())
+    if (file == null)
     {
       return false;
     }

@@ -46,12 +46,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
+public class JMeldPanel extends JPanel implements ConfigurationListenerIF, PropertyChangeListener {
     public final Actions actions;
 
     // Options (enable/disable before adding this component to its container)
@@ -416,29 +419,48 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF {
         }
     }
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("state".equals(evt.getPropertyName())
+                && org.jdesktop.swingworker.SwingWorker.StateValue.DONE.equals(evt.getNewValue())) {
+            try {
+                String result = (String)((org.jdesktop.swingworker.SwingWorker) evt.getSource()).get();
+                if (result != null) {
+                    launchDialog();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
     public void doNew(ActionEvent ae) {
+        launchDialog();
+    }
+
+    private void launchDialog() {
         PanelDialog dialog;
 
         dialog = new PanelDialog(this);
         dialog.show();
 
 
-        //TODO Son todo SwingWorker<String, Object>;
-        //Agregar una interfaz común
+        org.jdesktop.swingworker.SwingWorker<String, Object> worker = null;
         if (dialog.getFunction() == PanelDialog.Function.FILE_COMPARISON) {
-            FileComparison fileComparison = new FileComparison(this, new File(dialog.getLeftFileName()), new File(dialog
+            worker = new FileComparison(this, new File(dialog.getLeftFileName()), new File(dialog
                         .getRightFileName()));
-            fileComparison.setOpenInBackground(false);
-            fileComparison.execute();
         } else if (dialog.getFunction() == PanelDialog.Function.DIRECTORY_COMPARISON) {
-            new DirectoryComparison(this, new File(dialog.getLeftDirectoryName()), new File(dialog.getRightDirectoryName()), dialog
-                        .getFilter()).execute();
+            worker = new DirectoryComparison(this,
+                    new File(dialog.getLeftDirectoryName()), new File(dialog.getRightDirectoryName()), dialog
+                    .getFilter());
         } else if (dialog.getFunction() == PanelDialog.Function.VERSION_CONTROL) {
-            VersionControlComparison versionControlComparison = new VersionControlComparison(this, new File(dialog
+            worker = new VersionControlComparison(this, new File(dialog
                     .getVersionControlDirectoryName()));
-            versionControlComparison.execute();
-
         }
+        worker.addPropertyChangeListener(this);
+        worker.execute();
+
     }
 
     public void doSave(ActionEvent ae) {

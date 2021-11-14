@@ -196,9 +196,6 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
             }
 
             title = bd.getShortName();
-            if (StringUtil.isEmpty(title)) {
-                continue;
-            }
 
             titles.add(title);
         }
