@@ -66,22 +66,12 @@ public class FileComparison extends SwingWorker<String, Object> {
     public String doInBackground() {
         try {
             if (diffNode == null) {
-                if (StringUtil.isEmpty(leftFile.getName())) {
-                    return "left filename is empty";
+                if (StringUtil.isEmpty(leftFile.getName()) || !leftFile.exists()) {
+                    leftFile = new File(leftFile.getName());
                 }
 
-                if (!leftFile.exists()) {
-                    return "left filename(" + leftFile.getAbsolutePath()
-                            + ") doesn't exist";
-                }
-
-                if (StringUtil.isEmpty(rightFile.getName())) {
-                    return "right filename is empty";
-                }
-
-                if (!rightFile.exists()) {
-                    return "right filename(" + rightFile.getAbsolutePath()
-                            + ") doesn't exist";
+                if (StringUtil.isEmpty(rightFile.getName()) || !rightFile.exists()) {
+                    rightFile = new File(rightFile.getName());
                 }
 
                 diffNode = JMDiffNodeFactory.create(leftFile.getName(), leftFile,

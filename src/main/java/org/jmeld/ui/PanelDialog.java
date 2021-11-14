@@ -196,7 +196,7 @@ public class PanelDialog
     label = new JLabel("Left");
     button = new JButton("Browse...");
     leftFileComboBox = new JComboBox();
-    leftFileComboBox.setEditable(false);
+    leftFileComboBox.setEditable(true);
     leftFileComboBox.addActionListener(getFileSelectAction());
     new ComboBoxPreference("LeftFile", leftFileComboBox);
 
@@ -211,7 +211,7 @@ public class PanelDialog
     button.setActionCommand(RIGHT_FILENAME);
     button.addActionListener(getFileBrowseAction());
     rightFileComboBox = new JComboBox();
-    rightFileComboBox.setEditable(false);
+    rightFileComboBox.setEditable(true);
     rightFileComboBox.addActionListener(getFileSelectAction());
     new ComboBoxPreference("RightFile", rightFileComboBox);
     panel.add(label, cc.xy(2, 4));
@@ -324,7 +324,7 @@ public class PanelDialog
     label = new JLabel("Left");
     button = new JButton("Browse...");
     leftDirectoryComboBox = new JComboBox();
-    leftDirectoryComboBox.setEditable(false);
+    leftDirectoryComboBox.setEditable(true);
     leftDirectoryComboBox.addActionListener(getDirectorySelectAction());
     new ComboBoxPreference("LeftDirectory", leftDirectoryComboBox);
 
@@ -339,7 +339,7 @@ public class PanelDialog
     button.setActionCommand(RIGHT_DIRECTORY);
     button.addActionListener(getDirectoryBrowseAction());
     rightDirectoryComboBox = new JComboBox();
-    rightDirectoryComboBox.setEditable(false);
+    rightDirectoryComboBox.setEditable(true);
     rightDirectoryComboBox.addActionListener(getDirectorySelectAction());
     new ComboBoxPreference("RightDirectory", rightDirectoryComboBox);
     panel.add(label, cc.xy(2, 4));
@@ -460,7 +460,7 @@ public class PanelDialog
     label = new JLabel("Directory");
     button = new JButton("Browse...");
     versionControlDirectoryComboBox = new JComboBox();
-    versionControlDirectoryComboBox.setEditable(false);
+    versionControlDirectoryComboBox.setEditable(true);
     versionControlDirectoryComboBox
         .addActionListener(getVersionControlDirectorySelectAction());
     new ComboBoxPreference("VersionControlDirectory",

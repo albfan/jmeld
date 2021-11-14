@@ -57,11 +57,6 @@ public class FileDocument
   {
     BufferedInputStream bis;
 
-    if (!file.isFile() || !file.canRead())
-    {
-      throw new JMeldException("Could not open file: " + file.getAbsolutePath());
-    }
-
     try
     {
       // Try to create a reader that has the right charset.
@@ -73,8 +68,7 @@ public class FileDocument
     }
     catch (Exception ex)
     {
-      throw new JMeldException("Could not create FileReader for : "
-                               + file.getName(), ex);
+      return new BufferedReader(new InputStreamReader(new ByteArrayInputStream("".getBytes())));
     }
   }
 
