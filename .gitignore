@@ -12,8 +12,12 @@ bin/
 *.iml
 
 #gradle
+gradle/
+gradlew
+gradlew.*
 .gradle/
 build/
+release/
 
 #ant
 lib/
