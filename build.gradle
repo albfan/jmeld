@@ -7,13 +7,14 @@ version = '3.5.0'
 
 repositories {
   mavenCentral() 
-  maven { url "http://central.maven.org/maven2" }  
+  maven { url "https://central.maven.org/maven2" }
 }
 
 buildscript {
   repositories {
     mavenCentral()
     jcenter()
+    maven { url "https://plugins.gradle.org/m2/" }
   }
 
   dependencies {
