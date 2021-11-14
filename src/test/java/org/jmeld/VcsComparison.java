@@ -4,6 +4,7 @@ import org.jmeld.settings.JMeldSettings;
 import org.jmeld.ui.JMeldPanel;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.Arrays;
 
 /*
@@ -25,16 +26,18 @@ import java.util.Arrays;
  */
 public class VcsComparison {
     public static void main(String[] args) {
-        JMeld.main(new String[]{});
-        SwingUtilities.invokeLater(new Runnable() {
-               @Override
-               public void run() {
-                   JMeldPanel jMeldPanel = JMeld.getJMeldPanel();
-                   jMeldPanel.openComparison(Arrays.asList(new String[] { "src/test/resources/vcs/git/file1"}) );
-                   jMeldPanel.openComparison(Arrays.asList(new String[]{"src/test/resources/vcs/git/file2"}));
-                   jMeldPanel.openComparison(Arrays.asList(new String[]{"src/test/resources/vcs/git/file3"}));
-                   jMeldPanel.openComparison(Arrays.asList(new String[]{"src/test/resources/vcs/git"}));
-               }
-           });
+        File vcsDir = new File("src/test/resources/vcs/git");
+        if (vcsDir.exists() && vcsDir.isDirectory()) { //TODO: Check is an vcs dir
+            JMeld.main(new String[]{});
+            SwingUtilities.invokeLater(new Runnable() {
+                   @Override
+                   public void run() {
+                           JMeldPanel jMeldPanel = JMeld.getJMeldPanel();
+                           jMeldPanel.openComparison(Arrays.asList("src/test/resources/vcs/git"));
+                   }
+               });
+        } else {
+            System.err.println("Decompress src/test/resources/vcs/git.zip first to use this test");
+        }
     }
 }

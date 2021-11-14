@@ -40,8 +40,8 @@ public class VersionControlUtil {
             versionControlList = new ArrayList<VersionControlIF>();
             versionControlList.add(new SubversionVersionControl());
             versionControlList.add(new MercurialVersionControl());
-            versionControlList.add(new BazaarVersionControl());
             versionControlList.add(new GitVersionControl());
+            versionControlList.add(new BazaarVersionControl());
         }
 
         return versionControlList;
