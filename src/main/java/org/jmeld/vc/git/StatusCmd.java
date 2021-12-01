@@ -5,6 +5,7 @@ import org.jmeld.vc.StatusResult;
 import org.jmeld.vc.util.VcCmd;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class StatusCmd extends VcCmd<StatusResult> {
 
@@ -56,14 +57,20 @@ public class StatusCmd extends VcCmd<StatusResult> {
     }
 
     private Result processFile() {
-        return _execute("git", "diff", getReferencePoint(), "--name-status", actualfile.getAbsolutePath());
+        ArrayList<String> commandArgs = new ArrayList<>();
+        commandArgs.add("git");
+        commandArgs.add("diff");
+        if (!"worktree".equals(reference)) {
+            commandArgs.add(getReferencePoint());
+        }
+        commandArgs.add("--name-status");
+        commandArgs.add(actualfile.getAbsolutePath());
+        return _execute(commandArgs.toArray(new String[4]));
     }
 
     private String getReferencePoint() {
         if ("index".equals(reference)) {
             return "--cached";
-        } else if ("worktree".equals(reference)) {
-            return "";
         } else {
             return reference;
         }

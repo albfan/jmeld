@@ -18,6 +18,7 @@ package org.jmeld.ui;
 
 import org.jmeld.ui.swing.table.JMTreeTableModel;
 import org.jmeld.ui.util.ImageUtil;
+import org.jmeld.util.node.BufferNode;
 import org.jmeld.util.node.JMDiffNode;
 import org.jmeld.util.node.VersionControlBaseNode;
 
@@ -47,11 +48,11 @@ public class VersionControlTreeTableModel
         }
 
         if (column == statusColumn) {
-            vcbNode = (VersionControlBaseNode) diffNode.getBufferNodeLeft();
-            if(vcbNode == null) {
+            BufferNode bufferNodeLeft = diffNode.getBufferNodeLeft();
+            if (!(bufferNodeLeft instanceof VersionControlBaseNode)) {
                 return "";
             }
-
+            vcbNode = (VersionControlBaseNode) bufferNodeLeft;
             return ImageUtil.getImageIcon("16x16/" + vcbNode.getEntry().getStatus().getIconName());
         }
 

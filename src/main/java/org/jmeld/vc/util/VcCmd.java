@@ -45,15 +45,15 @@ public abstract class VcCmd<T> {
 
         try {
             pb = new ProcessBuilder(command);
+            debug("execute: " + Arrays.asList(command));
+            System.out.println("wd2=" + pb.directory());
             if(workingDirectory != null) {
                 pb = pb.directory(workingDirectory);
                 System.out.println("wd=" + workingDirectory);
             }
 
-            System.out.println("wd2=" + pb.directory());
             p = pb.start();
 
-            debug("execute: " + Arrays.asList(command));
 
             data = new byte[4096];
 
