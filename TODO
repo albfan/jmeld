@@ -89,9 +89,9 @@ Release 2.3:
          (Change it to OutLine of the netbeans project!)
 
 Release 3.0:
-- VCS support
+- [100%] VCS support
 - Improved diff highlight
-- Mavenization
+- [100%] Mavenization
 
 Todo:
 -        Create manual
