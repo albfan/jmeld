@@ -61,7 +61,8 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF, Prope
     public final Option SHOW_TOOLBAR_OPTION;
     public final Option SHOW_STATUSBAR_OPTION;
     public final Option SHOW_TABBEDPANE_OPTION;
-    public final Option SHOW_FILE_TOOLBAR_OPTION;
+    public final Option SHOW_FILE_LABEL_OPTION;
+    public final Option SHOW_FILE_SAVE_BAR_OPTION;
     public final Option SHOW_FILE_STATUSBAR_OPTION;
     public final Option STANDALONE_INSTALLKEY_OPTION;
 
@@ -92,8 +93,9 @@ public class JMeldPanel extends JPanel implements ConfigurationListenerIF, Prope
         SHOW_TOOLBAR_OPTION = new Option(this, true);
         SHOW_STATUSBAR_OPTION = new Option(this, true);
         SHOW_TABBEDPANE_OPTION = new Option(this, true);
-        SHOW_FILE_TOOLBAR_OPTION = new Option(this, true);
+        SHOW_FILE_LABEL_OPTION = new Option(this, true);
         SHOW_FILE_STATUSBAR_OPTION = new Option(this, true);
+        SHOW_FILE_SAVE_BAR_OPTION = new Option(this, true);
         STANDALONE_INSTALLKEY_OPTION = new Option(this, false);
         actions = new Actions();
     }

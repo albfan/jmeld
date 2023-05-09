@@ -33,7 +33,6 @@ import org.jmeld.ui.text.AbstractBufferDocument;
 import org.jmeld.ui.text.BufferDocumentIF;
 import org.jmeld.ui.text.JMDocumentEvent;
 import org.jmeld.ui.tree.DiffTree;
-import org.jmeld.util.StringUtil;
 import org.jmeld.util.conf.ConfigurationListenerIF;
 import org.jmeld.util.node.BufferNode;
 import org.jmeld.util.node.JMDiffNode;
@@ -330,8 +329,10 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
 
         // panel for file1
         filePanel.add(new RevisionBar(this, filePanels[LEFT], true), cc.xy(2, 4));
-        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
+        if (mainPanel.SHOW_FILE_SAVE_BAR_OPTION.isEnabled()) {
             filePanel.add(filePanels[LEFT].getSaveButton(), cc.xy(2, 2));
+        }
+        if (mainPanel.SHOW_FILE_LABEL_OPTION.isEnabled()) {
             filePanel.add(filePanels[LEFT].getFileLabel(), cc.xyw(4, 2, 3));
         }
         filePanel.add(filePanels[LEFT].getScrollPane(), cc.xyw(4, 4, 3));
@@ -344,11 +345,11 @@ public class BufferDiffPanel extends AbstractContentPanel implements Configurati
 
         // panel for file2
         filePanel.add(new RevisionBar(this, filePanels[RIGHT], false), cc.xy(12, 4));
-        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
+        if (mainPanel.SHOW_FILE_LABEL_OPTION.isEnabled()) {
             filePanel.add(filePanels[RIGHT].getFileLabel(), cc.xyw(8, 2, 3));
         }
         filePanel.add(filePanels[RIGHT].getScrollPane(), cc.xyw(8, 4, 3));
-        if (mainPanel.SHOW_FILE_TOOLBAR_OPTION.isEnabled()) {
+        if (mainPanel.SHOW_FILE_SAVE_BAR_OPTION.isEnabled()) {
             filePanel.add(filePanels[RIGHT].getSaveButton(), cc.xy(12, 2));
         }
         if (mainPanel.SHOW_FILE_STATUSBAR_OPTION.isEnabled()) {
