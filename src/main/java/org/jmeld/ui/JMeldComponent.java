@@ -26,7 +26,8 @@ public class JMeldComponent extends Container {
         meldPanel.SHOW_TABBEDPANE_OPTION.disable();
         meldPanel.SHOW_TOOLBAR_OPTION.disable();
         meldPanel.SHOW_STATUSBAR_OPTION.disable();
-        meldPanel.SHOW_FILE_TOOLBAR_OPTION.disable();
+        meldPanel.SHOW_FILE_LABEL_OPTION.disable();
+        meldPanel.SHOW_FILE_SAVE_BAR_OPTION.disable();
         meldPanel.SHOW_FILE_STATUSBAR_OPTION.disable();
 
         setLayout(new BorderLayout());
