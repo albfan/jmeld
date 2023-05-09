@@ -146,7 +146,7 @@ public class FilePanel implements BufferDocumentChangeListenerIF, ConfigurationL
         return bufferDocument;
     }
 
-    JButton getSaveButton() {
+    public JButton getSaveButton() {
         return saveButton;
     }
 
