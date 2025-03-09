@@ -48,7 +48,7 @@ public class VersionControlUtil {
     }
 
     public static VersionControlIF getFirstVersionControl(File file) {
-        versionControlList = VersionControlUtil.getVersionControl(file);
+        List<VersionControlIF> versionControlList = VersionControlUtil.getVersionControl(file);
         if (versionControlList.isEmpty()) {
             return null;
         }
