@@ -14,7 +14,7 @@ public class ActiveCmd extends VcCmd<Boolean> {
 
     public Result execute() {
         // If log can be issued then we have a git working directory!
-        super.execute("git", "log", "-n 1", file.getAbsolutePath());
+        super.execute("git", "-C", file.getAbsolutePath(), "log", "-n 1");
 
         return getResult();
     }

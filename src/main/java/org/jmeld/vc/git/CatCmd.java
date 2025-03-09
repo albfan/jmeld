@@ -7,21 +7,24 @@ import org.jmeld.vc.util.VcCmd;
 import java.io.File;
 
 public class CatCmd extends VcCmd<BaseFile> {
+    private final GitVersionControl vc;
     private File file;
     private String reference;
 
-    public CatCmd(File file) {
-        this(file, "HEAD");
+    public CatCmd(GitVersionControl vc ,File file) {
+        this(vc, file, "HEAD");
     }
 
-    public CatCmd(File file, String reference) {
+    public CatCmd(GitVersionControl vc, File file, String reference) {
+        this.vc = vc;
         this.file = file;
         this.reference = reference;
         initWorkingDirectory(file);
     }
 
     public Result execute() {
-        super.execute("git", "show", getReferencePoint() +":"+file.getName());
+        String rootPath = vc.getRootPath();
+        super.execute("git", "-C", rootPath, "show", getReferencePoint() +":"+file.getPath().replaceFirst(rootPath+"/", ""));
 
         return getResult();
     }

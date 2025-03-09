@@ -10,6 +10,7 @@ import java.util.Vector;
 public class GitVersionControl implements VersionControlIF {
     private Boolean installed;
     private String reference;
+    private String rootPath;
 
     public GitVersionControl() {
         setReference("HEAD");
@@ -45,7 +46,15 @@ public class GitVersionControl implements VersionControlIF {
         cmd = new ActiveCmd(file);
         cmd.execute();
 
-        return cmd.getResult().isTrue();
+        boolean isEnabled = cmd.getResult().isTrue();
+        if (isEnabled) {
+            rootPath = file.getAbsolutePath();
+        }
+        return isEnabled;
+    }
+
+    public String getRootPath() {
+        return rootPath;
     }
 
     public StatusResult executeStatus(File file) {
@@ -57,7 +66,7 @@ public class GitVersionControl implements VersionControlIF {
     public BaseFile getBaseFile(File file) {
         CatCmd cmd;
 
-        cmd = new CatCmd(file, getReference());
+        cmd = new CatCmd(this, file, getReference());
         cmd.execute();
         return cmd.getResultData();
     }
