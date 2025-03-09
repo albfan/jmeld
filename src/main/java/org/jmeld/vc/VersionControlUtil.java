@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.*;
 
 public class VersionControlUtil {
-    static private List<VersionControlIF> versionControlList;
 
     public static boolean isVersionControlled(File file) {
         return getVersionControl(file) != null;
@@ -36,13 +35,11 @@ public class VersionControlUtil {
     }
 
     public static List<VersionControlIF> getVersionControlList() {
-        if (versionControlList == null) {
-            versionControlList = new ArrayList<VersionControlIF>();
-            versionControlList.add(new SubversionVersionControl());
-            versionControlList.add(new MercurialVersionControl());
-            versionControlList.add(new GitVersionControl());
-            versionControlList.add(new BazaarVersionControl());
-        }
+        List<VersionControlIF> versionControlList = new ArrayList<VersionControlIF>();
+        versionControlList.add(new SubversionVersionControl());
+        versionControlList.add(new MercurialVersionControl());
+        versionControlList.add(new GitVersionControl());
+        versionControlList.add(new BazaarVersionControl());
 
         return versionControlList;
     }
