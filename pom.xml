@@ -17,6 +17,8 @@
         <mainjar.prefix>/</mainjar.prefix>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <assemblyMainClass>org.jmeld.JMeld</assemblyMainClass>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
     </properties>
 
     <dependencies>
@@ -117,7 +119,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
@@ -165,7 +167,7 @@
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
-                <version>1.7.22</version>
+                <version>2.5.3</version>
                 <executions>
                     <execution>
                         <id>l4j-gui</id>
@@ -184,7 +186,6 @@
                             <priority>normal</priority>
                             <downloadUrl>http://java.com/download</downloadUrl>
                             <supportUrl>https://github.com/albfan/jmeld/issues</supportUrl>
-                            <customProcName>false</customProcName>
                             <stayAlive>false</stayAlive>
                             <manifest />
                             <icon />
@@ -215,12 +216,12 @@
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <configuration>
-                    <tasks>
+                    <target>
                         <copy
                             file="target/jmeld-${project.version}-jar-with-dependencies.jar"
                             tofile="release/jmeld.jar" />
                         <copy file="target/jmeld.exe" tofile="release/jmeld.exe" />
-                    </tasks>
+                    </target>
                 </configuration>
                 <executions>
                     <execution>
